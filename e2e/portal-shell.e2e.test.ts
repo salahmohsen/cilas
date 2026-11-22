@@ -964,7 +964,16 @@ test.describe('portal shell', () => {
               name: MESSAGES.en.Notifications.close,
               exact: true,
             })
-            const headerBox = await boxOf(header)
+            let lastBox = ''
+            await expect
+              .poll(async () => {
+                const now = JSON.stringify(await boxOf(header))
+                const still = now === lastBox
+                lastBox = now
+                return still
+              })
+              .toBe(true)
+            const headerBox = JSON.parse(lastBox)
             const size = await list.evaluate((el) => [el.scrollHeight, el.clientHeight])
             expect(size[0]).toBeGreaterThan(size[1]!)
             await list.hover()
