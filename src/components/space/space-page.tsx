@@ -1,4 +1,5 @@
 import { localeOf } from '@/i18n/routing'
+import { ACCOUNT_PATH } from '@/lib/account-path'
 import { detailPath } from '@/lib/paths'
 import { personAvatarSeed } from '@/lib/avatar'
 import config from '@payload-config'
@@ -549,7 +550,7 @@ export async function SpacePage({
             pinnedId={pinnedPost?.post.id ?? null}
             introPost={context.introPost}
             gated={gatedBy != null}
-            profileHref={`/${locale}/profile`}
+            profileHref={`/${locale}${ACCOUNT_PATH}#profile`}
             profile={profileStep}
             hidden={jar.get(CHECKLIST_COOKIE)?.value === '1'}
           />
