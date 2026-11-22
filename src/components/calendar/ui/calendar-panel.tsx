@@ -87,6 +87,9 @@ export function CalendarPanel({
                   {next.item.place}
                 </span>
               ) : null}
+              {next.item.edge ? (
+                <span className={styles.srOnly}>{labels.kind(next.item.kind)}</span>
+              ) : null}
             </button>
           </section>
         ) : null)}
@@ -133,6 +136,7 @@ function DaySection({
               {item.place}
             </span>
           ) : null}
+          {item.edge ? <span className={styles.srOnly}>{labels.kind(item.kind)}</span> : null}
         </button>
       </li>
     ) : null

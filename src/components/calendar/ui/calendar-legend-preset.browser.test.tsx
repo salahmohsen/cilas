@@ -9,7 +9,7 @@ import type { CalendarItem } from '@/lib/calendar-items'
 
 import ar from '../../../../messages/ar.json'
 import en from '../../../../messages/en.json'
-import { emulateMedia } from '../../../../testing/media.test-utils'
+import { emulateMedia, resetMedia } from '../../../../testing/media.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
@@ -63,6 +63,11 @@ const cancelledOther = item('gone', 'Gone', {
   edge: 'double',
   cancelled: true,
   blocks: [at('b', '2026-11-18')],
+})
+const cancelledMine = item('cancelled-mine', 'Cancelled mine', {
+  edge: 'solid',
+  cancelled: true,
+  blocks: [at('b', '2026-11-17')],
 })
 
 type HostProps = {
@@ -121,11 +126,12 @@ beforeEach(() => {
     document.documentElement.style.setProperty(`--calendar-${tone}-line`, 'rgb(90, 90, 90)')
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
-afterEach(() => {
+afterEach(async () => {
   cleanup()
   vi.useRealTimers()
   document.documentElement.removeAttribute('dir')
   for (const tone of TONES) document.documentElement.style.removeProperty(`--calendar-${tone}-line`)
+  await resetMedia()
 })
 
 describe('the legend preset', () => {
@@ -239,40 +245,54 @@ describe('the edge bar', () => {
     expect(swatch('Talks')).toBeNull()
   })
 
-  it('keeps the dotted bar of a cancelled other-course agenda row', () => {
-    show({ items: [cancelledOther], view: 'agenda' })
-    const row = block('Gone')!
-    const bar = row.querySelector<HTMLElement>('[class*="agendaBar"]')!
-    expect(getComputedStyle(bar).backgroundImage).toContain('repeating-linear-gradient')
-  })
+  it.each(['none', 'active'])(
+    'keeps the course cue in cancelled agenda rows with forced colours %s',
+    async (forcedColors) => {
+      await emulateMedia({ 'forced-colors': forcedColors })
+      show({ items: [mine, other, cancelledMine, cancelledOther], view: 'agenda' })
+      const bar = (title: string) =>
+        getComputedStyle(block(title)!.querySelector('[class*="agendaBar"]')!)
+      for (const [title, width] of [
+        ['Mine', '3px'],
+        ['Cancelled mine', '3px'],
+        ['Other', '2px'],
+        ['Gone', '2px'],
+      ] as const) {
+        const style = bar(title)
+        expect(style.width).toBe('6px')
+        expect(style.borderInlineStartWidth).toBe(width)
+        expect(style.borderInlineEndWidth).toBe(width)
+        expect(style.borderInlineStartStyle).toBe('solid')
+        expect(style.borderInlineStartColor).not.toBe('rgba(0, 0, 0, 0)')
+      }
+    },
+  )
 
-  it('keeps a visible bar on an other-course agenda row when forced colours are active', async () => {
-    await emulateMedia({ 'forced-colors': 'active' })
-    show({ items: [other], view: 'agenda' })
-    const bar = block('Other')!.querySelector<HTMLElement>('[class*="agendaBar"]')!
-    const style = getComputedStyle(bar)
-    expect(style.borderTopWidth).toBe('1px')
-    expect(style.borderTopStyle).not.toBe('none')
-  })
-
-  it('draws a 3px bar on the start edge of every element that carries it', () => {
-    const bar = (element: Element | null) => {
-      const style = getComputedStyle(element!)
-      return [style.borderInlineStartWidth, style.borderInlineStartStyle]
-    }
-    const view = show({ items: [mine, other, talk], details: true })
-    openPanel()
-    expect(bar(block('Mine'))).toEqual(['3px', 'solid'])
-    expect(bar(block('Other'))).toEqual(['3px', 'double'])
-    expect(bar(toggle('Your courses').querySelector('[data-edge]'))).toEqual(['3px', 'solid'])
-    expect(bar(toggle('Other courses').querySelector('[data-edge]'))).toEqual(['3px', 'double'])
-    expect(bar(document.querySelector('[data-row-id][data-edge]'))).toEqual(['3px', 'solid'])
-    fireEvent.click(block('Other')!)
-    expect(bar(document.querySelector('[class*="detailsMark"]'))).toEqual(['3px', 'double'])
-    view.rerender({ items: [mine, other, talk], view: 'month', details: true })
-    expect(bar(block('Mine'))).toEqual(['3px', 'solid'])
-    expect(bar(block('Other'))).toEqual(['3px', 'double'])
-  })
+  it.each(['none', 'active'])(
+    'draws a filled or hollow start-edge bar with forced colours %s',
+    async (forcedColors) => {
+      await emulateMedia({ 'forced-colors': forcedColors })
+      const bar = (element: Element | null) => {
+        const style = getComputedStyle(element!, '::after')
+        expect(style.borderInlineStartColor).not.toBe('rgba(0, 0, 0, 0)')
+        return [style.inlineSize, style.borderInlineStartWidth, style.borderInlineEndWidth]
+      }
+      const view = show({ items: [mine, other, talk], details: true })
+      openPanel()
+      const solid = ['6px', '3px', '3px']
+      const hollow = ['6px', '2px', '2px']
+      expect(bar(block('Mine'))).toEqual(solid)
+      expect(bar(block('Other'))).toEqual(hollow)
+      expect(bar(toggle('Your courses').querySelector('[data-edge]'))).toEqual(solid)
+      expect(bar(toggle('Other courses').querySelector('[data-edge]'))).toEqual(hollow)
+      expect(bar(document.querySelector('[data-row-id][data-edge]'))).toEqual(solid)
+      fireEvent.click(block('Other')!)
+      expect(bar(document.querySelector('[class*="detailsMark"]'))).toEqual(hollow)
+      view.rerender({ items: [mine, other, talk], view: 'month', details: true })
+      expect(bar(block('Mine'))).toEqual(solid)
+      expect(bar(block('Other'))).toEqual(hollow)
+    },
+  )
 
   it('draws no bar on an event', () => {
     show({ items: [talk] })
@@ -284,5 +304,11 @@ describe('the edge bar', () => {
     show({ items: [mine, other, talk] })
     expect(block('Mine')).toHaveAccessibleName(/, 7 PM to 9 PM, Your courses$/)
     expect(block('Talk')).toHaveAccessibleName(/, 7 PM to 9 PM$/)
+  })
+
+  it.each(['week', 'month'] as const)('names side-panel course rows in %s view', (view) => {
+    show({ items: [mine], view })
+    openPanel()
+    expect(screen.getByRole('button', { name: /^Mine .*Your courses$/ })).toBeVisible()
   })
 })

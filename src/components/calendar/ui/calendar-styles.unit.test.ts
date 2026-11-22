@@ -18,14 +18,8 @@ describe('the calendar stylesheet', () => {
   })
 
   it('draws an edge on every view-mode element that carries a tone, in the start direction', () => {
-    const edged = ['block', 'pill', 'chip', 'monthBar', 'next', 'detailsMark', 'swatch'].filter(
-      (selector) =>
-        !css.includes(`.${selector}[data-edge] {`) && !css.includes(`.${selector}[data-edge],`),
-    )
-    expect(edged).toEqual([])
     expect(css).toMatch(
-      /\[data-edge\][^{]*\{[^}]*border-inline-start: 3px solid var\(--tone-line\)/,
+      /:is\(\.block, \.pill, \.chip, \.monthBar, \.next, \.detailsMark, \.swatch\)\[data-edge\]::after \{[^}]*inset-inline-start: 1px/,
     )
-    expect(css).toMatch(/\[data-edge='double'\][^{]*\{[^}]*border-inline-start-style: double/)
   })
 })

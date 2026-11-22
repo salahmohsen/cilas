@@ -234,15 +234,20 @@ test.describe('portal calendar', () => {
       })
     })
 
-    test('signed out, the cached public calendar holds no Community-tier or draft session after a reader loaded the portal page', async ({
+    test('signed out, the cached public calendar holds no Community-tier or draft session after the fellow loads their draft', async ({
       browser,
     }) => {
-      await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
+      await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
         await page.goto(portalAt('en', WEEK_VIEW))
-        await expect(block(page, world.communityCourse.title)).toBeVisible()
+        await expect(block(page, world.draft.title)).toBeVisible()
       })
       await inContextAt(browser, { baseURL, viewport: DESKTOP }, async (page) => {
-        await page.goto(`/en/calendar${WEEK_VIEW}`)
+        const response = await page.goto(`/en/calendar${WEEK_VIEW}`)
+        expect(response?.ok()).toBe(true)
+        const html = await response!.text()
+        expect(html).toContain(world.other.title)
+        expect(html).not.toContain(world.communityCourse.title)
+        expect(html).not.toContain(world.draft.title)
         await expect(block(page, world.other.title)).toBeVisible()
         await expect(block(page, world.event.title)).toBeVisible()
         await hidden(page, [
@@ -399,22 +404,40 @@ test.describe('portal calendar', () => {
         }
     })
 
-    test('at 390 the preset shows and the calendar has no side panel, so no legend', async ({
-      browser,
-    }) => {
+    test('at 390 a student can turn Other courses on in the legend', async ({ browser }) => {
       await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
         await page.goto(portalAt('en', THREE_DAYS))
         await expect(block(page, world.communityCourse.title)).toBeVisible()
         await expect(block(page, world.event.title)).toBeVisible()
         await hidden(page, [world.other.title])
-        await expect(panelButton(page, 'en')).toBeHidden()
+        const legend = await openLegend(page, 'en')
+        const other = toggleOf(legend, MESSAGES.en.Portal.calendar.otherCourses)
+        await expect(other).toHaveAttribute('aria-pressed', 'false')
+        await other.click()
+        await expect(other).toHaveAttribute('aria-pressed', 'true')
+        await expect(block(page, world.other.title)).toBeVisible()
       })
     })
 
-    test('axe finds no violation at 390', async ({ browser }) => {
+    test('at 390 the public legend can hide and show events', async ({ browser }) => {
+      await inContextAt(browser, { baseURL, viewport: PHONE }, async (page) => {
+        await page.goto(`/en/calendar${THREE_DAYS}`)
+        const event = block(page, world.event.title)
+        await expect(event).toBeVisible()
+        const legend = await openLegend(page, 'en')
+        const talk = toggleOf(legend, MESSAGES.en.Calendar.eventTypes.talk)
+        await talk.click()
+        await expect(event).toHaveCount(0)
+        await talk.click()
+        await expect(event).toBeVisible()
+      })
+    })
+
+    test('axe finds no violation at 390 with the legend open', async ({ browser }) => {
       await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
         await page.goto(portalAt('en', THREE_DAYS))
         await expect(block(page, world.communityCourse.title)).toBeVisible()
+        await openLegend(page, 'en')
         expect(await axeOver(page, known(PAGE, 'student', 'en', PHONE.width))).toEqual({})
       })
     })
