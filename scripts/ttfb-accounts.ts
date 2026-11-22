@@ -62,7 +62,7 @@ if (payload.email.name !== 'console')
 console.log('mail, push, search and storage are off')
 
 if (values['check-off']) process.exit(0)
-if (!out) fail('need --out <file> or --check-off')
+const outFile = out ?? fail('need --out <file> or --check-off')
 
 const pg = payload.db.pool
 
@@ -113,6 +113,6 @@ for (const [role, { id, email }] of Object.entries(accounts)) {
   cookies[role] = token as string
   console.log(`${role}: user id ${id}`)
 }
-writeFileSync(out, JSON.stringify(cookies), { mode: 0o600 })
-chmodSync(out, 0o600)
+writeFileSync(outFile, JSON.stringify(cookies), { mode: 0o600 })
+chmodSync(outFile, 0o600)
 process.exit(0)
