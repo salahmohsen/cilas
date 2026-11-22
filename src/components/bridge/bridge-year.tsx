@@ -16,6 +16,7 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
 import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
+import { courseTypeKey } from '@/fields/course-type'
 import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
@@ -88,7 +89,7 @@ export async function BridgeYearView({
             title: c.title,
             excerpt: c.excerpt,
             category: cycleName(cycle),
-            label: tf(`types.${c.type.toLowerCase()}`),
+            label: tf(courseTypeKey(c.type)),
             date: c.startDate,
             dateLabel: day(c.startDate),
             readTime: 0,
