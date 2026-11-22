@@ -1746,6 +1746,10 @@
       "articles": "المقالات",
       "courses": "المقررات"
     },
+    "calendar": {
+      "yourCourses": "مقرراتك",
+      "otherCourses": "مقررات أخرى"
+    },
     "shell": {
       "skip": "الانتقال إلى المحتوى"
     },

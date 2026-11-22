@@ -1746,6 +1746,10 @@
       "articles": "Articles",
       "courses": "Courses"
     },
+    "calendar": {
+      "yourCourses": "Your courses",
+      "otherCourses": "Other courses"
+    },
     "shell": {
       "skip": "Skip to content"
     },
