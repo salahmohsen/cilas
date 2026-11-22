@@ -48,6 +48,7 @@ import { courseRegistration } from '@/lib/registration'
 import { firstDay, summary } from '@/lib/meetings'
 import { weekdayName } from '@/lib/meeting-text'
 import { textDirection } from '@/lib/text-direction'
+import { courseTypeKey } from '@/fields/course-type'
 import type { Course, Media, Person, Place, Session } from '@/payload-types'
 
 import { RegisterBar } from '@/components/course/RegisterBar'
@@ -107,7 +108,7 @@ export const CourseView: React.FC<{
         .filter(Boolean)
         .join(listSeparator(locale))
     : null
-  const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
+  const typeLabel = tf(courseTypeKey(course.course_type))
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
   const dir = courseLanguage(course) === 'ar' ? 'rtl' : 'ltr'
   const lang = dir === 'rtl' ? 'ar' : 'en'
@@ -682,7 +683,7 @@ export const CourseView: React.FC<{
                     ) : null}
                   </span>
                   <span className="mt-3 block text-xs text-(--text-muted)">
-                    {tf(`types.${r.type.toLowerCase()}`)}
+                    {tf(courseTypeKey(r.type))}
                   </span>
                   <span
                     className="mt-1 block font-medium underline-offset-4 group-hover:underline"

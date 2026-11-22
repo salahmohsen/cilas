@@ -46,6 +46,7 @@ import { ShareBar } from '@/components/share-bar'
 import { SideCard, SideCardSection } from '@/components/side-card'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { env } from '@/env'
+import { courseTypeKey } from '@/fields/course-type'
 import { Link } from '@/i18n/navigation'
 import { splitBody } from '@/lib/article-body'
 import { toArticleCard } from '@/lib/article-cards'
@@ -134,7 +135,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       collection: (title) => t('collectionStack', { title }),
       articles: t('stackArticles'),
       courses: t('stackCourses'),
-      courseType: (type) => tf(`types.${type.toLowerCase()}`),
+      courseType: (type) => tf(courseTypeKey(type)),
     },
   })
   const footnotes = footnotesOf(text)
