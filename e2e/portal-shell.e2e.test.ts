@@ -817,9 +817,15 @@ test.describe('portal shell', () => {
       await inShort(browser, 'fellow', async (page) => {
         await page.emulateMedia({ reducedMotion: 'reduce' })
         await page.goto('/en/spaces')
-        expect(await track(page).evaluate((el) => getComputedStyle(el).transitionDuration)).toBe(
-          '0s',
-        )
+        expect(
+          await track(page).evaluate((el) => {
+            const style = getComputedStyle(el)
+            return (
+              style.transitionProperty === 'none' ||
+              style.transitionDuration.split(',').every((d) => parseFloat(d) === 0)
+            )
+          }),
+        ).toBe(true)
         expect(await region(page, 'en').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
           'auto',
         )
