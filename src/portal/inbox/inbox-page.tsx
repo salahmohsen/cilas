@@ -1,4 +1,5 @@
 import config from '@payload-config'
+import { headers } from 'next/headers'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
@@ -6,6 +7,7 @@ import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
 import type { User } from '@/payload-types'
 import { PortalPageHeader } from '@/portal/lists/page-header'
+import { portalSpaces } from '@/portal/nav/portal-spaces'
 import { latestRows } from '@/portal/needs/latest'
 import { LatestList } from '@/portal/needs/latest-list'
 import { NeedList } from '@/portal/needs/need-list'
@@ -14,6 +16,8 @@ import styles from '@/portal/needs/needs.module.css'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 
 async function NeedsSection({ user, locale }: { user: User; locale: Locale }) {
+  // A client navigation can reuse its layout. Only a document request needs the shell read here.
+  if ((await headers()).get('rsc') !== '1') await portalSpaces(user, locale)
   const result = await needs(user, locale)
   return <NeedList result={result} group={false} />
 }

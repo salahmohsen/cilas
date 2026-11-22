@@ -113,6 +113,7 @@ test.describe('portal home: Inbox', () => {
               await page.goto(inboxPath(locale))
               const portal = portalOf(locale)
               await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.inbox.title)
+              await expect(needsSection(page).locator('h2')).toBeVisible()
               const headings = await page
                 .locator('main h2')
                 .evaluateAll((hs) => hs.map((h) => h.firstChild?.textContent))
