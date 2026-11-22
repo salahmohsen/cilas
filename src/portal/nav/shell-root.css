@@ -7,7 +7,9 @@
 /* The phone bottom bar: toasts sit above it, and a focused row scrolls clear of the bar and the toasts. */
 @media (width < 700px) {
   :root:has([data-portal-shell]) {
-    --portal-bar-height: 4rem;
+    /* The whole bar above the safe area: 4rem of items and the 1px top border. */
+    --portal-bar-border: 1px;
+    --portal-bar-height: calc(4rem + var(--portal-bar-border));
     --toast-stack-offset: calc(var(--portal-bar-height) + env(safe-area-inset-bottom));
     scroll-padding-block-end: calc(
       var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +

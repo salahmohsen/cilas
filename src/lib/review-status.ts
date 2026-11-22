@@ -99,6 +99,9 @@ const NOT_LIVE_KEYS: Partial<Record<ReviewState, StatusKey>> = {
   rejected: 'rejected',
 }
 
+/** What `statusOf` throws for a keys-only row whose key needs a field compare. */
+export const KEYS_READ_ERROR = 'statusOf compares fields only on full rows'
+
 export const statusOf = (
   { collection, doc, draft, read }: StatusInput,
   warn: (message: string) => void = console.warn,
@@ -114,7 +117,7 @@ export const statusOf = (
   if (!draft) return 'published'
   const request = draft.review?.request
   const unsent = () => {
-    if (read === 'keys') throw new Error('statusOf compares fields only on full rows')
+    if (read === 'keys') throw new Error(KEYS_READ_ERROR)
     return hasUnsentEdits(draft, doc, REVIEWED_FIELDS[collection])
   }
   switch (draft.review?.status) {

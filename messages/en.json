@@ -1752,6 +1752,13 @@
       "theme": "Theme",
       "signOut": "Sign out",
       "signingOut": "Signing out",
+      "signIn": "Sign-in",
+      "signInIntro": "Your email is your sign-in name. To change it, write to us.",
+      "email": "Email",
+      "changePassword": "Change password",
+      "sending": "Sending…",
+      "resetSent": "We sent a link to {email}. The link works once and expires in one hour.",
+      "resetFailed": "The email could not be sent. Try again.",
       "themes": {
         "light": "Light",
         "dark": "Dark",

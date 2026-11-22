@@ -2,7 +2,7 @@ import { Bot, ClipboardCheck, Images, Inbox, Mail, Plus, type LucideIcon } from 
 import Link from 'next/link'
 import type { TypedUser } from 'payload'
 
-import { getReviewQueue } from '@/lib/review-queue'
+import { countReviewQueue } from '@/lib/review-queue'
 import { accountContactCount } from '@/lib/resend-contacts'
 import { env } from '@/env'
 import { workViewsFor, type WorkViewKey } from '@/components/admin/work-views'
@@ -32,8 +32,7 @@ const TILE: Record<WorkViewKey, { caption: string; Icon: LucideIcon; attention: 
 }
 
 /** What waits in the review queue: shared by every admin, so it is cached. */
-const waiting = () =>
-  cachedStat('review-count', async (payload) => (await getReviewQueue(payload)).length)
+const waiting = () => cachedStat('review-count', countReviewQueue)
 
 /** Contacts in the Resend account; null when Resend is not set up or does not answer. */
 const subscribers = () =>

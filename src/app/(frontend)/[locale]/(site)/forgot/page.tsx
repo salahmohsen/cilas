@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 
 import { ForgotForm, type ForgotMessages } from '@/components/login/forgot-form'
+import { ACCOUNT_PATH } from '@/lib/account-path'
 import { currentReader } from '@/lib/reader'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -18,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function ForgotPage({ params }: Props) {
   const { locale } = await params
-  if (await currentReader()) redirect(`/${locale}/settings`)
+  if (await currentReader()) redirect(`/${locale}${ACCOUNT_PATH}`)
 
   const t = await getTranslations('Forgot')
   const keys = [

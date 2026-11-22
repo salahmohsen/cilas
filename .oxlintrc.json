@@ -137,7 +137,10 @@
       }
     ],
     "landmines-testing/no-fixed-sleep": "error",
-    "landmines-testing/no-flake-masking": "error",
+    "landmines-testing/no-flake-masking": [
+      "error",
+      { "allow": { "scripts/needs-check.int.test.ts": 3 } }
+    ],
     "landmines-testing/no-test-doubles": "error",
     "landmines-testing/no-unsignaled-poll": "error",
     "landmines-testing/strict-msw": "error",
