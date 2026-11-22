@@ -748,9 +748,14 @@ test.describe('portal shell', () => {
           const count = await rows.count()
           for (let i = 1; i < count; i++) await page.keyboard.press('Tab')
           await expect(rows.last()).toBeFocused()
-          const view = (await region(page, locale).boundingBox())!
-          const last = (await rows.last().boundingBox())!
-          expect(inside(last, view)).toBe(true)
+          await expect
+            .poll(async () =>
+              inside(
+                (await rows.last().boundingBox())!,
+                (await region(page, locale).boundingBox())!,
+              ),
+            )
+            .toBe(true)
           expect(await rows.last().evaluate((el) => getComputedStyle(el).outlineOffset)).toBe(
             '-2px',
           )
@@ -758,12 +763,22 @@ test.describe('portal shell', () => {
             parseFloat(getComputedStyle(el).paddingBlockEnd),
           )
           expect(room).toBeGreaterThan(0)
-          expect(view.y + view.height - (last.y + last.height)).toBeGreaterThanOrEqual(room - 1)
+          const gap = (edge: 'start' | 'end') =>
+            page.evaluate(
+              ([name, side]) => {
+                const viewport = [...document.querySelectorAll('[role="region"]')].find(
+                  (el) => el.getAttribute('aria-label') === name,
+                )!
+                const row = document.activeElement!.getBoundingClientRect()
+                const box = viewport.getBoundingClientRect()
+                return side === 'end' ? box.bottom - row.bottom : row.top - box.top
+              },
+              [MESSAGES[locale].Portal.nav.scroll, edge] as const,
+            )
+          await expect.poll(() => gap('end')).toBeGreaterThanOrEqual(room - 1)
           for (let i = 1; i < count; i++) await page.keyboard.press('Shift+Tab')
           await expect(rows.first()).toBeFocused()
-          const first = (await rows.first().boundingBox())!
-          const top = (await region(page, locale).boundingBox())!
-          expect(first.y - top.y).toBeGreaterThanOrEqual(room - 1)
+          await expect.poll(() => gap('start')).toBeGreaterThanOrEqual(room - 1)
         })
       })
 
