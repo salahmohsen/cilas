@@ -683,6 +683,7 @@ test.describe('portal shell', () => {
       test(`the spaces scroll inside the rail (${locale})`, async ({ browser }) => {
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
+          await expect(accountButton(page, locale)).toBeVisible()
           for (const folded of [false, true]) {
             if (folded) {
               await foldIn(page, locale).click()

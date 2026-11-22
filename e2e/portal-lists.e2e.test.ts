@@ -355,6 +355,17 @@ test.describe('portal lists', () => {
             if (await more.evaluate((el) => el === document.activeElement)) break
           }
           await expect(more).toBeFocused()
+          let rscInFlight = 0
+          const isRsc = (request: { headers: () => Record<string, string> }) =>
+            request.headers().rsc === '1'
+          page.on('request', (request) => {
+            if (isRsc(request)) rscInFlight++
+          })
+          const settle = (request: { headers: () => Record<string, string> }) => {
+            if (isRsc(request)) rscInFlight--
+          }
+          page.on('requestfinished', settle)
+          page.on('requestfailed', settle)
           await page.keyboard.press('Enter')
           await page.waitForURL((url) => url.searchParams.get('published') === '2')
           const rows = sectionOf(page, 'published').locator('li')
@@ -365,7 +376,7 @@ test.describe('portal lists', () => {
           await expect(page.locator('[data-portal-live]')).toHaveText(
             translator('en')('lists.moreRows', { count }),
           )
-          await page.waitForLoadState('networkidle')
+          await expect.poll(() => rscInFlight).toBe(0)
           await expect(rows.nth(50).locator('a')).toBeFocused()
           expect(new URL(page.url()).searchParams.has('focus')).toBe(false)
         })
