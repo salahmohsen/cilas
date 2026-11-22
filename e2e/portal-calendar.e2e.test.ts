@@ -80,7 +80,7 @@ const noSideScroll = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
 
 test.describe('portal calendar', () => {
-  test.describe.configure({ timeout: 300_000 })
+  test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
     test.setTimeout(300_000)
@@ -187,6 +187,7 @@ test.describe('portal calendar', () => {
         await expect(
           details.getByRole('link', { name: MESSAGES.en.Calendar.viewCourse }),
         ).toHaveCount(0)
+        await expect(details).not.toContainText('course:')
         const legend = await openLegend(page, 'en')
         await expect(toggleOf(legend, MESSAGES.en.Portal.calendar.yourCourses)).toBeVisible()
         await expect(toggleOf(legend, MESSAGES.en.Portal.calendar.otherCourses)).toHaveAttribute(
@@ -396,6 +397,18 @@ test.describe('portal calendar', () => {
             await context.close()
           }
         }
+    })
+
+    test('at 390 the preset shows and the calendar has no side panel, so no legend', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
+        await page.goto(portalAt('en', THREE_DAYS))
+        await expect(block(page, world.communityCourse.title)).toBeVisible()
+        await expect(block(page, world.event.title)).toBeVisible()
+        await hidden(page, [world.other.title])
+        await expect(panelButton(page, 'en')).toBeHidden()
+      })
     })
 
     test('axe finds no violation at 390', async ({ browser }) => {

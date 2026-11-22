@@ -15,6 +15,8 @@ declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
+const TONES = ['neutral', 'pink', 'blue']
+
 const KIND_NAMES: Record<string, string> = {
   'course:mine': 'Your courses',
   'course:other': 'Other courses',
@@ -68,9 +70,10 @@ type HostProps = {
   defaultHiddenKinds?: readonly string[]
   view?: CalendarView
   locale?: 'en' | 'ar'
+  details?: boolean
 }
 
-function Host({ items, defaultHiddenKinds, view = 'week', locale = 'en' }: HostProps) {
+function Host({ items, defaultHiddenKinds, view = 'week', locale = 'en', details }: HostProps) {
   const labels = useCalendarLabels({ kind: (kind) => KIND_NAMES[kind] ?? kind, newItem: 'New' })
   return (
     <Calendar
@@ -82,6 +85,7 @@ function Host({ items, defaultHiddenKinds, view = 'week', locale = 'en' }: HostP
       view={view}
       defaultHiddenKinds={defaultHiddenKinds}
       onOpen={vi.fn()}
+      actionsOf={details ? () => [{ id: 'open', label: 'Open', href: '/page' }] : undefined}
     />
   )
 }
@@ -113,14 +117,15 @@ beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
 })
 beforeEach(() => {
-  document.documentElement.style.setProperty('--calendar-neutral-line', 'rgb(90, 90, 90)')
+  for (const tone of TONES)
+    document.documentElement.style.setProperty(`--calendar-${tone}-line`, 'rgb(90, 90, 90)')
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => {
   cleanup()
   vi.useRealTimers()
   document.documentElement.removeAttribute('dir')
-  document.documentElement.style.removeProperty('--calendar-neutral-line')
+  for (const tone of TONES) document.documentElement.style.removeProperty(`--calendar-${tone}-line`)
 })
 
 describe('the legend preset', () => {
@@ -248,6 +253,31 @@ describe('the edge bar', () => {
     const style = getComputedStyle(bar)
     expect(style.borderTopWidth).toBe('1px')
     expect(style.borderTopStyle).not.toBe('none')
+  })
+
+  it('draws a 3px bar on the start edge of every element that carries it', () => {
+    const bar = (element: Element | null) => {
+      const style = getComputedStyle(element!)
+      return [style.borderInlineStartWidth, style.borderInlineStartStyle]
+    }
+    const view = show({ items: [mine, other, talk], details: true })
+    openPanel()
+    expect(bar(block('Mine'))).toEqual(['3px', 'solid'])
+    expect(bar(block('Other'))).toEqual(['3px', 'double'])
+    expect(bar(toggle('Your courses').querySelector('[data-edge]'))).toEqual(['3px', 'solid'])
+    expect(bar(toggle('Other courses').querySelector('[data-edge]'))).toEqual(['3px', 'double'])
+    expect(bar(document.querySelector('[data-row-id][data-edge]'))).toEqual(['3px', 'solid'])
+    fireEvent.click(block('Other')!)
+    expect(bar(document.querySelector('[class*="detailsMark"]'))).toEqual(['3px', 'double'])
+    view.rerender({ items: [mine, other, talk], view: 'month', details: true })
+    expect(bar(block('Mine'))).toEqual(['3px', 'solid'])
+    expect(bar(block('Other'))).toEqual(['3px', 'double'])
+  })
+
+  it('draws no bar on an event', () => {
+    show({ items: [talk] })
+    expect(getComputedStyle(block('Talk')!).borderInlineStartStyle).not.toBe('double')
+    expect(getComputedStyle(block('Talk')!).borderInlineStartWidth).toBe('1px')
   })
 
   it('names a block by its kind after its time', () => {
