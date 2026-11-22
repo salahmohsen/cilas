@@ -58,10 +58,11 @@ export function BottomBar({ items, spaces }: { items: PortalNavItem[]; spaces: S
                     aria-current={isCurrentItem(pathname, locale, item) ? 'page' : undefined}
                   >
                     <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
-                    <span>
+                    <span className="sr-only">
                       {t(item.labelKey)}
                       <NavCountSpoken itemKey={item.key} />
                     </span>
+                    <span aria-hidden="true">{t(item.labelKey)}</span>
                     <NavCountChip itemKey={item.key} />
                   </Link>
                 </li>

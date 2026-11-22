@@ -36,8 +36,11 @@ export function NavItemRow({
         <Icon size={18} strokeWidth={1.75} />
       </span>
       <span className={styles.label}>
-        {t(item.labelKey)}
-        <NavCountSpoken itemKey={item.key} />
+        <span className="sr-only">
+          {t(item.labelKey)}
+          <NavCountSpoken itemKey={item.key} />
+        </span>
+        <span aria-hidden="true">{t(item.labelKey)}</span>
       </span>
       <NavCountChip itemKey={item.key} />
     </>

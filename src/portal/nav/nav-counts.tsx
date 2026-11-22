@@ -55,8 +55,7 @@ const useCountWords = (key: PortalNavItem['key']) => {
 }
 
 function Spoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
-  const words = useCountWords(itemKey)
-  return words && <span className="sr-only">{words.spoken}</span>
+  return useCountWords(itemKey)?.spoken ?? null
 }
 
 function Chip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
@@ -71,8 +70,9 @@ function Chip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
 }
 
 /**
- * The item's count in words, for its link's name: "Inbox, 3 tasks". It goes
- * inside the label's element, so the name has no gap before the comma. Before the
+ * The item's count in words, as text: ", 3 tasks". It goes right after the label's text inside one
+ * visually hidden element that carries the link's name, so the name reads "Inbox, 3 tasks" with
+ * no gap before the comma (a separate hidden element gets a space from the browser). Before the
  * counts settle, and for no number or 0, it renders nothing: the name is "Inbox".
  */
 export function NavCountSpoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
