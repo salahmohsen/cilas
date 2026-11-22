@@ -1,6 +1,6 @@
 'use client'
 
-import { Languages } from 'lucide-react'
+import { Keyboard, Languages } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useMemo } from 'react'
@@ -11,14 +11,20 @@ import { useOtherLanguage } from '@/components/site-controls'
 import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
 import { useSignOut } from '@/lib/sign-out'
+import { announce } from '@/portal/feedback/announce'
 
+import { useFold } from './fold-state'
 import { NAV_ICONS } from './nav-icons'
 import { PROFILE } from './profile'
 
 const THEMES = new Set<string>(['light', 'dark', 'system'])
 const ProfileIcon = NAV_ICONS[PROFILE.icon]
 
-/** The portal's account menu: profile, theme, language and sign out. Nothing until the session loads. */
+/**
+ * The portal's account menu: profile, language, the sidebar shortcut (WCAG
+ * 2.1.4: a one-key shortcut the reader can turn off), theme and sign out.
+ * Nothing until the session loads.
+ */
 export function AccountMenu(): React.JSX.Element | null {
   const t = useTranslations('Portal')
   const language = useTranslations('Language')
@@ -27,6 +33,7 @@ export function AccountMenu(): React.JSX.Element | null {
   const { theme, setTheme } = useTheme()
   const session = useSession()
   const signOut = useSignOut()
+  const { shortcutOn, setShortcutOn } = useFold()
   const user = useMemo(() => (session ? menuUser(session) : null), [session])
   if (!user) return null
   return (
@@ -46,6 +53,15 @@ export function AccountMenu(): React.JSX.Element | null {
           lang: other,
           icon: <Languages size={16} />,
           onSelect: () => router.replace(href, { locale: other }),
+        },
+        {
+          label: t(shortcutOn ? 'account.shortcutOff' : 'account.shortcutOn'),
+          icon: <Keyboard size={16} />,
+          keys: ['['],
+          onSelect: () => {
+            setShortcutOn(!shortcutOn)
+            announce(t(shortcutOn ? 'fold.shortcutIsOff' : 'fold.shortcutIsOn'))
+          },
         },
       ]}
       onSignOut={signOut}

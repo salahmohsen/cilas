@@ -10,7 +10,7 @@ import { isRelation as isObj, relation as obj, relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { SiteTier } from '@/access'
-import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import { COURSE_TYPE_OPTIONS, courseTypeKey, type CourseType } from '@/fields/course-type'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
 import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
@@ -130,7 +130,7 @@ export const getStudyCourses = async (
   const placeKey = new Map(places.map((s) => [s.id, slugify(s.city ?? s.name)]))
   const otherTexts = new Map(otherDocs.map((d) => [d.id, courseTexts(d)]))
 
-  const typeLabel = (value: string) => t(`types.${value.toLowerCase()}`)
+  const typeLabel = (value: CourseType) => t(courseTypeKey(value))
 
   return docs
     .map((c): StudyCourse => {

@@ -1741,7 +1741,10 @@
       "unreadMany": "، أكثر من {cap} منشورات غير مقروءة",
       "sidebar": "الشريط الجانبي",
       "more": "المزيد",
-      "brand": "الصفحة الرئيسية لـ CILAS"
+      "brand": "الصفحة الرئيسية لـ CILAS",
+      "scroll": "الصفحات والمساحات",
+      "articles": "المقالات",
+      "courses": "المقررات"
     },
     "shell": {
       "skip": "الانتقال إلى المحتوى"
@@ -1763,7 +1766,9 @@
         "light": "فاتح",
         "dark": "داكن",
         "system": "حسب النظام"
-      }
+      },
+      "shortcutOff": "إيقاف اختصار الشريط الجانبي",
+      "shortcutOn": "تشغيل اختصار الشريط الجانبي"
     },
     "sheet": {
       "close": "إغلاق",
@@ -1776,6 +1781,118 @@
     "empty": {
       "spacesTitle": "مساحاتك",
       "spacesNext": "تُفتح المساحة حين يبدأ مساق أو دفعة انضممت إليها."
+    },
+    "fold": {
+      "folded": "تم طي الشريط الجانبي",
+      "unfolded": "تم توسيع الشريط الجانبي",
+      "shortcutIsOn": "اختصار الشريط الجانبي مفعّل",
+      "shortcutIsOff": "اختصار الشريط الجانبي متوقف"
+    },
+    "status": {
+      "draft": "مسودة",
+      "submitted": "مُرسَل للمراجعة",
+      "changesRequested": "مطلوب تعديلات",
+      "declined": "مرفوض",
+      "published": "منشور",
+      "unsentEdits": "تعديلات غير مُرسَلة",
+      "editsInReview": "تعديلات قيد المراجعة",
+      "removalRequested": "طلب إزالة",
+      "editsDeclined": "تعديلات مرفوضة",
+      "keptOnSite": "باقٍ على الموقع"
+    },
+    "next": {
+      "owner": {
+        "draft": "متابعة الكتابة، ثم الإرسال للمراجعة.",
+        "submitted": "لدى مشرف للمراجعة.",
+        "changesRequested": "قراءة الملاحظة، ثم التعديل والإرسال من جديد.",
+        "rejected": "قراءة الملاحظة.",
+        "published": "أي تعديل لاحق ينتظر المراجعة.",
+        "publishedUnsent": "إرسال التعديلات للمراجعة.",
+        "publishedEdits": "لدى مشرف للمراجعة. النسخة المنشورة لا تتغير.",
+        "publishedRemoval": "لدى مشرف للمراجعة.",
+        "publishedEditsReturned": "قراءة الملاحظة، ثم التعديل والإرسال من جديد.",
+        "publishedEditsDeclined": "قراءة الملاحظة، ثم التعديل والإرسال من جديد.",
+        "publishedRemovalKept": "قراءة الملاحظة."
+      },
+      "admin": {
+        "submitted": "الموافقة والنشر، أو طلب تعديلات، أو الرفض.",
+        "changesRequested": "بانتظار المؤلف.",
+        "publishedEdits": "مراجعة التعديلات.",
+        "publishedRemoval": "الإزالة، أو الإبقاء مع ملاحظة.",
+        "publishedEditsReturned": "بانتظار المؤلف."
+      }
+    },
+    "lists": {
+      "myArticles": "مقالاتي",
+      "allArticles": "كل المقالات",
+      "myCourses": "مقرراتي",
+      "allCourses": "كل المقررات",
+      "metaTitle": "{name} — CILAS",
+      "newArticle": "مقال جديد",
+      "proposeCourse": "اقتراح مقرر",
+      "openDashboard": "فتح لوحة التحكم",
+      "writeArticle": "كتابة مقال",
+      "group": {
+        "needsYou": "بانتظارك",
+        "inProgress": "قيد العمل",
+        "withEditors": "لدى المحررين",
+        "published": "المنشورة",
+        "closed": "المغلقة",
+        "teachingNow": "تُدرَّس الآن",
+        "proposals": "المقترحات",
+        "waitingOnAuthor": "بانتظار المؤلف"
+      },
+      "groupCount": "{name}، {count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {{count, number, digits} عناصر} many {{count, number, digits} عنصرًا} other {{count, number, digits} عنصر}}",
+      "chips": {
+        "label": "تصفية",
+        "all": "الكل",
+        "needsYou": "بانتظارك",
+        "drafts": "المسودات",
+        "published": "المنشورة"
+      },
+      "search": "بحث",
+      "noResults": "لا نتائج لـ \"<bdi>{query}</bdi>\".",
+      "clearSearch": "مسح البحث",
+      "noneInFilter": "لا شيء هنا الآن.",
+      "showAll": "عرض الكل",
+      "showMore": "عرض المزيد",
+      "showMoreIn": "عرض المزيد في {group}",
+      "pageCap": "تظهر أول {count, number, digits} صف فقط. البحث يجد البقية.",
+      "pageCapSearch": "تظهر أول {count, number, digits} صف فقط. يمكن تضييق البحث.",
+      "moreRows": "{count, plural, zero {لا صفوف إضافية.} one {صف واحد إضافي.} two {صفّان إضافيان.} few {{count, number, digits} صفوف إضافية.} many {{count, number, digits} صفًا إضافيًا.} other {{count, number, digits} صف إضافي.}}",
+      "loadError": "تعذّر تحميل القائمة.",
+      "retry": "إعادة المحاولة",
+      "untitledArticle": "مقال بلا عنوان",
+      "untitledCourse": "مقرر بلا عنوان",
+      "meta": {
+        "updated": "حُدِّث {when}",
+        "waiting": "ينتظر منذ {days, plural, one {يوم واحد} two {يومين} few {{days, number, digits} أيام} many {{days, number, digits} يومًا} other {{days, number, digits} يوم}}",
+        "waitingToday": "ينتظر منذ اليوم",
+        "held": "عُقدت {held, number, digits} من {total, number, digits}"
+      },
+      "tier": {
+        "public": "عام",
+        "community": "المجتمع"
+      },
+      "empty": {
+        "ownerArticles": {
+          "title": "لا مقالات لديك بعد",
+          "body": "يقرأ أحد المشرفين كل مقال قبل أن يصبح عامًا.",
+          "next": "تُحفظ المسودات. لا يُرسَل شيء قبل الإرسال للمراجعة."
+        },
+        "adminArticles": {
+          "title": "لم يكتب أحد مقالًا بعد",
+          "body": "تظهر المقالات هنا حين يكتبها زميل أو طالب."
+        },
+        "fellowCourses": {
+          "title": "لا مقرر لديك للتدريس بعد",
+          "body": "يراجع أحد المشرفين كل مقترح قبل أن يصبح عامًا."
+        },
+        "adminCourses": {
+          "title": "لا مقررات بعد",
+          "body": "تظهر المقررات هنا حين يقترحها زميل."
+        }
+      }
     }
   }
 }

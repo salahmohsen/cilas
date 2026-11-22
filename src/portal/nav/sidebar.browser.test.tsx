@@ -10,6 +10,8 @@ import { unreadCount } from '@/lib/unread-count'
 import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 import { renderWithBrowserNavigation } from '../../../testing/browser-navigation.test-utils'
+import { FoldButton } from './fold-button'
+import { FoldProvider } from './fold-state'
 import type { PortalNavItem } from './portal-nav'
 import { Sidebar } from './sidebar'
 import { spaceRow } from './space-link.test-utils'
@@ -48,12 +50,23 @@ const renderSidebar = ({
   folded = false,
   locale = 'en',
   spaces = [spaceRow({ label: 'Other course', unread: 12 })],
-}: { folded?: boolean; locale?: 'en' | 'ar'; spaces?: SpaceLink[] } = {}) =>
+  box,
+}: {
+  folded?: boolean
+  locale?: 'en' | 'ar'
+  spaces?: SpaceLink[]
+  box?: { width: number; height: number }
+} = {}) =>
   renderWithBrowserNavigation(
     <IntlProvider locale={locale}>
-      <div data-page="spaces">
-        <Sidebar items={[HOME]} spaces={spaces} folded={folded} accountId={7} />
-      </div>
+      <FoldProvider folded={folded} accountId={7}>
+        <div data-page="spaces">
+          <FoldButton />
+          <div style={box && { display: 'flex', inlineSize: box.width, blockSize: box.height }}>
+            <Sidebar items={[HOME]} spaces={spaces} />
+          </div>
+        </div>
+      </FoldProvider>
     </IntlProvider>,
   )
 
@@ -65,20 +78,6 @@ afterEach(() => {
 })
 
 describe('Sidebar', () => {
-  it('[ folds only while focus is inside the sidebar', async () => {
-    renderSidebar()
-    const fold = screen.getByRole('button', { name: 'Sidebar' })
-    expect(fold).toHaveAttribute('aria-expanded', 'true')
-    document.body.focus()
-    await userEvent.keyboard('[[')
-    expect(fold).toHaveAttribute('aria-expanded', 'true')
-    expect(document.cookie).not.toContain('portal-folded-7')
-    screen.getByRole('link', { name: 'Home' }).focus()
-    await userEvent.keyboard('[[')
-    expect(fold).toHaveAttribute('aria-expanded', 'false')
-    expect(document.cookie).toContain('portal-folded-7=1')
-  })
-
   it('folded and unfolded rows have the same accessible names', async () => {
     renderSidebar()
     const home = screen.getByRole('link', { name: 'Home' })
@@ -121,9 +120,10 @@ describe('Sidebar', () => {
               unread: i === 0 ? 120 : i % 3,
             }),
           )
-          renderSidebar({ folded, locale, spaces })
-          const nav = screen.getByRole('navigation')
-          expect(nav.scrollWidth).toBeLessThanOrEqual(nav.clientWidth)
+          renderSidebar({ folded, locale, spaces, box: { width, height: 600 } })
+          const list = screen.getByRole('region', { name: messagesOf[locale].Portal.nav.scroll })
+          expect(list.scrollHeight).toBeGreaterThan(list.clientHeight)
+          expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth)
           const { shown, spoken } = countOf(120, locale)
           const first = screen.getAllByRole('link')[1]!
           expect(first).toHaveTextContent(shown)
@@ -173,5 +173,54 @@ describe('Sidebar rows', () => {
     renderSidebar({ spaces: [spaceRow({ label: 'Broken cover', cover: '/missing-cover.png' })] })
     const row = screen.getByRole('link', { name: /^Broken cover/ })
     await waitFor(() => expect(row.querySelector('img')).toBeNull())
+  })
+})
+
+describe('Sidebar scroll region', () => {
+  it.each([0, 200])(
+    'a focused row keeps clear of the region edge, at the end and back at the start (toast stack %ipx)',
+    async (toast) => {
+      await page.viewport(1440, 800)
+      document.documentElement.style.setProperty('--toast-stack-height', `${toast}px`)
+      const spaces = Array.from({ length: 12 }, (_, i) => spaceRow({ label: `Space ${i + 1}` }))
+      renderSidebar({ spaces, box: { width: 256, height: 180 } })
+      const region = screen.getByRole('region', { name: 'Pages and spaces' })
+      const rows = [...region.querySelectorAll('a')]
+      const gap = (edge: 'start' | 'end') => {
+        const row = document.activeElement!.getBoundingClientRect()
+        const box = region.getBoundingClientRect()
+        return edge === 'end' ? box.bottom - row.bottom : row.top - box.top
+      }
+      rows[0]!.focus()
+      for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Tab}')
+      expect(document.activeElement).toBe(rows.at(-1))
+      await waitFor(() => expect(gap('end')).toBeGreaterThanOrEqual(7))
+      for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+      expect(document.activeElement).toBe(rows[0])
+      await waitFor(() => expect(gap('start')).toBeGreaterThanOrEqual(7))
+      document.documentElement.style.removeProperty('--toast-stack-height')
+    },
+  )
+
+  it('after keyboard scrolling, Shift+Tab back to the first row scrolls it into view', async () => {
+    await page.viewport(1440, 800)
+    window.history.replaceState(null, '', '/en/spaces')
+    const spaces = Array.from({ length: 10 }, (_, i) =>
+      spaceRow({ label: `Space ${i + 1}`, cover: '/missing-cover.png', unread: i % 3 }),
+    )
+    renderSidebar({ spaces, box: { width: 256, height: 236 } })
+    const region = screen.getByRole('region', { name: 'Pages and spaces' })
+    const rows = [...region.querySelectorAll('a')]
+    region.focus()
+    await userEvent.keyboard('{ArrowDown}{PageDown}{Tab}')
+    expect(document.activeElement).toBe(rows[0])
+    for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Tab}')
+    for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+    expect(document.activeElement).toBe(rows[0])
+    await waitFor(() =>
+      expect(
+        rows[0]!.getBoundingClientRect().top - region.getBoundingClientRect().top,
+      ).toBeGreaterThanOrEqual(7),
+    )
   })
 })

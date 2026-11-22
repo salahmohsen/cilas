@@ -1,6 +1,7 @@
 import { expect, test, type Browser, type Page } from '@playwright/test'
 import { createTranslator } from 'next-intl'
 import AxeBuilder from '@axe-core/playwright'
+import Color from 'colorjs.io'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../src/payload.config.js'
@@ -24,6 +25,7 @@ import {
   type StorageState,
 } from '../testing/portal.fixture'
 import {
+  AXE_TAGS,
   axeOver,
   known,
   navHref,
@@ -39,6 +41,7 @@ type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
 const OTHER = { en: 'ar', ar: 'en' } as const
 const DESKTOP = WIDTHS.desktop
+const BASE_BELL_PANEL_RULES = { 'label-content-name-mismatch': 12 } as const
 
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -173,7 +176,7 @@ test.describe('portal shell', () => {
                 await page.keyboard.press('Tab')
                 await expect(page.getByRole('link', { name: portal.shell.skip })).toBeFocused()
                 await page.keyboard.press('Enter')
-                await expect(page.locator('main#main')).toBeFocused()
+                await expect(page.locator('main > #main')).toBeFocused()
                 await expect(page.getByRole('main')).toHaveCount(1)
                 await expect(portalNavOf(page, locale)).toHaveCount(1)
                 await expect(page.locator('header.site-header')).toHaveCount(0)
@@ -314,6 +317,18 @@ test.describe('portal shell', () => {
             )
             expect(hrefs).toEqual(NAV_BY_ROLE[role].map((item) => navHref(item, locale)))
             for (const href of hrefs) expect((await page.request.get(href)).status()).toBe(200)
+            const labels = NAV_BY_ROLE[role].map(
+              (item) => portal.nav[item.key as keyof typeof portal.nav],
+            )
+            const fold = page.locator('[data-portal-crumbs] [data-portal-fold]')
+            await fold.click()
+            await expect(fold).toHaveAttribute('aria-expanded', 'false')
+            for (const label of labels)
+              await expect(
+                portalNavOf(page, locale).getByRole('link', { name: label, exact: true }),
+              ).toHaveCount(1)
+            await fold.click()
+            await expect(fold).toHaveAttribute('aria-expanded', 'true')
 
             const account = accountButton(page, locale)
             await expect(account).toHaveAttribute('aria-haspopup', 'menu')
@@ -345,6 +360,37 @@ test.describe('portal shell', () => {
           })
         })
       }
+  })
+
+  test.describe('list nav landing', () => {
+    const H1 = {
+      articles: { admin: 'allArticles', fellow: 'myArticles', student: 'myArticles' },
+      courses: { admin: 'allCourses', fellow: 'myCourses', student: null },
+    } as const
+    for (const role of ROLES)
+      for (const locale of LOCALES)
+        for (const viewport of Object.values(WIDTHS)) {
+          const portal = MESSAGES[locale].Portal
+          for (const item of NAV_BY_ROLE[role].filter(
+            (row) => row.key === 'articles' || row.key === 'courses',
+          )) {
+            const key = item.key as 'articles' | 'courses'
+            const h1 = H1[key][role]
+            test(`the ${key} item lands on its page (${role} ${locale} ${viewport.width})`, async ({
+              browser,
+            }) => {
+              await inContext(browser, { viewport, role }, async (page) => {
+                await page.goto(localePath('/en/spaces', locale))
+                const scope =
+                  viewport.width < 700 ? await openMore(page, locale) : portalNavOf(page, locale)
+                await scope.getByRole('link', { name: portal.nav[key], exact: true }).click()
+                await page.waitForURL(`**/${locale}${item.href}`)
+                expect(h1).not.toBeNull()
+                await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.lists[h1!])
+              })
+            })
+          }
+        }
   })
 
   test.describe('fold (1440)', () => {
@@ -413,6 +459,567 @@ test.describe('portal shell', () => {
         await context.close()
       }
     })
+  })
+
+  test.describe('fold trigger (1440)', () => {
+    const foldIn = (page: Page, locale: Locale) =>
+      page
+        .locator('[data-portal-crumbs]')
+        .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar, exact: true })
+    const foldCookie = async (page: Page) =>
+      (await page.context().cookies()).some(
+        (cookie) => cookie.name === `portal-folded-${world.accounts.fellow.id}`,
+      )
+    const live = (page: Page) => page.locator('[data-portal-live]')
+    const focusMain = (page: Page) => page.locator('main > #main').focus()
+
+    for (const locale of LOCALES) {
+      const portal = MESSAGES[locale].Portal
+
+      test(`the trigger is at the inline start of the header row (${locale})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const button = foldIn(page, locale)
+          await expect(button).toHaveCount(1)
+          await expect(page.locator('[data-portal-rail] [data-portal-fold]')).toHaveCount(0)
+          expect(
+            await page
+              .locator('main')
+              .evaluate((main) => main.firstElementChild?.hasAttribute('data-portal-crumbs')),
+          ).toBe(true)
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          await expect(button).toHaveAttribute('aria-keyshortcuts', '[')
+          const target = await button.getAttribute('aria-controls')
+          expect(
+            await page.evaluate(
+              (id) => document.querySelector('[data-portal-rail] nav')?.id === id,
+              target,
+            ),
+          ).toBe(true)
+          const row = (await page.locator('[data-portal-crumbs]').boundingBox())!
+          const box = (await button.boundingBox())!
+          if (locale === 'en') expect(Math.abs(box.x - row.x)).toBeLessThanOrEqual(1)
+          else expect(Math.abs(box.x + box.width - (row.x + row.width))).toBeLessThanOrEqual(1)
+          const offset = async () =>
+            page.evaluate((rtl) => {
+              const main = document.querySelector('main')!.getBoundingClientRect()
+              const fold = document
+                .querySelector('[data-portal-crumbs] [data-portal-fold]')!
+                .getBoundingClientRect()
+              return rtl ? main.right - fold.right : fold.left - main.left
+            }, locale === 'ar')
+          const open = await offset()
+          await button.click()
+          await expect(button).toHaveAttribute('aria-expanded', 'false')
+          expect(Math.abs((await offset()) - open)).toBeLessThanOrEqual(1)
+          await page.setViewportSize(PHONE)
+          await expect(page.locator('[data-portal-crumbs]')).toBeHidden()
+          await expect(button).toBeHidden()
+        })
+      })
+
+      test(`[ folds from the main and not from an input (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const button = foldIn(page, locale)
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'false')
+          expect(await foldCookie(page)).toBe(true)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          expect(await foldCookie(page)).toBe(false)
+          await page.locator('main > #main').evaluate((main) => {
+            main.insertAdjacentHTML(
+              'afterbegin',
+              '<input aria-label="probe" data-probe><div contenteditable="true" data-probe>x</div>',
+            )
+          })
+          for (const probe of await page.locator('[data-probe]').all()) {
+            await probe.focus()
+            await page.keyboard.press('BracketLeft')
+            await expect(button).toHaveAttribute('aria-expanded', 'true')
+          }
+          await accountButton(page, locale).click()
+          await expect(page.getByRole('menu')).toBeVisible()
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          await page.keyboard.press('Escape')
+          await expect(page.getByRole('menu')).toHaveCount(0)
+          await page.evaluate(() => {
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<dialog open data-probe-dialog><button>x</button></dialog>',
+            )
+          })
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          await page.evaluate(() => document.querySelector('[data-probe-dialog]')?.remove())
+          await portalNavOf(page, locale)
+            .getByRole('link', { name: portal.nav.home, exact: true })
+            .focus()
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'false')
+        })
+      })
+
+      test(`the key announces, the click does not (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(live(page)).toHaveText(portal.fold.folded)
+          await page.keyboard.press('BracketLeft')
+          await expect(live(page)).toHaveText(portal.fold.unfolded)
+        })
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const button = foldIn(page, locale)
+          await button.click()
+          await expect(button).toHaveAttribute('aria-expanded', 'false')
+          await expect(live(page)).toHaveText('')
+          await button.click()
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+        })
+      })
+
+      test(`the key does nothing at 390 (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: PHONE, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          expect(await foldCookie(page)).toBe(false)
+          await expect(live(page)).toHaveText('')
+        })
+      })
+
+      test(`the skip link lands below the crumbs row (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+          await page.keyboard.press('Tab')
+          await expect(page.getByRole('link', { name: portal.shell.skip })).toBeFocused()
+          await page.keyboard.press('Enter')
+          await expect(page.locator('main > #main')).toBeFocused()
+          expect(
+            await page
+              .locator('main > #main')
+              .evaluate((el) => el.previousElementSibling?.hasAttribute('data-portal-crumbs')),
+          ).toBe(true)
+          await page.keyboard.press('Tab')
+          expect(
+            await page.evaluate(() => document.activeElement?.hasAttribute('data-portal-fold')),
+          ).toBe(false)
+        })
+      })
+
+      test(`the shortcut turns off (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const button = foldIn(page, locale)
+          const item = (name: string) => page.getByRole('menuitem', { name, exact: true })
+          await accountButton(page, locale).click()
+          await item(portal.account.shortcutOff).click()
+          await expect(live(page)).toHaveText(portal.fold.shortcutIsOff)
+          await expect(page.getByRole('menu')).toHaveCount(0)
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          await accountButton(page, locale).click()
+          await expect(item(portal.account.shortcutOn)).toBeVisible()
+          await page.keyboard.press('Escape')
+          await expect(page.getByRole('menu')).toHaveCount(0)
+          await page.reload()
+          await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'true')
+          await accountButton(page, locale).click()
+          await item(portal.account.shortcutOn).click()
+          await expect(live(page)).toHaveText(portal.fold.shortcutIsOn)
+          await expect(page.getByRole('menu')).toHaveCount(0)
+          await focusMain(page)
+          await page.keyboard.press('BracketLeft')
+          await expect(button).toHaveAttribute('aria-expanded', 'false')
+        })
+      })
+    }
+  })
+
+  test.describe('rail scroll', () => {
+    const SHORT = { ...DESKTOP, height: 320 }
+    const inShort = (browser: Browser, role: PortalRole, run: (page: Page) => Promise<void>) =>
+      inContextAt(browser, { baseURL, viewport: SHORT, state: states[role] }, run)
+    const region = (page: Page, locale: Locale) =>
+      page.getByRole('region', { name: MESSAGES[locale].Portal.nav.scroll, exact: true })
+    const track = (page: Page) => page.locator('[data-portal-rail] [data-axis="y"]')
+    const metrics = (page: Page, locale: Locale) =>
+      region(page, locale).evaluate((el) => ({
+        scrollTop: el.scrollTop,
+        scrollHeight: el.scrollHeight,
+        clientHeight: el.clientHeight,
+      }))
+    const boxOf = async (locator: ReturnType<Page['locator']>) => {
+      const box = await locator.boundingBox()
+      return box && { x: Math.round(box.x), y: Math.round(box.y), w: Math.round(box.width) }
+    }
+    const inside = (
+      inner: { x: number; y: number; width: number; height: number },
+      outer: { x: number; y: number; width: number; height: number },
+    ) =>
+      inner.x >= outer.x - 1 &&
+      inner.y >= outer.y - 1 &&
+      inner.x + inner.width <= outer.x + outer.width + 1 &&
+      inner.y + inner.height <= outer.y + outer.height + 1
+    const foldIn = (page: Page, locale: Locale) =>
+      page
+        .locator('[data-portal-crumbs]')
+        .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar, exact: true })
+    const bell = (page: Page, locale: Locale) =>
+      page.getByRole('button', {
+        name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
+      })
+
+    for (const locale of LOCALES) {
+      test(`the spaces scroll inside the rail (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await expect(accountButton(page, locale)).toBeVisible()
+          for (const folded of [false, true]) {
+            if (folded) {
+              await foldIn(page, locale).click()
+              await expect(foldIn(page, locale)).toHaveAttribute('aria-expanded', 'false')
+              await expect
+                .poll(() =>
+                  page
+                    .locator('[data-portal-rail]')
+                    .evaluate((rail) => rail.getAnimations({ subtree: true }).length),
+                )
+                .toBe(0)
+              await region(page, locale).evaluate((el) => el.scrollTo({ top: 0 }))
+            }
+            const before = await metrics(page, locale)
+            expect(before.scrollHeight).toBeGreaterThan(before.clientHeight)
+            expect(
+              await page
+                .locator('[data-portal-rail]')
+                .evaluate((rail) => rail.scrollHeight === rail.clientHeight),
+            ).toBe(true)
+            const fixed = [
+              page.locator('[data-portal-rail] header a').first(),
+              bell(page, locale),
+              accountButton(page, locale),
+            ]
+            const boxes = await Promise.all(fixed.map(boxOf))
+            const scrollY = await page.evaluate(() => window.scrollY)
+            await region(page, locale).hover()
+            await page.mouse.wheel(0, 2000)
+            await expect
+              .poll(async () => (await metrics(page, locale)).scrollTop)
+              .toBeGreaterThan(0)
+            expect(await Promise.all(fixed.map(boxOf))).toEqual(boxes)
+            expect(await page.evaluate(() => window.scrollY)).toBe(scrollY)
+            await expect
+              .poll(async () => {
+                const rows = region(page, locale).getByRole('link')
+                const last = (await rows.last().boundingBox())!
+                return inside(last, (await region(page, locale).boundingBox())!)
+              })
+              .toBe(true)
+          }
+        })
+      })
+
+      test(`keyboard (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await accountButton(page, locale).focus()
+          await page.keyboard.press('Tab')
+          await expect(region(page, locale)).toBeFocused()
+          const scrolledPast = async (from: number) => {
+            let last = -1
+            await expect
+              .poll(async () => {
+                const now = (await metrics(page, locale)).scrollTop
+                const settled = now === last && now > from
+                last = now
+                return settled
+              })
+              .toBe(true)
+            return last
+          }
+          await page.keyboard.press('ArrowDown')
+          const afterArrow = await scrolledPast(0)
+          await page.keyboard.press('PageDown')
+          await scrolledPast(afterArrow)
+          await page.keyboard.press('Tab')
+          const rows = region(page, locale).getByRole('link')
+          await expect(rows.first()).toBeFocused()
+          const count = await rows.count()
+          for (let i = 1; i < count; i++) await page.keyboard.press('Tab')
+          await expect(rows.last()).toBeFocused()
+          await expect
+            .poll(async () =>
+              inside(
+                (await rows.last().boundingBox())!,
+                (await region(page, locale).boundingBox())!,
+              ),
+            )
+            .toBe(true)
+          expect(await rows.last().evaluate((el) => getComputedStyle(el).outlineOffset)).toBe(
+            '-2px',
+          )
+          const room = await region(page, locale).evaluate((el) =>
+            parseFloat(getComputedStyle(el).paddingBlockEnd),
+          )
+          expect(room).toBeGreaterThan(0)
+          const measure = () =>
+            page.evaluate((name) => {
+              const viewport = [...document.querySelectorAll('[role="region"]')].find(
+                (el) => el.getAttribute('aria-label') === name,
+              )!
+              const active = document.activeElement!
+              const row = active.getBoundingClientRect()
+              const box = viewport.getBoundingClientRect()
+              const style = getComputedStyle(viewport)
+              return {
+                start: row.top - box.top,
+                end: box.bottom - row.bottom,
+                active: active.textContent,
+                inside: viewport.contains(active),
+                scrollTop: viewport.scrollTop,
+                clientHeight: viewport.clientHeight,
+                scrollHeight: viewport.scrollHeight,
+                padding: [style.scrollPaddingTop, style.scrollPaddingBottom],
+                toast: getComputedStyle(document.documentElement).getPropertyValue(
+                  '--toast-stack-height',
+                ),
+              }
+            }, MESSAGES[locale].Portal.nav.scroll)
+          const roomAt = async (edge: 'start' | 'end') => {
+            const state = await measure()
+            return state[edge] >= room - 1 ? 'ok' : JSON.stringify(state)
+          }
+          await expect.poll(() => roomAt('end')).toBe('ok')
+          for (let i = 1; i < count; i++) await page.keyboard.press('Shift+Tab')
+          await expect(rows.first()).toBeFocused()
+          await expect.poll(() => roomAt('start')).toBe('ok')
+        })
+      })
+
+      test(`scroll padding stays (${locale})`, async ({ browser }) => {
+        await inContextAt(
+          browser,
+          { baseURL, viewport: PHONE, state: states.fellow },
+          async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+            expect(
+              await page.evaluate(() =>
+                parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom),
+              ),
+            ).toBeGreaterThanOrEqual(64)
+            await expect(region(page, locale)).toBeHidden()
+          },
+        )
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const usedPadding = () =>
+            region(page, locale).evaluate((el) => {
+              const probe = document.createElement('div')
+              probe.style.cssText = `position:absolute;visibility:hidden;inline-size:1px;block-size:${getComputedStyle(el).scrollPaddingBottom}`
+              el.parentElement!.append(probe)
+              const height = probe.getBoundingClientRect().height
+              probe.remove()
+              return { used: height, scrollport: el.clientHeight }
+            })
+          for (const toast of [120, 4000]) {
+            await page.evaluate(
+              (px) => document.documentElement.style.setProperty('--toast-stack-height', `${px}px`),
+              toast,
+            )
+            const { used, scrollport } = await usedPadding()
+            expect(used).toBeCloseTo(Math.min(Math.max(8, toast), scrollport / 2), 0)
+          }
+        })
+      })
+
+      test(`the bar sits at the inline end (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          for (const folded of [false, true]) {
+            if (folded) await foldIn(page, locale).click()
+            await expect(track(page)).toBeVisible()
+            await expect
+              .poll(async () => {
+                const bar = (await track(page).boundingBox())!
+                const view = (await region(page, locale).boundingBox())!
+                const rail = (await page.locator('[data-portal-rail]').boundingBox())!
+                const right = bar.x + bar.width / 2 > view.x + view.width / 2
+                return { atEnd: locale === 'en' ? right : !right, inRail: inside(bar, rail) }
+              })
+              .toEqual({ atEnd: true, inRail: true })
+          }
+        })
+      })
+    }
+
+    test('reduced motion (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' })
+        await page.goto('/en/spaces')
+        expect(
+          await track(page).evaluate((el) => {
+            const style = getComputedStyle(el)
+            return (
+              style.transitionProperty === 'none' ||
+              style.transitionDuration.split(',').every((d) => parseFloat(d) === 0)
+            )
+          }),
+        ).toBe(true)
+        expect(await region(page, 'en').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
+          'auto',
+        )
+        const bar = (await track(page).boundingBox())!
+        const before = await metrics(page, 'en')
+        const target = Math.min(
+          before.scrollHeight - before.clientHeight,
+          before.scrollTop + before.clientHeight * 0.9,
+        )
+        expect(target).toBeGreaterThan(before.scrollTop)
+        await page.mouse.click(bar.x + bar.width / 2, bar.y + bar.height - 4)
+        await page.evaluate(() => new Promise((done) => requestAnimationFrame(done)))
+        const after = await metrics(page, 'en')
+        expect(Math.abs(after.scrollTop - target)).toBeLessThanOrEqual(1)
+      })
+    })
+
+    test('forced colours and more contrast (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.goto('/en/spaces')
+        const thumbColour = () =>
+          track(page)
+            .locator('> *')
+            .evaluate((thumb) => getComputedStyle(thumb, '::after').backgroundColor)
+        const shellColour = await page
+          .locator('[data-portal-shell]')
+          .evaluate((el) => getComputedStyle(el).backgroundColor)
+        const opaque = (colour: string) => new Color(colour).alpha === 1
+
+        await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
+        await region(page, 'en').hover()
+        await expect.poll(async () => opaque(await thumbColour())).toBe(true)
+        const forced = await thumbColour()
+        expect(forced).not.toBe(shellColour)
+        await track(page).locator('> *').hover()
+        await expect.poll(thumbColour).toBe(forced)
+
+        await page.emulateMedia({ forcedColors: 'none', contrast: 'more', reducedMotion: 'reduce' })
+        const foreground = await page.evaluate(() => {
+          const probe = document.createElement('span')
+          probe.style.color = 'var(--foreground)'
+          document.body.append(probe)
+          const colour = getComputedStyle(probe).color
+          probe.remove()
+          return colour
+        })
+        await region(page, 'en').hover()
+        await expect.poll(thumbColour).toBe(foreground)
+        await track(page).locator('> *').hover()
+        await expect.poll(thumbColour).toBe(foreground)
+      })
+    })
+
+    test('touch momentum, by structure (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.goto('/en/spaces')
+        expect(
+          await region(page, 'en').evaluate((el) => {
+            const style = getComputedStyle(el)
+            const content = el.firstElementChild
+            return {
+              overflowY: style.overflowY,
+              touchAction: style.touchAction,
+              transform: content ? getComputedStyle(content).transform : 'none',
+            }
+          }),
+        ).toEqual({ overflowY: 'auto', touchAction: 'auto', transform: 'none' })
+      })
+    })
+
+    for (const where of ['portal', 'site'] as const)
+      test(`the bell list scrolls inside its panel (${where}, en)`, async ({ browser }) => {
+        const student = world.accounts.student
+        const made: number[] = []
+        try {
+          for (let i = 0; i < 12; i++) {
+            const doc = await payload.create({
+              collection: 'notifications',
+              data: {
+                recipient: student.id,
+                kind: 'comment',
+                title: `E2E scroll ${i}`,
+                link: '/en',
+              },
+              overrideAccess: true,
+            })
+            made.push(doc.id)
+          }
+          await inShort(browser, 'student', async (page) => {
+            await gotoLive(page, where === 'portal' ? '/en/spaces' : '/en')
+            await bell(page, 'en').first().click()
+            const list = page.getByRole('region', {
+              name: MESSAGES.en.Notifications.allNotifications,
+              exact: true,
+            })
+            await expect(list).toBeVisible()
+            const header = page.getByRole('button', {
+              name: MESSAGES.en.Notifications.close,
+              exact: true,
+            })
+            let lastBox = ''
+            await expect
+              .poll(async () => {
+                const now = JSON.stringify(await boxOf(header))
+                const still = now === lastBox
+                lastBox = now
+                return still
+              })
+              .toBe(true)
+            const headerBox = JSON.parse(lastBox)
+            const size = await list.evaluate((el) => [el.scrollHeight, el.clientHeight])
+            expect(size[0]).toBeGreaterThan(size[1]!)
+            await list.hover()
+            await page.mouse.wheel(0, 1000)
+            await expect.poll(() => list.evaluate((el) => el.scrollTop)).toBeGreaterThan(0)
+            expect(await boxOf(header)).toEqual(headerBox)
+            if (where === 'site') {
+              const { violations } = await new AxeBuilder({ page })
+                .withTags(AXE_TAGS)
+                .include('[role="dialog"]')
+                .analyze()
+              const allowed: Record<string, number> = BASE_BELL_PANEL_RULES
+              expect(
+                Object.fromEntries(
+                  violations
+                    .filter((v) => v.nodes.length > (allowed[v.id] ?? 0))
+                    .map((v) => [v.id, v.nodes.map((node) => node.target.join(' '))]),
+                ),
+              ).toEqual({})
+            }
+          })
+        } finally {
+          await payload.delete({
+            collection: 'notifications',
+            where: { id: { in: made } },
+            overrideAccess: true,
+          })
+        }
+      })
   })
 
   test.describe('bottom bar and More sheet (390)', () => {
@@ -741,14 +1348,20 @@ test.describe('portal shell', () => {
             expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true)
             if (viewport === DESKTOP) await expect(accountButton(page, locale)).toBeVisible()
             const nav = portalNavOf(page, locale)
+            if (viewport === PHONE)
+              await expect(
+                nav.getByRole('button', { name: portal.nav.more, exact: true }),
+              ).toBeVisible()
             const targets =
               viewport === PHONE
                 ? nav.locator('a, button')
                 : page.locator(
-                    `[data-portal-rail] nav a, [data-portal-rail] button[aria-label="${portal.nav.sidebar}"]`,
+                    '[data-portal-rail] nav a, [data-portal-crumbs] button[data-portal-fold]',
                   )
+            await expect
+              .poll(async () => (await sizes(page, targets)).length)
+              .toBeGreaterThan(viewport === PHONE ? 1 : 2)
             const found = await sizes(page, targets)
-            expect(found.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
             expect(atLeast(found, 44)).toEqual([])
             const header = page.locator('[data-portal-rail] header').locator('a, button')
             await expect(header.first()).toBeVisible()
@@ -832,9 +1445,10 @@ test.describe('portal shell', () => {
           const sheet = await openMore(page, locale)
           await page.setViewportSize({ width: 1000, height: 800 })
           await expect(sheet).toHaveCount(0)
-          await expect(
-            page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar }),
-          ).toBeFocused()
+          const focused = page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
+          await expect(focused).toBeFocused()
+          await expect(page.locator('[data-portal-crumbs] [data-portal-fold]')).toBeFocused()
+          await expect(focused).toHaveAttribute('aria-keyshortcuts', '[')
         })
       })
 

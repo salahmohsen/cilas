@@ -25,6 +25,12 @@
   :root[data-theme='dark']:has([data-page='spaces']) {
     --portal-unread: oklch(70% 0.19 27);
   }
+
+  /* Row hairlines, the cover slot and the badge outlines read --border: they take the strong border. */
+  :root:has([data-page='spaces']),
+  :root[data-theme='dark']:has([data-page='spaces']) {
+    --border: var(--border-strong);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
