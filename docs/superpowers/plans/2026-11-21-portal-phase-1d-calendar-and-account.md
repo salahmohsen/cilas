@@ -385,7 +385,7 @@ Base `origin/main`. Rebase before open and before merge (Shared files).
 
 **Verification boxes (1d-1).**
 
-- [ ] **unit:** `account-path.unit.test.ts`, `sign-in-section.dom.test.tsx`, `analytics.unit.test.ts`; e2e `portal-account`, `portal-shell`.
+- [ ] **unit:** `account-path.unit.test.ts`, `sign-in-section.dom.test.tsx`, `analytics.unit.test.ts`; e2e `portal-account` (its "/settings#notifications opens Notifications" test is the only proof that a fragment survives the redirect, so it stays in this box), `portal-shell`.
 - [ ] **live:** Scenario: as the fixture student on the kept app, open the account menu from `/en/spaces`, choose **Profile and settings**, change the photo, then open `/en/profile` in a new tab and `/ar/settings#notifications` in another. Pass: the first lands on `/en/spaces/account` inside the portal shell (sidebar present), the avatar in the account menu shows the new photo with no reload, the second ends on `/en/spaces/account#profile` with the Profile group in view, the third on `/ar/spaces/account#notifications` with Notifications selected.
 - [ ] **perf:** Metric: TTFB p75 per role (student, fellow, admin of `portalWorld`), 5 warm-up and 30 samples, by Perf runs (Global Constraints) on `cilas_dev` with production builds. Baseline first, in the same session: `main`, `/en/settings`, signed in. Head: `/en/spaces/account`, signed in. Marker: `-tab-profile"`, and `data-page="spaces"` on the head. Pass, for every role: head p75 <= 1.25 x `main` `/en/settings` p75 + 50 ms. The box is part of READY.
 
@@ -589,7 +589,7 @@ Base `origin/main` after 1d-2 merges (see PRs).
 
 **Verification boxes (1d-3).**
 
-- [ ] **unit:** `portal-nav.unit.test.ts`, `public-items.unit.test.ts`, `calendar-legend-preset.browser.test.tsx`, `public-calendar.browser.test.tsx`; e2e `portal-calendar`, `portal-shell`, the existing `public-calendar-*` e2e.
+- [ ] **unit:** `portal-nav.unit.test.ts`, `public-items.unit.test.ts`, `calendar-model.unit.test.ts`, `calendar-styles.unit.test.ts`, `calendar-legend-preset.browser.test.tsx`, `public-calendar.browser.test.tsx`; e2e `portal-calendar`, `portal-shell`, the existing `public-calendar-*` e2e, and `portal-home` when T5 ran.
 - [ ] **live:** Scenario: on the kept app with `calendarWorld`, as the student, click Calendar in the sidebar, then open the legend and press "Other courses", then open the `community` block. Pass: the first view shows the `community` and `event` blocks and not `other`; after the press `other` shows; the popover shows the session title, number and time and a **View course** link; the URL path is `/en/spaces/calendar` with `view` and `date`. Repeat at 390 in Arabic: Calendar is in the bottom bar, and the first column on the right is Saturday.
 - [ ] **perf:** Metric: TTFB p75 per role (student, fellow, admin of `calendarWorld`), 5 warm-up and 30 samples, by Perf runs (Global Constraints) on `cilas_dev` with production builds, no query (today's month on real data). Baseline first, in the same session: `main`, `/en/calendar` (the public page), signed in as the same role (the public page reads the reader too, `src/api/public-calendar.api.ts:17`). Head: `/en/spaces/calendar`, signed in. Marker: `data-mode="view"`, and `data-page="spaces"` on the head. Pass, for every role: head p75 <= 1.25 x `main` `/en/calendar` p75 + 50 ms. The box is part of READY.
 
