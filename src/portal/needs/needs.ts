@@ -13,6 +13,7 @@ import type { StatusKey } from '@/lib/review-status'
 import { titleOf } from '@/lib/title-of'
 import type { User } from '@/payload-types'
 
+import { afterHeadStart } from './head-start'
 import { ownRows, ownSet } from './owner-rows'
 import {
   KIND_OF_KEY,
@@ -183,7 +184,7 @@ const once = <Value>(store: Map<string, Value>, key: string, make: () => Value) 
  * two objects for one account.
  */
 export const workIn = (store: Map<string, Promise<WorkSets>>, payload: Payload, user: User) =>
-  once(store, String(user.id), () => workSetsOf(payload, user))
+  once(store, String(user.id), () => afterHeadStart(() => workSetsOf(payload, user)))
 
 /** React `cache` gives one `Map` per request. */
 const requestStore = <Value>() => cache(() => new Map<string, Value>())
