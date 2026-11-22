@@ -12,6 +12,7 @@ import {
   STATUS_KEYS,
   waitsOn,
   type ReviewedDoc,
+  type StatusInput,
   type StatusKey,
 } from '@/lib/review-status'
 import type { ReviewedCollection } from '@/lib/reviewed-fields'
@@ -51,6 +52,7 @@ export type ReadCtx = {
 }
 
 export type Entry = { id: number; main: Doc; latest: Doc | null; key: StatusKey }
+type KeysEntry = Omit<Entry, 'key'> & { key: StatusKey | null }
 
 export type Selected = Record<string, true>
 type Gated = 'collection' | 'user' | 'overrideAccess'
@@ -108,22 +110,48 @@ const readLatest = async (ctx: ReadCtx, ids: number[], version: Selected) => {
   return newestPerParent(docs)
 }
 
+const KEYS_READ_ERROR = 'statusOf compares fields only on full rows'
+
+/**
+ * The key of a keys-only row. `statusOf` throws `KEYS_READ_ERROR` only for a live
+ * row whose copy needs a field compare, and each such key waits on nobody, so that
+ * row has no key. Any other error is a bug and goes on.
+ */
+export const keyOrNull = (input: StatusInput): StatusKey | null => {
+  try {
+    return statusOf(input)
+  } catch (error) {
+    if (error instanceof Error && error.message === KEYS_READ_ERROR) return null
+    throw error
+  }
+}
+
 type KeyedOptions = { select: { main: Selected; version: Selected } }
 
 /**
- * Reads the rows and their latest versions in two steps. Step one reads the
- * fields every row needs: `KEY_SELECT` plus the caller's. Step two reads the
- * reviewed fields, only for a live row with a draft copy, because only those
- * need a field compare. The main read keeps `base` in its `and`: it is the one
- * base check of every candidate, and an id with no main row inside `base` gets
- * no entry.
+ * Reads the rows and their latest versions. Step one reads `KEY_SELECT` plus the
+ * caller's fields. `read: 'full'` then reads the reviewed fields, only for a live
+ * row with a draft copy, because only those need a field compare. `read: 'keys'`
+ * stops after step one: a row whose key needs a compare gets `key: null`. The main
+ * read keeps `base` in its `and`: it is the one base check of every candidate, and
+ * an id with no main row inside `base` gets no entry.
  */
-export const keyedRows = async (
+export async function keyedRows(
   ctx: ReadCtx,
   ids: number[],
-  { select }: KeyedOptions & { read: 'full' },
-) => {
-  const entries = new Map<number, Entry>()
+  options: KeyedOptions & { read: 'full' },
+): Promise<Map<number, Entry>>
+export async function keyedRows(
+  ctx: ReadCtx,
+  ids: number[],
+  options: KeyedOptions & { read: 'keys' },
+): Promise<Map<number, KeysEntry>>
+export async function keyedRows(
+  ctx: ReadCtx,
+  ids: number[],
+  { select, read }: KeyedOptions & { read: 'keys' | 'full' },
+): Promise<Map<number, KeysEntry>> {
+  const entries = new Map<number, KeysEntry>()
   if (ids.length === 0) return entries
   const mains = await readMains(ctx, ids, { ...KEY_SELECT, ...select.main })
   const latests = await readLatest(ctx, ids, { ...KEY_SELECT, ...select.version })
@@ -131,6 +159,15 @@ export const keyedRows = async (
     const main = mains.get(id)
     return main ? [{ id, main, latest: latests.get(id) ?? null }] : []
   })
+  if (read === 'keys') {
+    for (const { id, main, latest } of keyed) {
+      const key = keyOrNull(
+        statusInputOf({ collection: ctx.collection, main, latest, read: 'keys' }),
+      )
+      entries.set(id, { id, main, latest, key })
+    }
+    return entries
+  }
   const compare = keyed
     .filter(
       ({ main, latest }) =>
@@ -187,4 +224,23 @@ export const candidateIds = async (ctx: ReadCtx, keys: readonly StatusKey[]) => 
     where: ctx.base,
   })
   return [...new Set([...mains.docs.map((doc) => doc.id), ...live])]
+}
+
+/**
+ * One set of work: the candidates of `keys` under `ctx.base`, read keys only,
+ * kept when their key waits on `side`. A candidate whose key does not wait, or
+ * has none, is out of the set, as a 1b list shows it in another group. The count
+ * of a source is the size of this map and its rows are made from it, so the two
+ * cannot differ.
+ */
+export const waitingSet = async (
+  ctx: ReadCtx,
+  { side, keys }: { side: 'owner' | 'admin'; keys: readonly StatusKey[] },
+) => {
+  const ids = await candidateIds(ctx, keys)
+  const rows = await keyedRows(ctx, ids, { select: { main: {}, version: {} }, read: 'keys' })
+  const set = new Map<number, StatusKey>()
+  for (const { id, key } of rows.values())
+    if (key !== null && waitsOn(key) === side) set.set(id, key)
+  return set
 }

@@ -1,5 +1,8 @@
-import { REVIEWED } from '@/lib/reviewed-collections'
 import { relId } from '@/lib/relation'
+import { ADMIN_LIST_KEYS, gate, keyedRows, waitingSet } from '@/lib/review-candidates'
+import { ADMIN_VISIBLE, type StatusKey } from '@/lib/review-status'
+import type { ReviewedCollection } from '@/lib/reviewed-fields'
+import { REVIEWED } from '@/lib/reviewed-collections'
 import type { Payload } from 'payload'
 
 export type QueueKind = (typeof REVIEWED)[number]['kind']
@@ -16,62 +19,127 @@ export type QueueItem = {
   href: string
 }
 
-const namesOf = (people: unknown) =>
-  ((people as Array<{ name?: string } | number> | null | undefined) ?? [])
-    .flatMap((p) => (typeof p === 'object' && p?.name ? [p.name] : []))
-    .join(', ')
+/** What waits on an admin, per collection: each id with its key. One set, read keys only. */
+export type AdminSets = Record<ReviewedCollection, Map<number, StatusKey>>
+
+export type AdminReviewRow = {
+  collection: ReviewedCollection
+  kind: QueueKind
+  id: number
+  key: StatusKey
+  title: { en: string | null; ar: string | null }
+  owners: string[]
+  since: string
+}
+
+const adminCtx = (payload: Payload, collection: ReviewedCollection) => ({
+  payload,
+  user: null,
+  collection,
+  base: ADMIN_VISIBLE,
+})
 
 /**
- * Content waiting for an admin, oldest first: articles, courses and
- * publications submitted for review. Applications have their own page
- * (Admin → Applicants). Read from the documents themselves, so it is right
- * even when an email never arrives.
+ * The documents that wait on an admin: the candidates the 1b admin list reads
+ * (`ADMIN_LIST_KEYS`) under `ADMIN_VISIBLE`, whose key waits on the admin. The
+ * admin list's Needs you group, minus an admin's own not-live rows. Read with
+ * `overrideAccess: true` (Deviation 17): every caller checks the reader first.
  */
-export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => {
-  const local = { depth: 1, pagination: false, overrideAccess: true } as const
-  const reviewed = await Promise.all(
+export const adminQueue = async (payload: Payload): Promise<AdminSets> => {
+  const sets = await Promise.all(
+    REVIEWED.map(({ collection }) =>
+      waitingSet(adminCtx(payload, collection), { side: 'admin', keys: ADMIN_LIST_KEYS }),
+    ),
+  )
+  return Object.fromEntries(REVIEWED.map(({ collection }, i) => [collection, sets[i]])) as AdminSets
+}
+
+/** The size of the admin queue: the dashboard's "Reviews waiting". */
+export const countReviewQueue = async (payload: Payload) =>
+  Object.values(await adminQueue(payload)).reduce((sum, set) => sum + set.size, 0)
+
+const personIdsOf = (people: unknown) =>
+  ((people ?? []) as Array<number | { id: number }>).flatMap((person) => {
+    const id = relId(person)
+    return typeof id === 'number' ? [id] : []
+  })
+
+/**
+ * Exactly one row per id of `sets`, with the set's key. It reads only display
+ * fields and does not filter: an id whose details read finds nothing still gets
+ * a row, with no titles and no owners, so the count and the rows of one `sets`
+ * value are equal. Title, owners and `since` come from one row, `latest ?? main`:
+ * every key of the set waits on the admin, so the admin reviews the copy.
+ * Oldest first.
+ */
+export const adminReviewRows = async (
+  payload: Payload,
+  sets: AdminSets,
+  locale: 'en' | 'ar',
+): Promise<AdminReviewRow[]> => {
+  const rows = await Promise.all(
     REVIEWED.map(async ({ kind, collection, owners }) => {
-      // A change to a published document waits as its latest draft
-      // (src/lib/review-hooks.ts), so it is found among the versions.
-      const [{ docs }, { docs: versions }] = await Promise.all([
-        payload.find({
-          collection,
-          where: { 'review.status': { equals: 'submitted' } },
-          select: { title: true, updatedAt: true, review: true, [owners]: true },
-          populate: { people: { name: true } },
-          ...local,
-        }),
-        payload.findVersions({
-          collection,
-          where: {
-            and: [
-              { latest: { equals: true } },
-              { 'version.review.status': { equals: 'submitted' } },
-            ],
-          },
-          populate: { people: { name: true } },
-          ...local,
-        }),
-      ])
-      const waiting = new Map<number, Record<string, unknown>>()
-      for (const v of versions) {
-        const ref = v.parent as unknown as number | { id: number }
-        const parent = relId(ref)
-        waiting.set(parent, { ...(v.version as unknown as Record<string, unknown>), id: parent })
+      const set = sets[collection]
+      if (set.size === 0) return []
+      const ctx = adminCtx(payload, collection)
+      const field = { [owners]: true } as const
+      const entries = await keyedRows(ctx, [...set.keys()], {
+        select: { main: field, version: field },
+        read: 'keys',
+      })
+      const sourceOf = (id: number) => {
+        const entry = entries.get(id)
+        return entry ? (entry.latest ?? entry.main) : null
       }
-      for (const d of docs) waiting.set(d.id, d as unknown as Record<string, unknown>)
-      return [...waiting.values()].map((d): QueueItem => {
+      const personIds = [
+        ...new Set([...set.keys()].flatMap((id) => personIdsOf(sourceOf(id)?.[owners]))),
+      ]
+      const names = new Map<number, string>()
+      if (personIds.length) {
+        const { docs } = await payload.find({
+          collection: 'people',
+          where: { id: { in: personIds } },
+          select: { name: true },
+          depth: 0,
+          pagination: false,
+          locale,
+          ...gate(ctx),
+        })
+        for (const person of docs) if (person.name) names.set(person.id, person.name)
+      }
+      return [...set].map(([id, key]): AdminReviewRow => {
+        const source = sourceOf(id)
+        const title = (source?.title ?? {}) as { en?: string | null; ar?: string | null }
         return {
+          collection,
           kind,
-          id: d.id as number,
-          title: (d.title as string | null | undefined) || null,
-          removal: (d.review as { request?: string } | null)?.request === 'removal',
-          by: namesOf(d[owners]),
-          since: d.updatedAt as string,
-          href: `/admin/collections/${collection}/${d.id}`,
+          id,
+          key,
+          title: { en: title.en || null, ar: title.ar || null },
+          owners: personIdsOf(source?.[owners]).flatMap((person) => names.get(person) ?? []),
+          since: source?.updatedAt ?? '',
         }
       })
     }),
   )
-  return reviewed.flat().sort((a, b) => a.since.localeCompare(b.since))
+  return rows.flat().sort((a, b) => a.since.localeCompare(b.since))
+}
+
+/**
+ * Content waiting for an admin, oldest first: articles, courses and
+ * publications waiting for review. Applications have their own page
+ * (Admin → Applicants). Read from the documents themselves, so it is right
+ * even when an email never arrives.
+ */
+export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => {
+  const rows = await adminReviewRows(payload, await adminQueue(payload), 'en')
+  return rows.map((row): QueueItem => ({
+    kind: row.kind,
+    id: row.id,
+    title: row.title.en ?? row.title.ar,
+    removal: row.key === 'published_removal',
+    by: row.owners.join(', '),
+    since: row.since,
+    href: `/admin/collections/${row.collection}/${row.id}`,
+  }))
 }
