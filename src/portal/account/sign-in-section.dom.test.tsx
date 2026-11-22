@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { LiveRegion } from '@/portal/feedback/announce'
@@ -14,10 +14,12 @@ const sentLine = text.resetSent.replace('{email}', EMAIL)
 
 const requests: unknown[] = []
 let status = 200
+let wait = 0
 
 mockNetwork(
   http.post('/api/users/forgot-password', async ({ request }) => {
     requests.push(await request.json())
+    if (wait) await delay(wait)
     return HttpResponse.json({}, { status })
   }),
 )
@@ -25,6 +27,7 @@ mockNetwork(
 beforeEach(() => {
   requests.length = 0
   status = 200
+  wait = 0
 })
 
 const mount = () =>
@@ -36,13 +39,17 @@ const mount = () =>
   )
 
 const button = () => screen.getByRole('button', { name: text.changePassword })
+const exposed = (words: string) =>
+  screen
+    .queryAllByRole('status')
+    .concat(screen.queryAllByRole('alert'))
+    .filter((node) => node.textContent?.includes(words))
 const region = (view: ReturnType<typeof mount>) =>
   view.container.querySelector('[data-portal-live]')!
 
 describe('SignInSection', () => {
   it('the email shows read-only', () => {
     mount()
-    expect(screen.getByText(text.signInIntro)).toBeInTheDocument()
     expect(screen.getByText(EMAIL)).toBeInTheDocument()
     expect(screen.getByText(text.email)).toBeInTheDocument()
     expect(screen.queryByRole('textbox')).toBeNull()
@@ -75,5 +82,33 @@ describe('SignInSection', () => {
     await waitFor(() => expect(region(view)).toHaveTextContent(sentLine))
     observer.disconnect()
     expect(seen.filter((value) => value === sentLine)).toHaveLength(1)
+  })
+
+  it.each([
+    ['sent', 200, sentLine],
+    ['failed', 500, text.resetFailed],
+  ])('a %s result is exposed to a screen reader in one place', async (_name, code, words) => {
+    status = code
+    const view = mount()
+    fireEvent.click(button())
+    await screen.findByText(words, { selector: 'strong *, strong' })
+    await waitFor(() => expect(region(view)).toHaveTextContent(words))
+    const places = exposed(words)
+    expect(places).toHaveLength(1)
+    expect(places[0]).toBe(region(view))
+    expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('while sending the button says so, keeps its place and ignores a second press', async () => {
+    wait = 60
+    mount()
+    fireEvent.click(button())
+    const busy = await screen.findByRole('button', { name: text.sending })
+    expect(busy).toHaveAttribute('aria-busy', 'true')
+    expect(busy).not.toBeDisabled()
+    fireEvent.click(busy)
+    await screen.findByText(sentLine, { selector: 'strong *, strong' })
+    expect(requests).toHaveLength(1)
+    expect(button()).not.toHaveAttribute('aria-busy')
   })
 })

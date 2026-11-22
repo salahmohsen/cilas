@@ -68,7 +68,7 @@ export async function AccountPage({ user }: Props) {
       icon: <KeyRound size={16} aria-hidden="true" />,
       content: (
         <>
-          <PanelHeader title={ta('signIn')} />
+          <PanelHeader title={ta('signIn')} intro={ta('signInIntro')} />
           <SignInSection email={user.email} />
         </>
       ),

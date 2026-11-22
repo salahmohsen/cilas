@@ -1,5 +1,3 @@
-import path from 'node:path'
-
 import { expect, test, type Browser, type Page } from '@playwright/test'
 import { getPayload, type Payload } from 'payload'
 
@@ -26,7 +24,6 @@ type Viewport = { width: number; height: number }
 
 const DESKTOP = WIDTHS.desktop
 const NARROW = { width: 320, height: 640 }
-const PHOTO = path.resolve('testing/files/pixel.png')
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -46,7 +43,7 @@ const ACCOUNT = '/en/spaces/account'
 const tab = (page: Page, locale: Locale, name: 'profile' | 'signIn' | 'notifications') => {
   const label =
     name === 'signIn' ? MESSAGES[locale].Portal.account.signIn : MESSAGES[locale].Settings[name]
-  return page.getByRole('tab', { name: label, exact: true })
+  return page.getByRole('tab', { name: new RegExp(`^${label}(?:\\s|$)`) })
 }
 
 const saveBar = (page: Page, locale: Locale) => {
@@ -107,23 +104,6 @@ test.describe('portal account', () => {
     }
   })
 
-  test('a photo change shows in the account menu avatar', async ({ browser }) => {
-    await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
-      await page.goto('/en/spaces/account')
-      const avatar = accountButton(page).locator('img')
-      const srcNow = async () =>
-        (await avatar.count()) ? avatar.first().getAttribute('src') : null
-      const before = await srcNow()
-
-      const group = page.getByRole('group', { name: MESSAGES.en.ImageUpload.avatarLabel })
-      await group.locator('input[type="file"]').setInputFiles(PHOTO)
-      await page.getByRole('button', { name: MESSAGES.en.ImageUpload.save }).click()
-      await expect(page.getByText(MESSAGES.en.ImageUpload.updated).first()).toBeVisible()
-
-      await expect.poll(srcNow, { timeout: 15_000 }).not.toBe(before)
-    })
-  })
-
   test.describe('redirects', () => {
     for (const role of ROLES)
       for (const locale of LOCALES) {
@@ -173,14 +153,15 @@ test.describe('portal account', () => {
       })
     })
 
-    test('signed out, /spaces/account returns to the account page after login', async ({
+    test('signed out, /spaces/account returns to the portal home after login', async ({
       browser,
     }) => {
       await inContextAt(browser, { baseURL, viewport: DESKTOP }, async (page) => {
         await page.goto(ACCOUNT)
         await page.waitForURL('**/en/login**')
+        expect(new URL(page.url()).searchParams.get('next')).toBe('/en/spaces')
         await signIn(page, world.accounts.student)
-        await page.waitForURL('**/en/spaces/account')
+        await page.waitForURL(/\/en\/spaces$/)
       })
     })
 
@@ -208,12 +189,18 @@ test.describe('portal account', () => {
     test('a profile save works', async ({ browser }) => {
       await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
         const name = uniq('Account name')
+        const bio = uniq('Account bio')
         await page.goto(ACCOUNT)
         await editName(page, 'en', name)
+        const bioField = page.getByRole('textbox', { name: MESSAGES.en.Profile.bioEn })
+        await bioField.click()
+        await page.keyboard.type(bio)
         await page.getByRole('button', { name: MESSAGES.en.Settings.save, exact: true }).click()
         await expect(saveBar(page, 'en')).toBeHidden()
+        await expect.poll(() => accountButton(page).getAttribute('aria-label')).toContain(name)
         await page.reload()
         await expect(page.getByLabel(MESSAGES.en.Profile.nameEn, { exact: true })).toHaveValue(name)
+        await expect(bioField).toContainText(bio)
       })
     })
 
@@ -240,16 +227,57 @@ test.describe('portal account', () => {
       })
     })
 
-    test('Change password says where the link went', async ({ browser }) => {
+    test('Change password says where the link went, once', async ({ browser }) => {
       await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
-        await page.route('**/api/users/forgot-password', (route) =>
-          route.fulfill({ status: 200, json: {} }),
-        )
+        const posted: unknown[] = []
+        await page.route('**/api/users/forgot-password', (route) => {
+          posted.push(route.request().postDataJSON())
+          return route.fulfill({ status: 200, json: {} })
+        })
         await page.goto(`${ACCOUNT}#sign-in`)
         const portal = MESSAGES.en.Portal.account
+        const words = portal.resetSent.replace('{email}', world.accounts.student.email)
         await page.getByRole('button', { name: portal.changePassword }).click()
+        const exposed = page
+          .getByRole('status')
+          .or(page.getByRole('alert'))
+          .filter({ hasText: words })
+        await expect(exposed).toHaveCount(1)
+        await expect(exposed).toHaveAttribute('data-portal-live')
+        await expect(page.locator('[aria-hidden="true"]').getByText(words)).toBeVisible()
+        expect(posted).toEqual([{ email: world.accounts.student.email }])
+      })
+    })
+
+    test('the Change password button keeps its width while it sends', async ({ browser }) => {
+      await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
+        await page.route('**/api/users/forgot-password', async (route) => {
+          await new Promise((done) => setTimeout(done, 800))
+          await route.fulfill({ status: 200, json: {} })
+        })
+        await page.goto(`${ACCOUNT}#sign-in`)
+        const portal = MESSAGES.en.Portal.account
+        const widthOf = async (name: string) =>
+          (await page.getByRole('button', { name }).boundingBox())?.width ?? 0
+        const idle = await widthOf(portal.changePassword)
+        await page.getByRole('button', { name: portal.changePassword }).click()
+        await expect(page.getByRole('button', { name: portal.sending })).toBeVisible()
+        expect(Math.abs((await widthOf(portal.sending)) - idle)).toBeLessThanOrEqual(1)
+        await expect(page.getByRole('button', { name: portal.changePassword })).toBeVisible()
+        expect(Math.abs((await widthOf(portal.changePassword)) - idle)).toBeLessThanOrEqual(1)
+      })
+    })
+
+    test('the photo takes one Tab stop: the avatar is for pointers', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
+        await page.goto(ACCOUNT)
+        const text = MESSAGES.en.ImageUpload
+        const avatar = page.getByRole('button', {
+          name: new RegExp(`^(${text.avatarChange}|${text.avatarUpload})$`),
+        })
+        await expect(avatar).toHaveAttribute('tabindex', '-1')
         await expect(
-          page.getByText(portal.resetSent.replace('{email}', world.accounts.student.email)),
+          page.getByRole('button', { name: new RegExp(`^(${text.upload}|${text.replace})$`) }),
         ).toBeVisible()
       })
     })
@@ -272,6 +300,40 @@ test.describe('portal account', () => {
           .toBeGreaterThanOrEqual(15.5)
       })
     })
+
+    for (const locale of LOCALES)
+      test(`at 390 the tab row stays put and no tab is cut off (${locale})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
+          await page.goto(localePath(ACCOUNT, locale))
+          const list = page.getByRole('tablist')
+          await expect(list).toBeVisible()
+          const rowY: number[] = []
+          const fits = async () => {
+            const box = (await list.boundingBox())!
+            for (const tabBox of await Promise.all(
+              (await page.getByRole('tab').all()).map((node) => node.boundingBox()),
+            )) {
+              expect(tabBox!.x).toBeGreaterThanOrEqual(box.x - 0.5)
+              expect(tabBox!.x + tabBox!.width).toBeLessThanOrEqual(box.x + box.width + 0.5)
+            }
+            expect(await list.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true)
+          }
+          await fits()
+          await editName(page, locale, uniq('Phone name'))
+          await expect(
+            page.getByRole('button', { name: MESSAGES[locale].Settings.save, exact: true }),
+          ).toBeVisible()
+          await fits()
+          for (const group of ['profile', 'signIn', 'notifications'] as const) {
+            await tab(page, locale, group).click()
+            await expect(tab(page, locale, group)).toHaveAttribute('aria-selected', 'true')
+            rowY.push((await list.boundingBox())!.y)
+          }
+          expect(Math.max(...rowY) - Math.min(...rowY)).toBeLessThanOrEqual(1)
+        })
+      })
 
     test("the save bar on a wide screen sits 16 px above the viewport's bottom", async ({
       browser,

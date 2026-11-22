@@ -16,9 +16,10 @@ type Phase = { kind: 'idle' } | { kind: 'sending' } | { kind: 'done'; result: Se
 export function SignInSection({ email }: { email: string }) {
   const t = useTranslations('Portal.account')
   const [phase, setPhase] = useState<Phase>({ kind: 'idle' })
+  const sending = phase.kind === 'sending'
 
   const send = async () => {
-    if (phase.kind === 'sending') return
+    if (sending) return
     setPhase({ kind: 'sending' })
     const result = await requestResetLink(email)
     setPhase({ kind: 'done', result })
@@ -27,7 +28,6 @@ export function SignInSection({ email }: { email: string }) {
 
   return (
     <div className={styles.signIn}>
-      <p className={styles.intro}>{t('signInIntro')}</p>
       <dl className={styles.details}>
         <dt>{t('email')}</dt>
         <dd dir="ltr">
@@ -36,20 +36,26 @@ export function SignInSection({ email }: { email: string }) {
       </dl>
       <div>
         {/* Never disabled (spec, Forms): a second press while sending is ignored in `send`. */}
-        <Button
-          type="button"
-          variant="secondary"
-          aria-busy={phase.kind === 'sending' || undefined}
-          onClick={send}
-        >
-          {phase.kind === 'sending' ? t('sending') : t('changePassword')}
+        <Button type="button" variant="secondary" aria-busy={sending || undefined} onClick={send}>
+          {/* Both labels share one grid cell, so the button is as wide as the longer one. */}
+          <span className={styles.labels}>
+            <span aria-hidden={sending || undefined} data-hidden={sending || undefined}>
+              {t('changePassword')}
+            </span>
+            <span aria-hidden={!sending || undefined} data-hidden={!sending || undefined}>
+              {t('sending')}
+            </span>
+          </span>
         </Button>
       </div>
+      {/* The live region says it once (announce); the visible copy stays out of the accessibility tree. */}
       {phase.kind === 'done' ? (
-        <Alert
-          tone={phase.result === 'sent' ? 'success' : 'danger'}
-          title={phase.result === 'sent' ? t('resetSent', { email }) : t('resetFailed')}
-        />
+        <div aria-hidden="true">
+          <Alert
+            tone={phase.result === 'sent' ? 'success' : 'danger'}
+            title={phase.result === 'sent' ? t('resetSent', { email }) : t('resetFailed')}
+          />
+        </div>
       ) : null}
     </div>
   )

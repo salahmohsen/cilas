@@ -8,15 +8,29 @@
   padding-inline: var(--space-4);
 }
 
+/* The portal's main card already pads the page on a phone; a second inset would cost the tabs room. */
+@media (width < 700px) {
+  .page {
+    padding-inline: 0;
+  }
+}
+
 .signIn {
   display: grid;
   gap: var(--space-4);
 }
 
-.intro {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: var(--text-sm);
+.labels {
+  display: grid;
+}
+
+/* Stacked in one cell: the hidden label still counts for the width. */
+.labels > span {
+  grid-area: 1 / 1;
+}
+
+.labels > [data-hidden] {
+  visibility: hidden;
 }
 
 .details {

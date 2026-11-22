@@ -32,7 +32,7 @@ const refresh = () => {
     .then((body: { user?: SessionUser | null } | null) => body?.user ?? null)
     .catch(() => null)
     .then((next) => {
-      if (mine !== latest) return
+      if (mine !== latest || listeners.size === 0) return
       user = next
       listeners.forEach((listener) => listener())
     })
