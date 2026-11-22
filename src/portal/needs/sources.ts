@@ -24,6 +24,12 @@ export type NeedRow = {
 
 export type NeedSource = 'reviewQueue' | 'applicants' | 'ownArticles' | 'ownCourses'
 
+export type NeedsResult = { rows: NeedRow[]; failed: NeedSource[] }
+
+/** A failed source makes the complete task total unavailable. */
+export const needsTotal = ({ rows, failed }: NeedsResult) =>
+  failed.length > 0 ? null : rows.reduce((sum, row) => sum + row.count, 0)
+
 /** The sources of one reader. An admin has the queue and the applicants; any other reader has their own work. */
 export const SOURCES_OF = (user: User): NeedSource[] => {
   if (isAdminUser(user)) return ['reviewQueue', 'applicants']

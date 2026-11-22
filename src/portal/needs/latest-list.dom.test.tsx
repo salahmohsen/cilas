@@ -46,6 +46,16 @@ describe('LatestList', () => {
     expect(screen.getByRole('listitem')).toHaveTextContent('New comment')
   })
 
+  it.each([
+    ['javaScript:alert(1)', null],
+    ['data:text/html,test', '2026-01-01T00:00:00.000Z'],
+    ['java\nscript:alert(1)', '2026-01-01T00:00:00.000Z'],
+  ])('renders a notification with an invalid link as text (%s)', (link, read_at) => {
+    renderWithIntl(<LatestList focus={false} page={page([note({ link, read_at })])} />)
+    expect(screen.queryByRole('link')).toBeNull()
+    expect(screen.getByRole('listitem')).toHaveTextContent('New comment')
+  })
+
   it("a known kind uses the bell's words and glyph", () => {
     renderWithIntl(
       <LatestList

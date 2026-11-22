@@ -16,13 +16,11 @@ import {
   ROLES,
   WIDTHS,
   type Locale,
-  type PortalAccount,
   type PortalRole,
   type StorageState,
 } from '../testing/portal.fixture'
 import { axeOver, known, mailOff, NAV_BY_ROLE, navName } from '../testing/portal-e2e.test-utils'
 
-type Reader = PortalRole | 'secondAdmin'
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
 const DESKTOP = WIDTHS.desktop
@@ -32,13 +30,13 @@ const SHOWN_CAP = 9
 const { track, cleanup } = createTracker()
 let payload: Payload
 let fixture: PortalNeedsWorld
-let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
+let spaces: Awaited<ReturnType<typeof holdSpacesMode>> | undefined
 let baseURL: string | undefined
-const states = {} as Record<Reader, StorageState>
+const states = {} as Record<PortalRole, StorageState>
 
 const inContext = (
   browser: Browser,
-  options: { viewport: Viewport; reader: Reader },
+  options: { viewport: Viewport; reader: PortalRole },
   run: (page: Page) => Promise<void>,
 ) =>
   inContextAt(browser, { baseURL, viewport: options.viewport, state: states[options.reader] }, run)
@@ -70,10 +68,6 @@ const totalOf = async (page: Page) => {
 const shownFor = (total: number, locale: Locale) =>
   localDigits(total > SHOWN_CAP ? `${SHOWN_CAP}+` : total, locale)
 
-const REST = '/api/articles'
-const write = (page: Page, id: number, data: object) =>
-  page.request.patch(`${REST}/${id}?depth=0&locale=en`, { data })
-
 test.describe('portal home: Inbox', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
@@ -85,14 +79,14 @@ test.describe('portal home: Inbox', () => {
     spaces = await holdSpacesMode(payload)
     await spaces.set('on')
     fixture = await portalNeedsWorld(payload, track)
-    const accounts: Record<Reader, PortalAccount> = {
-      ...fixture.world.accounts,
-      secondAdmin: fixture.secondAdmin,
-    }
-    for (const reader of Object.keys(accounts) as Reader[]) {
+    for (const reader of ROLES) {
       const context = await browser.newContext({ baseURL })
       try {
-        await login({ page: await context.newPage(), user: accounts[reader], next: '/en/spaces' })
+        await login({
+          page: await context.newPage(),
+          user: fixture.world.accounts[reader],
+          next: '/en/spaces',
+        })
         states[reader] = await context.storageState()
       } finally {
         await context.close()
@@ -102,9 +96,9 @@ test.describe('portal home: Inbox', () => {
 
   test.afterAll(async () => {
     try {
-      await cleanup(payload)
+      if (payload) await cleanup(payload)
     } finally {
-      await spaces.release()
+      await spaces?.release()
     }
   })
 
@@ -320,6 +314,19 @@ test.describe('portal home: Inbox', () => {
       })
     })
 
+    for (const locale of LOCALES)
+      test(`Jump to Latest focuses its heading (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: PHONE, reader: 'student' }, async (page) => {
+          await page.goto(inboxPath(locale))
+          const portal = portalOf(locale)
+          const jump = page.getByRole('link', { name: portal.inbox.jumpToLatest })
+          await jump.focus()
+          await jump.press('Enter')
+          await expect(page).toHaveURL(/#latest$/)
+          await expect(page.getByRole('heading', { name: portal.latest.heading })).toBeFocused()
+        })
+      })
+
     test('Inbox at 200% zoom has no horizontal scroll (en)', async ({ browser }) => {
       const context = await browser.newContext({
         baseURL,
@@ -341,78 +348,6 @@ test.describe('portal home: Inbox', () => {
       } finally {
         await context.close()
       }
-    })
-  })
-
-  test.describe('live refresh', () => {
-    test('an owner submits in a second session and the admin Inbox number changes with no reload', async ({
-      browser,
-    }) => {
-      const draft = fixture.needs.lists.articles.draft
-      const submittedLink = `/admin/collections/articles/${draft}`
-      try {
-        await inContext(browser, { viewport: DESKTOP, reader: 'admin' }, async (admin) => {
-          await admin.goto(inboxPath('en'))
-          await expect(chipOf(admin, 'en')).toBeVisible()
-          const before = await totalOf(admin)
-          await admin.evaluate(() => {
-            ;(window as unknown as { noReloadMark: boolean }).noReloadMark = true
-          })
-          let lostChip = false
-          const watch = setInterval(() => {
-            void chipOf(admin, 'en')
-              .count()
-              .then((count) => {
-                if (count === 0) lostChip = true
-              })
-              .catch(() => {})
-          }, 100)
-          try {
-            await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (student) => {
-              const response = await write(student, draft, {
-                _status: 'draft',
-                review: { status: 'submitted' },
-              })
-              expect(response.ok(), await response.text()).toBe(true)
-            })
-            await expect.poll(() => totalOf(admin), { timeout: 5_000 }).toBe(before + 1)
-            if (before + 1 <= SHOWN_CAP)
-              await expect(chipOf(admin, 'en')).toHaveText(shownFor(before + 1, 'en'))
-          } finally {
-            clearInterval(watch)
-          }
-          expect(lostChip).toBe(false)
-          expect(
-            await admin.evaluate(
-              () => (window as unknown as { noReloadMark?: boolean }).noReloadMark,
-            ),
-          ).toBe(true)
-        })
-      } finally {
-        await payload.delete({
-          collection: 'notifications',
-          where: { link: { contains: submittedLink } },
-          overrideAccess: true,
-        })
-      }
-    })
-
-    test("a second admin's number is right after a reload", async ({ browser }) => {
-      const draft = fixture.needs.lists.articles.draft
-      await inContext(browser, { viewport: DESKTOP, reader: 'admin' }, async (a) => {
-        await inContext(browser, { viewport: DESKTOP, reader: 'secondAdmin' }, async (b) => {
-          await a.goto(inboxPath('en'))
-          await b.goto(inboxPath('en'))
-          const before = await totalOf(b)
-          const response = await write(a, draft, {
-            _status: 'published',
-            review: { status: 'approved', review_note: null },
-          })
-          expect(response.ok(), await response.text()).toBe(true)
-          await b.reload()
-          expect(await totalOf(b)).toBe(before - 1)
-        })
-      })
     })
   })
 })

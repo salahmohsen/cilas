@@ -14,7 +14,14 @@ import { titleOf } from '@/lib/title-of'
 import type { User } from '@/payload-types'
 
 import { ownRows, ownSet } from './owner-rows'
-import { KIND_OF_KEY, SOURCES_OF, VERB_OF, type NeedRow, type NeedSource } from './sources'
+import {
+  KIND_OF_KEY,
+  SOURCES_OF,
+  VERB_OF,
+  type NeedRow,
+  type NeedSource,
+  type NeedsResult,
+} from './sources'
 
 /** The work of one reader: the ids that wait on them, each with its key. `failed` names a source that did not read. */
 export type WorkSets = {
@@ -91,7 +98,7 @@ export const countsOf = (sets: WorkSets): NeedsCounts => {
   }
 }
 
-export type NeedsResult = { rows: NeedRow[]; failed: NeedSource[] }
+export { needsTotal, type NeedsResult } from './sources'
 
 /**
  * One row per id of the sets, in the reader's locale. It reads only the display
@@ -164,10 +171,6 @@ export const rowsOf = async (
     .map(({ row }) => row)
   return { rows: [...review, ...applicantRows, ...own], failed }
 }
-
-/** The total of the rows, or `null` when a source failed. Home and the Inbox page read it. */
-export const needsTotal = ({ rows, failed }: NeedsResult) =>
-  failed.length > 0 ? null : rows.reduce((sum, row) => sum + row.count, 0)
 
 const once = <Value>(store: Map<string, Value>, key: string, make: () => Value) => {
   if (!store.has(key)) store.set(key, make())

@@ -1,9 +1,14 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+import { getPayload } from 'payload'
+
+import config from '../src/payload.config.js'
 
 import { EMPTY_ACCOUNTS } from '../seed/empty'
 import { login } from '../testing/login.test-utils'
-import { inContext, LOCALES, MESSAGES, WIDTHS } from '../testing/portal.fixture'
-import { navName } from '../testing/portal-e2e.test-utils'
+import { createTracker, uniq } from '../testing/payload.fixture'
+import { trustedWrites } from '../testing/portal-lists.fixture'
+import { account, inContext, LOCALES, MESSAGES, WIDTHS } from '../testing/portal.fixture'
+import { mailOff, navName } from '../testing/portal-e2e.test-utils'
 
 type Role = keyof typeof EMPTY_ACCOUNTS
 
@@ -38,4 +43,151 @@ test.describe('portal Inbox on the empty seed', () => {
             expect(errors).toEqual([])
           })
         })
+})
+
+const inbox = '/en/spaces/inbox'
+const portal = MESSAGES.en.Portal
+const inboxLink = (page: Page) =>
+  page
+    .getByRole('navigation', { name: portal.nav.label, exact: true })
+    .getByRole('link', { name: navName(portal.nav.inbox) })
+const chipOf = (page: Page) => inboxLink(page).locator('[data-nav-count]')
+const totalOf = (page: Page) => page.locator('main section[data-needs] h2 > span')
+const write = (page: Page, id: number, data: object) =>
+  page.request.patch(`/api/articles/${id}?depth=0&locale=en`, { data })
+
+const observeWorkStream = async (page: Page) => {
+  await page.addInitScript(() => {
+    class ObservedEventSource extends EventSource {
+      constructor(url: string | URL, options?: EventSourceInit) {
+        super(url, options)
+        if (new URL(this.url).pathname === '/api/notifications/stream') {
+          this.addEventListener('open', () => {
+            document.documentElement.dataset.workStreamOpen = 'true'
+          })
+        }
+      }
+    }
+    window.EventSource = ObservedEventSource
+  })
+}
+
+test.describe('portal Inbox with a small review queue', () => {
+  test.describe.configure({ timeout: 120_000 })
+
+  const queue = test.extend<{
+    queue: {
+      admin: Awaited<ReturnType<typeof account>>
+      secondAdmin: Awaited<ReturnType<typeof account>>
+      student: Awaited<ReturnType<typeof account>>
+      draft: number
+      submit: () => Promise<unknown>
+    }
+  }>({
+    queue: async ({}, run) => {
+      const payload = await getPayload({ config, key: uniq('portal-home-small-queue') })
+      mailOff(payload)
+      const { track, cleanup } = createTracker()
+      const { create, submit } = trustedWrites(payload, track)
+      const links: string[] = []
+      try {
+        const admin = await account(payload, track, 'admin', 'small-queue-admin')
+        const secondAdmin = await account(payload, track, 'admin', 'small-queue-admin2')
+        const student = await account(payload, track, 'student', 'small-queue-owner')
+        const article = async (name: string) => {
+          const id = await create('articles', {
+            title: name,
+            slug: uniq(name),
+            authors: [student.person],
+            tier: 'owner',
+            review: { status: 'draft' },
+          })
+          links.push(`/admin/collections/articles/${id}`)
+          return id
+        }
+        await submit('articles', await article('waiting'))
+        const draft = await article('next-review')
+        await run({ admin, secondAdmin, student, draft, submit: () => submit('articles', draft) })
+      } finally {
+        try {
+          if (links.length > 0) {
+            await payload.delete({
+              collection: 'notifications',
+              where: { link: { in: links } },
+              overrideAccess: true,
+            })
+          }
+        } finally {
+          await cleanup(payload)
+        }
+      }
+    },
+  })
+
+  queue(
+    'an owner submits in a second session and the admin Inbox number changes with no reload',
+    async ({ browser, baseURL, queue: { admin, student, draft } }) => {
+      const at = { baseURL, viewport: WIDTHS.desktop }
+      await inContext(browser, at, async (page) => {
+        await observeWorkStream(page)
+        await login({ page, user: admin, next: inbox })
+        await expect(page.locator('html')).toHaveAttribute('data-work-stream-open', 'true')
+        await expect(inboxLink(page)).toHaveAccessibleName('Inbox, 1 task')
+        await expect(chipOf(page)).toHaveText('1')
+        await expect(totalOf(page)).toHaveText('1')
+        await page.evaluate(() => {
+          document.body.dataset.noReloadMark = 'true'
+        })
+        let lostChip = false
+        const watch = setInterval(() => {
+          void chipOf(page)
+            .count()
+            .then((count) => {
+              if (count === 0) lostChip = true
+            })
+        }, 100)
+        try {
+          await inContext(browser, at, async (owner) => {
+            await login({ page: owner, user: student, next: inbox })
+            const response = await write(owner, draft, {
+              _status: 'draft',
+              review: { status: 'submitted' },
+            })
+            expect(response.ok(), await response.text()).toBe(true)
+          })
+          await expect(inboxLink(page)).toHaveAccessibleName('Inbox, 2 tasks', { timeout: 5_000 })
+          await expect(chipOf(page)).toHaveText('2')
+          await expect(totalOf(page)).toHaveText('2')
+        } finally {
+          clearInterval(watch)
+        }
+        expect(lostChip).toBe(false)
+        await expect(page.locator('body')).toHaveAttribute('data-no-reload-mark', 'true')
+      })
+    },
+  )
+
+  queue(
+    "a second admin's number is right after a reload",
+    async ({ browser, baseURL, queue: { admin, secondAdmin, draft, submit } }) => {
+      await submit()
+      const at = { baseURL, viewport: WIDTHS.desktop }
+      await inContext(browser, at, async (writer) => {
+        await login({ page: writer, user: admin, next: inbox })
+        await inContext(browser, at, async (reader) => {
+          await login({ page: reader, user: secondAdmin, next: inbox })
+          await expect(inboxLink(reader)).toHaveAccessibleName('Inbox, 2 tasks')
+          const response = await write(writer, draft, {
+            _status: 'published',
+            review: { status: 'approved', review_note: null },
+          })
+          expect(response.ok(), await response.text()).toBe(true)
+          await reader.reload()
+          await expect(inboxLink(reader)).toHaveAccessibleName('Inbox, 1 task')
+          await expect(chipOf(reader)).toHaveText('1')
+          await expect(totalOf(reader)).toHaveText('1')
+        })
+      })
+    },
+  )
 })

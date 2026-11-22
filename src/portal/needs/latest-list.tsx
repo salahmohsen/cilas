@@ -45,9 +45,19 @@ function Note({ note }: { note: StoredNotification }) {
   )
 }
 
+const notificationHref = (link: string | null | undefined) => {
+  if (!link?.trim()) return null
+  try {
+    const { protocol } = new URL(link, 'https://example.invalid')
+    return protocol === 'http:' || protocol === 'https:' ? link : null
+  } catch {
+    return null
+  }
+}
+
 /**
- * The newest notification rows (information, never work), as the bell shows them. A row links to
- * its stored `link` exactly as stored, as a plain `<a>` (a soft navigation to a post from outside
+ * The newest notification rows (information, never work), as the bell shows them. A row with a valid link uses
+ * its stored URL, as a plain `<a>` (a soft navigation to a post from outside
  * the rooms shows the dialog over an empty page). An unread row marks itself read when opened.
  */
 export function LatestList({ page, focus }: { page: LatestPage; focus: boolean }) {
@@ -55,26 +65,26 @@ export function LatestList({ page, focus }: { page: LatestPage; focus: boolean }
   const { rows, pages, more } = page
   const firstNewIndex = LATEST_PAGE * (pages - 1)
   return (
-    <section className={styles.section} data-latest>
-      <h2 className={styles.heading}>{t('latest.heading')}</h2>
+    <>
       {rows.length === 0 ? (
         <p className={styles.empty}>{t('latest.empty')}</p>
       ) : (
         <ol className={styles.rows}>
           {rows.map((note) => {
+            const href = notificationHref(note.link)
             const className = `${styles.note} ${note.read_at ? '' : styles.unread}`
             return (
               <li key={note.id}>
-                {!note.link ? (
+                {href === null ? (
                   <div className={className}>
                     <Note note={note} />
                   </div>
                 ) : note.read_at ? (
-                  <a href={note.link} className={className}>
+                  <a href={href} className={className}>
                     <Note note={note} />
                   </a>
                 ) : (
-                  <ReadLink href={note.link} id={note.id} className={className}>
+                  <ReadLink href={href} id={note.id} className={className}>
                     <Note note={note} />
                   </ReadLink>
                 )}
@@ -100,6 +110,6 @@ export function LatestList({ page, focus }: { page: LatestPage; focus: boolean }
         firstNewIndex={firstNewIndex}
         message={t('latest.moreRows', { count: rows.length - firstNewIndex })}
       />
-    </section>
+    </>
   )
 }

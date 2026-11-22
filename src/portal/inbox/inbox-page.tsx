@@ -2,6 +2,7 @@ import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
+import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
 import type { User } from '@/payload-types'
 import { PortalPageHeader } from '@/portal/lists/page-header'
@@ -13,26 +14,8 @@ import styles from '@/portal/needs/needs.module.css'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 
 async function NeedsSection({ user, locale }: { user: User; locale: Locale }) {
-  const [t, { rows, failed }] = await Promise.all([getTranslations('Portal'), needs(user, locale)])
-  return (
-    <>
-      {failed.length > 0 && (
-        <p className={styles.notice} role="status">
-          {t('needs.someFailed')}
-        </p>
-      )}
-      {rows.length > 0 ? (
-        <NeedList rows={rows} group={false} />
-      ) : (
-        failed.length === 0 && (
-          <section className={styles.section}>
-            <h2 className={styles.heading}>{t('needs.heading')}</h2>
-            <p className={styles.empty}>{t('needs.empty')}</p>
-          </section>
-        )
-      )}
-    </>
-  )
+  const result = await needs(user, locale)
+  return <NeedList result={result} group={false} />
 }
 
 async function LatestSection({
@@ -60,17 +43,29 @@ export async function InboxPage({
   pages: number
   focus: boolean
 }) {
-  const t = await getTranslations('Portal.inbox')
+  const t = await getTranslations('Portal')
   return (
     <>
-      <PortalPageHeader title={t('title')} />
+      <PortalPageHeader title={t('inbox.title')}>
+        <a
+          href="#latest"
+          className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.md}`}
+        >
+          {t('inbox.jumpToLatest')}
+        </a>
+      </PortalPageHeader>
       <div className={styles.sections}>
         <SectionBoundary>
           <NeedsSection user={user} locale={locale} />
         </SectionBoundary>
-        <SectionBoundary>
-          <LatestSection user={user} pages={pages} focus={focus} />
-        </SectionBoundary>
+        <section className={styles.section} data-latest>
+          <h2 id="latest" tabIndex={-1} className={styles.heading}>
+            {t('latest.heading')}
+          </h2>
+          <SectionBoundary>
+            <LatestSection user={user} pages={pages} focus={focus} />
+          </SectionBoundary>
+        </section>
       </div>
     </>
   )

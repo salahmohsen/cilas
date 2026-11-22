@@ -1898,7 +1898,7 @@
       }
     },
     "needs": {
-      "heading": "يحتاج إلى انتباهك",
+      "heading": "مهام تحتاج إلى انتباهك",
       "review": "مراجعة",
       "editReview": "مراجعة التعديلات",
       "removalReview": "البتّ في الحذف",
@@ -1921,13 +1921,14 @@
       "heading": "الأحدث",
       "empty": "لا جديد بعد. تظهر هنا الردود والمراجعات والقرارات.",
       "showMore": "عرض المزيد",
-      "cap": "تظهر الأحدث فقط، وعددها {count, number, digits}.",
-      "moreRows": "{count, plural, zero {لا صفوف أخرى.} one {صف آخر واحد.} two {صفان آخران.} few {{count, number, digits} صفوف أخرى.} many {{count, number, digits} صفًّا آخر.} other {{count, number, digits} صف آخر.}}",
+      "cap": "تُعرض أحدث {count, number, digits} من الإشعارات فقط.",
+      "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
       "unread": "غير مقروء"
     },
     "inbox": {
       "title": "الوارد",
       "metaTitle": "الوارد",
+      "jumpToLatest": "انتقل إلى أحدث الإشعارات",
       "loading": "جارٍ تحميل الوارد",
       "failed": "تعذّر تحميل هذا القسم.",
       "retry": "أعد المحاولة"

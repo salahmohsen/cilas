@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { announce } from '@/portal/feedback/announce'
+import { focusNewRow } from '@/portal/feedback/focus-new-row'
 
 import { findGroupSection } from './group-section'
 import type { PagedGroup } from './groups'
@@ -29,11 +29,7 @@ export function NewRowsFocus({
     const row = findGroupSection(document, group)?.querySelectorAll('ol > li')[firstNewIndex]
     const link = row?.querySelector<HTMLElement>('a')
     if (!link) return
-    link.focus()
-    announce(message)
-    const url = new URL(window.location.href)
-    url.searchParams.delete('focus')
-    window.history.replaceState(null, '', url)
+    focusNewRow(link, message)
   }, [focus, firstNewIndex, group, message])
   return null
 }

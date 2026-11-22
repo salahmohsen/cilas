@@ -1928,6 +1928,7 @@
     "inbox": {
       "title": "Inbox",
       "metaTitle": "Inbox",
+      "jumpToLatest": "Jump to Latest",
       "loading": "Loading the inbox",
       "failed": "This could not load.",
       "retry": "Retry"

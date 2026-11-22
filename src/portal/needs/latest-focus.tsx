@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { announce } from '@/portal/feedback/announce'
+import { focusNewRow } from '@/portal/feedback/focus-new-row'
 
 /**
  * After **Show more** the link carries `focus=latest`: focus moves to the first new
@@ -23,15 +23,8 @@ export function LatestFocus({
     const row = document.querySelectorAll<HTMLElement>('[data-latest] ol > li')[firstNewIndex]
     const target = row?.querySelector<HTMLElement>('a')
     if (!row) return
-    if (target) target.focus()
-    else {
-      row.tabIndex = -1
-      row.focus()
-    }
-    announce(message)
-    const url = new URL(window.location.href)
-    url.searchParams.delete('focus')
-    window.history.replaceState(null, '', url)
+    if (!target) row.tabIndex = -1
+    focusNewRow(target ?? row, message)
   }, [focus, firstNewIndex, message])
   return null
 }

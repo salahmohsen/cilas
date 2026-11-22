@@ -33,7 +33,7 @@ export const latestRows = async (
   const found = await payload.find({
     collection: 'notifications',
     where: { recipient: { equals: user.id } },
-    sort: '-createdAt',
+    sort: ['-createdAt', '-id'],
     limit: LATEST_PAGE * pages,
     depth: 0,
     select: {

@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { localDigits } from '@/lib/digits'
 
 import styles from './needs.module.css'
-import type { NeedKind, NeedRow } from './sources'
+import { needsTotal, type NeedKind, type NeedRow, type NeedsResult } from './sources'
 
 type Shown = Pick<NeedRow, 'kind' | 'href' | 'count' | 'owners' | 'label' | 'collection'> & {
   verbKey: string
@@ -47,10 +47,11 @@ const grouped = (rows: NeedRow[], locale: string): Shown[] => {
  * total. `group` (Home, past five rows) shows one row per kind. A row runs no
  * action in place.
  */
-export function NeedList({ rows, group }: { rows: NeedRow[]; group: boolean }) {
+export function NeedList({ result, group }: { result: NeedsResult; group: boolean }) {
+  const { rows } = result
+  const total = needsTotal(result)
   const t = useTranslations('Portal')
   const locale = useLocale()
-  const total = rows.reduce((sum, row) => sum + row.count, 0)
   const shown: Shown[] = group ? grouped(rows, locale) : rows
   const untitled = (collection: NeedRow['collection']) =>
     t(
@@ -64,35 +65,50 @@ export function NeedList({ rows, group }: { rows: NeedRow[]; group: boolean }) {
     <section className={styles.section} data-needs>
       <h2 className={styles.heading}>
         {t('needs.heading')}
-        <span className={styles.total}>{localDigits(total, locale)}</span>
+        {total !== null && total > 0 && (
+          <span className={styles.total}>{localDigits(total, locale)}</span>
+        )}
       </h2>
-      <ul className={styles.rows}>
-        {shown.map((row) => (
-          <li key={`${row.kind}:${row.href}`}>
-            <a href={row.href} className={styles.need} data-need-kind={row.kind}>
-              <span className={styles.text}>
-                <span className={styles.verb}>
-                  {t(row.verbKey as 'needs.review', { count: row.count })}
-                </span>{' '}
-                {row.kind !== 'applicants' && row.label !== null && (
-                  <span className={styles.label}>
-                    <bdi dir="auto">{row.label}</bdi>
-                  </span>
-                )}{' '}
-                {row.kind !== 'applicants' && row.label === null && !group && (
-                  <span className={styles.label}>{untitled(row.collection)}</span>
-                )}{' '}
-                {row.owners.length > 0 && (
-                  <span className={styles.owners}>
-                    {t('needs.owners', { names: row.owners.join(', ') })}
-                  </span>
-                )}
-              </span>
-              <ChevronRight size={18} strokeWidth={1.75} aria-hidden="true" className={styles.go} />
-            </a>
-          </li>
-        ))}
-      </ul>
+      {total === null && (
+        <p className={styles.notice} role="status">
+          {t('needs.someFailed')}
+        </p>
+      )}
+      {total === 0 && <p className={styles.empty}>{t('needs.empty')}</p>}
+      {shown.length > 0 && (
+        <ul className={styles.rows}>
+          {shown.map((row) => (
+            <li key={`${row.kind}:${row.href}`}>
+              <a href={row.href} className={styles.need} data-need-kind={row.kind}>
+                <span className={styles.text}>
+                  <span className={styles.verb}>
+                    {t(row.verbKey as 'needs.review', { count: row.count })}
+                  </span>{' '}
+                  {row.kind !== 'applicants' && row.label !== null && (
+                    <span className={styles.label}>
+                      <bdi dir="auto">{row.label}</bdi>
+                    </span>
+                  )}{' '}
+                  {row.kind !== 'applicants' && row.label === null && !group && (
+                    <span className={styles.label}>{untitled(row.collection)}</span>
+                  )}{' '}
+                  {row.owners.length > 0 && (
+                    <span className={styles.owners}>
+                      {t('needs.owners', { names: row.owners.join(', ') })}
+                    </span>
+                  )}
+                </span>
+                <ChevronRight
+                  size={18}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                  className={styles.go}
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }
