@@ -1,16 +1,15 @@
 import { adminViewOf, type AdminView } from '@/access'
 
 export type PortalNavGroup = 'top' | 'myWork' | 'teaching' | 'admin'
-export type PortalNavIcon = 'home' | 'dashboard' | 'profile' | 'articles' | 'courses'
+export type PortalNavIcon = 'home' | 'inbox' | 'dashboard' | 'profile' | 'articles' | 'courses'
 
-/** One entry of the portal nav. `href` has no locale; `external` is a full load (its own root layout). */
+/** One entry of the portal nav. A count comes from `COUNT_OF` (`nav-counts.tsx`), never from the item. `href` has no locale; `external` is a full load (its own root layout). */
 export type PortalNavItem = {
-  key: 'home' | 'articles' | 'courses' | 'openDashboard'
+  key: 'home' | 'inbox' | 'articles' | 'courses' | 'openDashboard'
   labelKey: `nav.${string}`
   group: PortalNavGroup
   href: string
   icon: PortalNavIcon
-  count: number | null
   external: boolean
 }
 
@@ -20,7 +19,15 @@ const HOME: PortalNavItem = {
   group: 'top',
   href: '/spaces',
   icon: 'home',
-  count: null,
+  external: false,
+}
+
+const INBOX: PortalNavItem = {
+  key: 'inbox',
+  labelKey: 'nav.inbox',
+  group: 'top',
+  href: '/spaces/inbox',
+  icon: 'inbox',
   external: false,
 }
 
@@ -30,7 +37,6 @@ const OPEN_DASHBOARD: PortalNavItem = {
   group: 'admin',
   href: '/admin',
   icon: 'dashboard',
-  count: null,
   external: true,
 }
 
@@ -40,7 +46,6 @@ const listItem = (key: 'articles' | 'courses', group: PortalNavGroup): PortalNav
   group,
   href: `/spaces/${key}`,
   icon: key,
-  count: null,
   external: false,
 })
 
@@ -54,5 +59,5 @@ const ITEMS_BY_VIEW: Record<AdminView, PortalNavItem[]> = {
 /** What the account can open from the portal nav. Later phases add items here only. */
 export const portalNav = (user: Parameters<typeof adminViewOf>[0]): PortalNavItem[] => {
   const view = adminViewOf(user)
-  return [HOME, ...(view ? ITEMS_BY_VIEW[view] : [])]
+  return [HOME, INBOX, ...(view ? ITEMS_BY_VIEW[view] : [])]
 }

@@ -10,14 +10,35 @@ const lookup = (messages: object, key: string) =>
 
 describe('portalNav', () => {
   it.each([
-    [[], ['home']],
-    [['member'], ['home', 'articles']],
-    [['non_degree_seeking'], ['home', 'articles']],
-    [['fellow'], ['home', 'articles', 'courses']],
-    [['admin'], ['home', 'articles', 'courses', 'openDashboard']],
-    [['super_admin'], ['home', 'articles', 'courses', 'openDashboard']],
+    [[], ['home', 'inbox']],
+    [['member'], ['home', 'inbox', 'articles']],
+    [['non_degree_seeking'], ['home', 'inbox', 'articles']],
+    [['fellow'], ['home', 'inbox', 'articles', 'courses']],
+    [['admin'], ['home', 'inbox', 'articles', 'courses', 'openDashboard']],
+    [['super_admin'], ['home', 'inbox', 'articles', 'courses', 'openDashboard']],
   ] as const)('roles %j see %j', (roles, keys) => {
     expect(portalNav({ roles: [...roles] }).map((item) => item.key)).toEqual(keys)
+  })
+
+  it.each([[[]], [['member']], [['fellow']], [['admin']]] as const)(
+    'Inbox is the second top item for roles %j',
+    (roles) => {
+      const items = portalNav({ roles: [...roles] })
+      expect(items[1]).toEqual({
+        key: 'inbox',
+        labelKey: 'nav.inbox',
+        group: 'top',
+        href: '/spaces/inbox',
+        icon: 'inbox',
+        external: false,
+      })
+    },
+  )
+
+  it('portalNav takes one argument and no item has a count field', () => {
+    expect(portalNav.length).toBe(1)
+    for (const item of portalNav({ roles: ['super_admin'] }))
+      expect(item).not.toHaveProperty('count')
   })
 
   it('Open dashboard is a full load to /admin in the admin group', () => {
@@ -27,7 +48,6 @@ describe('portalNav', () => {
       group: 'admin',
       href: '/admin',
       icon: 'dashboard',
-      count: null,
       external: true,
     })
   })
@@ -43,15 +63,18 @@ describe('portalNav', () => {
     expect(Object.fromEntries(items.map((item) => [item.key, item.group]))).toEqual(groups)
   })
 
-  it('the list items are portal pages with no count', () => {
-    expect(portalNav({ roles: ['fellow'] }).filter((item) => item.key !== 'home')).toEqual([
+  it('the list items are portal pages', () => {
+    expect(
+      portalNav({ roles: ['fellow'] }).filter(
+        (item) => item.key === 'articles' || item.key === 'courses',
+      ),
+    ).toEqual([
       {
         key: 'articles',
         labelKey: 'nav.articles',
         group: 'myWork',
         href: '/spaces/articles',
         icon: 'articles',
-        count: null,
         external: false,
       },
       {
@@ -60,7 +83,6 @@ describe('portalNav', () => {
         group: 'myWork',
         href: '/spaces/courses',
         icon: 'courses',
-        count: null,
         external: false,
       },
     ])

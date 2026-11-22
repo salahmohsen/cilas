@@ -1744,7 +1744,10 @@
       "brand": "الصفحة الرئيسية لـ CILAS",
       "scroll": "الصفحات والمساحات",
       "articles": "المقالات",
-      "courses": "المقررات"
+      "courses": "المقررات",
+      "inbox": "الوارد",
+      "count": "{count, plural, zero {، لا مهام} one {، مهمة واحدة} two {، مهمتان} few {، {shown} مهام} many {، {shown} مهمة} other {، {shown} مهمة}}",
+      "countMany": "، أكثر من {cap} مهام"
     },
     "shell": {
       "skip": "الانتقال إلى المحتوى"

@@ -1744,7 +1744,10 @@
       "brand": "CILAS home",
       "scroll": "Pages and spaces",
       "articles": "Articles",
-      "courses": "Courses"
+      "courses": "Courses",
+      "inbox": "Inbox",
+      "count": "{count, plural, one {, {shown} task} other {, {shown} tasks}}",
+      "countMany": ", more than {cap} tasks"
     },
     "shell": {
       "skip": "Skip to content"

@@ -23,7 +23,6 @@ const HOME: PortalNavItem = {
   group: 'top',
   href: '/spaces',
   icon: 'home',
-  count: null,
   external: false,
 }
 
