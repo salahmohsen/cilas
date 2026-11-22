@@ -6,7 +6,8 @@ import { INGEST_PATH } from './hosts'
  * if its first path segment (after the language) names a public section, so a
  * new private route is excluded until someone adds it here on purpose.
  *
- * Never listed, so never tracked: Spaces, settings, profile, login, forgot and
+ * Never listed, so never tracked: Spaces (the account page, /spaces/account,
+ * is one), settings and profile (both only redirect to it), login, forgot and
  * reset, the signed-in copies of pages, /admin, /api, previews and the
  * ingestion proxy itself.
  */

@@ -57,6 +57,7 @@ describe('which pages analytics may see', () => {
     '/en/events/preview/9',
     '/en/unknown-section',
     '/uploads/old.pdf',
+    '/en/spaces/account',
   ])('does not track %s', (path) => {
     expect(isTrackedPath(path)).toBe(false)
   })
@@ -147,6 +148,7 @@ describe('the last gate before an event leaves', () => {
       method: 'password',
     })
     expect(mayCapture('push_enabled', '/en/settings')).toBe(true)
+    expect(mayCapture('push_enabled', '/en/spaces/account')).toBe(true)
     expect(mayCapture('contact_submitted', '/en/settings')).toBe(false)
   })
 

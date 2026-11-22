@@ -1,5 +1,6 @@
 'use client'
 
+import { ACCOUNT_PATH } from '@/lib/account-path'
 import { BRIDGE_PATH } from '@/lib/paths'
 
 import {
@@ -208,7 +209,7 @@ export function CILASSiteHeader({ peoplePages = ALL_ON }: { peoplePages?: People
                 {
                   label: t('settings'),
                   icon: <UserRound size={16} />,
-                  onSelect: () => router.push('/settings'),
+                  onSelect: () => router.push(ACCOUNT_PATH),
                 },
                 {
                   label: t('dashboard'),

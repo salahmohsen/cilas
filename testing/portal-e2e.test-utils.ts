@@ -27,11 +27,19 @@ export const LIST_SHAPES = [
   ['/spaces/courses', /^\/[a-z]{2}\/spaces\/courses$/],
 ] as const
 
-export type RouteShape = (typeof ROUTE_SHAPES)[number][0] | (typeof LIST_SHAPES)[number][0]
+/** The other portal pages. Their own e2e files run their axe scans. */
+export const PAGE_SHAPES = [['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/]] as const
+
+export type RouteShape =
+  | (typeof ROUTE_SHAPES)[number][0]
+  | (typeof LIST_SHAPES)[number][0]
+  | (typeof PAGE_SHAPES)[number][0]
 export type Known = Partial<Record<RouteShape, Record<string, Record<string, number>>>>
 
 export const shapeOf = (route: string) => {
-  const shape = [...ROUTE_SHAPES, ...LIST_SHAPES].find(([, pattern]) => pattern.test(route))
+  const shape = [...ROUTE_SHAPES, ...LIST_SHAPES, ...PAGE_SHAPES].find(([, pattern]) =>
+    pattern.test(route),
+  )
   if (!shape) throw new Error(`no route shape for ${route}`)
   return shape[0]
 }

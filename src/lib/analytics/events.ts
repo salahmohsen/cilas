@@ -19,7 +19,7 @@ export type AnalyticsEvent = keyof AnalyticsEvents
 
 /**
  * Events that fire where analytics is otherwise off (the login page, the
- * settings page). They carry no address and no page, so they say only that
+ * account page at /spaces/account). They carry no address and no page, so they say only that
  * something happened.
  */
 export const ANYWHERE_EVENTS: ReadonlySet<string> = new Set<AnalyticsEvent>([

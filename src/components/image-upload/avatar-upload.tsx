@@ -215,6 +215,8 @@ export function AvatarUpload({ name, fallbackSeed, src, onUpload, onRemove }: Av
               style={{ width: SIZE, height: SIZE, borderRadius: 9999 }}
               transition={smooth}
               aria-label={shown ? t('avatarChange') : t('avatarUpload')}
+              // The action button beside it opens the same picker, so the keyboard stops there once.
+              tabIndex={-1}
               aria-disabled={busy || undefined}
               data-over={pick.over || undefined}
               data-busy={busy || inset || undefined}
