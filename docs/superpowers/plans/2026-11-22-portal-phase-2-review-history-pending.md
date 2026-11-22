@@ -610,3 +610,366 @@ export const sends = (before: PendingItem, after: PendingItem) => before.state !
 - [ ] **unit:** `machine.unit.test.ts`, `undo-ms.unit.test.ts`, `pending-provider.dom.test.tsx`, `undo-all-bar.dom.test.tsx`; browser `pending-ring.browser.test.tsx`, `more-sheet.browser.test.tsx`; e2e `portal-shell` (unchanged rows still pass with the provider mounted).
 - [ ] **live:** Scenario on the kept app as the fixture student: open `/en/spaces`, open and close the More sheet at 390 px, then **Sign out** from the account menu at 1440 px. Pass: no console error; sign-out ends on the signed-out page within the time it took on `main` (no wait with zero items); `document` has listeners for `pagehide` and `visibilitychange` (`agent-browser eval "getEventListeners"` is not in agent-browser, so check with a `performance.mark` added only in a scratch build, or read the provider's dom test instead and say so).
 - [ ] **perf:** Metric 1: the client JavaScript the student's `/en/spaces` route loads, gzip, from `next build` output on the Mac (route table "First Load JS"), `main` at the base vs the head. Pass: head minus base at most 4 KB (the provider renders on every portal page; spec Lazy loading rule; the ring and the toast content load only where used). Metric 2: TTFB p75 per role on `/en/spaces` by Perf runs (1d Global Constraints), baseline `main` at the base. Pass: head p75 at most `L`. BLOCKING or REPORT-ONLY by the 1d P12 rule.
+
+## PR 2-4. Review endpoint (`portal/phase-2-review-endpoint`)
+
+Base `origin/main` after 2-1 merges. No screen. Every run uses `--db migrated` and Mail off (M).
+
+### Task E1: The move table and the body parser (pure)
+
+**Skills:** tdd.
+
+**Files:** Create `src/lib/review-moves.ts`, `src/lib/review-moves.unit.test.ts`.
+
+**Interfaces:**
+
+```ts
+export type ReviewTo = 'approved' | 'changes_requested' | 'rejected' | 'draft'
+export type Asked = 'changes' | 'removal' // stored review.request: 'removal', else 'changes' (also for null)
+export const MOVES: Record<Asked, Partial<Record<ReviewTo, { note: 'optional' | 'required' }>>> = {
+  changes: { approved: { note: 'optional' }, changes_requested: { note: 'required' }, rejected: { note: 'required' } },
+  removal: { draft: { note: 'optional' }, rejected: { note: 'required' } },
+}
+export type ReviewCommit = { to: ReviewTo; note: string | null; tier: 'community' | 'public' | null; cycle: number | null; updatedAt: string }
+export const parseCommit = (raw: unknown): { ok: true; commit: ReviewCommit } | { ok: false; field: 'to' | 'note' | 'tier' | 'cycle' | 'updatedAt'; message: string }
+export const checkMove = (asked: Asked, commit: ReviewCommit, collection: ReviewedCollection): { ok: true } | { ok: false; field: 'to' | 'note' | 'cycle'; message: string }
+```
+
+- `parseCommit` (zod, unknown keys dropped): `to` one of `ReviewTo`; `note` a string trimmed to `null` when empty, at most 4000 characters; `tier` `community`, `public` or absent (`owner` and any other value: `field: 'tier'`); `cycle` a positive integer or absent; `updatedAt` an ISO date string.
+- `checkMove`: the move must be in `MOVES[asked]` (else `field: 'to'`); a `required` note must be present (else `field: 'note'`); a course approval needs `cycle` (else `field: 'cycle'`, spec D10). `tier` and `cycle` count only on `approved`; on any other move the endpoint drops them.
+- [ ] **Step 1: Failing unit table** (`pnpm exec vitest run --project node src/lib/review-moves.unit.test.ts`, `describe('review-events: move table')`): every legal pair of the spec table gives `ok`; `changes`+`draft`, `changes`+`submitted`, `removal`+`approved`, `removal`+`changes_requested` give `field: 'to'`; empty and whitespace notes on each `required` move give `field: 'note'`; `tier: 'owner'` gives `field: 'tier'`; a course approval with no `cycle` gives `field: 'cycle'`; an article approval with no tier is `ok`. FAIL. Implement. PASS. Commit.
+
+### Task E2: The endpoint factory
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/lib/review-endpoint.ts`. Modify `src/collections/Articles.ts`, `Courses.ts`, `Publications.ts` (`endpoints`).
+
+**Interfaces:**
+
+- `reviewEndpoint(collection: ReviewedCollection): Endpoint` = `{ path: '/:id/review', method: 'post', handler }` (P17). `Courses` keeps `deleteEndpoints(...)` and adds it: `endpoints: [...deleteEndpoints('courses', …), reviewEndpoint('courses')]`.
+- Handler, in this order:
+  1. `isAdminUser(req.user)`, else 403 `{ error: 'Admins only.' }`.
+  2. `req.headers.get('origin') === siteOrigin()`, else 403 `{ error: 'Wrong origin.' }`. `siteOrigin()` is `new URL(env.NEXT_PUBLIC_SERVER_URL).origin`. A missing header is refused (P8).
+  3. `id` from `req.routeParams.id`, an integer, else 404.
+  4. `parseCommit(await req.json())`, else 400 `{ error, field }`.
+  5. `const owns = await initTransaction(req)`, then in `try`: `lockRow(req, collection, id)`; read `main` (`findByID`, `depth: 0`, `user: req.user`, `overrideAccess: false`, `req`; missing: 404) and `latest` (`findVersions({ where: { parent: { equals: id } }, sort: '-updatedAt', limit: 1, depth: 0, user: req.user, overrideAccess: false, req })`).
+  6. Step 1 (spec): the newest `review-events` row of this document (`find`, `sort: '-at'`, `limit: 1`, `overrideAccess: true`, `req`). When its `to` equals `commit.to`, its `actor` is `req.user.id`, and its `at` is after `commit.updatedAt`: commit the transaction and return 200 `{ ok: true, repeated: true }`.
+  7. Step 2: when `latest.updatedAt > commit.updatedAt` or `latest.version.review.status !== 'submitted'`: 409 `{ error: 'stale' }`.
+  8. `checkMove(asked, commit, collection)` with `asked` from `latest.version.review.request`, else 400 `{ error, field }`. On a course approval, `findByID({ collection: 'cycles', id: commit.cycle, depth: 0, overrideAccess: true, req })` must find it, else 400 `field: 'cycle'` (the handler's own read; Payload's relationship check is not relied on).
+  9. Step 3: `payload.update({ collection, id, draft: false, depth: 0, user: req.user, overrideAccess: false, req, data: { review: { status: commit.to, review_note: commit.note }, ...(approve && commit.tier ? { tier: commit.tier } : {}), ...(approve && collection === 'courses' ? { cycle: commit.cycle } : {}) } })`. `review_note` is `null` when there is no note, on every move (spec; `submit-for-review.tsx:177`). `draft: false` on every move: `recordDraftSave` turns an admin's `changes_requested` or `rejected` on a live document into a draft save of the copy (`HELD`), an approval publishes (P6), and a removal approved (`draft`) takes the main row off the site, as the admin button does.
+  10. Commit; 200 `{ ok: true }`.
+  - `catch`: `killTransaction(req)` when `owns`; an `APIError` (a `ValidationError` too) returns its status with `{ error, field }` (the first field path of a `ValidationError`); any other error rethrows (500).
+- [ ] **Step 1:** Implement and register. `pnpm exec tsgo --noEmit`. The cases run in E6. Commit.
+
+### Task E3: Course `onApprove` (D10)
+
+**Skills:** tdd, payload.
+
+**Files:** Modify `src/collections/Courses.ts`.
+
+- [ ] **Step 1:** `approveCourse: ReviewOptions['onApprove'] = ({ data, originalDoc }) => { const tier = (data.tier ?? originalDoc?.tier) as string | null | undefined; return { tier: tier && tier !== 'owner' ? tier : 'public' } }`; `courseReview = reviewHooks(courseNoun, { onApprove: approveCourse })`. So an approval from `/admin` also leaves no course at `owner`. The case runs in E6. Commit.
+
+### Task E4: The tier in the approved line (D6)
+
+**Skills:** tdd.
+
+**Files:** Modify `src/lib/review-hooks.ts` (`NOTES.approved`, `notifyReview`).
+
+- [ ] **Step 1:** For an article, `approved` gives "Your article “{title}” was published for the community" when `doc.tier === 'community'`, and "Your article “{title}” was published on the public site" when `public`. Courses and publications keep today's line. The case runs in E6. Commit.
+
+### Task E5: Test helpers
+
+**Skills:** tdd.
+
+**Files:** Modify `testing/payload-rest.test-utils.ts`.
+
+- [ ] **Step 1:** `rest(method, path, { token, body, json, headers })`: `json` sets the body to `JSON.stringify(json)` and `Content-Type: application/json`; `headers` merge after the auth header. Existing callers do not change. Commit.
+
+### Task E6: The endpoint int cases
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/lib/review-endpoint.int.test.ts`. Uses `rest()` with `headers: { Origin: siteOrigin() }`, `holdRow` and `waitForLockWaiters` (2-1), `ownerMove` (2-1), `resendInbox()`.
+
+**Concurrency (needs a real Postgres transaction, so every case runs on the Mac through `verify.sh --db migrated --int-only`).** Rows 12 to 14 force the order: `holdRow(article)`, start request A, `waitForLockWaiters(1)`, start request B, `waitForLockWaiters(2)`, `release()`, await both. Postgres queues row-lock waiters in arrival order, so A runs first. Each of the three fails when `lockRow` is a no-op (A and B never wait, so `waitForLockWaiters` times out). The builder proves this once with a scratch edit (not committed) and writes the failing output in the PR.
+
+- [ ] **Step 1: The cases** (`describe('review-events: the review endpoint')`):
+  1. "approve publishes a new article at the tier sent" (`tier: 'public'` on a request for `community`; public read shows it; tier `public`).
+  2. "approve a live edit publishes the copy" (P6).
+  3. "approving a course with cycle and tier publishes it at that tier" and its fellows get the `fellow` role.
+  4. "a course approved at tier owner from /admin is public" (E3, a `payload.update` as an admin).
+  5. "ask for changes stores the note; every move sets review_note, null when none".
+  6. "each move outside the table gets 400 with field to" (the four pairs of E1).
+  7. "a missing required note gets 400 with field note" (three moves).
+  8. "tier owner gets 400"; "an unknown cycle gets 400"; "a course approval with no cycle gets 400".
+  9. "a member gets 403"; "a foreign Origin gets 403"; "a missing Origin gets 403"; "an unknown id gets 404"; "POST /api/users/1/review is not found".
+  10. "the owner withdraws, then a commit with the old updatedAt gets 409 and nothing publishes".
+  11. "the same commit sent twice returns 200 both times and sends one email".
+  12. "two commits with different verdicts at once: one writes, the other gets 409, one email goes" (A approve, B ask for changes).
+  13. "owner withdraw and admin approval at once, admin first: the withdraw is refused with reason decided" (A endpoint, B `ownerMove(withdraw)`); the page copy for `decided` is 2-5's.
+  14. "owner withdraw and admin approval at once, owner first: the admin gets 409".
+  15. "the approved notification of an article names the tier" (community and public).
+  16. "a removal approved takes the article off the site; keep it published needs a note" (`to: 'draft'` then a second document with `to: 'rejected'` and a note).
+- [ ] **Step 2:** **[verify]** `verify.sh --db migrated --int-only portal/phase-2-review-endpoint <sha>`. Pass predicate (Int runs): no case of `review-endpoint`, `review-moves`, `review-events` or `review-status` is named as failed. Commit.
+
+### Task E7: Reviews, full suite, open PR 2-4
+
+**Skills:** code-review, then security-review.
+
+- [ ] **Step 1:** code-review (spec, The review endpoint, Errors, D6, D10 as the issue). security-review of the endpoint: admin only; `Origin` exact match, missing refused; only the body keys of `parseCommit` reach `payload.update`; `overrideAccess: false` with the admin as `user`; one `req` for every call (lock, reads, update, hooks); 409 and 400 never leak another document; `review_note` length bound; no `tier: 'owner'` path; a GET to the path is not served.
+- [ ] **Step 2:** Fix. **[verify]** the full suite (`--db migrated`). Per-PR step 5. Open `feat(portal): review endpoint with move table, lock and stale check (portal phase 2, PR 4)`.
+
+**Verification boxes (2-4).**
+
+- [ ] **unit:** `review-moves.unit.test.ts`; int `review-endpoint.int.test.ts`.
+- [ ] **live:** Scenario on the kept app (`--db migrated --keep --no-tests`, Mail off (M) server guard first; scratch world: one admin, one fellow, one submitted article): as the admin, `curl -s -o /dev/null -w '%{http_code}' -X POST -b <admin cookie> -H "Origin: http://localhost:<port>" -H 'Content-Type: application/json' -d '{"to":"approved","note":null,"tier":"public","updatedAt":"<version updatedAt>"}' http://localhost:<port>/api/articles/<id>/review` twice, then once with `Origin: https://example.com`. Pass: `200`, `200`, `403`; `/en/articles/<slug>` renders for a signed-out reader; one `review_events` row `submitted | approved`; the server log shows one review message.
+- [ ] **perf:** no route. Metric: wall time of one commit on the kept app, 20 sequential approves of scratch articles (`curl -w '%{time_total}'`). REPORT-ONLY: write p50 and p75 in the PR; no pass line (the spec sets none; a commit runs off the reader's path, after the undo window).
+
+## PR 2-5. Owner pages (`portal/phase-2-owner-pages`)
+
+Base `origin/main` after 2-2 merges. Screen: `/spaces/articles/[id]`, `/spaces/courses/[id]`.
+
+### Task O1: The document read
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/portal/review/read-document.ts`, `src/portal/review/read-document.int.test.ts`.
+
+**Interfaces:**
+
+- `readDocument(payload, user, target: { collection: ReviewedCollection; id: number }, locale): Promise<ReviewedRead | null>`. A gated `findByID` of the main row (`depth` as the public page reads it, P10; `user`, `overrideAccess: false`), a gated `findVersions` of the latest version (`limit: 1`, `sort: '-updatedAt'`, same `depth`). No version found (the reader is neither an owner nor an admin): `null`, so the page is not found (spec: the version access lets only owners and admins through). Returns `{ main, latest, key: statusOf(statusInputOf(...)), updatedAt: latest.updatedAt }`. For a course it also reads its sessions with a gated `find` (`course equals id`, `depth: 0`, `pagination: false`).
+- [ ] **Step 1: Failing int cases** (`describe('review-events: readDocument')`): "the owner reads a draft"; "an admin reads it"; "another member gets null on a published article" (the main row is readable, the version is not); "a student gets null for a course of someone else". **[verify]** at the O1 to O4 group end. Implement. PASS. Commit.
+
+### Task O2: Banner, history, body
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-accessibility, better-layout, better-typography, better-writing then humanizer.
+
+**Files:** Create `src/portal/review/review-banner.tsx`, `review-history.tsx`, `document-body.tsx`, `review.module.css`, `review-banner.dom.test.tsx`, `review-history.dom.test.tsx`, `document-body.browser.test.tsx`. Modify `messages/{en,ar}.json` (`Portal.banner.*`, `Portal.history.*`).
+
+**Interfaces:**
+
+- `ReviewBanner({ statusKey, viewer, latestNote })` (server): Arc `Alert` with `statusBadge(statusKey)` badges, the `nextAction(statusKey, viewer)` line, and the latest note (`dir="auto"`) when there is one.
+- `ReviewHistory({ rows, open })` (server): `<details open={open}>` with `<summary>` "History ({n})", holding Arc `Timeline` events: date (`<time>`, tabular numbers), "{actor} moved it from {from} to {to}" with status words from `Portal.status`, and the note. `open` is true for an admin (spec, pane order 2). No rows: "No review moves yet."
+- `DocumentBody({ collection, doc, sessions, clamp })` (server): article through `RichTextField` (`data={doc.body}`, the article page's footnote props), course through `CourseView` (`course={doc}`, `sessions`), publication through label and value rows (Deviation 11). `clamp`: `max-block-size: 320px`, `overflow: hidden`, and a **Show more** `<button aria-expanded>` (own CSS; Arc `ExpandableText` clamps by `lines`, not by height, `expandable-text.tsx:10-18`). Each localized block carries `lang` and `dir`.
+- [ ] **Step 1: Failing tests:** banner "shows two badges for a live item with edits in review and the latest note"; history "is closed for an owner, open for an admin, counts rows in the summary"; body (browser) "clamps at 320 px, Show more expands, and the button's aria-expanded follows", "Arabic body has dir rtl". FAIL. Implement. PASS (**[verify]** for the browser file). Commit.
+
+### Task O3: Owner moves on the page
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-accessibility, better-writing then humanizer.
+
+**Files:** Create `src/portal/document/owner-buttons.ts`, `owner-buttons.unit.test.ts`, `owner-actions.ts` (`'use server'`), `owner-actions-bar.tsx` (client), `owner-actions-bar.dom.test.tsx`, `restore-line.tsx`, `document.module.css`. Modify `messages/{en,ar}.json` (`Portal.document.*`).
+
+**Interfaces:**
+
+- `OWNER_BUTTONS: Record<StatusKey, OwnerButton[]>` with `OwnerButton = 'withdraw' | 'withdrawChanges' | 'requestRemoval' | 'discard'`: `submitted` [withdraw]; `published_edits` [withdrawChanges]; `published_removal` [withdraw]; `published` [requestRemoval]; `published_unsent` [discard, requestRemoval]; `published_edits_returned` [discard]; `published_edits_declined` [discard]; `published_removal_kept` [requestRemoval]; `draft`, `changes_requested`, `rejected` []. **Edit** (secondary, the admin editor URL) shows for every key except `submitted`, `published_edits`, `published_removal` (the owner cannot edit while it waits). `withdraw` and `withdrawChanges` both call `ownerMove({ move: 'withdraw' })`.
+- `ownerMoveAction(input: unknown): Promise<OwnerMoveResult>`: parses `{ collection, id, move, from? }` with zod (collection `articles` or `courses`), reads `currentReader()` (no reader: `{ ok: false, reason: 'refused' }`), calls `ownerMove`, then `refresh()` (`next/cache`, `refresh.md`) on `ok` and on `decided`.
+- `OwnerActionsBar`: the buttons in one area with a fixed inline size, so nothing shifts across **Withdraw** and **Request removal** (spec, Success moments). After a move, focus goes to the first button of the new state, or to the banner when there is none. `decided`: the line "An admin decided this while you withdrew it." (`role="status"`) and the page shows the new state (after `refresh()`). Discard `ok`: `RestoreLine` "Your changes were discarded." with **Restore them** (`ownerMoveAction({ move: 'restore', from: restoreFrom })`); the line stays until the owner edits again or leaves the page; a toast repeats it (the line is the keyboard path; spec, Undo not confirm). Discard commits at once, with no pending timer (spec, Calls).
+- [ ] **Step 1: Failing tests:** `owner-buttons.unit.test.ts`: one row per `StatusKey`. `owner-actions-bar.dom.test.tsx`: "Withdraw calls the action and moves focus to the new first button"; "decided shows the line"; "Discard shows the restore line and Restore them calls restore with restoreFrom"; "the area keeps its inline size". FAIL. Implement. PASS. Commit.
+
+### Task O4: The routes and the owner branch of `documentHref`
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-layout.
+
+**Files:** Create `src/portal/document/document-page.tsx`, `src/app/(frontend)/[locale]/(portal)/spaces/articles/[id]/page.tsx`, `src/app/(frontend)/[locale]/(portal)/spaces/courses/[id]/page.tsx`. Modify `src/lib/document-href.ts`, `document-href.unit.test.ts`, `testing/portal-e2e.test-utils.ts` (route shapes, P13).
+
+**Interfaces:**
+
+- Each route: `currentReader()`; `id` an integer, else `notFound()`; courses: `adminViewOf(user)` must be `fellow` or `admin`, else `notFound()` (spec, Routes); `readDocument`, `null` gives `notFound()`; renders `DocumentPage` with `PageHeader` (H1 the title in the reader's locale, or the other locale's title; **Edit**; **View on the site** for a live item), `ReviewBanner`, `ReviewHistory` (`open={false}` for an owner), `OwnerActionsBar` (owners only; Open question 4), `DocumentBody` (no clamp). `generateMetadata` with the title and `robots: { index: false }`. No `loading.tsx` above the banner (first-render content, server-rendered).
+- `documentHref`: `viewer: 'owner'` and `collection` `articles` or `courses` gives `/spaces/{collection}/{id}`. A publication owner keeps the admin URL (D16). Admin and fellow rows unchanged until 2-6.
+- [ ] **Step 1: Failing unit rows** in `document-href.unit.test.ts` (owner articles, owner courses, owner publications stays admin). FAIL. Implement. PASS. Commit.
+
+### Task O5: Fixture
+
+**Skills:** tdd, payload.
+
+**Files:** Create `testing/review.fixture.ts`.
+
+- [ ] **Step 1:** `reviewWorld(payload)`: an admin, a fellow with a submitted course (two fellows), a student with a submitted article (requested `community`), a live article with unsent edits, a live article with edits in review, a live article with a removal request, a submitted publication, each tracked for cleanup (`createTracker`). Returns ids, accounts and each document's latest version `updatedAt`. Used by 2-5 and 2-6. Commit.
+
+### Task O6: `portal-document` e2e
+
+**Skills:** tdd, better-accessibility.
+
+**Files:** Create `e2e/portal-document.e2e.test.ts`.
+
+- [ ] **Step 1: The cases** (owner roles fellow and student, English and Arabic, 1440 and 390; Mail off (M); `reviewWorld`):
+  1. "the list row opens the portal page" (Articles list, title link goes to `/{locale}/spaces/articles/{id}`).
+  2. "a submitted article: banner, history, Withdraw" (banner Submitted; the history summary "History (1)"; **Withdraw**; banner Draft; focus on the first button of the new state or the banner).
+  3. "a live article: Discard, then Restore them" (badges Published and Unsent edits; **Discard my changes**; the line and the toast; badges Published only; **Restore them**; Unsent edits again).
+  4. "Request removal, then Withdraw keeps it on the site".
+  5. "another member gets not found on the owner page"; "a student gets not found on /spaces/courses/{id}"; "/spaces/articles/new is not found".
+  6. "Edit opens the admin editor".
+  7. axe on each page shape (the axe rule); keyboard-only walk through the actions.
+  8. At 390 px in Arabic: no horizontal scroll, the back link and chevrons mirror.
+- [ ] **Step 2:** **[verify]** `verify.sh --db migrated --e2e-only portal/phase-2-owner-pages <sha> e2e/portal-document.e2e.test.ts e2e/portal-lists.e2e.test.ts e2e/portal-shell.e2e.test.ts`. PASS. Commit.
+
+### Task O7: Reviews, full suite, open PR 2-5
+
+**Skills:** ux-auditor, better-interface, then break-ui; code-review, then security-review.
+
+- [ ] **Step 1: Screen reviews** on the kept app (`--db migrated --keep --no-tests`, Mail off (M) server guard; `reviewWorld` by the scratch world script): ux-auditor and better-interface on the two read-only pages, as fellow and student, 1440 and 390, English and Arabic, light and dark. Reports in a PR comment.
+- [ ] **Step 2: break-ui** with `agent-browser` (headless): a 120-character Arabic title, a body of 30 paragraphs, a history of 40 rows, an empty note, a course with 8 fellows, a document whose other locale is empty. `agent-browser close`.
+- [ ] **Step 3:** code-review (spec Review and history, Read-only views, Status model Discard). security-review: `ownerMoveAction` parses its input, takes the user from the session, never sets `overrideAccess`; the pages read through the gated read and return not found for a reader without version access; `rg -l "@/portal/" src/lib src/components src/i18n` prints nothing.
+- [ ] **Step 4:** Fix. **[verify]** the full suite. Per-PR step 5. Scratch-world `--remove`. Open `feat(portal): read-only article and course pages with owner moves (portal phase 2, PR 5)`.
+
+**Verification boxes (2-5).**
+
+- [ ] **unit:** `owner-buttons.unit.test.ts`, `document-href.unit.test.ts`, `review-banner.dom.test.tsx`, `review-history.dom.test.tsx`, `owner-actions-bar.dom.test.tsx`; browser `document-body.browser.test.tsx`; int `read-document.int.test.ts`; e2e `portal-document`.
+- [ ] **live:** Scenario on the kept app as the fixture student who owns the submitted article: open the bell, open the "Review requested" style row for the article (the student's own submit row is not theirs; use the Articles list row instead), then **Withdraw**, then open the same URL as another student. Pass: the first lands on `/en/spaces/articles/<id>` inside the portal shell with banner Submitted; after **Withdraw** the banner says Draft and the admin's bell gets "Withdrawn"; the second account gets the not-found page.
+- [ ] **perf:** Metric: TTFB p75 by Perf runs (1d Global Constraints, `cilas_ttfb` migrated in the head session). Baseline `main` at the base, `/en/spaces`. Head routes: `/en/spaces/courses/<id>` for the fellow account (its first own course, printed by a gated `find` as that account) and `/en/spaces/articles/<id>` for the account that owns an article (when the clone has one), with `/en/spaces` as the control. Pass: head p75 at most `L` per role and route. BLOCKING or REPORT-ONLY by the 1d P12 rule.
+
+## PR 2-6. To review (`portal/phase-2-to-review`)
+
+Base `origin/main` after 2-3, 2-4 and 2-5 merge. Screen: `/spaces/review`, `/spaces/review/[collection]/[id]`.
+
+### Task R1: The nav item and its count
+
+**Skills:** tdd, modern-web-guidance (first), arc.
+
+**Files:** `src/portal/nav/portal-nav.ts`, `portal-nav.unit.test.ts`, `nav-icons.ts`, `nav-counts.tsx`, `testing/portal-e2e.test-utils.ts`, `messages/{en,ar}.json` (`Portal.nav.review`: "To review").
+
+- [ ] **Step 1:** Run P1, P2, P3, P13. Failing unit row in `portal-nav.unit.test.ts`: "an admin gets To review in the admin group before Open dashboard; a fellow and a student do not". FAIL. Add `REVIEW` (Shared files), the `COUNT_OF.review` row, the icon, the `NAV_BY_ROLE` row. PASS. Commit.
+
+### Task R2: List and pane data
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/portal/review/review-rows.ts`, `src/portal/review/pane-data.ts`, `src/portal/review/pane-data.int.test.ts`.
+
+**Interfaces:**
+
+- `reviewRows(payload, user, locale): Promise<AdminReviewRow[]>`: throws for a non-admin (callers return not found first); `adminReviewRows(payload, await adminQueue(payload), locale)` (oldest first, `src/lib/review-queue.ts`).
+- `reviewPane(payload, user, target, locale): Promise<ReviewPane | null>`: `readDocument` (2-5) as the admin; `reviewHistoryFor`; `reviewDiff` (R3) when the key is a resubmission or a published edit; the facts row (article: requested tier, translation, tag count, locales; course: course type (`courseTypeKey`), mode, language, start date, session count, locales, fellows' names); for a course, the cycles for the select (`find` `cycles`, `select: { title: true }`, `depth: 0`, `pagination: false`) and the current `cycle` and `tier` of a live course; the fellows who become fellows on approval (people in `fellows` whose account lacks the `fellow` role); `waitsOnAdmin: waitsOn(key) === 'admin'` (actions show only then); `asked` (`changes` or `removal`).
+- [ ] **Step 1: Failing int cases** (`describe('review-events: pane data')`): "the rows equal getReviewQueue in order"; "a non-admin throws"; "a course pane names the fellows who become fellows"; "a decided item returns its pane with waitsOnAdmin false". **[verify]** at the group end. Implement. PASS. Commit.
+
+### Task R3: The diff (D9)
+
+**Skills:** tdd.
+
+**Files:** Create `src/lib/review-diff.ts`, `src/lib/review-diff.unit.test.ts`. Modify `package.json`, `pnpm-lock.yaml` (`pnpm add diff --save-exact` on the Mac; Check open source first).
+
+**Interfaces:**
+
+```ts
+type FieldChange =
+  | { field: string; locale: Locale | null; kind: 'text'; before: string | null; after: string | null }
+  | { field: string; locale: Locale | null; kind: 'richText'; hunks: { removed: string[]; added: string[] }[] }
+  | { field: string; kind: 'people'; added: string[]; removed: string[] }
+type ReviewDiff = { kind: 'changes'; changes: FieldChange[] } | { kind: 'pruned' } | { kind: 'none' }
+diffBaseId(events: { to: ReviewState; version: number | null }[], live: boolean): 'live' | number | null
+reviewDiff(collection: ReviewedCollection, base: ReviewedDoc | null, submitted: ReviewedDoc, names: Map<number, string>): ReviewDiff
+```
+
+- Base (spec D9): a document that is not live uses the `version` of the latest `review-events` row whose `to` is `changes_requested`; a live document uses the live row. No such row on a document that is not live: `none` (a first submission has no diff). The version is gone (`findVersionByID` finds nothing, P14): `pruned`.
+- Fields: `REVIEWED_FIELDS[collection]`, compared with the fingerprint rule of `hasUnsentEdits` (no Lexical node ids). A text field gives both values. A rich text field gives its paragraphs as plain text (Lexical text nodes joined per top-level block) per locale, diffed with `diffArrays` from `diff`; each hunk lists removed above added. `fellows` gives the names added and removed. Sessions are not a field (ADR 0011).
+- [ ] **Step 1: Failing unit table** (`pnpm exec vitest run --project node src/lib/review-diff.unit.test.ts`): a changed title in Arabic only; a rich text body with one paragraph changed and one added; node id changes alone give no change; fellows added and removed; base for a document that is not live after two rounds uses the latest `changes_requested` row; a live document uses `live`; a first submission gives `none`; a missing version gives `pruned`. FAIL. Implement. PASS. Commit.
+
+### Task R4: Routes and layout
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-layout, better-typography, better-accessibility.
+
+**Files:** Create `src/portal/review/review-page.tsx`, `review-list.tsx`, `review-pane.tsx`, `review-diff-view.tsx`, their tests, `src/app/(frontend)/[locale]/(portal)/spaces/review/page.tsx`, `src/app/(frontend)/[locale]/(portal)/spaces/review/[collection]/[id]/page.tsx`. Modify `review.module.css`, `messages/{en,ar}.json` (`Portal.review.*`).
+
+**Interfaces:**
+
+- Both routes: `currentReader()`; not an admin: `notFound()`. The pane route: `collection` in `articles`, `courses`, `publications`, else `notFound()` (spec); `id` an integer; `reviewPane` `null` gives `notFound()`.
+- `/spaces/review`: H1 "To review", the list, and on a wide screen the pane of the oldest row (no pane when the list is empty: `PortalEmptyState` "Nothing waits for review."). `/spaces/review/[collection]/[id]`: the list with that row selected (`aria-current="true"`) and its pane. Under 700 px the list route shows only the list, and the pane route shows only the pane, with a back link "To review" (a chevron that mirrors in Arabic) and the sticky action bar; the page sets `scroll-padding-block-end` to the bar's height.
+- Wide: a CSS grid of two columns; each is an Arc `ScrollArea` (operator rule). The list is server-rendered (spec, Lazy loading rule).
+- `ReviewList`: each row is a container (not a link): the title is the link to the row's pane route; meta "{owner} · Waiting {n} days"; the 40x40 slot; `statusBadge`. The pending state comes from R5 on the client (`usePendingItem('review:{collection}:{id}')`).
+- `ReviewPane` order (spec): title, byline, facts row (13 px); `ReviewBanner` and `ReviewHistory open`; **What changed** (`ReviewDiffView`, or "The earlier version is no longer stored."); `DocumentBody clamp` with "Read the full article" or "Open the full course" (a quiet link to the owner page route, which an admin may open read-only; Open question 4; its back link returns to this row); the actions (R5).
+- `ReviewDiffView`: per change a `<dl>` row: the field label (with the locale), old above new; `<del>` and `<ins>` with visually hidden "Removed" and "Added" (colour is never the only cue).
+- [ ] **Step 1: Failing tests:** `review-list.dom.test.tsx` "the title is the only link; the selected row has aria-current"; `review-diff-view.dom.test.tsx` "old above new, with Removed and Added text". FAIL. Implement. PASS. Commit.
+
+### Task R5: Actions on the pending provider
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-accessibility, apple-design, better-writing then humanizer.
+
+**Files:** Create `src/portal/review/review-actions.tsx`, `review-actions.dom.test.tsx`, `pending-row.tsx`, `review-drafts.ts` (client store of form state per key). Modify `review-list.tsx`, `messages/{en,ar}.json`.
+
+**Interfaces:**
+
+- `ReviewActions({ pane })` (client), by item (spec, Actions by item): article: **Approve and publish** with **Publish as** (Arc `Select`, Community and Public, starting at the requested tier, D6); course: **Approve and publish** with **Cycle** (required) and **Tier** (Community, Public, starting at Public; on an edit of a live course both start at its current values, D10), and the label "Approve and publish. Makes {names} fellows." when the approval makes someone a fellow; publication: **Approve and publish**; each with **Ask for changes** and **Decline** (note required). Removal request: **Remove from the site** and **Keep it published** (note required). The note is an Arc `Textarea`.
+- On press: validate **Cycle** and a required note; a gap shows the error under the field (`aria-invalid`, `aria-describedby`), focus moves there, no item starts. Else `pending.decide({ key: 'review:{collection}:{id}', label: title, request: { url: '/api/{collection}/{id}/review', body: { to, note, tier, cycle, updatedAt: pane.updatedAt } } })`. The buttons preload `PendingToast` on `onPointerEnter`, `onFocus`, `onPointerDown`.
+- After `decide`: the row becomes a `PendingRow` (`aria-busy="true"`, the line "Approving. Email in {n} s", **Undo**, `PendingRing`, all siblings of the title link); focus moves to the next row that is not pending and the router goes to its pane route (`router.push`, the provider keeps its timers across the route change); no such row: focus to the list heading and the pane shows "Nothing else waits."; on a phone, the next row's pane page, or the list. A toast "Approved. Email in {n} s" with **Undo**. 500 ms after the toast shows, `announce(t('left', { n }))` ("6 left."), counting rows that are not pending.
+- **Undo** (row, ring, toast, Esc on the row, **Undo all**): the row is normal again, selected, with the note and selects as they were (`review-drafts.ts` keeps them per key until the item leaves); focus moves to that row.
+- `ok`: `router.refresh()`; the row leaves. `refused` 409: the row is normal again, selected; toast "This changed while you reviewed it."; refresh. `refused` 400: the row is normal again, selected, with the field error from the response's `field` under that field. `failed`: the row line "Not saved." with **Try again** and **Undo**; the toast says the same.
+- A pending row never shows the decision buttons; a second `decide` on its key is refused by the provider.
+- [ ] **Step 1: Failing dom tests** (fake clock and fetcher through `PendingProvider` props): "an empty required note shows the error and starts nothing"; "approve starts one pending item with the body of the spec"; "focus moves to the next row that is not pending"; "Undo restores the note and selects and focuses the row"; "409 shows the changed toast"; "400 puts the error under the field"; "failure shows Not saved with Try again and Undo"; "6 left is announced 500 ms after the toast and counts only rows that are not pending"; "the course label names the new fellows". FAIL. Implement. PASS. Commit.
+
+### Task R6: The admin branch of `documentHref`
+
+**Skills:** tdd.
+
+**Files:** `src/lib/document-href.ts`, `document-href.unit.test.ts`, `src/lib/review-mail.int.test.ts` (one assertion).
+
+- [ ] **Step 1:** Failing unit rows: admin and `waiting` gives `/spaces/review/{collection}/{id}` for articles, courses and publications; admin and not waiting keeps the admin URL; `users` keeps the admin URL. Add to the 2-2 int case: the Arabic admin's link holds `/ar/spaces/review/articles/`. FAIL. Implement. PASS. The `/admin/reviews` page (`getReviewQueue` `href`) now links to To review. Commit.
+
+### Task R7: The one-off link script
+
+**Skills:** tdd, payload.
+
+**Files:** Create `scripts/rewrite-notification-links.ts`, `scripts/rewrite-notification-links.int.test.ts`.
+
+**Interfaces:**
+
+- `rewriteNotificationLinks(payload, { apply }): Promise<{ scanned; changed; skipped: Record<'users' | 'gone' | 'same', number>; samples: { id; from; to }[] }>`. Reads `notifications` whose `link` starts with `/admin/collections/` or `/admin/applicants` (`overrideAccess: true`, `depth: 0`, pages of 200). For a reviewed collection link: reads the document and its latest version, `waiting = waitsOn(statusOf(...)) === 'admin'`, `viewer = isAdminUser(recipient) ? 'admin' : 'owner'`, the new link from `documentHref`; a gone document is skipped (`gone`); a `users` link is skipped (`users`). An applicants link goes through `applicantsHref` (the same URL until phase 3, so `same`). With `apply`, each changed row is updated with `overrideAccess: true`.
+- The CLI (`npx tsx scripts/rewrite-notification-links.ts [--apply]`) prints the database name, the counts and ten samples. With no flag it writes nothing. The owner runs it by hand on each database after 2-6 deploys; deploys never run it; it is not called from `package.json` scripts, the Dockerfile or a migration (For the operator, item 3).
+- [ ] **Step 1: Failing int cases** (`describe('review-events: link script')`): "a dry run changes nothing and counts"; "apply rewrites an owner's article link to /spaces/articles/{id} and a waiting admin link to /spaces/review/..."; "users links and gone documents are skipped". **[verify]** at the group end. Implement. PASS. Commit.
+
+### Task R8: The end gate int half
+
+**Skills:** tdd, payload.
+
+**Files:** `src/lib/review-mail.int.test.ts` (one case).
+
+- [ ] **Step 1:** "the owner's approval email holds reviewEmailUrl(owner), which is the portal page": approve through the endpoint; `resendInbox()` holds one message to the owner whose body holds `reviewEmailUrl(owner, { collection: 'articles', id, viewer: 'owner', waiting: false })`, and that URL ends `/{locale}/spaces/articles/{id}` (Deviation 10). **[verify]**. Commit.
+
+### Task R9: `portal-review` e2e (with the `pending` cases and the end gate)
+
+**Skills:** tdd, better-accessibility.
+
+**Files:** Create `e2e/portal-review.e2e.test.ts`. Modify `e2e/portal-shell.e2e.test.ts` (one block), `testing/review.fixture.ts`.
+
+- [ ] **Step 1: The cases** (admin, English and Arabic, 1440 and 390, `reviewWorld`, the test build's `NEXT_PUBLIC_PORTAL_UNDO_MS=1500`; Mail off (M)):
+  1. "approve a course with cycle and tier, undo, approve again and let the timer end" (the row is pending with `aria-busy`, the toast shows, focus is on the next row; **Undo** on the row brings it back selected with cycle and tier as set; the second approval commits after 1.5 s and the row leaves; the course's public page shows at that tier).
+  2. "ask for changes with a note" (an empty note first: the error under the field and focus in it).
+  3. "the history shows" (the pane's `<details>` is open with the rows).
+  4. "Publish as starts at the requested tier".
+  5. "/spaces/review/users/1 is not found"; "a fellow gets not found on /spaces/review".
+  6. "the toast text and 6 left arrive in the accessibility event log": an init script records each text change of `[role=status]` and `[aria-live]` nodes with a timestamp (MutationObserver); both strings are recorded, "{n} left." at least 500 ms after the toast text.
+  7. "on a phone, tabbing through the pane keeps focus visible above the sticky bar" (390 px: for each focused element, its bottom edge is at or above the bar's top edge).
+  8. `pending`: "reload during the window decides the item" (reload at 0.5 s; then the document's key is `published` and the owner's notification row exists, the row the hook writes beside the email).
+  9. `pending`: "switching tab during the window commits" (`page.evaluate` sets `document.visibilityState` to `hidden` and dispatches `visibilitychange`; headless Chromium does not hide a tab on its own); the commit request is seen (`page.waitForRequest('**/review')`) before 1.5 s.
+  10. `pending`: "Sign out during the window commits first" (the commit request finishes before `/api/users/logout` starts).
+  11. `pending`: "with reducedMotion reduce the ring shows the remaining seconds as text and no arc".
+  12. "Undo all brings two items back and focuses the first".
+  13. End gate: "an owner's email link opens the portal": after case 1, as the course's fellow (owner) in a new context, open `reviewEmailUrl(owner, …)` (imported from `src/lib/review-mail.ts`; the Playwright config registers `tsx`); the page is `/{locale}/spaces/courses/{id}` inside the portal shell with banner Published. And "an admin's email link opens To review" for a waiting document.
+  14. axe on both route shapes; a keyboard-only walk (Tab to a row, Enter, choose the tier with the keyboard, press **Approve and publish**, Esc on the pending row undoes).
+  - `portal-shell`: `describe('To review item')`: admin sees it in the admin group with its count and accessible name ("To review, 3 tasks" style, the 1c-2 count words) at 1440 and in the More sheet at 390; fellow and student do not.
+- [ ] **Step 2:** **[verify]** `verify.sh --db migrated --e2e-only portal/phase-2-to-review <sha> e2e/portal-review.e2e.test.ts e2e/portal-shell.e2e.test.ts e2e/portal-document.e2e.test.ts`. PASS. Commit.
+
+### Task R10: Reviews, full suite, open PR 2-6
+
+**Skills:** ux-auditor, better-interface, then break-ui; code-review, then security-review.
+
+- [ ] **Step 1: Screen reviews** on the kept app (`--db migrated --keep --no-tests`, Mail off (M), `reviewWorld` by the scratch world script): ux-auditor and better-interface on To review (list, pane, pending rows, the Undo all bar, the phone pane page), 1440 and 390, English and Arabic, light and dark. Reports in a PR comment.
+- [ ] **Step 2: break-ui** (`agent-browser`, headless): 0 items, 60 items, a 120-character Arabic title, a course with 8 fellows, a missing title, a pruned version, a note of 4000 characters, three decisions pending at once. `agent-browser close`.
+- [ ] **Step 3:** code-review (spec Review and history, Pending decisions, Document links as the issue). **security-review of the review endpoint** (spec, Phase 2 Review line) with the pane in place: the pane's request reaches only `/api/{collection}/{id}/review` of the shown document; the `updatedAt` it sends is the pane's read; a non-admin gets not found on both routes; the link script writes only with `--apply`.
+- [ ] **Step 4:** Fix. **[verify]** the full suite (`--db migrated`). Per-PR step 5. Scratch-world `--remove`. Open `feat(portal): To review with history, diff and undo (portal phase 2, PR 6)`. The PR body names the link script under "For the operator".
+
+**Verification boxes (2-6).**
+
+- [ ] **unit:** `portal-nav.unit.test.ts`, `review-diff.unit.test.ts`, `document-href.unit.test.ts`, `review-list.dom.test.tsx`, `review-diff-view.dom.test.tsx`, `review-actions.dom.test.tsx`; int `pane-data.int.test.ts`, `rewrite-notification-links.int.test.ts`, `review-mail.int.test.ts`; e2e `portal-review`, `portal-shell`.
+- [ ] **live:** Scenario on the kept app as the admin (`reviewWorld`): open `/en/spaces` and follow **To review** in the sidebar; open the submitted course; choose a cycle and Public; press **Approve and publish**; press **Undo**; press it again and wait. Then open the course's fellow's newest notification link from the bell as that fellow. Pass: the sidebar count drops by one after the commit; the row shows "Approving. Email in" with a ring, then leaves; `review_events` holds `submitted | approved` for the course; the fellow's bell link opens `/en/spaces/courses/<id>` with banner Published.
+- [ ] **perf:** Metric: TTFB p75 by Perf runs (1d Global Constraints), admin account, `cilas_ttfb` migrated in the head session. Baseline `main` at the base, `/en/spaces`. Head: `/en/spaces/review`, and `/en/spaces/review/<collection>/<id>` for the oldest queue row on the clone (`getReviewQueue` prints it; an empty queue makes the pane route REPORT-ONLY), with `/en/spaces` as the control. Pass: head p75 at most `L`. BLOCKING or REPORT-ONLY by the 1d P12 rule.
+
+## Could not verify from this server
+
+- `~/cilas-verify/verify.sh` on the Mac: its env for `NEXT_PUBLIC_SERVER_URL` and its `--db` options (P8, P18). V0 settles both.
+- The SQL that `migrate:create` writes for M3 and M1 (P7, C6): `migrate:create` needs the Mac worktree with `node_modules`.
+- `payload.update({ locale: 'all' })` for localized fields in Payload 3.91.0 (P11). C8 case 9 settles it, with the per-locale fallback written.
+- Whether Arc `Timeline` and `Select` render well in a 360 px pane and in RTL (P16); O2 and R4 read their props first, and the screen reviews check the result.
+- The final shape of 1c-2 and 1d-3 (both in build): P1, P3 and P13 re-check them.
+- That headless Chromium never fires `visibilitychange` on its own: R9 case 9 dispatches it by hand.
+- The exact `diff` version that `pnpm add diff --save-exact` resolves (8.x expected; `diff@8.0.4` is in the store).
