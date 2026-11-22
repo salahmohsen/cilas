@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test'
 import { config as loadEnv } from 'dotenv'
 import { register } from 'tsx/esm/api'
 
+import { EMPTY_DATABASE } from './seed/empty-url'
 import { isLocalUrl, requireLocalStorage } from './testing/local-env'
 
 register()
@@ -10,7 +11,11 @@ register()
 loadEnv({ path: ['.env.development.local', '.env.local', '.env'] })
 requireLocalStorage(process.env)
 
-const { hostname: databaseHost } = new URL(process.env.DATABASE_URL ?? 'postgres://unset')
+const { hostname: databaseHost, pathname: databasePath } = new URL(
+  process.env.DATABASE_URL ?? 'postgres://unset',
+)
+const onEmptySeed = databasePath === `/${EMPTY_DATABASE}`
+const EMPTY_SPECS = '**/*.empty.e2e.test.ts'
 if (!['localhost', '127.0.0.1', '[::1]'].includes(databaseHost)) {
   throw new Error(`The e2e specs write to the database, and "${databaseHost}" is not a local host.`)
 }
@@ -31,7 +36,8 @@ if (!process.env.CI) {
 
 export default defineConfig({
   testDir: './e2e',
-  testIgnore: 'production.e2e.test.ts',
+  testIgnore: onEmptySeed ? 'production.e2e.test.ts' : ['production.e2e.test.ts', EMPTY_SPECS],
+  ...(onEmptySeed && { testMatch: EMPTY_SPECS }),
 
   forbidOnly: !!process.env.CI,
 
