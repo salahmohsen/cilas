@@ -56,21 +56,22 @@ const totalOf = (page: Page) => page.locator('main section[data-needs] h2 > span
 const write = (page: Page, id: number, data: object) =>
   page.request.patch(`/api/articles/${id}?depth=0&locale=en`, { data })
 
-const observeWorkStream = async (page: Page) => {
-  await page.addInitScript(() => {
-    class ObservedEventSource extends EventSource {
-      constructor(url: string | URL, options?: EventSourceInit) {
-        super(url, options)
-        if (new URL(this.url).pathname === '/api/notifications/stream') {
-          this.addEventListener('open', () => {
-            document.documentElement.dataset.workStreamOpen = 'true'
-          })
-        }
-      }
-    }
-    window.EventSource = ObservedEventSource
+const observeWorkStream = (page: Page) =>
+  page.addInitScript({
+    content: `
+      window.EventSource = new Proxy(window.EventSource, {
+        construct(target, args) {
+          const stream = Reflect.construct(target, args)
+          if (new URL(stream.url).pathname === '/api/notifications/stream') {
+            stream.addEventListener('open', () => {
+              document.documentElement.dataset.workStreamOpen = 'true'
+            })
+          }
+          return stream
+        },
+      })
+    `,
   })
-}
 
 test.describe('portal Inbox with a small review queue', () => {
   test.describe.configure({ timeout: 120_000 })
@@ -144,6 +145,9 @@ test.describe('portal Inbox with a small review queue', () => {
             .count()
             .then((count) => {
               if (count === 0) lostChip = true
+            })
+            .catch(() => {
+              lostChip = true
             })
         }, 100)
         try {
