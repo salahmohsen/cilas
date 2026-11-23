@@ -81,6 +81,7 @@
     "next": "16.4.6",
     "next-intl": "^4.14.9",
     "next-themes": "^0.4.6",
+    "p-memoize": "9.0.0",
     "payload": "3.91.0",
     "payload-inline-visual-editor": "1.0.1",
     "payload-oauth2": "^1.0.21",
@@ -184,7 +185,8 @@
       "unrs-resolver"
     ],
     "patchedDependencies": {
-      "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch"
+      "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch",
+      "payload-plugin-llms-txt": "patches/payload-plugin-llms-txt.patch"
     }
   }
 }

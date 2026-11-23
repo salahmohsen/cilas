@@ -2,8 +2,15 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
+import {
+  courseDocument,
+  articleDocument,
+  documentToMarkdown,
+  richTextToMarkdown,
+} from '@/api/llms-document'
 import { getCourseSessions } from '@/api/sessions.api'
+import { llmsOptions } from '@/plugins/llms'
+import { createLlmsFullTxtRouteHandler } from 'payload-plugin-llms-txt/next'
 import type { Article, Course, Cycle, Person, Session } from '@/payload-types'
 
 import { RUN, createTracker, uniq } from '../../testing/payload.fixture'
@@ -175,5 +182,79 @@ describe('llms-document', () => {
     expect(md).toContain('[^1]:')
     expect(md).toContain('Footnote text')
     expect(md).toContain('/people/')
+  })
+  it("converts a body that holds a block and an inline block, which the plugin's default editor cannot read", async () => {
+    const body = {
+      root: {
+        type: 'root',
+        children: [
+          {
+            type: 'paragraph',
+            children: [
+              { type: 'text', text: 'Block body text' },
+              {
+                type: 'inlineBlock',
+                fields: { id: 'fn2', blockType: 'footnote', note: note('Block footnote words') },
+              },
+            ],
+          },
+          { type: 'block', fields: { id: 'b1', blockType: 'cardStack', label: 'Reading list' } },
+        ],
+      },
+    }
+    const md = await richTextToMarkdown(payload, { body }, body, 'en', 'article')
+    expect(md).toContain('Block body text')
+    expect(md).toContain('[^1]: Block footnote words')
+    expect(md).toContain('[Card: Reading list]')
+  })
+
+  it('llms-full.txt carries the text of an article whose body holds blocks', async () => {
+    const title = `Llms Full ${RUN}`
+    track(
+      'articles',
+      await payload.create({
+        collection: 'articles',
+        data: {
+          title,
+          slug: uniq('llms-full-article'),
+          authors: [person.id],
+          tier: 'public',
+          _status: 'published',
+          body: {
+            root: {
+              type: 'root',
+              direction: null,
+              format: '',
+              indent: 0,
+              version: 1,
+              children: [
+                {
+                  type: 'paragraph',
+                  version: 1,
+                  children: [
+                    { type: 'text', version: 1, text: 'Full text with a footnote' },
+                    {
+                      type: 'inlineBlock',
+                      version: 1,
+                      fields: {
+                        id: 'fn3',
+                        blockType: 'footnote',
+                        note: note('Distinct endnote words'),
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        } as never,
+        overrideAccess: true,
+      }),
+    )
+    const response = await createLlmsFullTxtRouteHandler(config, llmsOptions)()
+    const text = await response.text()
+    expect(text).toContain(`## ${title}`)
+    expect(text).toContain('Full text with a footnote')
+    expect(text).toContain('[^1]: Distinct endnote words')
   })
 })

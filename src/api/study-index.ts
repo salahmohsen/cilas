@@ -2,6 +2,7 @@ import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { createTranslator } from 'next-intl'
 import { unstable_cache } from 'next/cache'
+import pMemoize from 'p-memoize'
 import { getPayload } from 'payload'
 
 import type { SiteTier } from '@/access'
@@ -18,7 +19,7 @@ import en from '../../messages/en.json'
  * cycles and places it names). Labels come straight from the messages: a
  * cached function cannot read the request.
  */
-export const getStudyIndex = unstable_cache(
+const cachedStudyIndex = unstable_cache(
   async (locale: Locale, tiers: SiteTier[]) => {
     const payload = await getPayload({ config })
     const t = createTranslator({
@@ -32,6 +33,18 @@ export const getStudyIndex = unstable_cache(
   ['study-index-v6'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 300 },
 )
+
+/**
+ * Every page shows the open deadlines, so every page asks for this index.
+ * `unstable_cache` does not share a computation that is still running: at a
+ * cold start (a build's first pages in each worker, or a cache that expired
+ * under load) each caller read and processed all the courses itself. The wait
+ * is shared here; the result is still kept only by `unstable_cache`.
+ */
+export const getStudyIndex = pMemoize(cachedStudyIndex, {
+  cache: false,
+  cacheKey: ([locale, tiers]) => `${locale}:${tiers.join(',')}`,
+})
 
 /** Courses on a page of the study list. */
 export const STUDY_PAGE_SIZE = 20

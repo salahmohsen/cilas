@@ -358,6 +358,33 @@ const articleBodyToMarkdown = async (
   return toMarkdown(payload, body, l, references, { features: articleBodyFeatures, footnotes })
 }
 
+/**
+ * One rich-text field as markdown, with the blocks, mentions and footnotes
+ * the site's editors know. llms-full.txt hands each course and article body
+ * here (src/plugins/llms.ts): the plugin's own converter knows only Payload's
+ * default editor, and fails on a field that holds a block.
+ */
+export const richTextToMarkdown = async (
+  payload: Payload,
+  doc: Record<string, unknown>,
+  data: unknown,
+  locale: Locale,
+  kind: 'default' | 'article',
+): Promise<string> => {
+  const references = await resolveRichTextReferences(payload, doc, { locale, user: null })
+  const l = contextOf(locale)
+  if (kind === 'default') return toMarkdown(payload, data, l, references)
+  const notes = await endnotesOf(payload, data, l, references)
+  const body = await articleBodyToMarkdown(
+    payload,
+    data,
+    l,
+    new Map(notes.map((note) => [note.id, note.number])),
+    references,
+  )
+  return [body, ...notes.map((n) => `[^${n.number}]: ${n.markdown}`)].join('\n\n')
+}
+
 export const courseDocument = async (
   payload: Payload,
   course: Course,
