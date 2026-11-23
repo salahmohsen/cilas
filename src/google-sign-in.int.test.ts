@@ -1,9 +1,8 @@
 import { SignJWT } from 'jose'
 import { getFieldsToSign, getPayload, type Payload } from 'payload'
 import { addPayloadSessionToUser } from 'payload-oauth2/dist/auth-sessions'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 import { createTracker, uniqEmail } from '../testing/payload.fixture'
@@ -33,7 +32,11 @@ const googleCookie = async (account: User) => {
 
 describe('Google sign-in', () => {
   beforeAll(async () => {
+    vi.stubEnv('GOOGLE_CLIENT_ID', 'google-test-client')
+    vi.stubEnv('GOOGLE_CLIENT_SECRET', 'google-test-secret')
+    const { default: config } = await import('@/payload.config')
     payload = await getPayload({ config: await config })
+    vi.unstubAllEnvs()
     user = track(
       'users',
       await payload.create({
@@ -52,6 +55,6 @@ describe('Google sign-in', () => {
   it('authenticates with the cookie the callback sets', async () => {
     const headers = new Headers({ cookie: await googleCookie(user) })
     const { user: signedIn } = await payload.auth({ headers })
-    expect(signedIn?.id).toBe(user.id)
+    expect(signedIn).toMatchObject({ id: user.id, _strategy: 'google' })
   })
 })
