@@ -1,6 +1,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { waitingApplicantChoices } from '@/forms/applicants'
 import { LIVE_COPY } from '@/lib/review-status'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
@@ -212,7 +213,18 @@ describe('needs', () => {
       const applicants = result.rows.filter((row) => row.kind === 'applicants')
       expect(applicants).toHaveLength(1)
       expect(applicants[0]).toMatchObject({ href: '/admin/applicants', collection: null })
-      expect(applicants[0]!.count).toBeGreaterThanOrEqual(2)
+      const fixtureApplications = new Set(Object.values(world.applications))
+      const waitingFixture = (await waitingApplicantChoices(payload, admin)).filter(
+        ({ submission }) => fixtureApplications.has(submission),
+      )
+      expect(waitingFixture).toHaveLength(2)
+      expect(waitingFixture).toEqual(
+        expect.arrayContaining([
+          { submission: world.applications.course, course: world.fellowCourses.changes_requested },
+          { submission: world.applications.course, course: world.fellowCourses.published_removal },
+        ]),
+      )
+      expect(applicants[0]!.count).toBeGreaterThanOrEqual(waitingFixture.length)
     })
 
     it('names the owner of an article whose person is hidden', async () => {

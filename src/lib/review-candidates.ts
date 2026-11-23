@@ -220,6 +220,15 @@ export async function keyedRows(
 }
 
 /**
+ * The select of a read that needs only `parent`. Naming `version._status` is on
+ * purpose: Payload 3.91 joins every array and block of a group the select does
+ * not name, so `{ parent: true }` alone joins all of a course version's fields
+ * (38 joins, 4 ms of query building on the request thread; with this select, 2
+ * joins and 0.7 ms). The field is read and unused.
+ */
+export const PARENT_SELECT = { parent: true, version: { _status: true } } as const
+
+/**
  * The ids of every row that may hold work: the ones the `KEY_WHERE` main rows
  * find, and the live ones with a copy. A version row finds the copy of a
  * document that is not live too (`LIVE_COPY` holds no `parent` path), so the
@@ -239,7 +248,7 @@ export const candidateIds = async (ctx: ReadCtx, keys: readonly StatusKey[]) => 
     onMain.length
       ? findMain(ctx, { where: { and: [ctx.base, { or: onMain }] }, select: { id: true } })
       : none,
-    onCopy.length ? findCopies(ctx, { where: copyWhere, select: { parent: true } }) : none,
+    onCopy.length ? findCopies(ctx, { where: copyWhere, select: PARENT_SELECT }) : none,
   ])
   const live = await liveParentIds(ctx.payload, {
     collection: ctx.collection,

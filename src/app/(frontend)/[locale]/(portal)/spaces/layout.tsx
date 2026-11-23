@@ -25,7 +25,8 @@ export default async function SpacesLayout({ children, params }: Props) {
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
   const payload = await getPayload({ config })
-  // Never awaited. The reads begin after a head start (`head-start.ts`), so the first byte goes out first.
+  // Never awaited, so the counts never hold the first byte. The reads run on this thread while the
+  // shell renders, so each one stays cheap (a read of ids, not documents).
   const counts = needsCounts(user).catch((err: unknown) => {
     payload.logger.error({ err }, 'portal nav: the counts did not load')
     return null
