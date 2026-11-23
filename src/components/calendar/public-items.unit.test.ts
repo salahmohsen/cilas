@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { publicItems } from '@/components/calendar/public-items'
+import { publicItems, publicKinds } from '@/components/calendar/public-items'
 
 import { meeting, meetings, words } from '../../../testing/public-calendar.fixture'
 
@@ -89,5 +89,28 @@ describe('publicItems', () => {
     ])
     expect(items.at(-1)).toMatchObject({ href: '/en/events/film-night', title: 'Film night' })
     expect(items.at(-1)).not.toHaveProperty('caption')
+  })
+})
+
+describe('publicKinds', () => {
+  it('names course and event kinds as the public page did', () => {
+    expect(
+      publicKinds(
+        [
+          meeting({ kind: 'course', type: 'core' }),
+          meeting({ kind: 'event', type: 'screening' }),
+          meeting({ kind: 'course', type: 'core', key: 'again' }),
+        ],
+        {
+          course: (type) => `course ${type}`,
+          event: (type) => `event ${type}`,
+          viewCourse: 'View course',
+          viewEvent: 'View event',
+        },
+      ),
+    ).toEqual({
+      'course:core': { name: 'course core', open: 'View course' },
+      'event:screening': { name: 'event screening', open: 'View event' },
+    })
   })
 })

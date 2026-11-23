@@ -154,5 +154,13 @@
       "button-name": 1,
       "target-size": 3
     }
+  },
+  "/spaces/calendar": {
+    "student en 1440": {
+      "label-content-name-mismatch": 4
+    },
+    "student en 390": {
+      "label-content-name-mismatch": 2
+    }
   }
 }

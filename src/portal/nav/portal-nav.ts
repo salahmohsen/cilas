@@ -1,11 +1,18 @@
 import { adminViewOf, type AdminView } from '@/access'
 
 export type PortalNavGroup = 'top' | 'myWork' | 'teaching' | 'admin'
-export type PortalNavIcon = 'home' | 'inbox' | 'dashboard' | 'profile' | 'articles' | 'courses'
+export type PortalNavIcon =
+  | 'home'
+  | 'inbox'
+  | 'calendar'
+  | 'dashboard'
+  | 'profile'
+  | 'articles'
+  | 'courses'
 
 /** One entry of the portal nav. A count comes from `COUNT_OF` (`nav-counts.tsx`), never from the item. `href` has no locale; `external` is a full load (its own root layout). */
 export type PortalNavItem = {
-  key: 'home' | 'inbox' | 'articles' | 'courses' | 'openDashboard'
+  key: 'home' | 'inbox' | 'calendar' | 'articles' | 'courses' | 'openDashboard'
   labelKey: `nav.${string}`
   group: PortalNavGroup
   href: string
@@ -31,6 +38,15 @@ const INBOX: PortalNavItem = {
   external: false,
 }
 
+const CALENDAR: PortalNavItem = {
+  key: 'calendar',
+  labelKey: 'nav.calendar',
+  group: 'top',
+  href: '/spaces/calendar',
+  icon: 'calendar',
+  external: false,
+}
+
 const OPEN_DASHBOARD: PortalNavItem = {
   key: 'openDashboard',
   labelKey: 'nav.openDashboard',
@@ -49,7 +65,7 @@ const listItem = (key: 'articles' | 'courses', group: PortalNavGroup): PortalNav
   external: false,
 })
 
-/** The items after Home, per admin view (`adminViewOf`). An account with no view gets Home only. */
+/** The items after Home, Inbox and Calendar, per admin view (`adminViewOf`). An account with no view gets Home only. */
 const ITEMS_BY_VIEW: Record<AdminView, PortalNavItem[]> = {
   student: [listItem('articles', 'myWork')],
   fellow: [listItem('articles', 'myWork'), listItem('courses', 'myWork')],
@@ -59,5 +75,5 @@ const ITEMS_BY_VIEW: Record<AdminView, PortalNavItem[]> = {
 /** What the account can open from the portal nav. Later phases add items here only. */
 export const portalNav = (user: Parameters<typeof adminViewOf>[0]): PortalNavItem[] => {
   const view = adminViewOf(user)
-  return [HOME, INBOX, ...(view ? ITEMS_BY_VIEW[view] : [])]
+  return [HOME, INBOX, CALENDAR, ...(view ? ITEMS_BY_VIEW[view] : [])]
 }

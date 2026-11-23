@@ -10,7 +10,7 @@ import { getCalendarItems, getCachedCalendarItems } from '@/api/calendar.api'
 import { loadedRange, readCalendarUrl } from '@/components/calendar/calendar-url'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
 import { ConnectedScheduleActions } from '@/components/space/connected-schedule-actions'
-import { kindOf, publicItems } from '@/components/calendar/public-items'
+import { publicItems, publicKinds } from '@/components/calendar/public-items'
 import { cairoDay } from '@/lib/cairo-day'
 
 type Props = {
@@ -50,14 +50,12 @@ export default async function CalendarPage({ params, searchParams }: Props) {
       : getCachedCalendarItems(lang),
   ])
   const meetings = all.filter((m) => m.date >= range.from && m.date <= range.to)
-  const kinds = Object.fromEntries(
-    meetings.map((m) => [
-      kindOf(m),
-      m.kind === 'course'
-        ? { name: tf(`types.${m.type}`), open: t('viewCourse') }
-        : { name: t(`eventTypes.${m.type}`), open: t('viewEvent') },
-    ]),
-  )
+  const kinds = publicKinds(meetings, {
+    course: (type) => tf(`types.${type}`),
+    event: (type) => t(`eventTypes.${type}`),
+    viewCourse: t('viewCourse'),
+    viewEvent: t('viewEvent'),
+  })
 
   if (access.mode === 'edit') {
     for (const item of access.items) {
@@ -84,6 +82,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
           today={today}
           kinds={kinds}
           months={[...new Set(all.map((m) => m.date.slice(0, 7)))]}
+          path="/calendar"
         />
       </ConnectedScheduleActions>
     </div>

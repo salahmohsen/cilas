@@ -114,3 +114,18 @@ describe('presetHidden', () => {
     expect(presetHidden(ownCourseIdsOf([]))).toEqual([])
   })
 })
+
+describe('a draft course with no type', () => {
+  const draft = meeting({ courseId: 31, sessionId: '601', type: 'course', href: undefined })
+
+  it('is Your courses with the portal look, and never keeps the course:course kind', () => {
+    const [item] = portalItems(items([draft]), new Set(['31']))
+    expect(item).toMatchObject({ kind: MINE, ...KIND_LOOK[MINE] })
+    expect(item?.href).toBeUndefined()
+  })
+
+  it("is Other courses with the portal look when it is not the reader's", () => {
+    const [item] = portalItems(items([draft]), new Set())
+    expect(item).toMatchObject({ kind: OTHER, ...KIND_LOOK[OTHER] })
+  })
+})

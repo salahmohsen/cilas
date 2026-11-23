@@ -33,6 +33,7 @@ export const LIST_SHAPES = [
 export const PAGE_SHAPES = [
   ['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/],
   ['/spaces/inbox', /^\/[a-z]{2}\/spaces\/inbox$/],
+  ['/spaces/calendar', /^\/[a-z]{2}\/spaces\/calendar$/],
 ] as const
 
 export type RouteShape =
@@ -96,6 +97,7 @@ export const NAV_BY_ROLE = {
   admin: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
     { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'admin', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'admin', external: false },
     { key: 'openDashboard', href: '/admin', group: 'admin', external: true },
@@ -103,12 +105,14 @@ export const NAV_BY_ROLE = {
   fellow: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
     { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'myWork', external: false },
   ],
   student: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
     { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
   ],
 } as const satisfies Record<

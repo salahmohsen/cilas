@@ -175,6 +175,7 @@ export function WeekGrid({
               'data-covers': covers(bar) ? '' : undefined,
               'data-allday-id': block.id,
               'data-tone': item?.tone ?? newTone,
+              'data-edge': item?.edge,
               'data-cancelled': item?.cancelled ? '' : undefined,
               'data-marked': marked.has(block.itemId) ? '' : undefined,
               'data-unsaved': unsaved.has(block.id) ? '' : undefined,
@@ -299,6 +300,7 @@ export function WeekGrid({
                       className={styles.block}
                       aria-label={nameOf(block)}
                       data-tone={item?.tone ?? newTone}
+                      data-edge={item?.edge}
                       data-cancelled={item?.cancelled ? '' : undefined}
                       data-marked={marked.has(block.itemId) ? '' : undefined}
                       data-unsaved={edited ? '' : undefined}

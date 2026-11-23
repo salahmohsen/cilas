@@ -10,18 +10,18 @@ const lookup = (messages: object, key: string) =>
 
 describe('portalNav', () => {
   it.each([
-    [[], ['home', 'inbox']],
-    [['member'], ['home', 'inbox', 'articles']],
-    [['non_degree_seeking'], ['home', 'inbox', 'articles']],
-    [['fellow'], ['home', 'inbox', 'articles', 'courses']],
-    [['admin'], ['home', 'inbox', 'articles', 'courses', 'openDashboard']],
-    [['super_admin'], ['home', 'inbox', 'articles', 'courses', 'openDashboard']],
+    [[], ['home', 'inbox', 'calendar']],
+    [['member'], ['home', 'inbox', 'calendar', 'articles']],
+    [['non_degree_seeking'], ['home', 'inbox', 'calendar', 'articles']],
+    [['fellow'], ['home', 'inbox', 'calendar', 'articles', 'courses']],
+    [['admin'], ['home', 'inbox', 'calendar', 'articles', 'courses', 'openDashboard']],
+    [['super_admin'], ['home', 'inbox', 'calendar', 'articles', 'courses', 'openDashboard']],
   ] as const)('roles %j see %j', (roles, keys) => {
     expect(portalNav({ roles: [...roles] }).map((item) => item.key)).toEqual(keys)
   })
 
   it.each([[[]], [['member']], [['fellow']], [['admin']]] as const)(
-    'Inbox is the second top item for roles %j',
+    'Inbox is the second top item and Calendar the third for roles %j',
     (roles) => {
       const items = portalNav({ roles: [...roles] })
       expect(items[1]).toEqual({
@@ -30,6 +30,14 @@ describe('portalNav', () => {
         group: 'top',
         href: '/spaces/inbox',
         icon: 'inbox',
+        external: false,
+      })
+      expect(items[2]).toEqual({
+        key: 'calendar',
+        labelKey: 'nav.calendar',
+        group: 'top',
+        href: '/spaces/calendar',
+        icon: 'calendar',
         external: false,
       })
     },

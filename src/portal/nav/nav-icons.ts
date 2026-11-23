@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  CalendarDays,
   FileText,
   House,
   Inbox,
@@ -13,6 +14,7 @@ import type { PortalNavIcon } from './portal-nav'
 export const NAV_ICONS: Record<PortalNavIcon, LucideIcon> = {
   home: House,
   inbox: Inbox,
+  calendar: CalendarDays,
   dashboard: LayoutDashboard,
   profile: UserRound,
   articles: FileText,

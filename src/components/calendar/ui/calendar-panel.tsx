@@ -62,6 +62,7 @@ export function CalendarPanel({
               type="button"
               className={styles.next}
               data-tone={next.item.tone}
+              data-edge={next.item.edge}
               data-row-id={`${next.item.id}/${next.id}`}
               onClick={(event) => onOpen(next.item.id, next.id, event.currentTarget)}
             >
@@ -85,6 +86,9 @@ export function CalendarPanel({
                 <span className={styles.nextWhen} dir="auto">
                   {next.item.place}
                 </span>
+              ) : null}
+              {next.item.edge ? (
+                <span className={styles.srOnly}>{labels.kind(next.item.kind)}</span>
               ) : null}
             </button>
           </section>
@@ -118,6 +122,7 @@ function DaySection({
           type="button"
           className={styles.next}
           data-tone={item.tone}
+          data-edge={item.edge}
           data-cancelled={item.cancelled ? '' : undefined}
           data-row-id={block.id}
           onClick={(event) => onPress(event.currentTarget)}
@@ -131,6 +136,7 @@ function DaySection({
               {item.place}
             </span>
           ) : null}
+          {item.edge ? <span className={styles.srOnly}>{labels.kind(item.kind)}</span> : null}
         </button>
       </li>
     ) : null
