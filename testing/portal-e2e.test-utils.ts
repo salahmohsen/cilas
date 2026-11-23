@@ -28,7 +28,10 @@ export const LIST_SHAPES = [
 ] as const
 
 /** The other portal pages. Their own e2e files run their axe scans. */
-export const PAGE_SHAPES = [['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/]] as const
+export const PAGE_SHAPES = [
+  ['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/],
+  ['/spaces/calendar', /^\/[a-z]{2}\/spaces\/calendar$/],
+] as const
 
 export type RouteShape =
   | (typeof ROUTE_SHAPES)[number][0]
@@ -90,17 +93,20 @@ export const openMore = async (page: Page, locale: Locale) => {
 export const NAV_BY_ROLE = {
   admin: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'admin', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'admin', external: false },
     { key: 'openDashboard', href: '/admin', group: 'admin', external: true },
   ],
   fellow: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'myWork', external: false },
   ],
   student: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
   ],
 } as const satisfies Record<

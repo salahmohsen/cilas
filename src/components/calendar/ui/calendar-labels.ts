@@ -73,8 +73,17 @@ export type CalendarLabels = {
   range: (from: string, to: string) => string
   /** "19:00 to 21:00" */
   timeRange: (start: string, end: string) => string
-  /** A block's spoken name. `status` is "" or what it is now: "Cancelled and unsaved". */
-  blockName: (parts: { title: string; day: string; time: string; status: string }) => string
+  /**
+   * A block's spoken name. `kind` is "" or the legend name of an item that has an edge,
+   * kept apart from `status`, which is "" or what it is now: "Cancelled and unsaved".
+   */
+  blockName: (parts: {
+    title: string
+    day: string
+    time: string
+    kind: string
+    status: string
+  }) => string
 
   /** The title of an item drawn on an empty slot, until the host names it. */
   newItem: string
@@ -167,8 +176,16 @@ export const calendarLabelsFrom = (
   kind,
   range: (from, to) => t('range', { from, to }),
   timeRange: (start, end) => t('timeRange', { start, end }),
-  blockName: ({ title, day, time, status }) =>
-    t('blockName', { title, day, time, status, hasStatus: String(status !== '') }),
+  blockName: ({ title, day, time, kind, status }) =>
+    t('blockName', {
+      title,
+      day,
+      time,
+      kind,
+      status,
+      hasKind: String(kind !== ''),
+      hasStatus: String(status !== ''),
+    }),
   newItem,
   unsaved: t('unsaved'),
   deleted: t('deleted'),

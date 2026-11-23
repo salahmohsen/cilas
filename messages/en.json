@@ -549,7 +549,7 @@
     "unscheduled": "Unscheduled",
     "range": "{from} to {to}",
     "timeRange": "{start} to {end}",
-    "blockName": "{title}, {day}, {time}{hasStatus, select, true {, {status}} other {}}",
+    "blockName": "{title}, {day}, {time}{hasKind, select, true {, {kind}} other {}}{hasStatus, select, true {, {status}} other {}}",
     "newItem": "New item",
     "unsaved": "Unsaved",
     "deleted": "Deleted",
@@ -1735,6 +1735,7 @@
     "nav": {
       "label": "Main",
       "home": "Home",
+      "calendar": "Calendar",
       "openDashboard": "Open dashboard",
       "spaces": "Spaces",
       "unread": "{count, plural, one {, {shown} unread post} other {, {shown} unread posts}}",
@@ -1745,6 +1746,10 @@
       "scroll": "Pages and spaces",
       "articles": "Articles",
       "courses": "Courses"
+    },
+    "calendar": {
+      "yourCourses": "Your courses",
+      "otherCourses": "Other courses"
     },
     "shell": {
       "skip": "Skip to content"

@@ -65,7 +65,7 @@ export function ItemDetails({
         </div>
       ) : null}
       <div className={styles.detailsHead} data-tone={item.tone}>
-        <span className={styles.detailsMark} aria-hidden />
+        <span className={styles.detailsMark} data-edge={item.edge} aria-hidden />
         {heading}
         {trailing}
       </div>

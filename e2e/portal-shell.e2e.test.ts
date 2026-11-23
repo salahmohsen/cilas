@@ -393,6 +393,32 @@ test.describe('portal shell', () => {
         }
   })
 
+  test.describe('calendar nav landing', () => {
+    for (const role of ROLES)
+      for (const locale of LOCALES)
+        for (const viewport of Object.values(WIDTHS))
+          test(`the Calendar item lands on its page (${role} ${locale} ${viewport.width})`, async ({
+            browser,
+          }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              const portal = MESSAGES[locale].Portal
+              await page.goto(localePath('/en/spaces', locale))
+              const nav = portalNavOf(page, locale)
+              await nav.getByRole('link', { name: portal.nav.calendar, exact: true }).click()
+              await page.waitForURL(`**/${locale}/spaces/calendar`)
+              await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+                MESSAGES[locale].Calendar.title,
+              )
+              await expect(
+                nav.getByRole('link', { name: portal.nav.calendar, exact: true }),
+              ).toHaveAttribute('aria-current', 'page')
+              await expect(
+                nav.getByRole('link', { name: portal.nav.home, exact: true }),
+              ).not.toHaveAttribute('aria-current', 'page')
+            })
+          })
+  })
+
   test.describe('fold (1440)', () => {
     const PAIRS = [
       ['admin', 'fellow'],

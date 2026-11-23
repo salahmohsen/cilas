@@ -1258,7 +1258,7 @@
   }
 }
 
-/* Phones: the view switch on a row of its own, an icon-only add button, no side panel.
+/* Phones: the view switch on a row of its own and an icon-only add button.
    A week (the server's first render) shows its selected day alone, as the Day view does. */
 @container week (max-inline-size: 40rem) {
   .frame {
@@ -1328,10 +1328,6 @@
   }
   .agenda {
     padding-inline: var(--space-3);
-  }
-  .panelToggle,
-  .panel {
-    display: none;
   }
 }
 
@@ -1680,4 +1676,52 @@
 .actionGroup > [data-key]:not([data-key='button-group-menu']) {
   flex: 1 1 0;
   min-inline-size: min-content;
+}
+
+/* Two 3px borders fill the bar. Two 2px borders leave a hollow centre. */
+.root [data-edge] {
+  --course-bar-width: 6px;
+  --course-bar-stroke: 3px;
+  --course-bar-color: var(--tone-line);
+}
+.root [data-edge='double'] {
+  --course-bar-stroke: 2px;
+}
+@media (forced-colors: active) {
+  .root [data-edge] {
+    --course-bar-color: CanvasText;
+  }
+}
+
+:is(.pill, .chip, .next, .detailsMark, .swatch)[data-edge] {
+  position: relative;
+}
+:is(.block, .pill, .chip, .monthBar, .next, .detailsMark, .swatch)[data-edge]::after {
+  content: '';
+  position: absolute;
+  inset-block: 1px;
+  inset-inline-start: 1px;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+:is(.pill, .chip, .monthBar)[data-edge],
+.block[data-edge] .body {
+  padding-inline-start: max(var(--space-2), 10px);
+}
+.legendKind[aria-pressed='true'] .swatch[data-edge],
+.detailsMark[data-edge] {
+  background: var(--tone-fill);
+}
+.agendaRow[data-edge] {
+  grid-template-columns: 4.75rem var(--course-bar-width) minmax(0, 1fr);
+}
+.agendaRow[data-edge] .agendaBar {
+  background: none;
+  opacity: 1;
+}
+:is(.block, .pill, .chip, .monthBar, .next, .detailsMark, .swatch)[data-edge]::after,
+.agendaRow[data-edge] .agendaBar {
+  box-sizing: border-box;
+  inline-size: var(--course-bar-width);
+  border: var(--course-bar-stroke) solid var(--course-bar-color);
 }

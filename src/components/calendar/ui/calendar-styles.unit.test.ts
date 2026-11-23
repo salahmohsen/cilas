@@ -16,4 +16,10 @@ describe('the calendar stylesheet', () => {
     expect(coarse).toMatch(/\.edge \{\s*display: none;/)
     expect(css).not.toMatch(/\.track[^{]*\{[^}]*touch-action: none/)
   })
+
+  it('draws an edge on every view-mode element that carries a tone, in the start direction', () => {
+    expect(css).toMatch(
+      /:is\(\.block, \.pill, \.chip, \.monthBar, \.next, \.detailsMark, \.swatch\)\[data-edge\]::after \{[^}]*inset-inline-start: 1px/,
+    )
+  })
 })

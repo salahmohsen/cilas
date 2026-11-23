@@ -1,6 +1,6 @@
 import { act, fireEvent, renderHook, screen, waitFor, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -68,6 +68,7 @@ const calendar = (
   locale: 'en' | 'ar',
   query: string,
   source: readonly CalendarMeeting[] = meetings,
+  extra: Partial<ComponentProps<typeof PublicCalendar>> = {},
 ) => (
   <IntlProvider locale={locale}>
     <ScheduleActionsProvider actions={host.actions}>
@@ -77,6 +78,8 @@ const calendar = (
         today="2026-11-17"
         kinds={kinds(locale)}
         months={['2025-03', '2026-11']}
+        path="/calendar"
+        {...extra}
       />
     </ScheduleActionsProvider>
   </IntlProvider>
@@ -92,13 +95,20 @@ const framed = (width: string, children: ReactNode) => (
 const page = (
   locale: 'en' | 'ar' = 'en',
   query = '?view=week&date=2026-11-17',
-  { source = meetings, docked = false }: { source?: CalendarMeeting[]; docked?: boolean } = {},
+  {
+    source = meetings,
+    docked = false,
+    ...extra
+  }: { source?: CalendarMeeting[]; docked?: boolean } & Partial<
+    ComponentProps<typeof PublicCalendar>
+  > = {},
 ) => {
-  const url = `/${locale}/calendar${query}`
+  const url = `/${locale}${extra.path ?? '/calendar'}${query}`
   window.history.replaceState(null, '', query)
-  return renderWithNavigation(framed(docked ? DOCKED : UNDOCKED, calendar(locale, query, source)), {
-    url,
-  })
+  return renderWithNavigation(
+    framed(docked ? DOCKED : UNDOCKED, calendar(locale, query, source, extra)),
+    { url },
+  )
 }
 
 const pageTookOver = (target: Element, init: MouseEventInit = {}) => {
@@ -556,5 +566,68 @@ describe('the selected day in the URL', () => {
       'aria-selected',
       'true',
     )
+  })
+})
+
+describe('the calendar on another path', () => {
+  const portal = { path: '/spaces/calendar' }
+
+  it('loads the days past the loaded ones from its own path, not /calendar', () => {
+    const { memory } = page('en', '?view=month&date=2026-11-07', portal)
+    fireEvent.click(screen.getByRole('button', { name: 'Next month' }))
+    expect(memory.visits[0]).toEqual({
+      method: 'push',
+      href: '/en/spaces/calendar?view=month&date=2026-12-01',
+      options: { scroll: false },
+    })
+  })
+
+  it('points an empty month to the nearest month on its own path', () => {
+    page('en', '?view=month&date=2026-12-10', portal)
+    expect(screen.getByRole('link', { name: 'Most recent: November 2026' })).toHaveAttribute(
+      'href',
+      '/en/spaces/calendar?view=month&date=2026-11-01',
+    )
+  })
+})
+
+describe('a read-only calendar', () => {
+  const portal = { path: '/spaces/calendar', readOnly: true }
+
+  it('shows an admin no Edit button', async () => {
+    asReader({ canEdit: true, editable: ['22'] })
+    page('en', '?view=week&date=2026-11-17', portal)
+    await accessRead()
+    expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
+  })
+
+  it('gives a host no Cancel session, and no menu', async () => {
+    asReader({ canEdit: true, editable: ['22'], spaces: { '22': '/en/spaces/course/city' } })
+    page('en', '?view=week&date=2026-11-17', portal)
+    await accessRead()
+    fireEvent.click(screen.getByRole('link', { name: /^Reading the city, Tuesday/ }))
+    const details = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(within(details).queryByRole('button', { name: 'More actions' })).toBeNull()
+    expect(within(details).queryByRole('menuitem', { name: 'Cancel session' })).toBeNull()
+  })
+
+  it('keeps View course and Go to space', async () => {
+    asReader({ editable: ['22'], spaces: { '22': '/en/spaces/course/city' } })
+    page('en', '?view=week&date=2026-11-17', portal)
+    await accessRead()
+    fireEvent.click(screen.getByRole('link', { name: /^Reading the city, Tuesday/ }))
+    const details = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(
+      within(details)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href')),
+    ).toEqual(['/en/study/reading-the-city#session-501', '/en/spaces/course/city'])
+  })
+
+  it('still shows Edit when it is not read-only, on the same page', async () => {
+    asReader({ canEdit: true, editable: ['22'] })
+    page('en', '?view=week&date=2026-11-17', { path: '/spaces/calendar' })
+    await accessRead()
+    expect(await screen.findByRole('button', { name: 'Edit' })).toBeInTheDocument()
   })
 })
