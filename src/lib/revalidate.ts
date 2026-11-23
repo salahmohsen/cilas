@@ -1,5 +1,9 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionBeforeOperationHook,
+} from 'payload'
 
 import { routing } from '@/i18n/routing'
 import { PUBLIC_LISTS_TAG, revalidationOf } from '@/lib/paths'
@@ -24,10 +28,30 @@ export const revalidateDocument = (collection: string, doc: Slugged, previousDoc
   }
 }
 
+const draftKey = (collection: string) => `publicRevalidationDraft:${collection}`
+
+export const recordRevalidationDraft: CollectionBeforeOperationHook = ({
+  args,
+  collection,
+  operation,
+  req,
+}) => {
+  if (operation === 'create' || operation === 'update' || operation === 'restoreVersion') {
+    const draftSave = (operation === 'create' || operation === 'update') && args.draft
+    const publishes =
+      operation === 'update' &&
+      args.data &&
+      '_status' in args.data &&
+      args.data._status === 'published'
+    req.context[draftKey(collection.slug)] = Boolean(draftSave && !publishes)
+  }
+  return args
+}
+
 export const revalidateAfterChange =
   (collection: string): CollectionAfterChangeHook =>
-  ({ doc, previousDoc }) => {
-    revalidateDocument(collection, doc, previousDoc)
+  ({ doc, previousDoc, context }) => {
+    if (!context[draftKey(collection)]) revalidateDocument(collection, doc, previousDoc)
     return doc
   }
 

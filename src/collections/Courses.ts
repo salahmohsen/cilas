@@ -44,7 +44,11 @@ import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
 import { deleteOwnedSpaces } from '@/lib/space-delete'
-import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
+import {
+  recordRevalidationDraft,
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '@/lib/revalidate'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 const WORKSHOP_FORM_HELP = templateFormHelp('workshop template')
@@ -568,7 +572,7 @@ export const Courses: CollectionConfig = {
     },
   },
   hooks: {
-    beforeOperation: courseReview.beforeOperation,
+    beforeOperation: [...courseReview.beforeOperation, recordRevalidationDraft],
     beforeValidate: [
       addSelfAs('fellows'),
       copyRegistrationTemplate(

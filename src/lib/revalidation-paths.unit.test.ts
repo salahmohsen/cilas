@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { revalidationOf } from '@/lib/paths'
+import { PUBLIC_LAYOUT_PATTERNS, revalidationOf } from '@/lib/paths'
 
 const LOCALES = ['en', 'ar']
 
@@ -49,7 +49,7 @@ describe('revalidationOf', () => {
       '/ar/articles/new',
       '/ar/articles/old',
     ])
-    expect(layouts).toEqual(['/(frontend)/[locale]/(site)/articles/[slug]'])
+    expect(layouts).toEqual([PUBLIC_LAYOUT_PATTERNS.article])
   })
 
   it('drops pages that show programmes and their registration information', () => {
@@ -65,7 +65,7 @@ describe('revalidationOf', () => {
       '/ar/study/bridge',
       '/ar/study/bridge/apply',
     ])
-    expect(layouts).toEqual(['/(frontend)/[locale]/(site)/study/bridge/[year]'])
+    expect(layouts).toEqual([])
   })
 
   it('drops pages that render information from forms', () => {
@@ -78,7 +78,7 @@ describe('revalidationOf', () => {
       '/ar/contact',
       '/ar/study/bridge/apply',
     ])
-    expect(layouts).toEqual(['/(frontend)/[locale]/(site)/study/[slug]/apply'])
+    expect(layouts).toEqual([])
   })
 
   it('only drops the tag for a collection without pages', () => {

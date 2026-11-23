@@ -4,6 +4,12 @@ export const BRIDGE_APPLY_PATH = `${BRIDGE_PATH}/apply`
 // Next tags route patterns with the groups from the app directory.
 const SITE_SEGMENT = '/(frontend)/[locale]/(site)'
 
+export const PUBLIC_LAYOUT_PATTERNS = {
+  article: `${SITE_SEGMENT}/articles/[slug]`,
+  bridgeApply: `${SITE_SEGMENT}${BRIDGE_APPLY_PATH}`,
+  contact: `${SITE_SEGMENT}/contact`,
+} as const
+
 /**
  * What each collection shows on the public site, and so what a save drops from
  * the cache: its detail page (under the current and the previous slug), the
@@ -25,16 +31,14 @@ const ROUTES: Record<
     detail: (slug) => `/articles/${slug}`,
     lists: ['', '/articles'],
     fixed: ['/sitemap.xml', '/llms.txt', '/llms-full.txt'],
-    layouts: [`${SITE_SEGMENT}/articles/[slug]`],
+    layouts: [PUBLIC_LAYOUT_PATTERNS.article],
   },
   programmes: {
     lists: ['', '/apply', BRIDGE_PATH, BRIDGE_APPLY_PATH],
     fixed: ['/sitemap.xml'],
-    layouts: [`${SITE_SEGMENT}${BRIDGE_PATH}/[year]`],
   },
   forms: {
     lists: ['', '/contact', BRIDGE_APPLY_PATH],
-    layouts: [`${SITE_SEGMENT}/study/[slug]/apply`],
   },
   events: {
     detail: (slug) => `/events/${slug}`,

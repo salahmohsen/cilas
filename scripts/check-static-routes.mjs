@@ -1,5 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs'
 
+import {
+  BRIDGE_APPLY_PATH,
+  BRIDGE_PATH,
+  PUBLIC_LAYOUT_PATTERNS,
+  PUBLIC_LISTS_TAG,
+} from '../src/lib/paths.ts'
+
 import { articleSlug, courseSlug } from './smoke.fixture.ts'
 
 const { routes, dynamicRoutes, notFoundRoutes } = JSON.parse(
@@ -7,19 +14,21 @@ const { routes, dynamicRoutes, notFoundRoutes } = JSON.parse(
 )
 
 const LOCALES = ['en', 'ar']
-const STATIC_PAGES = [
-  '',
-  '/apply',
-  '/contact',
-  '/governance',
-  '/people/cilasians',
-  '/people/fellows',
-  '/study/bridge',
-  '/study/bridge/apply',
-  `/study/${courseSlug}`,
-  `/articles/${articleSlug}`,
-].map((page) => ({ page, status: 200 }))
-const STATIC_ROUTES = [...STATIC_PAGES, { page: '/about', status: 308, redirect: '' }]
+const STATIC_ROUTES = [
+  ...[
+    '',
+    '/apply',
+    '/governance',
+    '/people/cilasians',
+    '/people/fellows',
+    BRIDGE_PATH,
+    `/study/${courseSlug}`,
+  ].map((page) => ({ page, status: 200 })),
+  { page: '/contact', status: 200, layout: PUBLIC_LAYOUT_PATTERNS.contact },
+  { page: BRIDGE_APPLY_PATH, status: 200, layout: PUBLIC_LAYOUT_PATTERNS.bridgeApply },
+  { page: `/articles/${articleSlug}`, status: 200, layout: PUBLIC_LAYOUT_PATTERNS.article },
+  { page: '/about', status: 308, redirect: '' },
+]
 const DYNAMIC_PAGES = [
   '/login',
   '/settings',
@@ -39,7 +48,7 @@ const DYNAMIC_PATTERNS = [
 
 const problems = []
 for (const locale of LOCALES) {
-  for (const { page, status: expectedStatus, redirect } of STATIC_ROUTES) {
+  for (const { page, status: expectedStatus, redirect, layout } of STATIC_ROUTES) {
     const path = `/${locale}${page}`
     const route = routes[path]
     const artifact = `.next/server/app${path}`
@@ -65,8 +74,12 @@ for (const locale of LOCALES) {
     if (route.initialRevalidateSeconds !== 300) {
       problems.push(`expected 300s revalidation at ${path}, got ${route.initialRevalidateSeconds}`)
     }
-    if (!headers?.['x-next-cache-tags']?.split(',').includes('courses')) {
-      problems.push(`missing courses cache tag: ${path}`)
+    const tags = headers?.['x-next-cache-tags']?.split(',') ?? []
+    if (!tags.includes(PUBLIC_LISTS_TAG)) {
+      problems.push(`missing ${PUBLIC_LISTS_TAG} cache tag: ${path}`)
+    }
+    if (layout && !tags.includes(`_N_T_${layout}/layout`)) {
+      problems.push(`missing layout cache tag _N_T_${layout}/layout: ${path}`)
     }
   }
   for (const page of DYNAMIC_PAGES) {

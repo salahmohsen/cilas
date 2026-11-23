@@ -1,5 +1,9 @@
 import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
-import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
+import {
+  recordRevalidationDraft,
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '@/lib/revalidate'
 import { previewUrl } from '@/lib/preview-url'
 import type { CollectionConfig } from 'payload'
 
@@ -194,6 +198,7 @@ export const Programmes: CollectionConfig = {
     beforeValidate: [
       copyRegistrationTemplate('bridge_template', (programme) => programme.kind === 'bridge'),
     ],
+    beforeOperation: [recordRevalidationDraft],
     afterChange: [ensureSpaceFor('cohort'), revalidateAfterChange('programmes')],
     beforeDelete: [deleteOwnedSpaces('programme')],
     afterDelete: [revalidateAfterDelete('programmes')],
