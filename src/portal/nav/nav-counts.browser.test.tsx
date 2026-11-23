@@ -1,8 +1,10 @@
 import { act, cleanup, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse, sse } from 'msw'
+import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ClientNotificationEvent } from '@/lib/realtime/events'
+import { InboxRefresh } from '@/portal/inbox/inbox-refresh'
 
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 
@@ -37,13 +39,14 @@ afterEach(() => {
   countsResponse = () => HttpResponse.json({ total: countRequests, by: {} })
 })
 
-const mount = async () => {
+const mount = async (children?: ReactNode) => {
   const view = renderWithBrowserNavigation(
     <NavCountsProvider>
       <Count />
       <Count itemKey="articles" />
       <Count itemKey="courses" />
       <Count itemKey="home" />
+      {children}
     </NavCountsProvider>,
   )
   await waitFor(() => expect(open).toHaveLength(1))
@@ -159,8 +162,8 @@ describe('NavCountsProvider request lifecycle', () => {
     },
   )
 
-  it('spaces focus reads at least 30 seconds apart and still refreshes on work', async () => {
-    await mount()
+  it('spaces focus reads for nav counts and Inbox rows 30 seconds apart', async () => {
+    const view = await mount(<InboxRefresh />)
     await waitFor(() => expect(countOf('inbox')).toBe('1'))
     const focus = () => window.dispatchEvent(new Event('focus'))
     vi.useFakeTimers({ toFake: ['performance'] })
@@ -168,19 +171,29 @@ describe('NavCountsProvider request lifecycle', () => {
     try {
       focus()
       await waitFor(() => expect(countOf('inbox')).toBe('2'))
+      expect(view.browser.refreshes).toBe(1)
 
       vi.advanceTimersByTime(29_999)
       focus()
       expect(fetch).toHaveBeenCalledTimes(1)
+      expect(view.browser.refreshes).toBe(1)
 
       await send(created('submitted'))
       await waitFor(() => expect(countOf('inbox')).toBe('3'), { timeout: QUIET + 4 * MARGIN })
+      await waitFor(() => expect(view.browser.refreshes).toBe(2))
       focus()
       expect(fetch).toHaveBeenCalledTimes(2)
+      expect(view.browser.refreshes).toBe(2)
 
       vi.advanceTimersByTime(1)
       focus()
       await waitFor(() => expect(countOf('inbox')).toBe('4'))
+      expect(view.browser.refreshes).toBe(3)
+
+      view.unmount()
+      vi.advanceTimersByTime(30_000)
+      focus()
+      expect(view.browser.refreshes).toBe(3)
     } finally {
       fetch.mockRestore()
       vi.useRealTimers()

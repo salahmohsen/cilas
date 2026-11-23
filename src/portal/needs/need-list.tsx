@@ -1,13 +1,15 @@
 import { ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
+import { localeOf, type Locale } from '@/i18n/routing'
 import { localDigits } from '@/lib/digits'
+import { DEFAULT_PARAMS, hrefOf } from '@/portal/lists/list-params'
 
 import styles from './needs.module.css'
 import { needsTotal, type NeedKind, type NeedRow, type NeedsResult } from './sources'
 
-type Shown = Pick<NeedRow, 'kind' | 'href' | 'count' | 'owners' | 'label' | 'collection'> & {
-  verbKey: string
+type Shown = NeedRow & {
+  collectionLabel?: 'nav.articles' | 'nav.courses'
 }
 
 const GROUPED_VERB = {
@@ -19,39 +21,52 @@ const GROUPED_VERB = {
 
 const REVIEW_PAGE = '/admin/reviews'
 
-/** One row per kind with the sum of `count`; the applicants row stays as it is. The row links to the list of its kind. */
-const grouped = (rows: NeedRow[], locale: string): Shown[] => {
-  const byKind = new Map<NeedKind, NeedRow[]>()
-  for (const row of rows) byKind.set(row.kind, [...(byKind.get(row.kind) ?? []), row])
-  return [...byKind].map(([kind, of]): Shown => {
-    if (kind === 'applicants') return of[0]!
-    const owns = (collection: string) => of.some((row) => row.collection === collection)
-    const href =
-      kind === 'changes_requested'
-        ? `/${locale}/spaces/${owns('articles') ? 'articles' : 'courses'}?show=needsYou`
-        : REVIEW_PAGE
-    return {
+/** Group by kind and destination so each count describes the work its link opens. */
+const grouped = (rows: NeedRow[], locale: Locale): Shown[] => {
+  const groups = new Map<string, Shown>()
+  for (const row of rows) {
+    const { kind, collection } = row
+    if (kind === 'applicants') {
+      if (!groups.has(kind)) groups.set(kind, row)
+      continue
+    }
+    const list =
+      kind === 'changes_requested' && (collection === 'articles' || collection === 'courses')
+        ? collection
+        : null
+    const href = list
+      ? hrefOf(`/spaces/${list}`, { ...DEFAULT_PARAMS, show: 'needsYou' }, locale)
+      : REVIEW_PAGE
+    const key = `${kind}:${href}`
+    const existing = groups.get(key)
+    if (existing) {
+      existing.count += row.count
+      continue
+    }
+    groups.set(key, {
       kind,
       verbKey: GROUPED_VERB[kind],
       href,
-      count: of.reduce((sum, row) => sum + row.count, 0),
+      count: row.count,
       owners: [],
       label: null,
-      collection: null,
-    }
-  })
+      collection: list,
+      collectionLabel: list ? `nav.${list}` : undefined,
+    })
+  }
+  return [...groups.values()]
 }
 
 /**
  * The work that waits on the reader: one link per row, under a heading with the
- * total. `group` (Home, past five rows) shows one row per kind. A row runs no
- * action in place.
+ * total. `group` (Home, past five rows) combines rows of the same kind that
+ * link to the same destination.
  */
 export function NeedList({ result, group }: { result: NeedsResult; group: boolean }) {
   const { rows } = result
   const total = needsTotal(result)
   const t = useTranslations('Portal')
-  const locale = useLocale()
+  const locale = localeOf(useLocale())
   const shown: Shown[] = group ? grouped(rows, locale) : rows
   const untitled = (collection: NeedRow['collection']) =>
     t(
@@ -88,6 +103,9 @@ export function NeedList({ result, group }: { result: NeedsResult; group: boolea
                     <span className={styles.label}>
                       <bdi dir="auto">{row.label}</bdi>
                     </span>
+                  )}{' '}
+                  {row.collectionLabel && (
+                    <span className={styles.label}>{t(row.collectionLabel)}</span>
                   )}{' '}
                   {row.kind !== 'applicants' && row.label === null && !group && (
                     <span className={styles.label}>{untitled(row.collection)}</span>

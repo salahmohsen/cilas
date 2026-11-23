@@ -13,4 +13,9 @@ describe('InboxSkeleton', () => {
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Inbox')
   })
+
+  it('names the loading status and both placeholders in Arabic', () => {
+    renderWithIntl(<InboxSkeleton />, { locale: 'ar' })
+    expect(screen.getAllByRole('status', { name: 'جارٍ تحميل الوارد' })).toHaveLength(3)
+  })
 })

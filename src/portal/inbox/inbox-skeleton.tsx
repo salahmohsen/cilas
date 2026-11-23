@@ -11,8 +11,8 @@ export function InboxSkeleton() {
     <div data-inbox-skeleton aria-busy="true">
       <PortalPageHeader title={t('title')} />
       <div role="status" aria-label={t('loading')} className={styles.sections}>
-        <Skeleton lines={3} />
-        <Skeleton lines={4} avatar />
+        <Skeleton lines={3} label={t('loading')} />
+        <Skeleton lines={4} avatar label={t('loading')} />
       </div>
     </div>
   )

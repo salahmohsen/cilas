@@ -1,6 +1,6 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { ReadLink } from './read-link'
@@ -40,13 +40,12 @@ const link = () => {
 describe('ReadLink', () => {
   it('a click marks the row read with keepalive and keeps the navigation', async () => {
     const anchor = link()
-    let navigated = true
-    anchor.addEventListener('click', (event) => (navigated = !event.defaultPrevented), true)
-    fireEvent.click(anchor)
-    await settle()
-    expect(patches).toHaveLength(1)
+    const click = createEvent.click(anchor)
+    const preventDefault = vi.spyOn(click, 'preventDefault')
+    fireEvent(anchor, click)
+    await waitFor(() => expect(patches).toHaveLength(1))
     expect(patches[0]).toMatchObject({ id: '7', keepalive: true })
-    expect(navigated).toBe(true)
+    expect(preventDefault).toHaveBeenCalledOnce()
     expect(anchor).toHaveAttribute('href', '/en/spaces/x')
   })
 

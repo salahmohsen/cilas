@@ -19,7 +19,7 @@ import {
   type PortalRole,
   type StorageState,
 } from '../testing/portal.fixture'
-import { axeOver, known, mailOff, NAV_BY_ROLE, navName } from '../testing/portal-e2e.test-utils'
+import { axeOver, known, mailOff, navName } from '../testing/portal-e2e.test-utils'
 
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
@@ -185,9 +185,9 @@ test.describe('portal home: Inbox', () => {
         for (const role of ROLES)
           await inContext(browser, { viewport: DESKTOP, reader: role }, async (page) => {
             await page.goto(`/${locale}/spaces`)
-            const keys = NAV_BY_ROLE[role].map((item) => item.key)
-            expect(keys.slice(0, 2)).toEqual(['home', 'inbox'])
-            await expect(inboxLink(page, locale)).toHaveAttribute('href', `/${locale}/spaces/inbox`)
+            const links = mainNav(page, locale).getByRole('link')
+            await expect(links.nth(0)).toHaveAttribute('href', `/${locale}/spaces`)
+            await expect(links.nth(1)).toHaveAttribute('href', `/${locale}/spaces/inbox`)
           })
       })
 

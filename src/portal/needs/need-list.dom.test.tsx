@@ -112,7 +112,7 @@ describe('NeedList', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
   })
 
-  it('a grouped changes_requested row with an article links to the Articles list', () => {
+  it('groups requested changes into links with the count for each collection', () => {
     renderWithIntl(
       <NeedList
         group
@@ -123,18 +123,20 @@ describe('NeedList', () => {
             collection: 'courses',
             href: '/c/1',
           }),
-          row({
-            kind: 'changes_requested',
-            verbKey: 'needs.changesRequested',
-            collection: 'articles',
-            href: '/c/2',
-          }),
+          ...['/a/1', '/a/2'].map((href) =>
+            row({ kind: 'changes_requested', verbKey: 'needs.changesRequested', href }),
+          ),
         ])}
       />,
     )
-    expect(screen.getByRole('link', { name: 'Read 2 notes and edit' })).toHaveAttribute(
+    expect(screen.getAllByRole('link')).toHaveLength(2)
+    expect(screen.getByRole('link', { name: 'Read 2 notes and edit Articles' })).toHaveAttribute(
       'href',
       '/en/spaces/articles?show=needsYou',
+    )
+    expect(screen.getByRole('link', { name: 'Read 1 note and edit Courses' })).toHaveAttribute(
+      'href',
+      '/en/spaces/courses?show=needsYou',
     )
   })
 

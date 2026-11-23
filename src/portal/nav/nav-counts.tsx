@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 import { unreadCount } from '@/lib/unread-count'
+import { subscribeFocusRefresh } from '@/portal/needs/focus-refresh'
 import type { NeedsCounts } from '@/portal/needs/needs'
 import { subscribeWorkRefresh } from '@/portal/needs/work-refresh'
 
@@ -20,8 +21,6 @@ const COUNT_OF: Partial<Record<PortalNavItem['key'], (counts: NeedsCounts) => nu
   courses: (counts) => counts.by.ownCourses ?? null,
 }
 
-const FOCUS_INTERVAL_MS = 30_000
-
 const NavCountsContext = createContext<NeedsCounts | null>(null)
 
 export function NavCountsProvider({ children }: { children: ReactNode }) {
@@ -32,7 +31,6 @@ export function NavCountsProvider({ children }: { children: ReactNode }) {
     const { signal } = controller
     let loading = false
     let pendingWork = false
-    let lastFocusRead = -Infinity
 
     const load = async () => {
       if (loading || signal.aborted) return
@@ -61,17 +59,11 @@ export function NavCountsProvider({ children }: { children: ReactNode }) {
       if (loading) pendingWork = true
       else void load()
     })
-    const onFocus = () => {
-      const now = performance.now()
-      if (loading || now - lastFocusRead < FOCUS_INTERVAL_MS) return
-      lastFocusRead = now
-      void load()
-    }
-    window.addEventListener('focus', onFocus)
+    const unsubscribeFocus = subscribeFocusRefresh(load, () => !loading)
     return () => {
       controller.abort()
       unsubscribe()
-      window.removeEventListener('focus', onFocus)
+      unsubscribeFocus()
     }
   }, [])
 
