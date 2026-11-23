@@ -8,7 +8,6 @@ import { getPayload } from 'payload'
 import { currentReader } from '@/lib/reader'
 import { foldCookie } from '@/portal/nav/fold'
 import { mySpaces } from '@/lib/spaces-data'
-import { needsCounts } from '@/portal/needs/needs'
 import { portalNav } from '@/portal/nav/portal-nav'
 import { PortalShell } from '@/portal/nav/portal-shell'
 import { spaceLinks } from '@/portal/nav/space-links'
@@ -25,12 +24,6 @@ export default async function SpacesLayout({ children, params }: Props) {
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
   const payload = await getPayload({ config })
-  // Never awaited, so the counts never hold the first byte. The reads run on this thread while the
-  // shell renders, so each one stays cheap (a read of ids, not documents).
-  const counts = needsCounts(user).catch((err: unknown) => {
-    payload.logger.error({ err }, 'portal nav: the counts did not load')
-    return null
-  })
   const [t, jar, spaces] = await Promise.all([
     getTranslations('Spaces'),
     cookies(),
@@ -43,7 +36,6 @@ export default async function SpacesLayout({ children, params }: Props) {
   return (
     <PortalShell
       nav={portalNav(user)}
-      counts={counts}
       spaces={spaceLinks(spaces, t('community'))}
       folded={jar.has(foldCookie(user.id))}
       accountId={user.id}

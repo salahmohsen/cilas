@@ -195,9 +195,23 @@ test.describe('portal home: Inbox', () => {
         browser,
       }) => {
         await inContext(browser, { viewport: PHONE, reader: 'student' }, async (page) => {
+          const path = '**/api/portal/counts'
+          let release!: () => void
+          const pending = new Promise<void>((resolve) => (release = resolve))
+          await page.route(path, async (route) => {
+            await pending
+            await route.continue()
+          })
+          const request = page.waitForRequest(path)
           await page.goto(`/${locale}/spaces`)
           const link = inboxLink(page, locale)
-          await expect(link).toBeVisible()
+          await request
+          try {
+            await expect(link).toHaveAccessibleName(portalOf(locale).nav.inbox)
+            await expect(link.locator('[data-nav-count]')).toHaveCount(0)
+          } finally {
+            release()
+          }
           await expect(link.locator('[data-nav-count]')).toBeVisible()
         })
       })

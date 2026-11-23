@@ -1,10 +1,19 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { createContext, Suspense, use, useContext, type ReactNode } from 'react'
+import { useRouter, useSelectedLayoutSegment } from 'next/navigation'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useEffectEvent,
+  useState,
+  type ReactNode,
+} from 'react'
 
 import { unreadCount } from '@/lib/unread-count'
 import type { NeedsCounts } from '@/portal/needs/needs'
+import { subscribeWorkRefresh } from '@/portal/needs/work-refresh'
 
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
@@ -21,23 +30,62 @@ export const COUNT_OF: Partial<
   courses: (counts) => counts.by.ownCourses ?? null,
 }
 
-/** The layout's counts promise, or `null` when it failed. The layout never awaits it, so the shell streams first. */
-const NavCountsContext = createContext<Promise<NeedsCounts | null> | null>(null)
+const NavCountsContext = createContext<NeedsCounts | null>(null)
 
-export function NavCountsProvider({
-  counts,
-  children,
-}: {
-  counts: Promise<NeedsCounts | null>
-  children: ReactNode
-}) {
+export function NavCountsProvider({ children }: { children: ReactNode }) {
+  const [counts, setCounts] = useState<NeedsCounts | null>(null)
+  const router = useRouter()
+  const segment = useSelectedLayoutSegment()
+  const refreshInbox = useEffectEvent(() => {
+    if (segment === 'inbox') router.refresh()
+  })
+
+  useEffect(() => {
+    const controller = new AbortController()
+    const { signal } = controller
+    let loading = false
+    let pendingWork = false
+
+    const load = async () => {
+      if (loading || signal.aborted) return
+      loading = true
+      try {
+        const response = await fetch('/api/portal/counts', { signal, priority: 'low' })
+        const next = response.ok ? ((await response.json()) as NeedsCounts) : null
+        if (!signal.aborted) setCounts(next)
+      } catch {
+        if (!signal.aborted) setCounts(null)
+      } finally {
+        loading = false
+        // A work event during a fetch may be newer than the response. Take one trailing read.
+        if (pendingWork) {
+          pendingWork = false
+          void load()
+        }
+      }
+    }
+
+    void load()
+    const unsubscribe = subscribeWorkRefresh(() => {
+      if (loading) pendingWork = true
+      else void load()
+      refreshInbox()
+    })
+    const onFocus = () => void load()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      controller.abort()
+      unsubscribe()
+      window.removeEventListener('focus', onFocus)
+    }
+  }, [])
+
   return <NavCountsContext value={counts}>{children}</NavCountsContext>
 }
 
-/** The item's number, or `null` for no number: no row, no provider, a failed count. Suspends until the counts arrive. */
+/** The item's number, or null while loading, after failure, or when the item has no count. */
 export const useNavCount = (key: PortalNavItem['key']): number | null => {
-  const promise = useContext(NavCountsContext)
-  const counts = promise ? use(promise) : null
+  const counts = useContext(NavCountsContext)
   return counts ? (COUNT_OF[key]?.(counts) ?? null) : null
 }
 
@@ -54,40 +102,26 @@ const useCountWords = (key: PortalNavItem['key']) => {
     : null
 }
 
-function Spoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+/**
+ * The count text follows the label in the same visually hidden element. This keeps the
+ * accessible name "Inbox, 3 tasks"; while empty, the only spoken text is "Inbox".
+ */
+export function NavCountSpoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
   return useCountWords(itemKey)?.spoken ?? null
 }
 
-function Chip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
-  const words = useCountWords(itemKey)
-  return (
-    words && (
-      <span className={styles.navCount} data-nav-count aria-hidden="true" dir="ltr">
-        {words.shown}
-      </span>
-    )
-  )
-}
-
-/**
- * The item's count in words, as text: ", 3 tasks". It goes right after the label's text inside one
- * visually hidden element that carries the link's name, so the name reads "Inbox, 3 tasks" with
- * no gap before the comma (a separate hidden element gets a space from the browser). Before the
- * counts settle, and for no number or 0, it renders nothing: the name is "Inbox".
- */
-export function NavCountSpoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
-  return (
-    <Suspense fallback={null}>
-      <Spoken itemKey={itemKey} />
-    </Suspense>
-  )
-}
-
-/** The muted chip beside the item. Hidden from assistive tech: `NavCountSpoken` carries the number. */
+/** Reserve the chip's space before the fetch, with no additional accessible text. */
 export function NavCountChip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+  const words = useCountWords(itemKey)
+  if (!COUNT_OF[itemKey]) return null
   return (
-    <Suspense fallback={null}>
-      <Chip itemKey={itemKey} />
-    </Suspense>
+    <span
+      className={styles.navCount}
+      data-nav-count={words ? '' : undefined}
+      aria-hidden="true"
+      dir="ltr"
+    >
+      {words?.shown}
+    </span>
   )
 }

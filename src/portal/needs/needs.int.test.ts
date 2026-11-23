@@ -1,6 +1,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { GET as getCounts } from '@/app/(frontend)/api/portal/counts/route'
 import { waitingApplicantChoices } from '@/forms/applicants'
 import { LIVE_COPY } from '@/lib/review-status'
 import config from '@/payload.config'
@@ -8,10 +9,12 @@ import type { User } from '@/payload-types'
 
 import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
+import { runInRequest } from '../../../testing/next-request.test-utils'
 import { needsWorld, recordingPayload, type NeedsWorld } from '../../../testing/needs.fixture'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { trustedWrites, writePublishedArticle } from '../../../testing/portal-lists.fixture'
 import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
+import { signedInHeaders } from '../../../testing/reader.test-utils'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
@@ -45,6 +48,46 @@ describe('needs', () => {
       depth: 0,
       overrideAccess: true,
     })) as unknown as User
+
+  describe('GET /api/portal/counts', () => {
+    const url = 'http://localhost:3000/api/portal/counts'
+
+    it('rejects anonymous requests with a private, uncached response', async () => {
+      const { result } = await runInRequest(getCounts, { url })
+      expect(result.status).toBe(401)
+      expect(result.headers.get('cache-control')).toBe('private, no-store')
+    })
+
+    it.each(['admin', 'fellow', 'student'] as const)(
+      'returns the %s work sources for the signed-in account',
+      async (role) => {
+        const account = portal.accounts[role]
+        const headers = await signedInHeaders(payload, account)
+        const { result } = await runInRequest(getCounts, {
+          headers,
+          url: `${url}?userId=${portal.accounts.admin.id}`,
+        })
+        expect(result.status).toBe(200)
+        expect(result.headers.get('cache-control')).toBe('private, no-store')
+        const body = await result.json()
+        if (role === 'admin') {
+          expect(body).toEqual({
+            total: expect.any(Number),
+            by: { reviewQueue: expect.any(Number), applicants: expect.any(Number) },
+          })
+          expect(body.by.applicants).toBeGreaterThanOrEqual(2)
+          expect(body.total).toBe(body.by.reviewQueue + body.by.applicants)
+        } else {
+          const expected = countsOf(await workSetsOf(payload, await userOf(account)))
+          expect(body).toEqual(expected)
+          expect(body.total).toBeGreaterThan(0)
+          expect(Object.keys(body.by).sort()).toEqual(
+            role === 'fellow' ? ['ownArticles', 'ownCourses'] : ['ownArticles'],
+          )
+        }
+      },
+    )
+  })
 
   describe('the owner sources', () => {
     it("a student's needs hold their changes_requested and returned-edits articles", async () => {

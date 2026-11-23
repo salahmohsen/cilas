@@ -28,6 +28,9 @@ test.describe('portal Inbox on the empty seed', () => {
               if (message.type() === 'error') errors.push(message.text())
             })
             const target = `/${locale}/spaces/inbox`
+            const counts = page.waitForResponse(
+              (response) => new URL(response.url()).pathname === '/api/portal/counts',
+            )
             await login({ page, user: EMPTY_ACCOUNTS[role], next: target })
             await page.waitForURL(`**${target}`)
             const portal = MESSAGES[locale].Portal
@@ -38,6 +41,9 @@ test.describe('portal Inbox on the empty seed', () => {
             const link = page
               .getByRole('navigation', { name: portal.nav.label, exact: true })
               .getByRole('link', { name: navName(portal.nav.inbox) })
+            const countsResponse = await counts
+            expect(countsResponse.ok()).toBe(true)
+            expect(await countsResponse.json()).toMatchObject({ total: 0 })
             await expect(link).toHaveAccessibleName(portal.nav.inbox)
             await expect(link.locator('[data-nav-count]')).toHaveCount(0)
             expect(errors).toEqual([])

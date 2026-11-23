@@ -190,7 +190,7 @@ const requestStore = <Value>() => cache(() => new Map<string, Value>())
 const workStore = requestStore<Promise<WorkSets>>()
 const rowsStore = requestStore<Promise<NeedsResult>>()
 
-/** One read of the work sets per request and account. The layout calls `needsCounts`, the pages `needs`, and both share this entry. */
+/** One read of the work sets per request and account. The API uses `needsCounts` and the pages use `needs` with the same work-set rules. */
 export const workOf = async (user: User) => workIn(workStore(), await getPayload({ config }), user)
 
 export const needsCounts = async (user: User) => countsOf(await workOf(user))

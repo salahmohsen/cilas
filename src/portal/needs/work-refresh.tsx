@@ -1,8 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
-
 import { isNotificationKind, type NotificationKind } from '@/lib/notification-kinds'
 import type { ClientNotificationEvent } from '@/lib/realtime/events'
 import { subscribeNotifications } from '@/lib/realtime/stream-client'
@@ -39,33 +36,21 @@ export const refreshes = (event: ClientNotificationEvent): boolean =>
 
 const QUIET_MS = 1_000
 
-/**
- * Runs `router.refresh()` once the stream has been quiet for a second after a work event, or after
- * a reconnect (events in the gap are lost). The server components re-render, so the sidebar numbers
- * and the Inbox rows follow with no reload; client state stays.
- */
-export function WorkRefresh(): null {
-  const router = useRouter()
-  const refresh = useRef(router.refresh)
-  useEffect(() => {
-    refresh.current = router.refresh
-  }, [router])
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const queue = () => {
-      clearTimeout(timer)
-      timer = setTimeout(() => refresh.current(), QUIET_MS)
-    }
-    const unsubscribe = subscribeNotifications({
-      event: (event) => {
-        if (refreshes(event)) queue()
-      },
-      sync: queue,
-    })
-    return () => {
-      clearTimeout(timer)
-      unsubscribe()
-    }
-  }, [])
-  return null
+/** Coalesces work events and stream reconnects using the existing quiet period. */
+export function subscribeWorkRefresh(refresh: () => void): () => void {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const queue = () => {
+    clearTimeout(timer)
+    timer = setTimeout(refresh, QUIET_MS)
+  }
+  const unsubscribe = subscribeNotifications({
+    event: (event) => {
+      if (refreshes(event)) queue()
+    },
+    sync: queue,
+  })
+  return () => {
+    clearTimeout(timer)
+    unsubscribe()
+  }
 }

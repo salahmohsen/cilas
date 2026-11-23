@@ -5,8 +5,6 @@ import { CilasLogo } from '@/components/cilas-logo'
 import { SiteNotifications } from '@/components/site-notifications'
 import { Link } from '@/i18n/navigation'
 import { LiveRegion } from '@/portal/feedback/announce'
-import type { NeedsCounts } from '@/portal/needs/needs'
-import { WorkRefresh } from '@/portal/needs/work-refresh'
 
 import { AccountMenu } from './account-menu'
 import { BottomBar } from './bottom-bar'
@@ -27,15 +25,12 @@ import type { SpaceLink } from './space-links'
  */
 export async function PortalShell({
   nav,
-  counts,
   spaces,
   folded,
   accountId,
   children,
 }: {
   nav: PortalNavItem[]
-  /** Not awaited: each nav count shows when it settles, so the first byte never waits for it. */
-  counts: Promise<NeedsCounts | null>
   spaces: SpaceLink[]
   folded: boolean
   accountId: number
@@ -44,8 +39,7 @@ export async function PortalShell({
   const t = await getTranslations('Portal')
   return (
     <FoldProvider folded={folded} accountId={accountId}>
-      <NavCountsProvider counts={counts}>
-        <WorkRefresh />
+      <NavCountsProvider key={accountId}>
         <a href="#main" className={styles.skip}>
           {t('shell.skip')}
         </a>
