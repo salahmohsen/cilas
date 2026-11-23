@@ -36,8 +36,9 @@ test.describe('portal Inbox on the empty seed', () => {
             const portal = MESSAGES[locale].Portal
             await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
             await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.inbox.title)
-            await expect(page.getByText(portal.needs.empty, { exact: true })).toBeVisible()
-            await expect(page.getByText(portal.latest.empty, { exact: true })).toBeVisible()
+            const main = page.locator('#main')
+            await expect(main.getByText(portal.needs.empty, { exact: true })).toBeVisible()
+            await expect(main.getByText(portal.latest.empty, { exact: true })).toBeVisible()
             const link = page
               .getByRole('navigation', { name: portal.nav.label, exact: true })
               .getByRole('link', { name: navName(portal.nav.inbox) })

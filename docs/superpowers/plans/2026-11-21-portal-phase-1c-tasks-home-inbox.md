@@ -655,7 +655,7 @@ From `portal/phase-1c-needs` (1c-1, on `main` with PR C, 1b-1 and 1b-2a); rebase
 
 - Consumes: `subscribeNotifications` (P19); `NotificationKind`, `isNotificationKind` (`src/lib/notification-kinds.ts:57`).
 - Produces: `REFRESHES_WORK` and `refreshes(event)` retain the notification rules. `subscribeWorkRefresh` groups relevant created notifications and reconnects with the existing quiet period. The provider refetches the counts endpoint on that signal and on window focus. It keeps one request in flight and takes one trailing read for pending work. On Inbox the same work signal refreshes the page rows. Unmount aborts the fetch and removes the subscription.
-- [ ] **Step 1: Failing dom tests** (fake timers are a test tool, not a sleep): "a submitted event refreshes once after 1 s"; "three events in 1 s refresh once"; "an updated or deleted event does not refresh"; "a comment event does not refresh"; "an unknown kind does not refresh"; "an event with no doc refreshes"; "a sync refreshes"; "unmount cancels a pending refresh". FAIL, implement, PASS. Commit.
+- [ ] **Step 1: Browser tests** (real notification stream with MSW): "a submitted event refreshes once after 1 s"; "three events in 1 s refresh once"; "an updated or deleted event does not refresh"; "a comment event does not refresh"; "an unknown kind does not refresh"; "an event with no doc refreshes"; "a sync refreshes"; "unmount cancels a pending refresh". FAIL, implement, PASS. Commit.
 
 ### Task I6: `portal-home` e2e, Inbox describe
 
@@ -768,7 +768,7 @@ From `portal/phase-1c-inbox`. Reviews: ux-auditor and better-interface on Home, 
 
 - [ ] **Step 1:** Run the perf gate (G) of Global Constraints on `/en/spaces`: on the Mac, `cilas_ttfb` (T3 kept it), the same three accounts with fresh cookies (T2), production builds with Mail off (M) and `PROBE`'s storage sentinel (P39), inside the lock; the two `main` runs at the table's SHA first, then this PR's head (and C2 on a near miss). Write the per-role record of (G) in the PR.
 - [ ] **Step 2: Pass predicate:** the one in (G): head p75 at most `P = min(H x (1 + f), T x 1.10)` with `f = max(m, 0.05)`, a near miss up to `N = H x (1 + 2f)` reruns once and the rerun decides against `P`, and the 800 ms rule. `H` is the slower `main` run of this session and `m` its measured spread (Deviation 20); no other allowance applies. Record which line bound `P`.
-- [ ] **Step 3:** If it fails: profile which read grows (the layout's reads, and the Home cards only if TTFB moved, since cards stream below `loading.tsx`), using N7's per-function numbers. The layout no longer starts the counts read. Profile the server render and the counts endpoint independently. No cache is added without the operator's yes.
+- [ ] **Step 3:** If it fails: profile which read grows (the layout's reads, and the Home cards only if TTFB moved, since cards stream below `loading.tsx`), using N7's per-function numbers. The layout no longer starts the counts read. Profile the server render and the counts endpoint independently. No cache is added without the operator's yes. Drop `cilas_ttfb` after the last run (`docker exec cilas-db-1 dropdb -U cilas cilas_ttfb`).
 
 ### Task H6: Reviews, full suite, open PR 1c-3
 
