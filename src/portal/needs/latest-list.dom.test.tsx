@@ -1,6 +1,7 @@
 import { cleanup, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 
+import { clientEnv } from '@/env.client'
 import type { StoredNotification } from '@/lib/realtime/events'
 
 import { messagesOf, renderWithIntl } from '../../../testing/intl.test-utils'
@@ -26,6 +27,7 @@ const page = (rows: StoredNotification[], over: Partial<LatestPage> = {}) =>
 
 describe('LatestList', () => {
   it('a Latest row links to its stored link unchanged', () => {
+    const sameOrigin = new URL('/en/spaces/z', clientEnv.NEXT_PUBLIC_SERVER_URL).href
     renderWithIntl(
       <LatestList
         focus={false}
@@ -33,11 +35,17 @@ describe('LatestList', () => {
           note({ id: 1, link: '/admin/applicants?application=4' }),
           note({ id: 2, link: '/en/spaces/x' }),
           note({ id: 3, link: '/spaces/y', read_at: null }),
+          note({ id: 4, link: sameOrigin }),
         ])}
       />,
     )
     const hrefs = screen.getAllByRole('link').map((link) => link.getAttribute('href'))
-    expect(hrefs).toEqual(['/admin/applicants?application=4', '/en/spaces/x', '/spaces/y'])
+    expect(hrefs).toEqual([
+      '/admin/applicants?application=4',
+      '/en/spaces/x',
+      '/spaces/y',
+      sameOrigin,
+    ])
   })
 
   it('a row with no link is not a link', () => {
@@ -50,6 +58,9 @@ describe('LatestList', () => {
     ['javaScript:alert(1)', null],
     ['data:text/html,test', '2026-01-01T00:00:00.000Z'],
     ['java\nscript:alert(1)', '2026-01-01T00:00:00.000Z'],
+    ['//evil.example', null],
+    ['/\\evil.example', '2026-01-01T00:00:00.000Z'],
+    ['https://evil.example/path', null],
   ])('renders a notification with an invalid link as text (%s)', (link, read_at) => {
     renderWithIntl(<LatestList focus={false} page={page([note({ link, read_at })])} />)
     expect(screen.queryByRole('link')).toBeNull()

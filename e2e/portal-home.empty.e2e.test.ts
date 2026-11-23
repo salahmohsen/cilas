@@ -133,7 +133,7 @@ test.describe('portal Inbox with a small review queue', () => {
   })
 
   queue(
-    'an owner submits in a second session and the admin Inbox number changes with no reload',
+    'an owner submits in a second session and the admin Inbox adds the row and updates its count with no reload',
     async ({ browser, baseURL, queue: { admin, student, draft } }) => {
       const at = { baseURL, viewport: WIDTHS.desktop }
       await inContext(browser, at, async (page) => {
@@ -143,6 +143,10 @@ test.describe('portal Inbox with a small review queue', () => {
         await expect(inboxLink(page)).toHaveAccessibleName('Inbox, 1 task')
         await expect(chipOf(page)).toHaveText('1')
         await expect(totalOf(page)).toHaveText('1')
+        const newRow = page.locator('main section[data-needs]').getByText('next-review', {
+          exact: true,
+        })
+        await expect(newRow).toHaveCount(0)
         await page.evaluate(() => {
           document.body.dataset.noReloadMark = 'true'
         })
@@ -169,6 +173,7 @@ test.describe('portal Inbox with a small review queue', () => {
           await expect(inboxLink(page)).toHaveAccessibleName('Inbox, 2 tasks', { timeout: 5_000 })
           await expect(chipOf(page)).toHaveText('2')
           await expect(totalOf(page)).toHaveText('2')
+          await expect(newRow).toBeVisible()
         } finally {
           clearInterval(watch)
         }

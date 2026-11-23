@@ -159,6 +159,34 @@ describe('NavCountsProvider request lifecycle', () => {
     },
   )
 
+  it('spaces focus reads at least 30 seconds apart and still refreshes on work', async () => {
+    await mount()
+    await waitFor(() => expect(countOf('inbox')).toBe('1'))
+    const focus = () => window.dispatchEvent(new Event('focus'))
+    vi.useFakeTimers({ toFake: ['performance'] })
+    const fetch = vi.spyOn(window, 'fetch')
+    try {
+      focus()
+      await waitFor(() => expect(countOf('inbox')).toBe('2'))
+
+      vi.advanceTimersByTime(29_999)
+      focus()
+      expect(fetch).toHaveBeenCalledTimes(1)
+
+      await send(created('submitted'))
+      await waitFor(() => expect(countOf('inbox')).toBe('3'), { timeout: QUIET + 4 * MARGIN })
+      focus()
+      expect(fetch).toHaveBeenCalledTimes(2)
+
+      vi.advanceTimersByTime(1)
+      focus()
+      await waitFor(() => expect(countOf('inbox')).toBe('4'))
+    } finally {
+      fetch.mockRestore()
+      vi.useRealTimers()
+    }
+  })
+
   it('clears a loaded count after an error on focus', async () => {
     await mount()
     await waitFor(() => expect(countOf('inbox')).toBe('1'))
