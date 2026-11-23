@@ -18,6 +18,7 @@ import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testi
 const SUNDAY = new Date('2026-11-08T14:05:00Z')
 const MONDAY = new Date('2026-11-09T14:05:00Z')
 const at = (offsetHours: number) => new Date(SUNDAY.getTime() + offsetHours * 3_600_000)
+const LONG_AGO = at(-24 * 40)
 
 let payload: Payload
 let unlock: () => Promise<void>
@@ -32,6 +33,7 @@ const people: Record<string, number> = {}
 let course: { id: number }
 let space: Space
 let intro: number
+const fixtureAccounts = () => Object.values(users).map((u) => u.id)
 
 const mailsTo = (user: User) => outbox.to(user.email)
 
@@ -81,7 +83,10 @@ const comment = async (key: string, on: number, body: string, when: Date) => {
 }
 
 const clearClaims = () =>
-  payload.db.pool.query(`UPDATE space_preferences SET digest_sent_at = NULL`)
+  payload.db.pool.query(
+    `UPDATE space_preferences SET digest_sent_at = NULL WHERE account_id = ANY($1)`,
+    [fixtureAccounts()],
+  )
 
 const setMode = (mode: 'off' | 'trial' | 'on') =>
   payload.updateGlobal({
@@ -163,6 +168,7 @@ describe('space email', () => {
       .introduction_post
     intro = typeof introRef === 'object' ? introRef.id : introRef
     track('space-posts', intro)
+    await stamp('space_posts', intro, LONG_AGO)
 
     for (const key of ['a', 'b', 'c', 'e']) {
       const row = await payload.create({
@@ -171,7 +177,7 @@ describe('space email', () => {
         overrideAccess: true,
       })
       track('space-comments', row.id)
-      await stamp('space_comments', row.id, at(-24 * 40))
+      await stamp('space_comments', row.id, LONG_AGO)
     }
 
     await setSpaceEmail(payload, users.b!.id, { digest: 'daily' })
@@ -199,8 +205,9 @@ describe('space email', () => {
   }, 600_000)
 
   afterAll(async () => {
-    const ids = Object.values(users).map((u) => u.id)
-    await payload.db.pool.query(`DELETE FROM space_preferences WHERE account_id = ANY($1)`, [ids])
+    await payload.db.pool.query(`DELETE FROM space_preferences WHERE account_id = ANY($1)`, [
+      fixtureAccounts(),
+    ])
     await setMode(modeBefore)
     await cleanup(payload)
     await payload.destroy()
@@ -223,7 +230,7 @@ describe('space email', () => {
       expect(outbox.sent).toHaveLength(0)
       const { rows } = await payload.db.pool.query(
         `SELECT 1 FROM space_preferences WHERE digest_sent_at IS NOT NULL AND account_id = ANY($1)`,
-        [Object.values(users).map((u) => u.id)],
+        [fixtureAccounts()],
       )
       expect(rows).toHaveLength(0)
     })
