@@ -1,15 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useRouter, useSelectedLayoutSegment } from 'next/navigation'
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useEffectEvent,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 import { unreadCount } from '@/lib/unread-count'
 import type { NeedsCounts } from '@/portal/needs/needs'
@@ -22,35 +14,34 @@ import styles from './shell.module.css'
  * The number each nav item shows, from the reader's counts: the one table. An
  * item with no row has no number. A later item with a count adds one row.
  */
-export const COUNT_OF: Partial<
-  Record<PortalNavItem['key'], (counts: NeedsCounts) => number | null>
-> = {
+const COUNT_OF: Partial<Record<PortalNavItem['key'], (counts: NeedsCounts) => number | null>> = {
   inbox: (counts) => counts.total,
   articles: (counts) => counts.by.ownArticles ?? null,
   courses: (counts) => counts.by.ownCourses ?? null,
 }
 
+const FOCUS_INTERVAL_MS = 30_000
+
 const NavCountsContext = createContext<NeedsCounts | null>(null)
 
 export function NavCountsProvider({ children }: { children: ReactNode }) {
   const [counts, setCounts] = useState<NeedsCounts | null>(null)
-  const router = useRouter()
-  const segment = useSelectedLayoutSegment()
-  const refreshInbox = useEffectEvent(() => {
-    if (segment === 'inbox') router.refresh()
-  })
 
   useEffect(() => {
     const controller = new AbortController()
     const { signal } = controller
     let loading = false
     let pendingWork = false
+    let lastFocusRead = -Infinity
 
     const load = async () => {
       if (loading || signal.aborted) return
       loading = true
       try {
-        const response = await fetch('/api/portal/counts', { signal, priority: 'low' })
+        const response = await fetch('/api/portal/counts', {
+          signal: AbortSignal.any([signal, AbortSignal.timeout(15_000)]),
+          priority: 'low',
+        })
         const next = response.ok ? ((await response.json()) as NeedsCounts) : null
         if (!signal.aborted) setCounts(next)
       } catch {
@@ -69,9 +60,13 @@ export function NavCountsProvider({ children }: { children: ReactNode }) {
     const unsubscribe = subscribeWorkRefresh(() => {
       if (loading) pendingWork = true
       else void load()
-      refreshInbox()
     })
-    const onFocus = () => void load()
+    const onFocus = () => {
+      const now = performance.now()
+      if (loading || now - lastFocusRead < FOCUS_INTERVAL_MS) return
+      lastFocusRead = now
+      void load()
+    }
     window.addEventListener('focus', onFocus)
     return () => {
       controller.abort()

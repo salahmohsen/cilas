@@ -5,14 +5,7 @@ import { relId } from '../src/lib/relation'
 import { STATUS_KEYS, type StatusKey } from '../src/lib/review-status'
 import { type createTracker, uniq } from './payload.fixture'
 import { listWorld, trustedWrites, writePublishedArticle } from './portal-lists.fixture'
-import {
-  account,
-  courseRoom,
-  notifyOf,
-  portalWorld,
-  type PortalAccount,
-  type PortalWorld,
-} from './portal.fixture'
+import { courseRoom, notifyOf, portalWorld, type PortalWorld } from './portal.fixture'
 
 type Track = ReturnType<typeof createTracker>['track']
 
@@ -397,23 +390,16 @@ export const STUDENT_NOTIFICATIONS = 35
  * space, and the student's others, each awaited in turn so `createdAt` grows. The rows
  * the world's own writes sent (submit and decide notify) are deleted first, so each role's
  * Latest holds exactly the rows written here.
- * `secondAdmin` is for the test of a number that no event refreshes.
  */
 export const portalNeedsWorld = async (payload: Payload, track: Track) => {
   const world = await portalWorld(payload, track)
   const needs = await needsWorld(payload, track, world)
-  const secondAdmin: PortalAccount = await account(payload, track, 'admin', 'admin2')
   const link = world.community.postPath
   await payload.delete({
     collection: 'notifications',
     where: {
       recipient: {
-        in: [
-          world.accounts.admin.id,
-          world.accounts.fellow.id,
-          world.accounts.student.id,
-          secondAdmin.id,
-        ],
+        in: [world.accounts.admin.id, world.accounts.fellow.id, world.accounts.student.id],
       },
     },
     overrideAccess: true,
@@ -422,7 +408,7 @@ export const portalNeedsWorld = async (payload: Payload, track: Track) => {
     await notifyOf(payload, world.accounts[role], link)
   for (let i = 1; i < STUDENT_NOTIFICATIONS; i++)
     await notifyOf(payload, world.accounts.student, link)
-  return { world, needs, secondAdmin, link }
+  return { world, needs, link }
 }
 
 export type PortalNeedsWorld = Awaited<ReturnType<typeof portalNeedsWorld>>

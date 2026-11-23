@@ -11,6 +11,7 @@ import { LatestList } from '@/portal/needs/latest-list'
 import { NeedList } from '@/portal/needs/need-list'
 import { needs } from '@/portal/needs/needs'
 import styles from '@/portal/needs/needs.module.css'
+import { RefreshOnWork } from '@/portal/needs/refresh-on-work'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 
 async function NeedsSection({ user, locale }: { user: User; locale: Locale }) {
@@ -46,6 +47,7 @@ export async function InboxPage({
   const t = await getTranslations('Portal')
   return (
     <>
+      <RefreshOnWork />
       <PortalPageHeader title={t('inbox.title')}>
         <a
           href="#latest"

@@ -197,12 +197,6 @@ export async function applicantsFor(
   }
 }
 
-/**
- * The course choices that wait for a decision, for the viewer's courses: one per
- * choice with no decision or a `pending` one. A programme application counts 0.
- * Reads with `overrideAccess: true`, as `applicantsFor` does, and returns a
- * number only. The `where` narrows the read; the reduce below is the rule.
- */
 export type WaitingChoice = { submission: number; course: number }
 
 /**
@@ -259,7 +253,10 @@ export async function waitingApplicantChoices(
   )
 }
 
-/** How many choices wait on a decision: the nav chip and the Inbox row. */
+/**
+ * Count the viewer's course choices with no decision or a pending decision.
+ * A programme application contributes zero. Return only the total for the Inbox and nav.
+ */
 export async function countWaitingApplicants(
   payload: Payload,
   user: TypedUser | User | null | undefined,

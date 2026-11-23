@@ -1,5 +1,5 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { GET as getCounts } from '@/app/(frontend)/api/portal/counts/route'
 import { waitingApplicantChoices } from '@/forms/applicants'
@@ -18,8 +18,9 @@ import { signedInHeaders } from '../../../testing/reader.test-utils'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
-import { countsOf, needsTotal, rowsOf, workIn, workSetsOf, type NeedsResult } from './needs'
+import { countsOf, rowsOf, workSetsOf } from './needs'
 import { ownRows, ownSet } from './owner-rows'
+import { needsTotal, type NeedsResult } from './sources'
 
 mockNetwork(resendInbox().handler, ...localServices)
 
@@ -56,6 +57,22 @@ describe('needs', () => {
       const { result } = await runInRequest(getCounts, { url })
       expect(result.status).toBe(401)
       expect(result.headers.get('cache-control')).toBe('private, no-store')
+    })
+
+    it('logs an auth read outside the request scope and returns a private, uncached 500', async () => {
+      const log = vi.spyOn(payload.logger, 'error')
+      try {
+        const result = await getCounts()
+        expect(result.status).toBe(500)
+        expect(result.headers.get('cache-control')).toBe('private, no-store')
+        expect(await result.text()).toBe('Unable to load work counts.')
+        expect(log).toHaveBeenCalledWith(
+          { err: expect.any(Error) },
+          'portal counts: request failed',
+        )
+      } finally {
+        log.mockRestore()
+      }
     })
 
     it.each(['admin', 'fellow', 'student'] as const)(
@@ -201,16 +218,6 @@ describe('needs', () => {
         .filter((row) => row.collection === collection && ids.includes(idOf(row.href)))
         .map((row) => idOf(row.href))
         .sort()
-
-    it('two User objects of one account share one read of the work sets', async () => {
-      const admin = await userOf(portal.accounts.admin)
-      const student = await userOf(portal.accounts.student)
-      const store = new Map()
-      const first = workIn(store, payload, admin)
-      expect(workIn(store, payload, { ...admin })).toBe(first)
-      expect(workIn(store, payload, student)).not.toBe(first)
-      expect(store.size).toBe(2)
-    })
 
     it('an owner with articles and courses gets one list, oldest first', async () => {
       const fellow = await userOf(portal.accounts.fellow)

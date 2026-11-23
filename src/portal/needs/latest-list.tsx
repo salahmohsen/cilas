@@ -1,6 +1,7 @@
 import { useFormatter, useTranslations } from 'next-intl'
 
 import { NOTIFICATION_GLYPHS } from '@/components/notification-glyphs'
+import { clientEnv } from '@/env.client'
 import { Link } from '@/i18n/navigation'
 import { isNotificationKind, NOTIFICATION_KINDS } from '@/lib/notification-kinds'
 import { noteText } from '@/lib/notifications-client'
@@ -45,11 +46,17 @@ function Note({ note }: { note: StoredNotification }) {
   )
 }
 
+const site = new URL(clientEnv.NEXT_PUBLIC_SERVER_URL)
+
 const notificationHref = (link: string | null | undefined) => {
-  if (!link?.trim()) return null
+  const href = link?.trim()
+  if (!href) return null
+  const path = /^\/(?![/\\\t\r\n])/.test(href)
   try {
-    const { protocol } = new URL(link, 'https://example.invalid')
-    return protocol === 'http:' || protocol === 'https:' ? link : null
+    const url = new URL(href, path ? site : undefined)
+    const web = url.protocol === 'http:' || url.protocol === 'https:'
+    if (!web || url.origin !== site.origin) return null
+    return path ? href : url.href
   } catch {
     return null
   }

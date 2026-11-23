@@ -2,7 +2,6 @@ import 'server-only'
 
 import config from '@payload-config'
 import { getPayload, type Payload } from 'payload'
-import { cache } from 'react'
 
 import { isAdminUser } from '@/access'
 import { countWaitingApplicants } from '@/forms/applicants'
@@ -98,8 +97,6 @@ export const countsOf = (sets: WorkSets): NeedsCounts => {
   }
 }
 
-export { needsTotal, type NeedsResult } from './sources'
-
 /**
  * One row per id of the sets, in the reader's locale. It reads only the display
  * fields, never a work set. The admin's review rows come first, oldest first,
@@ -172,32 +169,10 @@ export const rowsOf = async (
   return { rows: [...review, ...applicantRows, ...own], failed }
 }
 
-const once = <Value>(store: Map<string, Value>, key: string, make: () => Value) => {
-  if (!store.has(key)) store.set(key, make())
-  return store.get(key)!
-}
-
-/**
- * The work sets of one account, read once per `store`. The key is the user's id,
- * never the `User` object: the layout and a page can each load the user and hold
- * two objects for one account.
- */
-export const workIn = (store: Map<string, Promise<WorkSets>>, payload: Payload, user: User) =>
-  once(store, String(user.id), () => workSetsOf(payload, user))
-
-/** React `cache` gives one `Map` per request. */
-const requestStore = <Value>() => cache(() => new Map<string, Value>())
-const workStore = requestStore<Promise<WorkSets>>()
-const rowsStore = requestStore<Promise<NeedsResult>>()
-
-/** One read of the work sets per request and account. The API uses `needsCounts` and the pages use `needs` with the same work-set rules. */
-export const workOf = async (user: User) => workIn(workStore(), await getPayload({ config }), user)
-
-export const needsCounts = async (user: User) => countsOf(await workOf(user))
+export const needsCounts = async (payload: Payload, user: User) =>
+  countsOf(await workSetsOf(payload, user))
 
 export const needs = async (user: User, locale: Locale) => {
   const payload = await getPayload({ config })
-  return once(rowsStore(), `${user.id}:${locale}`, async () =>
-    rowsOf(payload, user, await workIn(workStore(), payload, user), locale),
-  )
+  return rowsOf(payload, user, await workSetsOf(payload, user), locale)
 }

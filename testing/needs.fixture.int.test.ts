@@ -63,11 +63,9 @@ describe('portalNeedsWorld', () => {
     expect(times).toEqual([...times].sort())
   })
 
-  it('gives the admin and the fellow one post link each, and a second admin with no rows of its own', async () => {
+  it('gives the admin and the fellow one post link each', async () => {
     for (const role of ['admin', 'fellow'] as const)
       expect(await notesOf(world.world.accounts[role])).toHaveLength(1)
-    expect(world.secondAdmin.id).not.toBe(world.world.accounts.admin.id)
-    expect(await notesOf(world.secondAdmin)).toHaveLength(0)
   })
 
   it('takes the newest IDs first when notification timestamps tie across the page limit', async () => {

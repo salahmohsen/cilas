@@ -1,5 +1,3 @@
-'use client'
-
 import { isNotificationKind, type NotificationKind } from '@/lib/notification-kinds'
 import type { ClientNotificationEvent } from '@/lib/realtime/events'
 import { subscribeNotifications } from '@/lib/realtime/stream-client'
