@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 import buttonStyles from '@/components/arc/button/button.module.css'
 
 import styles from './lists.module.css'
@@ -11,10 +13,12 @@ export function PortalPageHeader({
   title,
   subtitle,
   primary,
+  children,
 }: {
   title: string
   subtitle?: string
   primary?: { label: string; href: string }
+  children?: ReactNode
 }): React.JSX.Element {
   return (
     <header className={styles.header}>
@@ -30,6 +34,7 @@ export function PortalPageHeader({
           {primary.label}
         </a>
       )}
+      {children}
     </header>
   )
 }

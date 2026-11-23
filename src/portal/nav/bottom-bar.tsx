@@ -11,6 +11,7 @@ import { useSignOut } from '@/lib/sign-out'
 
 import { WIDE } from './breakpoint'
 import { NAV_ICONS } from './nav-icons'
+import { NavCountChip, NavCountSpoken } from './nav-counts'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
 import { isCurrentItem, type SpaceLink } from './space-links'
@@ -57,7 +58,12 @@ export function BottomBar({ items, spaces }: { items: PortalNavItem[]; spaces: S
                     aria-current={isCurrentItem(pathname, locale, item) ? 'page' : undefined}
                   >
                     <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
-                    <span>{t(item.labelKey)}</span>
+                    <span className="sr-only">
+                      {t(item.labelKey)}
+                      <NavCountSpoken itemKey={item.key} />
+                    </span>
+                    <span aria-hidden="true">{t(item.labelKey)}</span>
+                    <NavCountChip itemKey={item.key} />
                   </Link>
                 </li>
               )

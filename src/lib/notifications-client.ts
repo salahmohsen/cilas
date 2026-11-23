@@ -29,10 +29,16 @@ export const countUnread = async (): Promise<number | null> => {
   return ((await res.json()) as { totalDocs: number }).totalDocs
 }
 
-export const markRead = (id: number | string, read: boolean) =>
+/** `keepalive` lets the request finish when the page navigates away, as a click on a plain link does. */
+export const markRead = (
+  id: number | string,
+  read: boolean,
+  { keepalive }: { keepalive?: boolean } = {},
+) =>
   call(`/${id}`, {
     method: 'PATCH',
     body: JSON.stringify({ read_at: read ? new Date().toISOString() : null }),
+    keepalive,
   })
 
 export const markAllRead = () => call('/read-all', { method: 'POST' })

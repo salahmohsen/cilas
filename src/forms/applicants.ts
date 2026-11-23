@@ -197,33 +197,38 @@ export async function applicantsFor(
   }
 }
 
+export type WaitingChoice = { submission: number; course: number }
+
 /**
- * The course choices that wait for a decision, for the viewer's courses: one per
- * choice with no decision or a `pending` one. A programme application counts 0.
- * Reads with `overrideAccess: true`, as `applicantsFor` does, and returns a
- * number only. The `where` narrows the read; the reduce below is the rule.
+ * The choices that wait on a decision, in the courses the viewer reviews: an admin every
+ * course, a fellow the courses they teach. The count is the length of this list, so a
+ * test can read the same rule for its own rows.
  */
-export async function countWaitingApplicants(
+export async function waitingApplicantChoices(
   payload: Payload,
   user: TypedUser | User | null | undefined,
-): Promise<{ total: number }> {
+): Promise<WaitingChoice[]> {
   const viewer = applicantViewer(user)
-  if (!viewer) return { total: 0 }
-  const { docs: courses } = await payload.find({
-    collection: 'courses',
-    where: viewerCoursesWhere(viewer),
-    select: {}, // the id only
-    depth: 0,
-    pagination: false,
-    overrideAccess: true,
-  })
-  const ids = new Set(courses.map((course) => course.id))
-  if (ids.size === 0) return { total: 0 }
+  if (!viewer) return []
+  // A choice's foreign key already limits admins to courses that exist. Only fellows need an ID list.
+  let courseIds: Set<number> | null = null
+  if (viewer.kind === 'fellow') {
+    const { docs: courses } = await payload.find({
+      collection: 'courses',
+      where: viewerCoursesWhere(viewer),
+      select: {}, // the id only
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    })
+    courseIds = new Set(courses.map((course) => course.id))
+    if (courseIds.size === 0) return []
+  }
   const { docs } = await payload.find({
     collection: 'form-submissions',
     where: {
       and: [
-        { 'choices.course': { in: [...ids] } },
+        { 'choices.course': courseIds ? { in: [...courseIds] } : { exists: true } },
         {
           or: [
             { 'choices.decision': { equals: 'pending' } },
@@ -237,17 +242,26 @@ export async function countWaitingApplicants(
     pagination: false,
     overrideAccess: true,
   })
-  const total = docs.reduce(
-    (sum, submission) =>
-      sum +
-      (submission.choices ?? []).filter(
-        (choice) =>
-          ids.has(Number(relId(choice.course))) &&
-          (!choice.decision || choice.decision === 'pending'),
-      ).length,
-    0,
+  return docs.flatMap((submission) =>
+    (submission.choices ?? []).flatMap((choice) => {
+      const course = relId(choice.course)
+      const waits = !choice.decision || choice.decision === 'pending'
+      return course != null && waits && (courseIds === null || courseIds.has(Number(course)))
+        ? [{ submission: submission.id, course: Number(course) }]
+        : []
+    }),
   )
-  return { total }
+}
+
+/**
+ * Count the viewer's course choices with no decision or a pending decision.
+ * A programme application contributes zero. Return only the total for the Inbox and nav.
+ */
+export async function countWaitingApplicants(
+  payload: Payload,
+  user: TypedUser | User | null | undefined,
+): Promise<{ total: number }> {
+  return { total: (await waitingApplicantChoices(payload, user)).length }
 }
 
 export type ApplicantsData = Awaited<ReturnType<typeof applicantsFor>>

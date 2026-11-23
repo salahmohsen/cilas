@@ -29,6 +29,7 @@ import {
   axeOver,
   known,
   navHref,
+  navName,
   NAV_BY_ROLE,
   openMore,
   PHONE,
@@ -325,7 +326,7 @@ test.describe('portal shell', () => {
             await expect(fold).toHaveAttribute('aria-expanded', 'false')
             for (const label of labels)
               await expect(
-                portalNavOf(page, locale).getByRole('link', { name: label, exact: true }),
+                portalNavOf(page, locale).getByRole('link', { name: navName(label) }),
               ).toHaveCount(1)
             await fold.click()
             await expect(fold).toHaveAttribute('aria-expanded', 'true')
@@ -383,7 +384,7 @@ test.describe('portal shell', () => {
                 await page.goto(localePath('/en/spaces', locale))
                 const scope =
                   viewport.width < 700 ? await openMore(page, locale) : portalNavOf(page, locale)
-                await scope.getByRole('link', { name: portal.nav[key], exact: true }).click()
+                await scope.getByRole('link', { name: navName(portal.nav[key]) }).click()
                 await page.waitForURL(`**/${locale}${item.href}`)
                 expect(h1).not.toBeNull()
                 await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.lists[h1!])
@@ -854,21 +855,19 @@ test.describe('portal shell', () => {
         )
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const usedPadding = () =>
-            region(page, locale).evaluate((el) => {
+          const rail = region(page, locale)
+          for (const toast of [120, 4000]) {
+            const { used, scrollport } = await rail.evaluate((el, px) => {
+              const viewport = el as HTMLElement
+              viewport.style.setProperty('--toast-stack-height', `${px}px`)
               const probe = document.createElement('div')
               probe.style.cssText = `position:absolute;visibility:hidden;inline-size:1px;block-size:${getComputedStyle(el).scrollPaddingBottom}`
               el.parentElement!.append(probe)
               const height = probe.getBoundingClientRect().height
               probe.remove()
+              viewport.style.removeProperty('--toast-stack-height')
               return { used: height, scrollport: el.clientHeight }
-            })
-          for (const toast of [120, 4000]) {
-            await page.evaluate(
-              (px) => document.documentElement.style.setProperty('--toast-stack-height', `${px}px`),
-              toast,
-            )
-            const { used, scrollport } = await usedPadding()
+            }, toast)
             expect(used).toBeCloseTo(Math.min(Math.max(8, toast), scrollport / 2), 0)
           }
         })
@@ -1391,15 +1390,19 @@ test.describe('portal shell', () => {
             expect(atLeast(found, 44)).toEqual([])
             const header = page.locator('[data-portal-rail] header').locator('a, button')
             await expect(header.first()).toBeVisible()
-            const shown = await header.evaluateAll((els) =>
-              els
-                .filter((el) => el.getClientRects().length > 0)
-                .map((el) => {
-                  const box = el.getBoundingClientRect()
-                  return { w: box.width, h: box.height }
-                }),
-            )
-            expect(shown.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            const shownIn = () =>
+              header.evaluateAll((els) =>
+                els
+                  .filter((el) => el.getClientRects().length > 0)
+                  .map((el) => {
+                    const box = el.getBoundingClientRect()
+                    return { w: box.width, h: box.height }
+                  }),
+              )
+            await expect
+              .poll(async () => (await shownIn()).length)
+              .toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            const shown = await shownIn()
             expect(atLeast(shown, 44)).toEqual([])
             await page.keyboard.press('Tab')
             const skip = page.getByRole('link', { name: portal.shell.skip })

@@ -1745,7 +1745,10 @@
       "brand": "الصفحة الرئيسية لـ CILAS",
       "scroll": "الصفحات والمساحات",
       "articles": "المقالات",
-      "courses": "المقررات"
+      "courses": "المقررات",
+      "inbox": "الوارد",
+      "count": "{count, plural, zero {، لا مهام} one {، مهمة واحدة} two {، مهمتان} few {، {shown} مهام} many {، {shown} مهمة} other {، {shown} مهمة}}",
+      "countMany": "، أكثر من {cap} مهام"
     },
     "calendar": {
       "yourCourses": "مقرراتك",
@@ -1898,6 +1901,42 @@
           "body": "تظهر المقررات هنا حين يقترحها زميل."
         }
       }
+    },
+    "needs": {
+      "heading": "مهام تحتاج إلى انتباهك",
+      "review": "مراجعة",
+      "editReview": "مراجعة التعديلات",
+      "removalReview": "البتّ في الحذف",
+      "applicants": "{count, plural, zero {لا طلبات للبتّ فيها} one {البتّ في طلب واحد} two {البتّ في طلبين} few {البتّ في {count, number, digits} طلبات} many {البتّ في {count, number, digits} طلبًا} other {البتّ في {count, number, digits} طلب}}",
+      "changesRequested": "اقرأ الملاحظة وعدّل",
+      "grouped": {
+        "review": "{count, plural, zero {لا عناصر للمراجعة} one {مراجعة عنصر واحد} two {مراجعة عنصرين} few {مراجعة {count, number, digits} عناصر} many {مراجعة {count, number, digits} عنصرًا} other {مراجعة {count, number, digits} عنصر}}",
+        "editReview": "{count, plural, zero {لا تعديلات للمراجعة} one {مراجعة تعديل واحد} two {مراجعة تعديلين} few {مراجعة {count, number, digits} تعديلات} many {مراجعة {count, number, digits} تعديلًا} other {مراجعة {count, number, digits} تعديل}}",
+        "removalReview": "{count, plural, zero {لا طلبات حذف} one {البتّ في طلب حذف واحد} two {البتّ في طلبَي حذف} few {البتّ في {count, number, digits} طلبات حذف} many {البتّ في {count, number, digits} طلب حذف} other {البتّ في {count, number, digits} طلب حذف}}",
+        "changesRequested": "{count, plural, zero {لا ملاحظات} one {قراءة ملاحظة واحدة والتعديل} two {قراءة ملاحظتين والتعديل} few {قراءة {count, number, digits} ملاحظات والتعديل} many {قراءة {count, number, digits} ملاحظة والتعديل} other {قراءة {count, number, digits} ملاحظة والتعديل}}"
+      },
+      "owners": "من {names}",
+      "untitledArticle": "مقال بلا عنوان",
+      "untitledCourse": "مقرر بلا عنوان",
+      "untitledPublication": "منشور بلا عنوان",
+      "empty": "لا شيء يحتاج إلى انتباهك الآن.",
+      "someFailed": "تعذّر تحميل بعض المهام. أعد تحميل الصفحة."
+    },
+    "latest": {
+      "heading": "الأحدث",
+      "empty": "لا جديد بعد. تظهر هنا الردود والمراجعات والقرارات.",
+      "showMore": "عرض المزيد",
+      "cap": "تُعرض أحدث {count, number, digits} من الإشعارات فقط.",
+      "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
+      "unread": "غير مقروء"
+    },
+    "inbox": {
+      "title": "الوارد",
+      "metaTitle": "الوارد",
+      "jumpToLatest": "انتقل إلى أحدث الإشعارات",
+      "loading": "جارٍ تحميل الوارد",
+      "failed": "تعذّر تحميل هذا القسم.",
+      "retry": "أعد المحاولة"
     }
   }
 }

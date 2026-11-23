@@ -1,38 +1,18 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useState, type ReactNode } from 'react'
+import { useCallback, useState } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
-import {
-  AtSign,
-  CalendarClock,
-  CircleCheck,
-  CircleX,
-  FileSearch,
-  Flag,
-  Heart,
-  Megaphone,
-  MessageCircle,
-  PenLine,
-  Reply,
-  Shield,
-  Trash2,
-  UserCheck,
-  UserPlus,
-} from 'lucide-react'
 
 import {
   NotificationCenter,
   type NotificationItem,
 } from '@/components/arc/notification-center/notification-center'
 import { useToastStack } from '@/components/arc/toast-stack/toast-stack'
+import { NOTIFICATION_GLYPHS } from '@/components/notification-glyphs'
 import { localDigits } from '@/lib/digits'
 import { unreadCount } from '@/lib/unread-count'
-import {
-  isNotificationKind,
-  NOTIFICATION_KINDS,
-  type NotificationIcon,
-} from '@/lib/notification-kinds'
+import { isNotificationKind, NOTIFICATION_KINDS } from '@/lib/notification-kinds'
 import {
   dismiss,
   isOwnTab,
@@ -44,24 +24,6 @@ import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime
 import { useNotificationFeed } from '@/components/use-notification-feed'
 
 const LIMIT = 20
-
-const GLYPHS: Record<NotificationIcon, ReactNode> = {
-  'file-search': <FileSearch size={18} strokeWidth={1.7} />,
-  'circle-check': <CircleCheck size={18} strokeWidth={1.7} />,
-  'pen-line': <PenLine size={18} strokeWidth={1.7} />,
-  'circle-x': <CircleX size={18} strokeWidth={1.7} />,
-  trash: <Trash2 size={18} strokeWidth={1.7} />,
-  'user-plus': <UserPlus size={18} strokeWidth={1.7} />,
-  'at-sign': <AtSign size={18} strokeWidth={1.7} />,
-  'message-circle': <MessageCircle size={18} strokeWidth={1.7} />,
-  reply: <Reply size={18} strokeWidth={1.7} />,
-  heart: <Heart size={18} strokeWidth={1.7} />,
-  megaphone: <Megaphone size={18} strokeWidth={1.7} />,
-  shield: <Shield size={18} strokeWidth={1.7} />,
-  flag: <Flag size={18} strokeWidth={1.7} />,
-  'calendar-clock': <CalendarClock size={18} strokeWidth={1.7} />,
-  'user-check': <UserCheck size={18} strokeWidth={1.7} />,
-}
 
 const relativeTime = (date: Date) => {
   if (isYesterday(date)) return 'Yesterday'
@@ -103,7 +65,7 @@ export function SiteNotifications() {
           n.actor_name || n.actor_photo
             ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
             : undefined,
-        icon: kind ? GLYPHS[kind.icon] : undefined,
+        icon: kind ? NOTIFICATION_GLYPHS[kind.icon] : undefined,
         time: relativeTime(new Date(n.createdAt)),
         read: Boolean(n.read_at),
         tone: kind?.tone,

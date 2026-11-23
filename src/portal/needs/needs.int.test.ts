@@ -1,21 +1,26 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { GET as getCounts } from '@/app/(frontend)/api/portal/counts/route'
+import { waitingApplicantChoices } from '@/forms/applicants'
 import { LIVE_COPY } from '@/lib/review-status'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
+import { runInRequest } from '../../../testing/next-request.test-utils'
 import { needsWorld, recordingPayload, type NeedsWorld } from '../../../testing/needs.fixture'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { trustedWrites, writePublishedArticle } from '../../../testing/portal-lists.fixture'
 import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
+import { signedInHeaders } from '../../../testing/reader.test-utils'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
-import { countsOf, needsTotal, rowsOf, workIn, workSetsOf, type NeedsResult } from './needs'
+import { countsOf, rowsOf, workSetsOf } from './needs'
 import { ownRows, ownSet } from './owner-rows'
+import { needsTotal, type NeedsResult } from './sources'
 
 mockNetwork(resendInbox().handler, ...localServices)
 
@@ -44,6 +49,62 @@ describe('needs', () => {
       depth: 0,
       overrideAccess: true,
     })) as unknown as User
+
+  describe('GET /api/portal/counts', () => {
+    const url = 'http://localhost:3000/api/portal/counts'
+
+    it('rejects anonymous requests with a private, uncached response', async () => {
+      const { result } = await runInRequest(getCounts, { url })
+      expect(result.status).toBe(401)
+      expect(result.headers.get('cache-control')).toBe('private, no-store')
+    })
+
+    it('logs an auth read outside the request scope and returns a private, uncached 500', async () => {
+      const log = vi.spyOn(payload.logger, 'error')
+      try {
+        const result = await getCounts()
+        expect(result.status).toBe(500)
+        expect(result.headers.get('cache-control')).toBe('private, no-store')
+        expect(await result.text()).toBe('Unable to load work counts.')
+        expect(log).toHaveBeenCalledWith(
+          { err: expect.any(Error) },
+          'portal counts: request failed',
+        )
+      } finally {
+        log.mockRestore()
+      }
+    })
+
+    it.each(['admin', 'fellow', 'student'] as const)(
+      'returns the %s work sources for the signed-in account',
+      async (role) => {
+        const account = portal.accounts[role]
+        const headers = await signedInHeaders(payload, account)
+        const { result } = await runInRequest(getCounts, {
+          headers,
+          url: `${url}?userId=${portal.accounts.admin.id}`,
+        })
+        expect(result.status).toBe(200)
+        expect(result.headers.get('cache-control')).toBe('private, no-store')
+        const body = await result.json()
+        if (role === 'admin') {
+          expect(body).toEqual({
+            total: expect.any(Number),
+            by: { reviewQueue: expect.any(Number), applicants: expect.any(Number) },
+          })
+          expect(body.by.applicants).toBeGreaterThanOrEqual(2)
+          expect(body.total).toBe(body.by.reviewQueue + body.by.applicants)
+        } else {
+          const expected = countsOf(await workSetsOf(payload, await userOf(account)))
+          expect(body).toEqual(expected)
+          expect(body.total).toBeGreaterThan(0)
+          expect(Object.keys(body.by).sort()).toEqual(
+            role === 'fellow' ? ['ownArticles', 'ownCourses'] : ['ownArticles'],
+          )
+        }
+      },
+    )
+  })
 
   describe('the owner sources', () => {
     it("a student's needs hold their changes_requested and returned-edits articles", async () => {
@@ -158,16 +219,6 @@ describe('needs', () => {
         .map((row) => idOf(row.href))
         .sort()
 
-    it('two User objects of one account share one read of the work sets', async () => {
-      const admin = await userOf(portal.accounts.admin)
-      const student = await userOf(portal.accounts.student)
-      const store = new Map()
-      const first = workIn(store, payload, admin)
-      expect(workIn(store, payload, { ...admin })).toBe(first)
-      expect(workIn(store, payload, student)).not.toBe(first)
-      expect(store.size).toBe(2)
-    })
-
     it('an owner with articles and courses gets one list, oldest first', async () => {
       const fellow = await userOf(portal.accounts.fellow)
       const { create, submit, decide } = trustedWrites(payload, track)
@@ -212,7 +263,18 @@ describe('needs', () => {
       const applicants = result.rows.filter((row) => row.kind === 'applicants')
       expect(applicants).toHaveLength(1)
       expect(applicants[0]).toMatchObject({ href: '/admin/applicants', collection: null })
-      expect(applicants[0]!.count).toBeGreaterThanOrEqual(2)
+      const fixtureApplications = new Set(Object.values(world.applications))
+      const waitingFixture = (await waitingApplicantChoices(payload, admin)).filter(
+        ({ submission }) => fixtureApplications.has(submission),
+      )
+      expect(waitingFixture).toHaveLength(2)
+      expect(waitingFixture).toEqual(
+        expect.arrayContaining([
+          { submission: world.applications.course, course: world.fellowCourses.changes_requested },
+          { submission: world.applications.course, course: world.fellowCourses.published_removal },
+        ]),
+      )
+      expect(applicants[0]!.count).toBeGreaterThanOrEqual(waitingFixture.length)
     })
 
     it('names the owner of an article whose person is hidden', async () => {

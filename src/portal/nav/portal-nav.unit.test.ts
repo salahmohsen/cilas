@@ -10,30 +10,44 @@ const lookup = (messages: object, key: string) =>
 
 describe('portalNav', () => {
   it.each([
-    [[], ['home', 'calendar']],
-    [['member'], ['home', 'calendar', 'articles']],
-    [['non_degree_seeking'], ['home', 'calendar', 'articles']],
-    [['fellow'], ['home', 'calendar', 'articles', 'courses']],
-    [['admin'], ['home', 'calendar', 'articles', 'courses', 'openDashboard']],
-    [['super_admin'], ['home', 'calendar', 'articles', 'courses', 'openDashboard']],
+    [[], ['home', 'inbox', 'calendar']],
+    [['member'], ['home', 'inbox', 'calendar', 'articles']],
+    [['non_degree_seeking'], ['home', 'inbox', 'calendar', 'articles']],
+    [['fellow'], ['home', 'inbox', 'calendar', 'articles', 'courses']],
+    [['admin'], ['home', 'inbox', 'calendar', 'articles', 'courses', 'openDashboard']],
+    [['super_admin'], ['home', 'inbox', 'calendar', 'articles', 'courses', 'openDashboard']],
   ] as const)('roles %j see %j', (roles, keys) => {
     expect(portalNav({ roles: [...roles] }).map((item) => item.key)).toEqual(keys)
   })
 
   it.each([[[]], [['member']], [['fellow']], [['admin']]] as const)(
-    'Calendar is a top item to /spaces/calendar for roles %j',
+    'Inbox is the second top item and Calendar the third for roles %j',
     (roles) => {
-      expect(portalNav({ roles: [...roles] }).find((item) => item.key === 'calendar')).toEqual({
+      const items = portalNav({ roles: [...roles] })
+      expect(items[1]).toEqual({
+        key: 'inbox',
+        labelKey: 'nav.inbox',
+        group: 'top',
+        href: '/spaces/inbox',
+        icon: 'inbox',
+        external: false,
+      })
+      expect(items[2]).toEqual({
         key: 'calendar',
         labelKey: 'nav.calendar',
         group: 'top',
         href: '/spaces/calendar',
         icon: 'calendar',
-        count: null,
         external: false,
       })
     },
   )
+
+  it('portalNav takes one argument and no item has a count field', () => {
+    expect(portalNav.length).toBe(1)
+    for (const item of portalNav({ roles: ['super_admin'] }))
+      expect(item).not.toHaveProperty('count')
+  })
 
   it('Open dashboard is a full load to /admin in the admin group', () => {
     expect(portalNav({ roles: ['admin'] }).find((item) => item.key === 'openDashboard')).toEqual({
@@ -42,7 +56,6 @@ describe('portalNav', () => {
       group: 'admin',
       href: '/admin',
       icon: 'dashboard',
-      count: null,
       external: true,
     })
   })
@@ -58,7 +71,7 @@ describe('portalNav', () => {
     expect(Object.fromEntries(items.map((item) => [item.key, item.group]))).toEqual(groups)
   })
 
-  it('the list items are portal pages with no count', () => {
+  it('the list items are portal pages', () => {
     expect(
       portalNav({ roles: ['fellow'] }).filter(
         (item) => item.key === 'articles' || item.key === 'courses',
@@ -70,7 +83,6 @@ describe('portalNav', () => {
         group: 'myWork',
         href: '/spaces/articles',
         icon: 'articles',
-        count: null,
         external: false,
       },
       {
@@ -79,7 +91,6 @@ describe('portalNav', () => {
         group: 'myWork',
         href: '/spaces/courses',
         icon: 'courses',
-        count: null,
         external: false,
       },
     ])

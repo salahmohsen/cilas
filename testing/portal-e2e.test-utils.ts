@@ -1,7 +1,9 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, type Page } from '@playwright/test'
+import type { Payload } from 'payload'
 
 import KNOWN from '../e2e/portal-axe-known.json'
+import { pushConfig } from '../src/lib/push/config'
 import {
   localePath,
   MESSAGES,
@@ -30,6 +32,7 @@ export const LIST_SHAPES = [
 /** The other portal pages. Their own e2e files run their axe scans. */
 export const PAGE_SHAPES = [
   ['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/],
+  ['/spaces/inbox', /^\/[a-z]{2}\/spaces\/inbox$/],
   ['/spaces/calendar', /^\/[a-z]{2}\/spaces\/calendar$/],
 ] as const
 
@@ -93,6 +96,7 @@ export const openMore = async (page: Page, locale: Locale) => {
 export const NAV_BY_ROLE = {
   admin: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
     { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'admin', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'admin', external: false },
@@ -100,12 +104,14 @@ export const NAV_BY_ROLE = {
   ],
   fellow: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
     { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
     { key: 'courses', href: '/spaces/courses', group: 'myWork', external: false },
   ],
   student: [
     { key: 'home', href: '/spaces', group: 'top', external: false },
+    { key: 'inbox', href: '/spaces/inbox', group: 'top', external: false },
     { key: 'calendar', href: '/spaces/calendar', group: 'top', external: false },
     { key: 'articles', href: '/spaces/articles', group: 'myWork', external: false },
   ],
@@ -117,3 +123,17 @@ export const NAV_BY_ROLE = {
 /** A nav item's link as the page writes it: in the page's language unless it leaves the portal. */
 export const navHref = (item: { href: string; external: boolean }, locale: Locale) =>
   item.external ? item.href : `/${locale}${item.href}`
+
+/** A nav link's name with or without its count: "Inbox" or "Inbox, 3 tasks". */
+export const navName = (label: string) =>
+  new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[,\u060C]|$)`)
+
+/**
+ * Stops a write run unless mail and push are off: a world write or a submit then runs its
+ * hooks against a database that holds real admin addresses. The runner and the server it
+ * talks to both start with the mail, push and search keys empty (`verify.sh`'s env has none).
+ */
+export const mailOff = (payload: Payload) => {
+  if (payload.email.name !== 'console') throw new Error('mail is on: refusing to write')
+  if (pushConfig() !== null) throw new Error('push is on: refusing to write')
+}

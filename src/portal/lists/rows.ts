@@ -11,6 +11,7 @@ import { relId } from '@/lib/relation'
 import {
   candidateIds,
   findCopies,
+  PARENT_SELECT,
   findMain,
   gate,
   keyedRows,
@@ -251,7 +252,7 @@ const searchOf = async (ctx: Ctx, raw: string | null): Promise<Search | null> =>
         { or: [{ 'version.title.en': { like: term } }, { 'version.title.ar': { like: term } }] },
       ],
     },
-    select: { parent: true },
+    select: PARENT_SELECT,
     sort: '-updatedAt',
     limit: MAX_SEARCH_PARENTS,
   })

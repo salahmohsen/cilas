@@ -5,7 +5,7 @@ import { relId } from '../src/lib/relation'
 import { STATUS_KEYS, type StatusKey } from '../src/lib/review-status'
 import { type createTracker, uniq } from './payload.fixture'
 import { listWorld, trustedWrites, writePublishedArticle } from './portal-lists.fixture'
-import { courseRoom, type PortalWorld } from './portal.fixture'
+import { courseRoom, notifyOf, portalWorld, type PortalWorld } from './portal.fixture'
 
 type Track = ReturnType<typeof createTracker>['track']
 
@@ -378,3 +378,37 @@ export const recordingPayload = (
   })
   return { payload: recording, calls }
 }
+
+/** How many bell rows the student gets: one page of Latest (30) and 5 for **Show more**. */
+export const STUDENT_NOTIFICATIONS = 35
+
+/**
+ * `portalWorld` plus `needsWorld` owned by its accounts, for the portal e2e.
+ * The e2e admin sees a known review set on top of whatever the database holds,
+ * and the fellow and the student have owner rows. It also writes the Latest
+ * rows: one bell row for each role that links to a post of the community
+ * space, and the student's others, each awaited in turn so `createdAt` grows. The rows
+ * the world's own writes sent (submit and decide notify) are deleted first, so each role's
+ * Latest holds exactly the rows written here.
+ */
+export const portalNeedsWorld = async (payload: Payload, track: Track) => {
+  const world = await portalWorld(payload, track)
+  const needs = await needsWorld(payload, track, world)
+  const link = world.community.postPath
+  await payload.delete({
+    collection: 'notifications',
+    where: {
+      recipient: {
+        in: [world.accounts.admin.id, world.accounts.fellow.id, world.accounts.student.id],
+      },
+    },
+    overrideAccess: true,
+  })
+  for (const role of ['admin', 'fellow', 'student'] as const)
+    await notifyOf(payload, world.accounts[role], link)
+  for (let i = 1; i < STUDENT_NOTIFICATIONS; i++)
+    await notifyOf(payload, world.accounts.student, link)
+  return { world, needs, link }
+}
+
+export type PortalNeedsWorld = Awaited<ReturnType<typeof portalNeedsWorld>>

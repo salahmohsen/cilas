@@ -1,4 +1,4 @@
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { createTranslator } from 'next-intl'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -7,12 +7,14 @@ import { page, userEvent } from 'vitest/browser'
 import '../../components/arc/foundation.css'
 import '../theme/tokens.css'
 import { unreadCount } from '@/lib/unread-count'
+import type { NeedsCounts } from '@/portal/needs/needs'
 import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 import { renderWithBrowserNavigation } from '../../../testing/browser-navigation.test-utils'
 import { FoldButton } from './fold-button'
 import { FoldProvider } from './fold-state'
 import type { PortalNavItem } from './portal-nav'
+import { NavCountsProvider } from './nav-counts'
 import { Sidebar } from './sidebar'
 import { spaceRow } from './space-link.test-utils'
 import type { SpaceLink } from './space-links'
@@ -23,13 +25,32 @@ const HOME: PortalNavItem = {
   group: 'top',
   href: '/spaces',
   icon: 'home',
-  count: null,
   external: false,
 }
 
+const INBOX: PortalNavItem = {
+  key: 'inbox',
+  labelKey: 'nav.inbox',
+  group: 'top',
+  href: '/spaces/inbox',
+  icon: 'inbox',
+  external: false,
+}
+
+const countsOf = (total: number | null) => ({ total, by: {} }) satisfies NeedsCounts
+
 const LONG_ARABIC = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'.repeat(3).slice(0, 60)
 
-mockNetwork(http.get('/_next/image', () => new HttpResponse(null, { status: 404 })))
+let countResponse: () => Promise<Response> = async () => HttpResponse.json(countsOf(null))
+let countRequests = 0
+mockNetwork(
+  http.get('/_next/image', () => new HttpResponse(null, { status: 404 })),
+  http.get('/api/portal/counts', () => {
+    countRequests++
+    return countResponse()
+  }),
+  http.get('/api/notifications/stream', () => new HttpResponse(null, { status: 204 })),
+)
 
 const countOf = (unread: number, locale: 'en' | 'ar') => {
   const t = createTranslator({ locale, messages: messagesOf[locale], namespace: 'Portal.nav' })
@@ -51,28 +72,35 @@ const renderSidebar = ({
   locale = 'en',
   spaces = [spaceRow({ label: 'Other course', unread: 12 })],
   box,
+  items = [HOME],
+  withCounts = false,
 }: {
   folded?: boolean
   locale?: 'en' | 'ar'
   spaces?: SpaceLink[]
   box?: { width: number; height: number }
-} = {}) =>
-  renderWithBrowserNavigation(
+  items?: PortalNavItem[]
+  withCounts?: boolean
+} = {}) => {
+  const sidebar = <Sidebar items={items} spaces={spaces} />
+  return renderWithBrowserNavigation(
     <IntlProvider locale={locale}>
       <FoldProvider folded={folded} accountId={7}>
         <div data-page="spaces">
           <FoldButton />
           <div style={box && { display: 'flex', inlineSize: box.width, blockSize: box.height }}>
-            <Sidebar items={[HOME]} spaces={spaces} />
+            {withCounts ? <NavCountsProvider>{sidebar}</NavCountsProvider> : sidebar}
           </div>
         </div>
       </FoldProvider>
     </IntlProvider>,
   )
+}
 
 afterEach(() => {
   cleanup()
   clearCookies()
+  countRequests = 0
   window.history.replaceState(null, '', '/')
   document.documentElement.removeAttribute('dir')
 })
@@ -222,5 +250,85 @@ describe('Sidebar scroll region', () => {
         rows[0]!.getBoundingClientRect().top - region.getBoundingClientRect().top,
       ).toBeGreaterThanOrEqual(7),
     )
+  })
+})
+
+describe('Sidebar counts', () => {
+  const tasksOf = (count: number, locale: 'en' | 'ar') => {
+    const t = createTranslator({ locale, messages: messagesOf[locale], namespace: 'Portal.nav' })
+    return unreadCount(count, locale, {
+      some: (values) => t('count', values),
+      many: (values) => t('countMany', values),
+    })
+  }
+  const settled = (total: number | null) => async () => HttpResponse.json(countsOf(total))
+  const named = (name: string | RegExp) => screen.findByRole('link', { name })
+  const show = (options: Parameters<typeof renderSidebar>[0], response: typeof countResponse) => {
+    countResponse = response
+    return renderSidebar({ ...options, withCounts: true })
+  }
+
+  it.each([false, true])(
+    'a nav item with 3 tasks is named Inbox, 3 tasks (folded %s)',
+    async (folded) => {
+      show({ items: [HOME, INBOX], spaces: [], folded }, settled(3))
+      expect(await named('Inbox, 3 tasks')).toBeTruthy()
+      expect(document.querySelector('[data-nav-count]')).toHaveTextContent('3')
+    },
+  )
+
+  it('12 shows 9+ and reads more than 9', async () => {
+    show({ items: [INBOX], spaces: [] }, settled(12))
+    expect(await named('Inbox, more than 9 tasks')).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toHaveTextContent('9+')
+  })
+
+  it.each([0, null])('%s shows no chip', async (total) => {
+    show({ items: [INBOX], spaces: [] }, settled(total))
+    await expect.poll(() => countRequests).toBe(1)
+    expect(await named('Inbox')).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toBeNull()
+    expect(screen.getByRole('link', { name: 'Inbox' })).toBeTruthy()
+  })
+
+  it('Arabic digits in the chip and the name', async () => {
+    show({ locale: 'ar', items: [INBOX], spaces: [] }, settled(3))
+    const name = `${messagesOf.ar.Portal.nav.inbox}${tasksOf(3, 'ar').spoken}`
+    expect(await named(name)).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toHaveTextContent('٣')
+  })
+
+  it.each([false, true])(
+    'reserves the chip box before counts arrive (folded %s)',
+    async (folded) => {
+      let settle!: (response: Response) => void
+      const response = new Promise<Response>((resolve) => (settle = resolve))
+      show({ items: [INBOX], spaces: [], folded }, () => response)
+      const link = await named('Inbox')
+      expect(link.querySelector('[data-nav-count]')).toBeNull()
+      const before = [...link.children].map((child) => child.getBoundingClientRect().toJSON())
+
+      await act(async () => settle(HttpResponse.json(countsOf(12))))
+      expect(await named('Inbox, more than 9 tasks')).toBe(link)
+      expect(link.querySelector('[data-nav-count]')).toBeVisible()
+      expect([...link.children].map((child) => child.getBoundingClientRect().toJSON())).toEqual(
+        before,
+      )
+    },
+  )
+
+  it('keeps the last count visible while a refresh is pending', async () => {
+    show({ items: [INBOX], spaces: [] }, settled(3))
+    expect(await named('Inbox, 3 tasks')).toBeTruthy()
+
+    let settle!: (response: Response) => void
+    const response = new Promise<Response>((resolve) => (settle = resolve))
+    countResponse = () => response
+    window.dispatchEvent(new Event('focus'))
+    await expect.poll(() => countRequests).toBe(2)
+    expect(screen.getByRole('link', { name: 'Inbox, 3 tasks' })).toBeTruthy()
+
+    await act(async () => settle(HttpResponse.json(countsOf(4))))
+    expect(await named('Inbox, 4 tasks')).toBeTruthy()
   })
 })

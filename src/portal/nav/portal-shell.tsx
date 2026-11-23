@@ -10,6 +10,7 @@ import { AccountMenu } from './account-menu'
 import { BottomBar } from './bottom-bar'
 import { FoldButton } from './fold-button'
 import { FoldProvider } from './fold-state'
+import { NavCountsProvider } from './nav-counts'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
 import { Sidebar } from './sidebar'
@@ -38,37 +39,39 @@ export async function PortalShell({
   const t = await getTranslations('Portal')
   return (
     <FoldProvider folded={folded} accountId={accountId}>
-      <a href="#main" className={styles.skip}>
-        {t('shell.skip')}
-      </a>
-      <LiveRegion />
-      <div className={styles.shell} data-page="spaces" data-portal-shell>
-        <div className={styles.rail} data-portal-rail>
-          <header className={styles.top}>
-            <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
-              <CilasLogo className={styles.logo} />
-            </Link>
-            <div className={styles.tools}>
-              <SiteNotifications />
-              <div className={styles.account}>
-                <Suspense fallback={null}>
-                  <AccountMenu />
-                </Suspense>
+      <NavCountsProvider key={accountId}>
+        <a href="#main" className={styles.skip}>
+          {t('shell.skip')}
+        </a>
+        <LiveRegion />
+        <div className={styles.shell} data-page="spaces" data-portal-shell>
+          <div className={styles.rail} data-portal-rail>
+            <header className={styles.top}>
+              <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
+                <CilasLogo className={styles.logo} />
+              </Link>
+              <div className={styles.tools}>
+                <SiteNotifications />
+                <div className={styles.account}>
+                  <Suspense fallback={null}>
+                    <AccountMenu />
+                  </Suspense>
+                </div>
               </div>
+            </header>
+            <Sidebar items={nav} spaces={spaces} />
+          </div>
+          <main className={styles.main}>
+            <div className={styles.crumbs} data-portal-crumbs>
+              <FoldButton />
             </div>
-          </header>
-          <Sidebar items={nav} spaces={spaces} />
+            <div id="main" tabIndex={-1} className={`${styles.content} mx-auto w-full max-w-300`}>
+              {children}
+            </div>
+          </main>
+          <BottomBar items={nav} spaces={spaces} />
         </div>
-        <main className={styles.main}>
-          <div className={styles.crumbs} data-portal-crumbs>
-            <FoldButton />
-          </div>
-          <div id="main" tabIndex={-1} className={`${styles.content} mx-auto w-full max-w-300`}>
-            {children}
-          </div>
-        </main>
-        <BottomBar items={nav} spaces={spaces} />
-      </div>
+      </NavCountsProvider>
     </FoldProvider>
   )
 }
