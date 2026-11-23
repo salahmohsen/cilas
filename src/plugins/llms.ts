@@ -1,10 +1,20 @@
 import { detailPath } from '@/lib/paths'
 import type { Plugin } from 'payload'
 import { DEFAULT_SETTINGS_GLOBAL_SLUG, llmsTxtPlugin } from 'payload-plugin-llms-txt'
-import type { LlmsTxtPluginOptions } from 'payload-plugin-llms-txt'
+import type { LlmsTxtCollectionConfig, LlmsTxtPluginOptions } from 'payload-plugin-llms-txt'
 
 import { anyone, isAdmin } from '@/access'
 import { env } from '@/env'
+
+/**
+ * The plugin's own converter cannot read a body that holds a block, so
+ * courses and articles go through the site's (a dynamic import: the editors
+ * need the Payload config, which loads this file).
+ */
+const markdownOf =
+  (kind: 'default' | 'article'): NonNullable<LlmsTxtCollectionConfig['contentToMarkdown']> =>
+  async ({ payload, doc, data }) =>
+    (await import('@/api/llms-document')).richTextToMarkdown(payload, doc, data, 'en', kind)
 
 /**
  * /llms.txt and /llms-full.txt: the public courses, articles and people, as
@@ -24,6 +34,7 @@ export const llmsOptions: LlmsTxtPluginOptions = {
       label: 'Courses',
       descriptionField: ['summary', 'subtitle', 'meta.description'],
       contentField: 'description',
+      contentToMarkdown: markdownOf('default'),
       urlPath: (doc) => detailPath('courses', String(doc.slug), 'en'),
     },
     {
@@ -31,6 +42,7 @@ export const llmsOptions: LlmsTxtPluginOptions = {
       label: 'Articles',
       descriptionField: ['meta.description'],
       contentField: 'body',
+      contentToMarkdown: markdownOf('article'),
       urlPath: (doc) => detailPath('articles', String(doc.slug), 'en'),
     },
     {

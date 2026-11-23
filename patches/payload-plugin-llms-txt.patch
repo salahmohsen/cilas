@@ -1,0 +1,104 @@
+diff --git a/dist/exports/next.cjs b/dist/exports/next.cjs
+index 8b7ed5e4d9eaf41b3a22469c58a46e57c4caeb42..487413eaa2bb72f2f4caa491d3066c090a493cb3 100644
+--- a/dist/exports/next.cjs
++++ b/dist/exports/next.cjs
+@@ -129,7 +129,7 @@ async function generateLlmsFullTxt(payload, options) {
+       const richTextData = collectionConfig.contentField ? doc[collectionConfig.contentField] : void 0;
+       if (richTextData) {
+         try {
+-          const markdown = convertLexicalToMarkdown({
++          const markdown = collectionConfig.contentToMarkdown ? await collectionConfig.contentToMarkdown({ payload, doc, data: richTextData }) : convertLexicalToMarkdown({
+             data: richTextData,
+             editorConfig
+           });
+diff --git a/dist/exports/next.js b/dist/exports/next.js
+index 1f82d897c2d6ad3605bd4de841062c099d2df304..21c31ad6cdbd777659a6accc8f85cfeb5894c644 100644
+--- a/dist/exports/next.js
++++ b/dist/exports/next.js
+@@ -94,7 +94,7 @@ async function generateLlmsFullTxt(payload, options) {
+       const richTextData = collectionConfig.contentField ? doc[collectionConfig.contentField] : void 0;
+       if (richTextData) {
+         try {
+-          const markdown = convertLexicalToMarkdown({
++          const markdown = collectionConfig.contentToMarkdown ? await collectionConfig.contentToMarkdown({ payload, doc, data: richTextData }) : convertLexicalToMarkdown({
+             data: richTextData,
+             editorConfig
+           });
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 3389c0e64593de75c6292c2a97034d3482e4176d..c375c99a59955269fcf18b2a87e6b393be2e8fe9 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -158,7 +158,7 @@ async function generateLlmsFullTxt(payload, options) {
+       const richTextData = collectionConfig.contentField ? doc[collectionConfig.contentField] : void 0;
+       if (richTextData) {
+         try {
+-          const markdown = convertLexicalToMarkdown({
++          const markdown = collectionConfig.contentToMarkdown ? await collectionConfig.contentToMarkdown({ payload, doc, data: richTextData }) : convertLexicalToMarkdown({
+             data: richTextData,
+             editorConfig
+           });
+diff --git a/dist/index.js b/dist/index.js
+index 280b365147fb6d465b83aea9e69af4179b9df5a0..3901b931bf698a19bdb5a3e289a9ed1e2dc2ae66 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -119,7 +119,7 @@ async function generateLlmsFullTxt(payload, options) {
+       const richTextData = collectionConfig.contentField ? doc[collectionConfig.contentField] : void 0;
+       if (richTextData) {
+         try {
+-          const markdown = convertLexicalToMarkdown({
++          const markdown = collectionConfig.contentToMarkdown ? await collectionConfig.contentToMarkdown({ payload, doc, data: richTextData }) : convertLexicalToMarkdown({
+             data: richTextData,
+             editorConfig
+           });
+diff --git a/dist/types-BDygeqD9.d.cts b/dist/types-BDygeqD9.d.cts
+index bb6b84541c38decf55e09d8c6e8a921a4c7f18c5..c1506a40be99f75aa81fe9c750ca04295daa6ca6 100644
+--- a/dist/types-BDygeqD9.d.cts
++++ b/dist/types-BDygeqD9.d.cts
+@@ -1,3 +1,4 @@
++import type { Payload } from 'payload';
+ interface LlmsTxtCollectionConfig {
+     /** Collection slug, e.g. 'posts' */
+     slug: string;
+@@ -25,6 +26,16 @@ interface LlmsTxtCollectionConfig {
+     publishedOnly?: boolean;
+     /** Label used for this collection's section heading. Defaults to a capitalized slug. */
+     label?: string;
++    /**
++     * Converts the content field to Markdown, in place of the plugin's own converter.
++     * The plugin's converter knows only Payload's default editor, so it cannot read
++     * a field that uses blocks, inline blocks or other custom nodes.
++     */
++    contentToMarkdown?: (args: {
++        payload: Payload;
++        doc: Record<string, unknown>;
++        data: unknown;
++    }) => string | Promise<string>;
+ }
+ interface LlmsTxtPluginOptions {
+     collections: LlmsTxtCollectionConfig[];
+diff --git a/dist/types-BDygeqD9.d.ts b/dist/types-BDygeqD9.d.ts
+index bb6b84541c38decf55e09d8c6e8a921a4c7f18c5..c1506a40be99f75aa81fe9c750ca04295daa6ca6 100644
+--- a/dist/types-BDygeqD9.d.ts
++++ b/dist/types-BDygeqD9.d.ts
+@@ -1,3 +1,4 @@
++import type { Payload } from 'payload';
+ interface LlmsTxtCollectionConfig {
+     /** Collection slug, e.g. 'posts' */
+     slug: string;
+@@ -25,6 +26,16 @@ interface LlmsTxtCollectionConfig {
+     publishedOnly?: boolean;
+     /** Label used for this collection's section heading. Defaults to a capitalized slug. */
+     label?: string;
++    /**
++     * Converts the content field to Markdown, in place of the plugin's own converter.
++     * The plugin's converter knows only Payload's default editor, so it cannot read
++     * a field that uses blocks, inline blocks or other custom nodes.
++     */
++    contentToMarkdown?: (args: {
++        payload: Payload;
++        doc: Record<string, unknown>;
++        data: unknown;
++    }) => string | Promise<string>;
+ }
+ interface LlmsTxtPluginOptions {
+     collections: LlmsTxtCollectionConfig[];

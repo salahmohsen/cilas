@@ -12,9 +12,11 @@ import { routing } from './routing'
 const fromRoute = async () => rootParams.locale()
 
 /** Messages and formats per request (formats: `./formats`). */
-export default getRequestConfig(async ({ locale: override, requestLocale }) => {
+export default getRequestConfig(async (params) => {
+  // `requestLocale` is a getter that reads the request's headers, which makes a page dynamic.
+  // Destructuring it would call it on every request, so it is read only when the route has no locale.
   // A server action has no route, so root params throw there; it sets the locale itself.
-  const requested = override ?? (await fromRoute().catch(() => requestLocale))
+  const requested = params.locale ?? (await fromRoute().catch(() => params.requestLocale))
   if (!hasLocale(routing.locales, requested)) notFound()
   const locale = requested
 

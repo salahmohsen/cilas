@@ -2,6 +2,7 @@ import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { createTranslator } from 'next-intl'
 import { unstable_cache } from 'next/cache'
+import pMemoize from 'p-memoize'
 import { getPayload } from 'payload'
 
 import type { SiteTier } from '@/access'
@@ -11,14 +12,7 @@ import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 
-/**
- * The study list with its search words, built once per language and tier set
- * (one cache entry per set, so an anonymous page never reads a community
- * course), and kept until a course changes (or five minutes pass, for changes to the people,
- * cycles and places it names). Labels come straight from the messages: a
- * cached function cannot read the request.
- */
-export const getStudyIndex = unstable_cache(
+const loadStudyIndex = pMemoize(
   async (locale: Locale, tiers: SiteTier[]) => {
     const payload = await getPayload({ config })
     const t = createTranslator({
@@ -28,7 +22,13 @@ export const getStudyIndex = unstable_cache(
     })
     return getStudyCourses(payload, locale, (key) => t(key as never), tiers)
   },
-  // The key names the index's shape: a change to it starts a fresh cache.
+  { cache: false, cacheKey: ([locale, tiers]) => `${locale}:${tiers.join(',')}` },
+)
+
+// Each render must register the tag and revalidation interval. Share only the
+// in-flight query, keyed by locale and access tiers, on concurrent cache misses.
+export const getStudyIndex = unstable_cache(
+  (locale: Locale, tiers: SiteTier[]) => loadStudyIndex(locale, tiers),
   ['study-index-v6'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 300 },
 )

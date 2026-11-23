@@ -168,6 +168,8 @@ jobs:
         run: |
           . ./scripts/smoke-test-env.sh
           pnpm build
+      - name: Check seeded public pages and signed-in routes
+        run: pnpm test:static-routes
       - name: Test production JavaScript in Chromium
         run: |
           . ./scripts/smoke-test-env.sh

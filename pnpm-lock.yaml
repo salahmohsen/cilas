@@ -28,6 +28,9 @@ patchedDependencies:
   deepmerge@4.3.1:
     hash: eb7264023075546742f57e4c1d640e3010cead11985d2329735ed25f5eedfb09
     path: patches/deepmerge@4.3.1.patch
+  payload-plugin-llms-txt@0.2.0:
+    hash: d1b13bf280107a500948ef3c85ef9ed376b6eae9b8a375899ed10e9ffad7b542
+    path: patches/payload-plugin-llms-txt.patch
 
 importers:
 
@@ -162,6 +165,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      p-memoize:
+        specifier: 9.0.0
+        version: 9.0.0
       payload:
         specifier: 3.91.0
         version: 3.91.0(graphql@16.14.2)(typescript@5.7.3)
@@ -173,7 +179,7 @@ importers:
         version: 1.0.21(payload@3.91.0(graphql@16.14.2)(typescript@5.7.3))
       payload-plugin-llms-txt:
         specifier: 0.2.0
-        version: 0.2.0(dd22b3a2c77583f67f3672a14d755b57)
+        version: 0.2.0(patch_hash=d1b13bf280107a500948ef3c85ef9ed376b6eae9b8a375899ed10e9ffad7b542)(dd22b3a2c77583f67f3672a14d755b57)
       payload-theme:
         specifier: 0.11.0
         version: 0.11.0(e97d061c1d5484bc9f2641fc4aa787be)
@@ -5632,6 +5638,10 @@ packages:
   p-locate@3.0.0:
     resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
     engines: {node: '>=6'}
+
+  p-memoize@9.0.0:
+    resolution: {integrity: sha512-CrDWMfDzkLVDM9qmPibiClRWbWbbLnQ7gfrvpY0F83az9zpZxtegV4SZvkYj0EeutirIK61YXLsIldlkGHORwA==}
+    engines: {node: '>=22'}
 
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
@@ -12515,6 +12525,10 @@ snapshots:
     dependencies:
       p-limit: 2.3.0
 
+  p-memoize@9.0.0:
+    dependencies:
+      mimic-function: 5.0.1
+
   p-try@2.2.0: {}
 
   parent-module@1.0.1:
@@ -12589,7 +12603,7 @@ snapshots:
     dependencies:
       payload: 3.91.0(graphql@16.14.2)(typescript@5.7.3)
 
-  payload-plugin-llms-txt@0.2.0(dd22b3a2c77583f67f3672a14d755b57):
+  payload-plugin-llms-txt@0.2.0(patch_hash=d1b13bf280107a500948ef3c85ef9ed376b6eae9b8a375899ed10e9ffad7b542)(dd22b3a2c77583f67f3672a14d755b57):
     dependencies:
       '@payloadcms/richtext-lexical': 3.91.0(@faceless-ui/modal@3.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@payloadcms/next@3.91.0(@types/react@19.2.14)(graphql@16.14.2)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.105.1))(payload@3.91.0(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3))(@types/react@19.2.14)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.105.1))(payload@3.91.0(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3)(yjs@13.6.33)
       payload: 3.91.0(graphql@16.14.2)(typescript@5.7.3)
