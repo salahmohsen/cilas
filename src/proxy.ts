@@ -1,3 +1,4 @@
+import { hasLocale } from 'next-intl'
 import createMiddleware from 'next-intl/middleware'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -6,6 +7,7 @@ import { routing } from './i18n/routing'
 import { relayRequest } from './lib/analytics/hosts'
 
 const intl = createMiddleware(routing)
+const intlForLocalizedPath = createMiddleware({ ...routing, localeCookie: false })
 
 /**
  * Discovery for Claude and ChatGPT: the two documents live at the site's root
@@ -106,7 +108,9 @@ export default function proxy(request: NextRequest) {
     url.pathname = `/${page[1]}/signed-in${page[2]}`
     return NextResponse.rewrite(url)
   }
-  return intl(request)
+  return hasLocale(routing.locales, pathname.split('/')[1])
+    ? intlForLocalizedPath(request)
+    : intl(request)
 }
 
 export const config = {

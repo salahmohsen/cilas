@@ -22,9 +22,11 @@ for (const path of paths) {
   test(`production JavaScript renders ${path}`, async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (error) => errors.push(error.message))
+    await page.setExtraHTTPHeaders({ 'Accept-Language': path.startsWith('/ar') ? 'en' : 'ar' })
     const response = await page.goto(path, { waitUntil: 'networkidle' })
 
     expect(response?.status()).toBe(200)
+    expect(await response!.headerValue('set-cookie')).toBeNull()
     await expect(page.locator('.site-header')).toBeVisible()
     await expect(page.getByRole('heading').first()).toBeVisible()
     await expect(page.getByRole('heading', { name: 'This page couldn’t load' })).toHaveCount(0)
