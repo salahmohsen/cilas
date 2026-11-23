@@ -14,9 +14,10 @@ type Slugged = { slug?: string | null }
  * call `updateTag`, which only a server action may.
  */
 export const revalidateDocument = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
-  const { paths, tag } = revalidationOf(collection, routing.locales, doc, previousDoc)
+  const { paths, layouts, tag } = revalidationOf(collection, routing.locales, doc, previousDoc)
   try {
     for (const path of paths) revalidatePath(path)
+    for (const layout of layouts) revalidatePath(layout, 'layout')
     if (tag) revalidateTag(PUBLIC_LISTS_TAG, { expire: 0 })
   } catch {
     // Seed and import scripts have no Next cache, and these calls throw there.

@@ -1,45 +1,87 @@
-// After `pnpm build`: the public pages are prerendered, and the pages that read
-// the reader's session are not. A page turns dynamic when anything in its tree
-// reads the request (headers, cookies, search params); Next then drops it from
-// the prerender manifest without an error, so only this check shows it.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 
-const { routes, dynamicRoutes } = JSON.parse(readFileSync('.next/prerender-manifest.json', 'utf8'))
+import { articleSlug, courseSlug } from './smoke.fixture.ts'
+
+const { routes, dynamicRoutes, notFoundRoutes } = JSON.parse(
+  readFileSync('.next/prerender-manifest.json', 'utf8'),
+)
 
 const LOCALES = ['en', 'ar']
 const STATIC_PAGES = [
   '',
-  '/about',
   '/apply',
   '/contact',
   '/governance',
   '/people/cilasians',
   '/people/fellows',
   '/study/bridge',
+  '/study/bridge/apply',
+  `/study/${courseSlug}`,
+  `/articles/${articleSlug}`,
+].map((page) => ({ page, status: 200 }))
+const STATIC_ROUTES = [...STATIC_PAGES, { page: '/about', status: 308, redirect: '' }]
+const DYNAMIC_PAGES = [
+  '/login',
+  '/settings',
+  '/profile',
+  '/signed-in',
+  '/signed-in/apply',
+  '/signed-in/articles',
+  `/signed-in/articles/${articleSlug}`,
+  `/signed-in/study/${courseSlug}`,
+  `/signed-in/study/${courseSlug}/apply`,
 ]
-// Pages with a [slug]: each page is added as it is published, so the manifest lists the route.
-const STATIC_PATTERNS = ['/[locale]/study/[slug]', '/[locale]/articles/[slug]']
-// Pages that read the session or the request: they must stay dynamic.
-const DYNAMIC_PAGES = ['/login', '/settings', '/profile', '/signed-in']
-
-const missing = LOCALES.flatMap((l) => STATIC_PAGES.map((p) => `/${l}${p}`)).filter(
-  (path) => !(path in routes),
-)
-const missingPatterns = STATIC_PATTERNS.filter((pattern) => !(pattern in dynamicRoutes))
-const wrongStatic = LOCALES.flatMap((l) => DYNAMIC_PAGES.map((p) => `/${l}${p}`)).filter(
-  (path) => path in routes,
-)
-
-const problems = [
-  ...[...missing, ...missingPatterns].map((path) => `not prerendered: ${path}`),
-  ...wrongStatic.map((path) => `prerendered but reads the session: ${path}`),
+const DYNAMIC_PATTERNS = [
+  '/[locale]/signed-in/articles/[slug]',
+  '/[locale]/signed-in/study/[slug]',
+  '/[locale]/signed-in/study/[slug]/apply',
 ]
+
+const problems = []
+for (const locale of LOCALES) {
+  for (const { page, status: expectedStatus, redirect } of STATIC_ROUTES) {
+    const path = `/${locale}${page}`
+    const route = routes[path]
+    const artifact = `.next/server/app${path}`
+    if (
+      route?.response !== 'complete' ||
+      !existsSync(`${artifact}.meta`) ||
+      !existsSync(`${artifact}.html`)
+    ) {
+      problems.push(`not prerendered: ${path}`)
+      continue
+    }
+
+    const { status, headers } = JSON.parse(readFileSync(`${artifact}.meta`, 'utf8'))
+    const actualStatus = notFoundRoutes.includes(path)
+      ? 404
+      : (route.initialStatus ?? status ?? 200)
+    if (actualStatus !== expectedStatus) {
+      problems.push(`expected HTTP ${expectedStatus} at ${path}, got ${actualStatus}`)
+    }
+    if (redirect !== undefined && headers?.location !== `/${locale}${redirect}`) {
+      problems.push(`expected ${path} to redirect to /${locale}${redirect}`)
+    }
+    if (route.initialRevalidateSeconds !== 300) {
+      problems.push(`expected 300s revalidation at ${path}, got ${route.initialRevalidateSeconds}`)
+    }
+    if (!headers?.['x-next-cache-tags']?.split(',').includes('courses')) {
+      problems.push(`missing courses cache tag: ${path}`)
+    }
+  }
+  for (const page of DYNAMIC_PAGES) {
+    const path = `/${locale}${page}`
+    if (path in routes || notFoundRoutes.includes(path)) {
+      problems.push(`prerendered but reads the session: ${path}`)
+    }
+  }
+}
+for (const pattern of DYNAMIC_PATTERNS) {
+  if (pattern in dynamicRoutes) problems.push(`cacheable but reads the session: ${pattern}`)
+}
+
 if (problems.length) {
   console.error(problems.join('\n'))
-  console.error(
-    'A public page turns dynamic when anything in its tree reads the request.\n' +
-      'Run `next build --debug` to see which call, and where.',
-  )
   process.exit(1)
 }
-console.log(`Static routes ok: ${Object.keys(routes).length} prerendered.`)
+console.log(`Static routes ok: ${STATIC_ROUTES.length * LOCALES.length} checked.`)

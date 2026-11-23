@@ -28,7 +28,7 @@ patchedDependencies:
   deepmerge@4.3.1:
     hash: eb7264023075546742f57e4c1d640e3010cead11985d2329735ed25f5eedfb09
     path: patches/deepmerge@4.3.1.patch
-  payload-plugin-llms-txt:
+  payload-plugin-llms-txt@0.2.0:
     hash: d1b13bf280107a500948ef3c85ef9ed376b6eae9b8a375899ed10e9ffad7b542
     path: patches/payload-plugin-llms-txt.patch
 

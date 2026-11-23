@@ -1,8 +1,14 @@
+export const BRIDGE_PATH = '/study/bridge'
+export const BRIDGE_APPLY_PATH = `${BRIDGE_PATH}/apply`
+
+// Next tags route patterns with the groups from the app directory.
+const SITE_SEGMENT = '/(frontend)/[locale]/(site)'
+
 /**
  * What each collection shows on the public site, and so what a save drops from
  * the cache: its detail page (under the current and the previous slug), the
- * pages that list it (per language), fixed pages, and whether it feeds the
- * lists cached under `PUBLIC_LISTS_TAG`. Add a line as each frontend route lands.
+ * pages that list it (per language), fixed paths, route patterns and the
+ * shared list cache tag.
  */
 const ROUTES: Record<
   string,
@@ -10,11 +16,26 @@ const ROUTES: Record<
     detail?: (slug: string) => string
     lists?: readonly string[]
     fixed?: readonly string[]
+    layouts?: readonly string[]
     tag?: boolean
   }
 > = {
   courses: { detail: (slug) => `/study/${slug}`, tag: true },
-  articles: { detail: (slug) => `/articles/${slug}` },
+  articles: {
+    detail: (slug) => `/articles/${slug}`,
+    lists: ['', '/articles'],
+    fixed: ['/sitemap.xml', '/llms.txt', '/llms-full.txt'],
+    layouts: [`${SITE_SEGMENT}/articles/[slug]`],
+  },
+  programmes: {
+    lists: ['', '/apply', BRIDGE_PATH, BRIDGE_APPLY_PATH],
+    fixed: ['/sitemap.xml'],
+    layouts: [`${SITE_SEGMENT}${BRIDGE_PATH}/[year]`],
+  },
+  forms: {
+    lists: ['', '/contact', BRIDGE_APPLY_PATH],
+    layouts: [`${SITE_SEGMENT}/study/[slug]/apply`],
+  },
   events: {
     detail: (slug) => `/events/${slug}`,
     lists: ['', '/events', '/calendar', '/signed-in'],
@@ -77,11 +98,8 @@ export const revalidationOf = (
       if (path) paths.add(path)
     }
   }
-  return { paths: [...paths], tag: Boolean(route?.tag) }
+  return { paths: [...paths], layouts: route?.layouts ?? [], tag: Boolean(route?.tag) }
 }
-
-export const BRIDGE_PATH = '/study/bridge'
-export const BRIDGE_APPLY_PATH = `${BRIDGE_PATH}/apply`
 
 /** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
 export const bridgeYearPath = (slug: string) =>

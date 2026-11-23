@@ -186,7 +186,7 @@
     ],
     "patchedDependencies": {
       "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch",
-      "payload-plugin-llms-txt": "patches/payload-plugin-llms-txt.patch"
+      "payload-plugin-llms-txt@0.2.0": "patches/payload-plugin-llms-txt.patch"
     }
   }
 }

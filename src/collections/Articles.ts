@@ -1,4 +1,5 @@
 import { tierField } from '@/fields/tier'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { previewUrl } from '@/lib/preview-url'
 import { addSelfAs } from '@/lib/review-ownership'
 import type { CollectionConfig } from 'payload'
@@ -73,6 +74,8 @@ export const Articles: CollectionConfig = {
     ...articleReview,
     beforeValidate: [addSelfAs('authors')],
     beforeChange: [...(articleReview.beforeChange ?? []), stampLastEditor],
+    afterChange: [...articleReview.afterChange, revalidateAfterChange('articles')],
+    afterDelete: [revalidateAfterDelete('articles')],
   },
   fields: [
     lastEditedByField,

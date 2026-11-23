@@ -86,6 +86,7 @@ import { roleNav } from './plugins/role-nav'
 import { adminMcp } from './plugins/mcp'
 import { AI_ACCESS_VIEW } from './plugins/mcp/paths'
 import { typesenseSearch } from './plugins/typesense'
+import { revalidateAfterChange, revalidateAfterDelete } from './lib/revalidate'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -355,7 +356,12 @@ export const sourceConfig: Config = {
           update: isAdmin,
           delete: isAdmin,
         },
-        hooks: { beforeValidate: [nameNewFormQuestions], beforeChange: [ensureNameEmail] },
+        hooks: {
+          beforeValidate: [nameNewFormQuestions],
+          beforeChange: [ensureNameEmail],
+          afterChange: [revalidateAfterChange('forms')],
+          afterDelete: [revalidateAfterDelete('forms')],
+        },
       },
       formSubmissionOverrides: {
         labels: { singular: 'Form submission', plural: 'Form submissions' },
