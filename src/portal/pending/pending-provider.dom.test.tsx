@@ -227,3 +227,16 @@ it('focus in the toast stack holds the undo window until focus leaves', () => {
   act(() => decide.focus())
   expect(screen.getByLabelText('State')).toHaveTextContent('pending')
 })
+
+it('shows the leave hint only on the first pending toast of the tab session', () => {
+  sessionStorage.clear()
+  const hint = 'Emails go when you leave this page or switch app.'
+  const first = render(setup().ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  expect(screen.getByText(hint)).toBeInTheDocument()
+  first.unmount()
+  render(setup().ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  expect(screen.queryByText(hint)).toBeNull()
+  sessionStorage.clear()
+})

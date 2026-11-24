@@ -25,6 +25,17 @@ const noSubscription = () => () => {}
 const emptySnapshot = () => EMPTY_ITEMS
 const EMPTY_ITEMS = new Map()
 
+function takeLeaveHint() {
+  const key = 'portal.pending.leaveHint'
+  try {
+    if (sessionStorage.getItem(key)) return false
+    sessionStorage.setItem(key, '1')
+  } catch {
+    // The provider still shows it once when the browser blocks session storage.
+  }
+  return true
+}
+
 export function PendingProvider({
   children,
   clock = browserClock,
@@ -69,7 +80,7 @@ export function PendingProvider({
               () => store.undo(key),
               t('undo'),
             ),
-            description: showedLeaveHint.current ? undefined : t('leaveHint'),
+            description: !showedLeaveHint.current && takeLeaveHint() ? t('leaveHint') : undefined,
           })
           showedLeaveHint.current = true
         } else if (state === 'committing') {

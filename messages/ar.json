@@ -1930,7 +1930,21 @@
       "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
       "unread": "غير مقروء"
     },
+    "inbox": {
+      "title": "الوارد",
+      "metaTitle": "الوارد",
+      "jumpToLatest": "انتقل إلى أحدث الإشعارات",
+      "loading": "جارٍ تحميل الوارد",
+      "failed": "تعذّر تحميل هذا القسم.",
+      "retry": "أعد المحاولة"
+    },
     "pending": {
+      "approving": "جارٍ الاعتماد. يُرسل البريد خلال {n, number, digits} ث",
+      "askingForChanges": "جارٍ طلب التعديلات. يُرسل البريد خلال {n, number, digits} ث",
+      "declining": "جارٍ الرفض. يُرسل البريد خلال {n, number, digits} ث",
+      "removing": "جارٍ الإزالة. يُرسل البريد خلال {n, number, digits} ث",
+      "keeping": "جارٍ الإبقاء على النشر. يُرسل البريد خلال {n, number, digits} ث",
+      "paused": "المؤقّت متوقّف. البريد بانتظار الإرسال.",
       "decision": "جارٍ حفظ القرار. يُرسل البريد خلال {n, number, digits} ث",
       "leaveHint": "يُرسل البريد عند مغادرة الصفحة أو الانتقال إلى تطبيق آخر.",
       "undo": "تراجع",
@@ -1953,14 +1967,6 @@
         "paused": "{label}. تراجع. {n, plural, one {تبقّت ثانية واحدة} two {تبقّت ثانيتان} few {تبقّت {n, number, digits} ثوانٍ} other {تبقّت {n, number, digits} ثانية}}. المؤقّت متوقّف.",
         "undo": "{label}. تراجع."
       }
-    },
-    "inbox": {
-      "title": "الوارد",
-      "metaTitle": "الوارد",
-      "jumpToLatest": "انتقل إلى أحدث الإشعارات",
-      "loading": "جارٍ تحميل الوارد",
-      "failed": "تعذّر تحميل هذا القسم.",
-      "retry": "أعد المحاولة"
     }
   }
 }
