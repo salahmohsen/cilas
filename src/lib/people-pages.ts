@@ -9,6 +9,15 @@ export const PEOPLE_PAGES = [
   { key: 'governance', label: 'Governance', path: '/governance' },
 ] as const
 
+/**
+ * The list pages that sit under /people, as one path segment each ("fellows").
+ * /people/[slug] is a person's page, so these words are not person slugs.
+ */
+export const PEOPLE_LIST_SEGMENTS: readonly string[] = PEOPLE_PAGES.flatMap(({ path }) => {
+  const [, root, segment] = path.split('/')
+  return root === 'people' && segment ? [segment] : []
+})
+
 export type PeoplePage = (typeof PEOPLE_PAGES)[number]
 export type PeoplePageKey = PeoplePage['key']
 export type PeoplePages = Record<PeoplePageKey, boolean>

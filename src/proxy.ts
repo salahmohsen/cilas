@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { clientEnv } from './env.client'
 import { routing } from './i18n/routing'
 import { relayRequest } from './lib/analytics/hosts'
+import { PEOPLE_LIST_SEGMENTS } from './lib/people-pages'
 
 const intl = createMiddleware(routing)
 
@@ -23,10 +24,20 @@ const LEGACY = /\.html$|^\/uploads\//
 /**
  * The pages that show `community` work to a signed-in reader: home and Open
  * for registration (what is open), the articles, a person's page, and a
- * course with its application. The Bridge has its own pages under /study and stays cached.
+ * course with its application. A static page next to a `[slug]` route is not
+ * a slug, so it keeps its cached page: the Bridge under /study, and the
+ * people lists (`PEOPLE_LIST_SEGMENTS`) under /people.
  */
-const SIGNED_IN =
-  /^\/(en|ar)((?:\/articles(?:\/[^/]+)?|\/people\/[^/]+|\/apply|\/study\/(?!bridge(?:\/|$))[^/]+(?:\/apply)?)?)\/?$/
+const SIGNED_IN = new RegExp(
+  '^/(en|ar)((?:' +
+    [
+      '/articles(?:/[^/]+)?',
+      `/people/(?!(?:${PEOPLE_LIST_SEGMENTS.join('|')})(?:/|$))[^/]+`,
+      '/apply',
+      '/study/(?!bridge(?:/|$))[^/]+(?:/apply)?',
+    ].join('|') +
+    ')?)/?$',
+)
 
 /** Payload's login cookie (no `cookiePrefix` is set). */
 const SESSION_COOKIE = 'payload-token'
