@@ -343,6 +343,36 @@ it('a failed item keeps its toast past the eight seconds of a finished one', asy
   expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
 })
 
+it('an item that fails during the unmount flush leaves a finite toast with no Try again', async () => {
+  function Page({ mounted }: { mounted: boolean }) {
+    return (
+      <AppRouterContext.Provider value={createBrowserRouter().router}>
+        <IntlProvider>
+          <ToastStackProvider limit={2}>
+            {mounted && (
+              <PendingProvider
+                undoMs={5000}
+                fetcher={async () => new Response(null, { status: 500 })}
+              >
+                <Probe />
+              </PendingProvider>
+            )}
+            <ToastStack label="Notifications" />
+          </ToastStackProvider>
+        </IntlProvider>
+      </AppRouterContext.Provider>
+    )
+  }
+  const view = render(<Page mounted />)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  view.rerender(<Page mounted={false} />)
+  await act(async () => {
+    vi.advanceTimersByTime(1)
+  })
+  expect(screen.getByText('Not saved.')).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull()
+})
+
 it('a toast that drops its focused button with no focusout lets the next decision run', async () => {
   vi.useRealTimers()
   const { ui } = setup()

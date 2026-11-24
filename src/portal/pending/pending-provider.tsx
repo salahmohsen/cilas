@@ -166,6 +166,14 @@ export function PendingProvider({
         syncToasts()
         void flushed.finally(() => {
           syncToasts()
+          // The store ends here, so a "Try again" would do nothing. A failed toast gets a normal finish instead.
+          for (const { key, state, status } of store.getSnapshot().values()) {
+            if (state !== 'failed') continue
+            update(
+              pendingToastId(key),
+              sentToast(key, t(status === 403 ? 'signInAgain' : 'notSaved'), 'error'),
+            )
+          }
           store.destroy()
         })
       }, 0)
