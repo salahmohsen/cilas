@@ -1069,7 +1069,6 @@
     "posting": "Posting level",
     "reopen": "Reopen this archive",
     "all": "All",
-    "empty": "No spaces yet. Your courses and cohorts appear here once you join them.",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",
     "announcements": "Announcements",
@@ -1760,10 +1759,6 @@
       "expanded": "Sheet expanded",
       "collapsed": "Sheet collapsed",
       "height": "Sheet at {percent} percent height"
-    },
-    "empty": {
-      "spacesTitle": "Your spaces",
-      "spacesNext": "A space opens when a course or a cohort you joined starts."
     },
     "fold": {
       "folded": "Sidebar folded",

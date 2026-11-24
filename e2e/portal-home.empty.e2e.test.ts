@@ -7,10 +7,69 @@ import { EMPTY_ACCOUNTS } from '../seed/empty'
 import { login } from '../testing/login.test-utils'
 import { createTracker, uniq } from '../testing/payload.fixture'
 import { trustedWrites } from '../testing/portal-lists.fixture'
-import { account, inContext, LOCALES, MESSAGES, WIDTHS } from '../testing/portal.fixture'
+import {
+  account,
+  holdSpacesMode,
+  inContext,
+  LOCALES,
+  MESSAGES,
+  WIDTHS,
+} from '../testing/portal.fixture'
 import { mailOff, navName } from '../testing/portal-e2e.test-utils'
 
 type Role = keyof typeof EMPTY_ACCOUNTS
+
+test.describe('portal Home on the empty seed', () => {
+  test.describe.configure({ mode: 'serial', timeout: 120_000 })
+  let spaces: Awaited<ReturnType<typeof holdSpacesMode>> | undefined
+
+  test.beforeAll(async () => {
+    const payload = await getPayload({ config, key: uniq('portal-home-empty') })
+    mailOff(payload)
+    spaces = await holdSpacesMode(payload)
+    await spaces.set('on')
+  })
+
+  test.afterAll(async () => {
+    await spaces?.release()
+  })
+
+  for (const role of Object.keys(EMPTY_ACCOUNTS) as Role[])
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS))
+        test(`an empty Home shows its empty cards (${role} ${locale} ${viewport.width})`, async ({
+          browser,
+          baseURL,
+        }) => {
+          await inContext(browser, { baseURL, viewport }, async (page) => {
+            const errors: string[] = []
+            page.on('console', (message) => {
+              if (message.type() === 'error') errors.push(message.text())
+            })
+            page.on('pageerror', (error) => errors.push(error.message))
+            const portal = MESSAGES[locale].Portal
+            await login({ page, user: EMPTY_ACCOUNTS[role], next: `/${locale}/spaces` })
+            const main = page.locator('#main')
+            await expect(main.getByRole('heading', { level: 1 })).toHaveCount(1)
+            for (const empty of [
+              portal.needs.empty,
+              portal.home.noSession,
+              portal.home.noSpaces,
+              portal.latest.empty,
+            ])
+              await expect(main.getByText(empty, { exact: true })).toBeVisible()
+            const actions = {
+              admin: portal.home.openCalendar,
+              fellow: portal.home.openCourses,
+              student: portal.home.browseSpaces,
+            }
+            await expect(main.getByRole('link', { name: actions[role] })).toBeVisible()
+            if (role === 'student')
+              await expect(main.getByRole('link', { name: portal.home.seeCourses })).toBeVisible()
+            expect(errors).toEqual([])
+          })
+        })
+})
 
 test.describe('portal Inbox on the empty seed', () => {
   test.describe.configure({ timeout: 120_000 })

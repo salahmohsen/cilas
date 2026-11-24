@@ -1129,7 +1129,7 @@ test.describe('portal shell', () => {
               )
               const toast = toastRegion(page, locale).getByText('E2E comment')
               await expect(toast).toBeVisible()
-              const last = page.locator('section[aria-labelledby="spaces-shortcuts"] a').last()
+              const last = page.locator('main section[data-latest] a').last()
               let focused = false
               for (let i = 0; i < 80 && !focused; i++) {
                 await page.keyboard.press('Tab')
@@ -1249,7 +1249,7 @@ test.describe('portal shell', () => {
           test(`a reader with no space sees the empty state (${role} ${locale} ${viewport.width})`, async ({
             browser,
           }) => {
-            const empty = MESSAGES[locale].Portal.empty
+            const home = MESSAGES[locale].Portal.home
             await spaces.set('trial', { trialCommunity: false })
             try {
               await inContextAt(browser, { baseURL, viewport }, async (page) => {
@@ -1259,9 +1259,9 @@ test.describe('portal shell', () => {
                   next: localePath('/en/spaces', locale),
                 })
                 await expect(
-                  page.getByRole('heading', { level: 2, name: empty.spacesTitle }),
+                  page.getByRole('heading', { level: 2, name: home.spaces }),
                 ).toBeVisible()
-                await expect(page.getByText(empty.spacesNext)).toBeVisible()
+                await expect(page.getByText(home.noSpaces)).toBeVisible()
               })
             } finally {
               await spaces.set('on')

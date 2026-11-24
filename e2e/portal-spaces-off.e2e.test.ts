@@ -184,12 +184,13 @@ test.describe('portal spaces', () => {
               const response = await page.goto(localePath('/en/spaces', locale))
               expect(response!.status()).toBe(200)
               await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
-              await expect(
-                page.locator('section[aria-labelledby="spaces-shortcuts"]'),
-              ).toBeVisible()
-              await expect(page.locator('section[aria-labelledby^="spaces-"]')).toHaveCount(1)
+              const portal = MESSAGES[locale].Portal
+              await expect(page.locator('section[data-needs] h2')).toContainText(
+                portal.needs.heading,
+              )
+              await expect(page.getByRole('heading', { name: portal.home.spaces })).toHaveCount(0)
               await expect(page.locator('a[href*="/spaces/course/"]')).toHaveCount(0)
-              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Portal.home.noSpaces)).toHaveCount(0)
             })
           })
 
@@ -206,7 +207,7 @@ test.describe('portal spaces', () => {
               await expect(
                 links.locator('a[href*="/spaces/course/"], a[href*="/spaces/community/"]'),
               ).toHaveCount(0)
-              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Portal.home.noSpaces)).toHaveCount(0)
             })
           })
 
