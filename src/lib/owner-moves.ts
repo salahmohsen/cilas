@@ -64,7 +64,7 @@ const writeEveryLocale = async (
       id,
       draft: true,
       data: {
-        ...dataForLocale(reviewed, source, locale, blocks),
+        ...dataForLocale(reviewed, source, locale, localeCodes, blocks),
         ...(locale === defaultLocale ? first : {}),
       } as never,
       req,

@@ -43,6 +43,8 @@ const blocks = {
   text: { slug: 'text', flattenedFields: fields[5].blocks![0].flattenedFields },
 }
 
+const locales = ['en', 'ar']
+
 const source = {
   title: { en: 'Hello', ar: 'مرحبا' },
   tier: 'owner',
@@ -63,7 +65,7 @@ const source = {
 
 describe('dataForLocale', () => {
   it('takes one locale of every localized field and keeps the rest', () => {
-    expect(dataForLocale(fields, source, 'ar', blocks)).toEqual({
+    expect(dataForLocale(fields, source, 'ar', locales, blocks)).toEqual({
       title: 'مرحبا',
       tier: 'owner',
       authors: [3, 4],
@@ -75,10 +77,40 @@ describe('dataForLocale', () => {
   })
 
   it('writes null for a locale the source has no value in', () => {
-    expect(dataForLocale(fields, { title: { en: 'Only' } }, 'ar', blocks)).toEqual({ title: null })
+    expect(dataForLocale(fields, { title: { en: 'Only' } }, 'ar', locales, blocks)).toEqual({
+      title: null,
+    })
   })
 
   it('skips a field the source does not hold', () => {
-    expect(dataForLocale(fields, { tier: 'owner' }, 'en', blocks)).toEqual({ tier: 'owner' })
+    expect(dataForLocale(fields, { tier: 'owner' }, 'en', locales, blocks)).toEqual({
+      tier: 'owner',
+    })
+  })
+
+  it('leaves a localized field alone when its value is not a map of locales', () => {
+    const plain = {
+      title: 'Hello',
+      body: { root: { type: 'root', children: [] } },
+      credits: [{ id: 'c1', role: 'editor', label: 'Editor' }],
+    }
+    expect(
+      dataForLocale(
+        [...fields, { name: 'body', type: 'richText', localized: true }],
+        plain,
+        'ar',
+        locales,
+        blocks,
+      ),
+    ).toEqual({ credits: [{ id: 'c1', role: 'editor' }] })
+  })
+
+  it('still clears a localized field the source holds as null or an empty map', () => {
+    expect(
+      dataForLocale(fields, { title: {}, meta: { title: null } }, 'ar', locales, blocks),
+    ).toEqual({
+      title: null,
+      meta: { title: null },
+    })
   })
 })

@@ -41,10 +41,15 @@ const BLOCK_KEYS = ['id', 'blockType', 'blockName'] as const
 const rowKeys = (row: Row, keys: readonly string[]): Row =>
   Object.fromEntries(keys.filter((key) => row[key] !== undefined).map((key) => [key, row[key]]))
 
+/** A value read with `locale: 'all'`: an object whose keys are all locale codes. */
+const isLocaleMap = (value: unknown, locales: readonly string[]): value is Row =>
+  isRow(value) && Object.keys(value).every((key) => locales.includes(key))
+
 const split = (
   fields: readonly SplitField[],
   data: Row,
   locale: string,
+  locales: readonly string[],
   lookup: BlockLookup,
 ): Row => {
   const out: Row = {}
@@ -52,19 +57,28 @@ const split = (
     const value = data[field.name]
     if (value === undefined) continue
     if (field.localized) {
-      out[field.name] = isRow(value) ? (value[locale] ?? null) : null
+      // Not a map of locales: the source was not read with every locale, and
+      // there is nothing to take one locale of. Leave the field out.
+      if (value === null) out[field.name] = null
+      else if (isLocaleMap(value, locales)) out[field.name] = value[locale] ?? null
     } else if (field.type === 'array' && Array.isArray(value)) {
       out[field.name] = value.map((row: Row) => ({
         ...rowKeys(row, ROW_KEYS),
-        ...split(field.flattenedFields ?? [], row, locale, lookup),
+        ...split(field.flattenedFields ?? [], row, locale, locales, lookup),
       }))
     } else if (field.type === 'blocks' && Array.isArray(value)) {
       out[field.name] = value.map((row: Row) => ({
         ...rowKeys(row, BLOCK_KEYS),
-        ...split(blockOf(field, row.blockType, lookup)?.flattenedFields ?? [], row, locale, lookup),
+        ...split(
+          blockOf(field, row.blockType, lookup)?.flattenedFields ?? [],
+          row,
+          locale,
+          locales,
+          lookup,
+        ),
       }))
     } else if ((field.type === 'group' || field.type === 'tab') && isRow(value)) {
-      out[field.name] = split(field.flattenedFields ?? [], value, locale, lookup)
+      out[field.name] = split(field.flattenedFields ?? [], value, locale, locales, lookup)
     } else {
       out[field.name] = value
     }
@@ -73,13 +87,16 @@ const split = (
 }
 
 /**
- * `data` as one locale's plain write. A localized value the source lacks in
- * `locale` becomes `null`, so the write clears it. A field `data` does not
- * hold is left out. `blocks` resolves block references by slug.
+ * `data` as one locale's plain write. `locales` is every locale code of the
+ * site. A localized value the source lacks in `locale` becomes `null`, so the
+ * write clears it. A field `data` does not hold, or a localized field whose
+ * value is not a map of locales, is left out. `blocks` resolves block
+ * references by slug.
  */
 export const dataForLocale = (
   fields: readonly SplitField[],
   data: Row,
   locale: string,
+  locales: readonly string[],
   blocks: BlockLookup = {},
-): Row => split(fields, data, locale, blocks)
+): Row => split(fields, data, locale, locales, blocks)
