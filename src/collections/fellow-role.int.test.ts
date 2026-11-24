@@ -1,3 +1,4 @@
+import { Forbidden } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import type { User } from '@/payload-types'
@@ -35,8 +36,13 @@ const accountFor = async (roles: Role[], withAccount = true) => {
   return { person: person.id, user: user.id }
 }
 
-const rolesOf = async (id: number) =>
-  (await f.payload.findByID({ collection: 'users', id, overrideAccess: true })).roles
+const account = (id: number) => f.payload.findByID({ collection: 'users', id, depth: 0 })
+const rolesOf = async (id: number) => (await account(id)).roles
+const actor = (user: User) => ({
+  user: { ...user, collection: 'users' as const },
+  overrideAccess: false as const,
+})
+const makeAdmin = async () => account((await accountFor(['admin'])).user)
 
 const list = (course: number, fellows: number[], status: 'draft' | 'published' = 'published') =>
   f.payload.update({
@@ -130,12 +136,97 @@ describe('propagateFellowRole', () => {
     expect(await rolesOf(user)).toEqual(['member'])
   })
 
-  it("keeps a co-fellow's role while a draft drops them: only publishing revokes", async () => {
+  it('keeps a co-fellow through an editor’s draft and revokes the role on admin approval', async () => {
+    const editor = await accountFor(['member'])
+    const coFellow = await accountFor(['member'])
+    const course = await courseListing([editor.person, coFellow.person])
+    const fellows = [editor.person]
+    const asEditor = actor(await account(editor.user))
+    const asAdmin = actor(await makeAdmin())
+
+    await expect(
+      f.payload.update({
+        collection: 'courses',
+        id: course,
+        draft: true,
+        data: { fellows, _status: 'draft' },
+        ...asEditor,
+      }),
+    ).resolves.toMatchObject({ _status: 'draft' })
+    expect(await rolesOf(coFellow.user)).toEqual(['member', 'fellow'])
+
+    const publication = {
+      collection: 'courses' as const,
+      id: course,
+      data: { fellows, _status: 'published' as const },
+    }
+    await expect(f.payload.update({ ...publication, ...asEditor })).rejects.toBeInstanceOf(
+      Forbidden,
+    )
+    await expect(f.payload.update({ ...publication, ...asAdmin })).resolves.toMatchObject({
+      _status: 'published',
+      review: { status: 'approved' },
+    })
+    expect(await rolesOf(coFellow.user)).toEqual(['member'])
+    expect(await rolesOf(editor.user)).toEqual(['member', 'fellow'])
+  })
+
+  it('reconciles against the live course when an admin restores an older publication', async () => {
+    const first = await accountFor(['member'])
+    const second = await accountFor(['member'])
+    const third = await accountFor(['member'])
+    const course = await courseListing([first.person])
+    const asAdmin = actor(await makeAdmin())
+    const {
+      docs: [original],
+    } = await f.payload.findVersions({
+      collection: 'courses',
+      where: { parent: { equals: course } },
+      ...asAdmin,
+    })
+    await list(course, [second.person])
+    await list(course, [third.person])
+    expect(await rolesOf(third.user)).toEqual(['member', 'fellow'])
+
+    await expect(
+      f.payload.restoreVersion({
+        collection: 'courses',
+        id: original!.id,
+        depth: 0,
+        ...asAdmin,
+      }),
+    ).resolves.toMatchObject({ _status: 'published', fellows: [first.person] })
+    expect(await rolesOf(third.user)).toEqual(['member'])
+    expect(await rolesOf(first.user)).toEqual(['member', 'fellow'])
+  })
+
+  it('revokes after publication history is pruned, even if a never-published course lists the fellow', async () => {
     const { person, user } = await accountFor(['member'])
-    await list(f.courses[0].id, [person])
-    await list(f.courses[0].id, [], 'draft')
+    const course = await courseListing([person])
+    const draft = await f.payload.create({
+      collection: 'courses',
+      draft: true,
+      data: {
+        title: 'Never published',
+        course_type: 'CORE',
+        slug: `fellow-role-draft-${crypto.randomUUID()}`,
+        fellows: [person],
+      },
+    })
+    spare.push(draft.id)
+    await list(course, [], 'draft')
+    await f.payload.db.deleteVersions({
+      collection: 'courses',
+      where: {
+        and: [{ parent: { equals: course } }, { 'version._status': { equals: 'published' } }],
+      },
+    })
+    await expect(
+      f.payload.findByID({ collection: 'courses', id: course, depth: 0 }),
+    ).resolves.toMatchObject({ _status: 'published', fellows: [person] })
     expect(await rolesOf(user)).toEqual(['member', 'fellow'])
-    await list(f.courses[0].id, [])
+
+    await list(course, [])
     expect(await rolesOf(user)).toEqual(['member'])
   })
 

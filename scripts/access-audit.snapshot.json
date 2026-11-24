@@ -9730,10 +9730,10 @@
     "entity": "collection:payload-locked-documents",
     "field": "*",
     "rules": {
-      "create": "lockInCallersName#900982b3",
-      "read": "payload:loggedIn",
-      "update": "lockInCallersName#900982b3",
-      "delete": "callersOwnLocks#395db14c",
+      "create": "lockInCallersNameOnEditableTarget#76276675",
+      "read": "readLocksOnVisibleTarget#7fc2180d",
+      "update": "takeOverEditableTargetLock#17bdc782",
+      "delete": "releaseOwnEditableTargetLock#f406d0a9",
       "unlock": "payload:defaultUnlock"
     }
   },

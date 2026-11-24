@@ -1,12 +1,12 @@
 import { relId } from '@/lib/relation'
-import type { PayloadRequest } from 'payload'
+import type { PayloadRequest, Where } from 'payload'
 
 import type { Role } from '@/access'
 import type { User } from '@/payload-types'
 
 /**
  * `fellow` is held by an account exactly while its linked person is listed on
- * at least one course. Courses list people; accounts are found through
+ * at least one published course. Courses list people; accounts are found through
  * `users.person`. A person with no account is simply skipped.
  */
 
@@ -40,6 +40,8 @@ export const accountOf = async (req: PayloadRequest, person: number): Promise<Us
   return (res.docs[0] as User | undefined) ?? null
 }
 
+export const publishedCourse = { _status: { equals: 'published' } } satisfies Where
+
 export const teaches = async (
   req: PayloadRequest,
   person: number,
@@ -50,6 +52,7 @@ export const teaches = async (
     collection: 'courses',
     where: {
       and: [
+        publishedCourse,
         { fellows: { contains: person } },
         ...(exceptCourseId === undefined ? [] : [{ id: { not_equals: exceptCourseId } }]),
       ],

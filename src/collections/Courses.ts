@@ -30,12 +30,14 @@ import { courseQuestionBlocks, nameNewQuestions } from '@/forms/form-fields'
 import { timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
-import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import { grantFellow, publishedCourse, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import { reviewHooks } from '@/lib/review-hooks'
 import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
   CollectionConfig,
   Condition,
   Field,
@@ -54,49 +56,56 @@ import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 const WORKSHOP_FORM_HELP = templateFormHelp('workshop template')
 
-/**
- * `courses.fellows` lists people, but the `fellow` role lives on the account
- * linked to each person, so granting and revoking means writing to `users` —
- * the course's own field cannot do it. afterChange, not beforeChange, so
- * accounts are only touched once the course write has landed.
- *
- * The role follows the published fellows list only. A fellow may list or drop
- * a co-fellow on a draft, but only an admin's approval (publishing) changes
- * anyone's role. A draft save changes no role, so a fellow's unapproved draft
- * cannot take the role from a co-fellow.
- */
-export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({ doc, req }) => {
-  if (doc._status !== 'published') return doc
-
-  const before = await previouslyPublishedFellows(req, doc.id)
-  const after = toPersonIds(doc.fellows)
-
-  // Every publish grants everyone listed; grantFellow skips accounts that hold it.
-  for (const id of after) await grantFellow(req, id)
-  for (const id of before.filter((id) => !after.includes(id))) {
-    await revokeIfUnteaching(req, id, doc.id)
-  }
-
-  return doc
+const publishedFellows = async (req: PayloadRequest, id: number): Promise<number[]> => {
+  const published = await req.payload.db.findOne<Course>({
+    collection: 'courses',
+    req,
+    select: { fellows: true },
+    where: { and: [{ id: { equals: id } }, publishedCourse] },
+  })
+  return toPersonIds(published?.fellows)
 }
 
-/**
- * The fellows of the publication this save replaces. previousDoc is the latest
- * draft, not the last publication, so it misses drops made in drafts. The
- * newest published version is the one this save just wrote; the one before it
- * is the publication it replaces.
- */
-const previouslyPublishedFellows = async (req: PayloadRequest, id: number): Promise<number[]> => {
-  const { docs } = await req.payload.findVersions({
-    req,
-    collection: 'courses',
-    where: { and: [{ parent: { equals: id } }, { 'version._status': { equals: 'published' } }] },
-    sort: '-createdAt',
-    limit: 2,
-    depth: 0,
-    overrideAccess: true,
-  })
-  return toPersonIds(docs[1]?.version.fellows)
+const fellowBaseline = new WeakMap<PayloadRequest, Map<number, number[]>>()
+
+/** Capture the live row before both ordinary edits and version restores. */
+const capturePublishedFellows: CollectionBeforeChangeHook<Course> = async ({
+  operation,
+  originalDoc,
+  req,
+}) => {
+  if (operation !== 'update' || !originalDoc) return
+  const id = originalDoc.id
+  const adapter = req.payload.db as unknown as PostgresAdapter
+  const transactionID = await req.transactionID
+  const transaction = transactionID && adapter.sessions[transactionID]?.db
+  if (transaction) {
+    // A concurrent write must capture the publication this write leaves behind.
+    await transaction.execute(sql`SELECT id FROM courses WHERE id = ${id} FOR UPDATE`)
+  }
+  const baseline = fellowBaseline.get(req) ?? new Map<number, number[]>()
+  baseline.set(id, await publishedFellows(req, id))
+  fellowBaseline.set(req, baseline)
+}
+
+/** Accounts follow the main row, which changes independently of the draft history. */
+export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
+  doc,
+  operation,
+  req,
+}) => {
+  const baseline = fellowBaseline.get(req)
+  const before = operation === 'update' ? (baseline?.get(doc.id) ?? []) : []
+  baseline?.delete(doc.id)
+  const after = await publishedFellows(req, doc.id)
+
+  for (const id of after) {
+    if (doc._status === 'published' || !before.includes(id)) await grantFellow(req, id)
+  }
+  for (const id of before) {
+    if (!after.includes(id)) await revokeIfUnteaching(req, id, doc.id)
+  }
+  return doc
 }
 
 /** A fellow submits a course; an admin approves (publishes) it, asks for changes or declines. */
@@ -113,8 +122,8 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   doc,
   req,
 }) => {
-  for (const id of toPersonIds(doc.fellows)) {
-    await revokeIfUnteaching(req, id, doc.id)
+  if (doc._status === 'published') {
+    for (const id of toPersonIds(doc.fellows)) await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
@@ -595,6 +604,7 @@ export const Courses: CollectionConfig = {
       ),
     ],
     beforeChange: [
+      capturePublishedFellows,
       ...(courseReview.beforeChange ?? []),
       ({ data, originalDoc }) => {
         const cycle = data.cycle === undefined ? originalDoc?.cycle : data.cycle
