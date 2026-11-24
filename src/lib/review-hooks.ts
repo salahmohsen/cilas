@@ -187,8 +187,8 @@ const nextRequest = ({
 }
 
 /**
- * The review rules (src/lib/review.ts) on every write: an owner may only
- * submit; only approval publishes. An admin's Publish counts as approval, so
+ * The review rules (src/lib/review.ts) on every write: owners can submit,
+ * withdraw or discard a live copy; only approval publishes. An admin's Publish counts as approval, so
  * admins publish as before. Server calls with no user (seeds, imports) are
  * trusted like an admin.
  */
@@ -217,9 +217,8 @@ const applyReview =
     }
     if (trusted && data._status === 'published' && to === from && to !== 'approved') to = 'approved'
 
-    // Submitted, a change to a published document waits for the admin
-    // unchanged, as a submitted draft does (WITH_OWNER).
-    if (!trusted && from === 'submitted') {
+    // A submission stays frozen for the admin until the owner withdraws it.
+    if (!trusted && from === 'submitted' && to !== 'draft') {
       throw new APIError(
         `This ${noun} waits for review. An admin decides before it changes again.`,
         403,

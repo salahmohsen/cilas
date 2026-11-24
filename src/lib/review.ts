@@ -17,22 +17,23 @@ export type Tier = 'owner' | 'community' | 'public'
 const AUTHOR_MOVES: Record<ReviewState, ReviewState[]> = {
   draft: ['submitted'],
   changes_requested: ['submitted'],
-  submitted: [],
+  submitted: ['draft'],
   approved: [],
   rejected: [],
 }
 
 /**
  * On a published document an owner submits a change, or a removal, from where
- * the last decision left it: approved, or a change declined.
+ * the last decision left it, and can discard returned or declined changes.
  */
 const LIVE_AUTHOR_MOVES: Partial<Record<ReviewState, ReviewState[]>> = {
   approved: ['submitted'],
-  rejected: ['submitted'],
+  rejected: ['submitted', 'draft'],
+  changes_requested: ['draft'],
 }
 
 /**
- * Authors may only submit; admins (and trusted server calls) may do anything.
+ * Authors can submit, withdraw or discard a live copy; admins (and trusted server calls) may do anything.
  * `live`: the document is published, and the move is about a change to it.
  */
 export const canMove = (
