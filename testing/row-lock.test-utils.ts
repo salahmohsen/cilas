@@ -1,8 +1,9 @@
 import type { Payload } from 'payload'
 
-import type { ReviewedCollection } from '../src/lib/reviewed-fields'
+import toSnakeCase from 'to-snake-case'
 
-export const holdRow = async (payload: Payload, collection: ReviewedCollection, id: number) => {
+/** Holds the row lock of one row of any collection, as a writer does, until `release`. */
+export const holdRow = async (payload: Payload, collection: string, id: number) => {
   const client = await payload.db.pool.connect()
   try {
     await client.query('begin')
@@ -10,7 +11,10 @@ export const holdRow = async (payload: Payload, collection: ReviewedCollection, 
     const {
       rows: [holder],
     } = await client.query<{ pid: number }>('select pg_backend_pid() as pid')
-    await client.query(`select id from "${collection}" where id = $1 for no key update`, [id])
+    await client.query(
+      `select id from "${toSnakeCase(collection)}" where id = $1 for no key update`,
+      [id],
+    )
     return {
       pid: holder.pid,
       async release() {

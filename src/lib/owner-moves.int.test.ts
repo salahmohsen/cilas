@@ -1,4 +1,4 @@
-import { getPayload, type Payload } from 'payload'
+import { APIError, getPayload, type CollectionBeforeChangeHook, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
@@ -189,6 +189,66 @@ const notesAbout = async (title: string, recipient: User) =>
     })
   ).docs
 
+const liveCourse = (title: string, extra: Record<string, unknown> = {}) =>
+  writes().create('courses', {
+    title,
+    slug: uniq('owner-moves-course'),
+    course_type: 'THEMATIC',
+    tier: 'public',
+    fellows: [Number(owner.person)],
+    review: { status: 'approved' },
+    _status: 'published',
+    ...extra,
+  })
+
+const saveDraft = (
+  collection: 'articles' | 'courses',
+  id: number,
+  locale: 'en' | 'ar',
+  data: Record<string, unknown>,
+) =>
+  payload.update({
+    collection,
+    id,
+    data: data as never,
+    draft: true,
+    locale,
+    overrideAccess: true,
+  })
+
+const latestOf = async (collection: 'articles' | 'courses', id: number) => {
+  const {
+    docs: [version],
+  } = await payload.findVersions({
+    collection,
+    where: { parent: { equals: id }, latest: { equals: true } },
+    sort: '-updatedAt',
+    limit: 1,
+    locale: 'all',
+    depth: 0,
+    overrideAccess: true,
+  })
+  return version as unknown as { id: number; version: Record<string, unknown> }
+}
+
+const strip = (value: unknown) =>
+  JSON.parse(JSON.stringify(value, (key, inner) => (key === 'id' ? undefined : inner)))
+
+const discardThenRestore = async (collection: 'articles' | 'courses', id: number) => {
+  const discarded = await ownerMove(payload, owner, { collection, id }, { move: 'discard' })
+  if (!discarded.ok || discarded.restoreFrom === undefined) throw new Error('discard failed')
+  const afterDiscard = (await latestOf(collection, id)).version
+  expect(
+    await ownerMove(
+      payload,
+      owner,
+      { collection, id },
+      { move: 'restore', from: discarded.restoreFrom },
+    ),
+  ).toEqual({ ok: true })
+  return { afterDiscard, afterRestore: (await latestOf(collection, id)).version }
+}
+
 describe('review-events: owner moves', () => {
   it('withdraw a new submission', async () => {
     const title = uniq('Withdraw new')
@@ -219,8 +279,9 @@ describe('review-events: owner moves', () => {
 
     expect(await ownerMove(payload, owner, target(id), { move: 'withdraw' })).toEqual({ ok: true })
 
-    expect(['published_unsent', 'published']).toContain(await keyOf(id))
+    expect(await keyOf(id)).toBe('published_unsent')
     const { version } = await latestVersion(id)
+    expect(version.title).toMatchObject({ en: `${title}, edited` })
     expect((version.review as { request?: string | null }).request ?? null).toBeNull()
     expect(await withdrawnNotes(`${title}, edited`)).toHaveLength(1)
     expect(inbox.sent.filter((m) => m.html.includes(title))).toEqual([])
@@ -316,6 +377,86 @@ describe('review-events: owner moves', () => {
     expect(restored.title).toEqual(edited)
     expect(restored.body).toEqual(editedBody)
     expect(inbox.sent.length).toBe(before)
+  })
+
+  it('discard, then restore, keeps every locale of a localized array label', async () => {
+    const title = uniq('Restore credits')
+    const people = [Number(owner.person)]
+    const id = await live(title)
+    await saveDraft('articles', id, 'en', {
+      credits: [{ role: 'editor', label: 'Editor', people }],
+    })
+    const {
+      version: { credits: enOnly },
+    } = await latestVersion(id)
+    await saveDraft('articles', id, 'ar', {
+      credits: [{ ...(enOnly as { id: string }[])[0], label: 'محرر' }],
+    })
+    const edited = (await latestVersion(id)).version.credits
+    expect(strip(edited)).toMatchObject([{ role: 'editor', label: { en: 'Editor', ar: 'محرر' } }])
+
+    const { afterDiscard, afterRestore } = await discardThenRestore('articles', id)
+
+    expect(strip(afterDiscard.credits ?? [])).toEqual([])
+    expect(strip(afterRestore.credits)).toEqual(strip(edited))
+  })
+
+  it('discard, then restore, keeps every locale of a course with localized blocks', async () => {
+    const title = uniq('Restore course')
+    const id = await liveCourse(title)
+    await saveDraft('courses', id, 'en', {
+      title: `${title}, edited`,
+      applicant_questions: [{ blockType: 'text', name: 'why', label: 'Why?', required: true }],
+    })
+    const {
+      version: { applicant_questions: enOnly },
+    } = await latestOf('courses', id)
+    await saveDraft('courses', id, 'ar', {
+      title: `${title}, تعديل`,
+      applicant_questions: [{ ...(enOnly as object[])[0], label: 'لماذا؟' }],
+    })
+    const { version: edited } = await latestOf('courses', id)
+    expect(strip(edited.applicant_questions)).toMatchObject([
+      { name: 'why', label: { en: 'Why?', ar: 'لماذا؟' } },
+    ])
+    expect(edited.title).toMatchObject({ en: `${title}, edited`, ar: `${title}, تعديل` })
+
+    const { afterDiscard, afterRestore } = await discardThenRestore('courses', id)
+
+    expect(afterDiscard.title).toMatchObject({ en: title })
+    expect(strip(afterDiscard.applicant_questions ?? [])).toEqual([])
+    expect(afterRestore.title).toEqual(edited.title)
+    expect(strip(afterRestore.applicant_questions)).toEqual(strip(edited.applicant_questions))
+  })
+
+  it('a second locale that fails to write rolls back the first', async () => {
+    const title = uniq('Rollback')
+    const id = await live(title)
+    await saveDraft('articles', id, 'en', { title: `${title}, edited` })
+    await saveDraft('articles', id, 'ar', { title: `${title}, تعديل` })
+    const before = await latestVersion(id)
+    const keyBefore = await keyOf(id)
+    const written: string[] = []
+    const failArabic: CollectionBeforeChangeHook = ({ data, req }) => {
+      if (req.locale) written.push(req.locale)
+      if (req.locale === 'ar') throw new APIError('Forced failure in the second locale', 500)
+      return data
+    }
+    const hooks = payload.collections.articles.config.hooks.beforeChange
+    hooks.push(failArabic)
+    try {
+      await expect(
+        ownerMove(payload, owner, target(id), { move: 'discard' }),
+      ).rejects.toMatchObject({ status: 500 })
+    } finally {
+      hooks.splice(hooks.indexOf(failArabic), 1)
+    }
+
+    expect(written).toEqual(['en', 'ar'])
+    const after = await latestVersion(id)
+    expect(after.id).toBe(before.id)
+    expect(after.version.title).toEqual(before.version.title)
+    expect(await keyOf(id)).toBe(keyBefore)
   })
 
   it('refuses to restore a version of another document', async () => {

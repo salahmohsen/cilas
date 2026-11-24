@@ -72,8 +72,8 @@ afterAll(async () => {
   await payload.destroy()
 })
 
-const withHeldArticle = async (id: number, write: () => Promise<unknown>) => {
-  const holder = await holdRow(payload, 'articles', id)
+const withHeld = async (collection: string, id: number, write: () => Promise<unknown>) => {
+  const holder = await holdRow(payload, collection, id)
   const pending = write()
   void pending.catch(() => {})
   try {
@@ -83,6 +83,9 @@ const withHeldArticle = async (id: number, write: () => Promise<unknown>) => {
     await pending
   }
 }
+
+const withHeldArticle = (id: number, write: () => Promise<unknown>) =>
+  withHeld('articles', id, write)
 
 describe('review-events: lockRow', () => {
   it('a draft save on a live article waits for the row lock', async () => {
@@ -149,6 +152,63 @@ describe('review-events: lockRow', () => {
       draft: true,
       data: { title: 'Draft article, again' },
     })
+  })
+
+  it('a course write waits for the row lock, then goes through', async () => {
+    const id = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Locked course',
+          slug: uniq('row-lock-course'),
+          course_type: 'THEMATIC',
+          tier: 'owner',
+        },
+        draft: true,
+      }),
+    ).id
+    await withHeld('courses', id, () =>
+      payload.update({
+        collection: 'courses',
+        id,
+        data: { title: 'Locked course, edited' },
+        draft: true,
+        depth: 0,
+      }),
+    )
+    const { title } = await payload.findByID({ collection: 'courses', id, draft: true, depth: 0 })
+    expect(title).toBe('Locked course, edited')
+  })
+
+  it('a course write that waits too long is refused with a 409', async () => {
+    const id = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Busy course',
+          slug: uniq('row-lock-busy'),
+          course_type: 'THEMATIC',
+          tier: 'owner',
+        },
+        draft: true,
+      }),
+    ).id
+    const holder = await holdRow(payload, 'courses', id)
+    try {
+      await expect(
+        payload.update({
+          collection: 'courses',
+          id,
+          data: { title: 'Busy course, edited' },
+          draft: true,
+          depth: 0,
+        }),
+      ).rejects.toMatchObject({ status: 409 })
+    } finally {
+      await holder.release()
+    }
   })
 
   it('an anonymous write is refused without queueing on the row lock', async () => {
