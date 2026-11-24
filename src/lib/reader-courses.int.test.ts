@@ -89,7 +89,7 @@ describe('nextSession', () => {
             course: world.communityCourse.id,
             title: 'Earlier session',
             cancelled,
-            meetings: [{ date, start_time: '09:00' }],
+            meetings: [{ date, start_time: '09:00', end_time: '10:00' }],
           },
           overrideAccess: true,
         }),
