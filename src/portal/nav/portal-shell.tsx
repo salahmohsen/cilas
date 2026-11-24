@@ -24,12 +24,14 @@ export async function PortalShell({
   spaces,
   folded,
   accountId,
+  nextSession,
   children,
 }: {
   nav: PortalNavItem[]
   spaces: SpaceLink[]
   folded: boolean
   accountId: number
+  nextSession: React.ReactNode
   children: React.ReactNode
 }): Promise<React.JSX.Element> {
   const t = await getTranslations('Portal')
@@ -51,6 +53,7 @@ export async function PortalShell({
               </header>
               <Sidebar items={nav} spaces={spaces} />
               <footer className={styles.footer}>
+                <Suspense fallback={null}>{nextSession}</Suspense>
                 <div className={styles.tools}>
                   <div className={styles.account}>
                     <Suspense fallback={null}>

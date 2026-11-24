@@ -5,11 +5,13 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
+import { localeOf } from '@/i18n/routing'
 import { currentReader } from '@/lib/reader'
 import { foldCookie } from '@/portal/nav/fold'
 import { mySpaces } from '@/lib/spaces-data'
 import { portalNav } from '@/portal/nav/portal-nav'
 import { PortalShell } from '@/portal/nav/portal-shell'
+import { SidebarNextSession } from '@/portal/nav/sidebar-next-session'
 import { spaceLinks } from '@/portal/nav/space-links'
 
 export const metadata: Metadata = { robots: { index: false } }
@@ -39,6 +41,14 @@ export default async function SpacesLayout({ children, params }: Props) {
       spaces={spaceLinks(spaces, t('community'))}
       folded={jar.has(foldCookie(user.id))}
       accountId={user.id}
+      nextSession={
+        <SidebarNextSession
+          payload={payload}
+          user={user}
+          locale={localeOf(locale)}
+          courses={spaces.courses}
+        />
+      }
     >
       {children}
     </PortalShell>

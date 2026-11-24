@@ -1737,6 +1737,13 @@
     "signOutFailed": "You are still signed in. Try again."
   },
   "Portal": {
+    "nextSession": {
+      "next": "Next",
+      "empty": "No sessions yet",
+      "admin": "Open the calendar",
+      "fellow": "Open your courses",
+      "student": "Browse spaces"
+    },
     "nav": {
       "label": "Main",
       "home": "Home",

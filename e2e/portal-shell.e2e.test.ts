@@ -487,6 +487,44 @@ test.describe('portal shell', () => {
     })
   })
 
+  for (const locale of LOCALES)
+    for (const role of ROLES)
+      test(`the next session sits above the footer controls (${role} ${locale})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const footer = page.locator('[data-portal-rail] > footer')
+          const card = footer.locator('[data-sidebar-next]')
+          const messages = MESSAGES[locale]
+          const bell = footer.getByRole('button', {
+            name: new RegExp(`^${messages.Notifications.label}(,|،|$)`),
+          })
+          const account = footer.getByRole('button', {
+            name: new RegExp(`^${messages.Portal.account.label}`),
+          })
+          await expect(card).toBeVisible()
+          if (role === 'admin') {
+            await expect(card).toContainText(messages.Portal.nextSession.empty)
+            await expect(card).toHaveAttribute('href', `/${locale}/spaces/calendar`)
+          } else {
+            await expect(card).toContainText('Portal e2e session')
+            await expect(card.locator('time')).toHaveAttribute('datetime', '2034-10-05T19:00')
+            expect(
+              [world.course.path, world.otherCourse.path].map((path) => localePath(path, locale)),
+            ).toContain(await card.getAttribute('href'))
+          }
+          await expect(bell).toBeVisible()
+          await expect(account).toBeVisible()
+          const [cardBox, bellBox] = await Promise.all([card.boundingBox(), bell.boundingBox()])
+          expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(bellBox!.y)
+          await page.locator('[data-portal-fold]').click()
+          await expect(card).toBeHidden()
+          await expect(bell).toBeVisible()
+          await expect(account).toBeVisible()
+        })
+      })
+
   test.describe('fold trigger (1440)', () => {
     const foldIn = (page: Page) => page.locator('[data-portal-rail] header [data-portal-fold]')
     const foldCookie = async (page: Page) =>
