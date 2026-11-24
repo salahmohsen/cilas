@@ -6,6 +6,7 @@ import { mayRunEditorLocking } from './collections/LockedDocuments'
 import config from './payload.config'
 import type { PayloadLockedDocument, User } from './payload-types'
 import { createTracker, uniq } from '../testing/payload.fixture'
+import { holdRow, waitForLockWaiters } from '../testing/row-lock.test-utils'
 
 let payload: Payload
 let admin: User
@@ -160,6 +161,33 @@ describe('document locks', () => {
       await expect(deleteLock(lock.id, otherEditor)).resolves.toMatchObject({ id: lock.id })
     } finally {
       await deleteLock(lock.id, admin).catch(() => null)
+    }
+  })
+
+  it('a takeover waits for the lock row, then goes through', async () => {
+    const lock = await lockOn(course, editor)
+    const holder = await holdRow(payload, locks, lock.id)
+    const takeover = patchLock(lock.id, { user: holderOf(otherEditor) }, otherEditor)
+    void takeover.catch(() => {})
+    try {
+      await waitForLockWaiters(payload, holder.pid, 1)
+    } finally {
+      await holder.release()
+    }
+    await expect(takeover).resolves.toMatchObject({ user: holderOf(otherEditor) })
+    await deleteLock(lock.id, admin)
+  })
+
+  it('a takeover on a lock row held too long is refused with a 409', async () => {
+    const lock = await lockOn(course, editor)
+    const holder = await holdRow(payload, locks, lock.id)
+    try {
+      await expect(
+        patchLock(lock.id, { user: holderOf(otherEditor) }, otherEditor),
+      ).rejects.toMatchObject({ status: 409 })
+    } finally {
+      await holder.release()
+      await deleteLock(lock.id, admin)
     }
   })
 

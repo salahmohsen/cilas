@@ -2744,7 +2744,8 @@ export interface Notification {
     | 'report'
     | 'question'
     | 'event_changed'
-    | 'joined';
+    | 'joined'
+    | 'withdrawn';
   title: string;
   description?: string | null;
   actor_name?: string | null;

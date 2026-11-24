@@ -1,7 +1,8 @@
-import type { Payload } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
 
 import type { ReactionKind } from '@/lib/space-reactions'
 import { NOTIFICATION_KINDS, type NotificationKind } from '@/lib/notification-kinds'
+import { withSavepoint } from '@/lib/savepoint'
 
 /**
  * The person an event belongs to, as a snapshot: name and photo are read once
@@ -64,10 +65,11 @@ export const notify = async (
     link?: string
     actor?: NotificationActor
   },
+  req?: PayloadRequest,
 ): Promise<void> => {
   for (const recipient of new Set(recipients)) {
-    await payload
-      .create({
+    const insert = (scoped?: PayloadRequest) =>
+      payload.create({
         collection: 'notifications',
         data: {
           recipient,
@@ -78,10 +80,12 @@ export const notify = async (
           actor_name: note.actor?.name,
           actor_photo: note.actor?.photo,
         },
+        depth: 0,
         overrideAccess: true,
+        req: scoped,
       })
-      .catch((error) =>
-        payload.logger.error({ err: error, msg: `Notification for user ${recipient} failed` }),
-      )
+    await (req ? withSavepoint(req, insert) : insert()).catch((error) =>
+      payload.logger.error({ err: error, msg: `Notification for user ${recipient} failed` }),
+    )
   }
 }

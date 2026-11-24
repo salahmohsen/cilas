@@ -3,12 +3,12 @@ import { describe, expect, it } from 'vitest'
 import { canMove, notifyOn } from '@/lib/review'
 
 describe('canMove', () => {
-  it('lets an author only submit, from draft or changes requested', () => {
+  it('lets an author submit or withdraw', () => {
     expect(canMove('draft', 'submitted', false)).toBe(true)
     expect(canMove('changes_requested', 'submitted', false)).toBe(true)
     expect(canMove('submitted', 'approved', false)).toBe(false)
     expect(canMove('draft', 'approved', false)).toBe(false)
-    expect(canMove('submitted', 'draft', false)).toBe(false)
+    expect(canMove('submitted', 'draft', false)).toBe(true)
   })
 
   it('allows staying put', () => {
@@ -21,6 +21,12 @@ describe('canMove', () => {
     expect(canMove('rejected', 'submitted', false, true)).toBe(true)
     expect(canMove('submitted', 'approved', false, true)).toBe(false)
     expect(canMove('approved', 'draft', false, true)).toBe(false)
+  })
+
+  it('lets an author discard changes from a live copy', () => {
+    expect(canMove('changes_requested', 'draft', false, true)).toBe(true)
+    expect(canMove('changes_requested', 'draft', false, false)).toBe(false)
+    expect(canMove('rejected', 'draft', false, true)).toBe(true)
   })
 
   it('lets an admin make any move', () => {
