@@ -516,8 +516,15 @@ test.describe('portal shell', () => {
           }
           await expect(bell).toBeVisible()
           await expect(account).toBeVisible()
-          const [cardBox, bellBox] = await Promise.all([card.boundingBox(), bell.boundingBox()])
+          const rail = page.locator('[data-portal-rail]')
+          const [railBox, cardBox, accountBox, bellBox] = await Promise.all(
+            [rail, card, account, bell].map((locator) => locator.boundingBox()),
+          )
           expect(cardBox!.y + cardBox!.height).toBeLessThanOrEqual(bellBox!.y)
+          for (const box of [cardBox!, accountBox!, bellBox!]) {
+            expect(box.x).toBeGreaterThanOrEqual(railBox!.x)
+            expect(box.x + box.width).toBeLessThanOrEqual(railBox!.x + railBox!.width)
+          }
           await page.locator('[data-portal-fold]').click()
           await expect(card).toBeHidden()
           await expect(bell).toBeVisible()

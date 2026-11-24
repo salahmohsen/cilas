@@ -80,6 +80,7 @@
 
 .footer {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   flex: none;
   gap: var(--space-2);
 }
