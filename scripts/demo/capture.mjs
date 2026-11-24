@@ -19,14 +19,17 @@ const accounts = {
   member: ['user33@demo.invalid', 'demo-member-pass'],
 }
 
+const run = (role, args, input) =>
+  execFileSync('agent-browser', ['--session', `cilas-demo-${role}`, ...args], {
+    encoding: 'utf8',
+    input,
+    timeout: 240_000,
+    stdio: ['pipe', 'pipe', 'pipe'],
+  }).trim()
+
 const ab = (role, args, input) => {
   try {
-    return execFileSync('agent-browser', ['--session', `cilas-demo-${role}`, ...args], {
-      encoding: 'utf8',
-      input,
-      timeout: 240_000,
-      stdio: ['pipe', 'pipe', 'pipe'],
-    }).trim()
+    return run(role, args, input)
   } catch (error) {
     throw new Error(`${args.slice(0, 3).join(' ')}: ${String(error.stderr || error.stdout).trim()}`)
   }
@@ -70,7 +73,11 @@ const browserFor = async (role) => {
   if (accounts[role]) {
     const [email, password] = accounts[role]
     ab(role, ['find', 'label', 'Email', 'fill', email])
-    ab(role, ['find', 'label', 'Password', 'fill', password])
+    try {
+      run(role, ['find', 'label', 'Password', 'fill', password])
+    } catch {
+      throw new Error(`could not fill the ${role} password`)
+    }
     ab(role, ['find', 'role', 'button', 'click', '--name', 'Sign in'])
     await sleep(6000)
   }
