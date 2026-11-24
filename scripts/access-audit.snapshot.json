@@ -4,7 +4,7 @@
     "field": "*",
     "rules": {
       "create": "isAdmin#b15b4fe4",
-      "read": "adminOrNonTemplateForms#28fb328e",
+      "read": "adminOrNonTemplateForms#0d135844",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
@@ -5751,7 +5751,7 @@
     "rules": {
       "create": "isAdmin#b15b4fe4",
       "read": "readablePosts#c8edbabd",
-      "readVersions": "payload:loggedIn",
+      "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
@@ -6006,7 +6006,7 @@
     "rules": {
       "create": "isAdmin#b15b4fe4",
       "read": "commentsOnReadablePosts#f073c838",
-      "readVersions": "payload:loggedIn",
+      "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
@@ -6604,7 +6604,7 @@
       "read": "adminOrSelf#b5312fea",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
-      "unlock": "payload:defaultUnlock"
+      "unlock": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -9730,10 +9730,10 @@
     "entity": "collection:payload-locked-documents",
     "field": "*",
     "rules": {
-      "create": "payload:loggedIn",
-      "read": "payload:loggedIn",
-      "update": "payload:loggedIn",
-      "delete": "payload:loggedIn",
+      "create": "lockInCallersNameOnEditableTarget#f4a34e9d",
+      "read": "readLocksOnEditableTarget#e44bf588",
+      "update": "takeOverEditableTargetLock#b2df6dfa",
+      "delete": "releaseOwnEditableTargetLock#32a6ed68",
       "unlock": "payload:defaultUnlock"
     }
   },

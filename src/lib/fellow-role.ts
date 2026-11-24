@@ -1,12 +1,12 @@
 import { relId } from '@/lib/relation'
-import type { PayloadRequest } from 'payload'
+import { isolateObjectProperty, type PayloadRequest, type Where } from 'payload'
 
 import type { Role } from '@/access'
 import type { User } from '@/payload-types'
 
 /**
  * `fellow` is held by an account exactly while its linked person is listed on
- * at least one course. Courses list people; accounts are found through
+ * at least one published course. Courses list people; accounts are found through
  * `users.person`. A person with no account is simply skipped.
  */
 
@@ -40,6 +40,8 @@ export const accountOf = async (req: PayloadRequest, person: number): Promise<Us
   return (res.docs[0] as User | undefined) ?? null
 }
 
+export const publishedCourse = { _status: { equals: 'published' } } satisfies Where
+
 export const teaches = async (
   req: PayloadRequest,
   person: number,
@@ -50,6 +52,7 @@ export const teaches = async (
     collection: 'courses',
     where: {
       and: [
+        publishedCourse,
         { fellows: { contains: person } },
         ...(exceptCourseId === undefined ? [] : [{ id: { not_equals: exceptCourseId } }]),
       ],
@@ -62,12 +65,23 @@ export const teaches = async (
   return res.totalDocs > 0
 }
 
+/**
+ * A write to the account runs in its own context. The save that fired the hook
+ * may be a version restore, which flags the shared context, and Payload then
+ * skips the defaults of the account's own fields and fails its validation.
+ */
+const accountWrite = (req: PayloadRequest): PayloadRequest => {
+  const own = isolateObjectProperty(req, 'context')
+  own.context = {}
+  return own
+}
+
 export const grantFellow = async (req: PayloadRequest, person: number): Promise<void> => {
   const account = await accountOf(req, person)
   if (!account || account.roles.includes('fellow')) return
 
   await req.payload.update({
-    req,
+    req: accountWrite(req),
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, true) },
@@ -88,7 +102,7 @@ export const revokeIfUnteaching = async (
   if (!account || !account.roles.includes('fellow')) return
 
   await req.payload.update({
-    req,
+    req: accountWrite(req),
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, false) },
