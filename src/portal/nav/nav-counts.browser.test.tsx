@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ClientNotificationEvent } from '@/lib/realtime/events'
-import { InboxRefresh } from '@/portal/inbox/inbox-refresh'
+import { RefreshOnWork } from '@/portal/needs/refresh-on-work'
 
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 
@@ -163,7 +163,7 @@ describe('NavCountsProvider request lifecycle', () => {
   )
 
   it('spaces focus reads for nav counts and Inbox rows 30 seconds apart', async () => {
-    const view = await mount(<InboxRefresh />)
+    const view = await mount(<RefreshOnWork />)
     await waitFor(() => expect(countOf('inbox')).toBe('1'))
     const focus = () => window.dispatchEvent(new Event('focus'))
     vi.useFakeTimers({ toFake: ['performance'] })
