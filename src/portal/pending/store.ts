@@ -13,7 +13,8 @@ import {
 export const FINISHED_MS = 8000
 const KEEPALIVE_LIMIT = 64 * 1024
 
-export type PendingView = Pick<PendingItem, 'state' | 'remainingMs' | 'status' | 'result'>
+/** What a view reads of an item. `remainingMs` is the time left when it is read, not when the item last changed. */
+export type PendingView = Readonly<Pick<PendingItem, 'state' | 'remainingMs' | 'status' | 'result'>>
 type ManualCause = Exclude<PauseCause, 'overlay'>
 export type PendingApi = {
   decide(input: PendingInput): boolean
@@ -26,6 +27,7 @@ export type PendingApi = {
   overlay(open: boolean): void
   flush(): Promise<{ ok: boolean }>
   readonly items: { key: string; label: string; view: PendingView }[]
+  getView(key: string): PendingView | null
 }
 
 type QueuedItem = PendingItem & { encodedBody: string }
@@ -60,6 +62,8 @@ export function createPendingStore({
   const timers = new Map<string, number>()
   const inflight = new Map<string, Promise<boolean>>()
   const listeners = new Set<() => void>()
+  // One view per item object keeps the snapshot of `useSyncExternalStore` stable between changes.
+  const views = new WeakMap<PendingItem, PendingView>()
   const notify = () => listeners.forEach((listener) => listener())
 
   function clearTimer(key: string) {
@@ -149,6 +153,22 @@ export function createPendingStore({
     notify()
   }
 
+  function viewOf(item: PendingItem): PendingView {
+    let view = views.get(item)
+    if (!view) {
+      view = {
+        state: item.state,
+        status: item.status,
+        result: item.result,
+        get remainingMs() {
+          return remaining(item, clock.now())
+        },
+      }
+      views.set(item, view)
+    }
+    return view
+  }
+
   const api: PendingApi = {
     decide(input) {
       if (items.has(input.key)) return false
@@ -211,17 +231,15 @@ export function createPendingStore({
       const outcomes = await Promise.allSettled(inflight.values())
       return { ok: outcomes.every((outcome) => outcome.status === 'fulfilled' && outcome.value) }
     },
+    getView(key) {
+      const item = items.get(key)
+      return item ? viewOf(item) : null
+    },
     get items() {
-      const now = clock.now()
       return Array.from(items.values(), (item) => ({
         key: item.key,
         label: item.label,
-        view: {
-          state: item.state,
-          remainingMs: remaining(item, now),
-          status: item.status,
-          result: item.result,
-        },
+        view: viewOf(item),
       }))
     },
   }

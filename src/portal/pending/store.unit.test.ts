@@ -42,6 +42,21 @@ beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
 describe('pending: store', () => {
+  it('the view reports the time left now and holds nothing but its four fields', () => {
+    const { store } = setup()
+    store.decide(input)
+    const view = store.getView(input.key)
+    expect(view?.remainingMs).toBe(5000)
+    vi.advanceTimersByTime(2000)
+    expect(store.getView(input.key)).toBe(view)
+    expect(view?.remainingMs).toBe(3000)
+    expect(Object.keys(view ?? {}).toSorted()).toEqual(['remainingMs', 'result', 'state', 'status'])
+    store.pause(input.key, 'focus')
+    vi.advanceTimersByTime(1000)
+    expect(store.getView(input.key)?.remainingMs).toBe(3000)
+    expect(store.getView('missing')).toBeNull()
+  })
+
   it('expire and flush together send one authenticated keepalive POST', async () => {
     const { store, fetcher } = setup()
     store.decide(input)

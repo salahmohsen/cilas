@@ -180,7 +180,7 @@ export function usePendingItem(key: string): PendingView | null {
   const store = useContext(PendingContext)
   return useSyncExternalStore(
     store?.subscribe ?? noSubscription,
-    () => store?.getSnapshot().get(key) ?? null,
+    () => store?.getView(key) ?? null,
     noItem,
   )
 }

@@ -12,6 +12,7 @@ import { usePortalSignOut } from './sign-out'
 import { StrictMode, useLayoutEffect, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PendingProvider, usePending, usePendingItem } from './pending-provider'
+import type { PendingApi, PendingView } from './store'
 
 const input = { key: 'one', label: 'Approve', request: { url: '/api/review', body: {} } }
 const useFirstItem = () => usePendingItem(input.key)
@@ -102,6 +103,26 @@ describe('pending: provider', () => {
   it('throws from usePending outside the provider and returns null from usePendingItem', () => {
     expect(() => renderHook(usePending)).toThrow(/PendingProvider/)
     expect(renderHook(useFirstItem).result.current).toBeNull()
+  })
+
+  it('usePendingItem reads the time left now, 2 s after the decision', () => {
+    const seen: { pending?: PendingApi; item?: PendingView | null } = {}
+    function Capture() {
+      const pending = usePending()
+      const item = useFirstItem()
+      useLayoutEffect(() => {
+        seen.pending = pending
+        seen.item = item
+      })
+      return null
+    }
+    render(setup(<Capture />).ui)
+    act(() => void seen.pending?.decide(input))
+    const first = seen.item
+    act(() => vi.advanceTimersByTime(2000))
+    expect(seen.item).toBe(first)
+    expect(first?.remainingMs).toBeGreaterThan(2900)
+    expect(first?.remainingMs).toBeLessThanOrEqual(3000)
   })
 
   it('an aria-modal pauses an item and removing it resumes it', async () => {
