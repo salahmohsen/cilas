@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto'
 
+import { JSDOM } from 'jsdom'
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -11,6 +12,16 @@ import { mcpServerUrl } from '@/plugins/mcp/paths'
 import { AI_GROUP } from '@/plugins/role-nav'
 
 import { createTracker, uniqEmail } from '../../testing/payload.fixture'
+
+const shownText = (html: string) => {
+  const { document } = new JSDOM(html).window
+  document.querySelectorAll('style, title').forEach((node) => node.remove())
+  const texts: string[] = []
+  const walker = document.createTreeWalker(document.body, 4)
+  for (let node = walker.nextNode(); node; node = walker.nextNode())
+    texts.push(node.nodeValue ?? '')
+  return texts.join(' ')
+}
 
 const SITE = 'http://localhost:3000'
 const MCP = mcpServerUrl(SITE)
@@ -283,10 +294,7 @@ describe('assistants connect with OAuth', () => {
       expect(html).toContain('A person has to read each draft and publish it.')
       expect(html).toContain('>Allow<')
       expect(html).not.toContain('Sent Name')
-      const words = html
-        .replace(admin.email, '')
-        .replace(/<(style|title)>[\s\S]*?<\/\1>/g, '')
-        .replace(/<[^>]+>/g, ' ')
+      const words = shownText(html).replace(admin.email, '')
       expect(words.match(/.{0,30}\b(token|OAuth|scope|API key)\b.{0,30}/i)?.[0]).toBeUndefined()
     })
 

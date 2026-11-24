@@ -20,6 +20,8 @@ export const SpaceComments: CollectionConfig = {
   labels: { singular: 'Comment', plural: 'Comments' },
   access: {
     read: commentsOnReadablePosts,
+    // As with posts: past versions are for admins only.
+    readVersions: isAdmin,
     // Actions-only writes, as with posts (REST refusal).
     create: isAdmin,
     update: isAdmin,

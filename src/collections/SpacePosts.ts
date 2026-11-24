@@ -24,6 +24,9 @@ export const SpacePosts: CollectionConfig = {
   labels: { singular: 'Post', plural: 'Posts' },
   access: {
     read: readablePosts,
+    // Nothing reads a post's past versions; Payload's default would show them to
+    // every signed-in account, including posts of spaces they are not in.
+    readVersions: isAdmin,
     create: isAdmin,
     update: isAdmin,
     // Deletes (authors included) go through the actions' postRemove, which

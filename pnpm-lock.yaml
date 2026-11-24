@@ -231,6 +231,9 @@ importers:
       temporal-polyfill:
         specifier: 1.0.6
         version: 1.0.6
+      to-snake-case:
+        specifier: 1.0.0
+        version: 1.0.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0

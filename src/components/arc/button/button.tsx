@@ -87,6 +87,14 @@ function labelKey(node: ReactNode): string {
   return `<${typeof type === 'string' ? type : (type?.displayName ?? type?.name ?? '')}>${labelKey((node.props as { children?: ReactNode }).children)}`
 }
 
+/** Whether the label has any visible text, as opposed to only an icon or other elements. */
+function hasText(node: ReactNode): boolean {
+  if (typeof node === 'string' || typeof node === 'number' || typeof node === 'bigint')
+    return String(node).trim() !== ''
+  if (Array.isArray(node)) return node.some(hasText)
+  return isValidElement(node) && hasText((node.props as { children?: ReactNode }).children)
+}
+
 /** Springs the slot to the natural width of the incoming label when it changes, so a new label never snaps the button's size.
  *  The outgoing label is popped out of flow at once, so it never holds the old width. Other resizes (a late web font, a parent reflow) jump straight to the new width, so nothing wobbles on first paint. */
 function useMorphWidth(content: RefObject<HTMLElement | null>, key: string, reduced: boolean) {
@@ -235,11 +243,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       >
         <span ref={contentRef} className={styles.labelContent}>
           <AnimatePresence mode="popLayout" initial={false}>
-            <LabelPhase
-              key={key}
-              icon={!/\S/.test(key.replace(/<[^>]*>/g, ''))}
-              reduced={reduceMotion}
-            >
+            <LabelPhase key={key} icon={!hasText(children)} reduced={reduceMotion}>
               {children}
             </LabelPhase>
           </AnimatePresence>

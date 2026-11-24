@@ -30,15 +30,19 @@ import { courseQuestionBlocks, nameNewQuestions } from '@/forms/form-fields'
 import { timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
-import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import { grantFellow, publishedCourse, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import { lockRow } from '@/lib/row-lock'
 import { reviewHooks } from '@/lib/review-hooks'
 import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
+  CollectionBeforeChangeHook,
   CollectionConfig,
   Condition,
   Field,
+  PayloadRequest,
+  RequestContext,
 } from 'payload'
 import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
@@ -53,35 +57,60 @@ import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 const WORKSHOP_FORM_HELP = templateFormHelp('workshop template')
 
+const publishedFellows = async (req: PayloadRequest, id: number): Promise<number[]> => {
+  const published = await req.payload.db.findOne<Course>({
+    collection: 'courses',
+    req,
+    select: { fellows: true },
+    where: { and: [{ id: { equals: id } }, publishedCourse] },
+  })
+  return toPersonIds(published?.fellows)
+}
+
+const FELLOWS_BEFORE = 'publishedFellowsBefore'
+type FellowsBefore = Map<number, number[]>
+
 /**
- * `courses.fellows` lists people, but the `fellow` role lives on the account
- * linked to each person, so granting and revoking means writing to `users` —
- * the course's own field cannot do it. afterChange, not beforeChange, so
- * accounts are only touched once the course write has landed. Granting waits
- * for the course to be published, so a draft cannot make anyone a fellow.
+ * The baseline rides in the request context as a value. Neither the request
+ * (a version restore hands each hook a different proxy) nor the context object
+ * (a nested Local API call swaps it for a copy) keeps its identity between
+ * beforeChange and afterChange, but a copy keeps the entries.
  */
-export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
-  doc,
+const baselineIn = (context: RequestContext) =>
+  (context[FELLOWS_BEFORE] ??= new Map()) as FellowsBefore
+
+/** Capture the live row before both ordinary edits and version restores. */
+const capturePublishedFellows: CollectionBeforeChangeHook<Course> = async ({
+  context,
+  operation,
+  originalDoc,
   req,
-  previousDoc,
 }) => {
-  const before = toPersonIds(previousDoc?.fellows)
-  const after = toPersonIds(doc.fellows)
+  if (operation !== 'update' || !originalDoc) return
+  const id = originalDoc.id
+  // A concurrent write must capture the publication this write leaves behind.
+  await lockRow(req, 'courses', id)
+  baselineIn(context).set(id, await publishedFellows(req, id))
+}
 
-  // The role follows publication: a fellow may list a co-fellow on a draft,
-  // but only an admin's approval makes that person a fellow. On publishing,
-  // everyone listed gets it; on a published course, whoever is added.
-  if (doc._status === 'published') {
-    const justPublished = previousDoc?._status !== 'published'
-    for (const id of justPublished ? after : after.filter((id) => !before.includes(id))) {
-      await grantFellow(req, id)
-    }
+/** Accounts follow the main row, which changes independently of the draft history. */
+export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
+  context,
+  doc,
+  operation,
+  req,
+}) => {
+  const baseline = baselineIn(context)
+  const before = operation === 'update' ? (baseline.get(doc.id) ?? []) : []
+  baseline.delete(doc.id)
+  const after = await publishedFellows(req, doc.id)
+
+  for (const id of after) {
+    if (doc._status === 'published' || !before.includes(id)) await grantFellow(req, id)
   }
-
-  for (const id of before.filter((id) => !after.includes(id))) {
-    await revokeIfUnteaching(req, id, doc.id)
+  for (const id of before) {
+    if (!after.includes(id)) await revokeIfUnteaching(req, id, doc.id)
   }
-
   return doc
 }
 
@@ -99,8 +128,8 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   doc,
   req,
 }) => {
-  for (const id of toPersonIds(doc.fellows)) {
-    await revokeIfUnteaching(req, id, doc.id)
+  if (doc._status === 'published') {
+    for (const id of toPersonIds(doc.fellows)) await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
@@ -581,6 +610,7 @@ export const Courses: CollectionConfig = {
       ),
     ],
     beforeChange: [
+      capturePublishedFellows,
       ...(courseReview.beforeChange ?? []),
       ({ data, originalDoc }) => {
         const cycle = data.cycle === undefined ? originalDoc?.cycle : data.cycle
