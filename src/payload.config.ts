@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { withLockRules } from './collections/LockedDocuments'
 import { InvitationLog } from './collections/InvitationLog'
 import { PushSubscriptions } from './collections/PushSubscriptions'
 import { People } from './collections/People'
@@ -513,4 +514,4 @@ export const sourceConfig: Config = {
   ],
 }
 
-export default buildConfig(sourceConfig)
+export default buildConfig(sourceConfig).then(withLockRules)

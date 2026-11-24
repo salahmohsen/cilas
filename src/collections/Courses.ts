@@ -39,6 +39,7 @@ import type {
   CollectionConfig,
   Condition,
   Field,
+  PayloadRequest,
 } from 'payload'
 import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
@@ -57,32 +58,45 @@ const WORKSHOP_FORM_HELP = templateFormHelp('workshop template')
  * `courses.fellows` lists people, but the `fellow` role lives on the account
  * linked to each person, so granting and revoking means writing to `users` —
  * the course's own field cannot do it. afterChange, not beforeChange, so
- * accounts are only touched once the course write has landed. Granting waits
- * for the course to be published, so a draft cannot make anyone a fellow.
+ * accounts are only touched once the course write has landed.
+ *
+ * The role follows the published fellows list only. A fellow may list or drop
+ * a co-fellow on a draft, but only an admin's approval (publishing) changes
+ * anyone's role. A draft save changes no role, so a fellow's unapproved draft
+ * cannot take the role from a co-fellow.
  */
-export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
-  doc,
-  req,
-  previousDoc,
-}) => {
-  const before = toPersonIds(previousDoc?.fellows)
+export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({ doc, req }) => {
+  if (doc._status !== 'published') return doc
+
+  const before = await previouslyPublishedFellows(req, doc.id)
   const after = toPersonIds(doc.fellows)
 
-  // The role follows publication: a fellow may list a co-fellow on a draft,
-  // but only an admin's approval makes that person a fellow. On publishing,
-  // everyone listed gets it; on a published course, whoever is added.
-  if (doc._status === 'published') {
-    const justPublished = previousDoc?._status !== 'published'
-    for (const id of justPublished ? after : after.filter((id) => !before.includes(id))) {
-      await grantFellow(req, id)
-    }
-  }
-
+  // Every publish grants everyone listed; grantFellow skips accounts that hold it.
+  for (const id of after) await grantFellow(req, id)
   for (const id of before.filter((id) => !after.includes(id))) {
     await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
+}
+
+/**
+ * The fellows of the publication this save replaces. previousDoc is the latest
+ * draft, not the last publication, so it misses drops made in drafts. The
+ * newest published version is the one this save just wrote; the one before it
+ * is the publication it replaces.
+ */
+const previouslyPublishedFellows = async (req: PayloadRequest, id: number): Promise<number[]> => {
+  const { docs } = await req.payload.findVersions({
+    req,
+    collection: 'courses',
+    where: { and: [{ parent: { equals: id } }, { 'version._status': { equals: 'published' } }] },
+    sort: '-createdAt',
+    limit: 2,
+    depth: 0,
+    overrideAccess: true,
+  })
+  return toPersonIds(docs[1]?.version.fellows)
 }
 
 /** A fellow submits a course; an admin approves (publishes) it, asks for changes or declines. */

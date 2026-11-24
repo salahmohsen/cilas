@@ -130,6 +130,15 @@ describe('propagateFellowRole', () => {
     expect(await rolesOf(user)).toEqual(['member'])
   })
 
+  it("keeps a co-fellow's role while a draft drops them: only publishing revokes", async () => {
+    const { person, user } = await accountFor(['member'])
+    await list(f.courses[0].id, [person])
+    await list(f.courses[0].id, [], 'draft')
+    expect(await rolesOf(user)).toEqual(['member', 'fellow'])
+    await list(f.courses[0].id, [])
+    expect(await rolesOf(user)).toEqual(['member'])
+  })
+
   it('falls back to member when fellow was the only role', async () => {
     const { person, user } = await accountFor(['fellow'])
     await list(f.courses[0].id, [person])

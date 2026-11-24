@@ -5751,7 +5751,7 @@
     "rules": {
       "create": "isAdmin#b15b4fe4",
       "read": "readablePosts#c8edbabd",
-      "readVersions": "payload:loggedIn",
+      "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
@@ -6006,7 +6006,7 @@
     "rules": {
       "create": "isAdmin#b15b4fe4",
       "read": "commentsOnReadablePosts#f073c838",
-      "readVersions": "payload:loggedIn",
+      "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
@@ -6604,7 +6604,7 @@
       "read": "adminOrSelf#b5312fea",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
-      "unlock": "payload:defaultUnlock"
+      "unlock": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -9730,10 +9730,10 @@
     "entity": "collection:payload-locked-documents",
     "field": "*",
     "rules": {
-      "create": "payload:loggedIn",
+      "create": "lockInCallersName#900982b3",
       "read": "payload:loggedIn",
-      "update": "payload:loggedIn",
-      "delete": "payload:loggedIn",
+      "update": "lockInCallersName#900982b3",
+      "delete": "callersOwnLocks#395db14c",
       "unlock": "payload:defaultUnlock"
     }
   },
