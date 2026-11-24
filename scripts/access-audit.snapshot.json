@@ -4,7 +4,7 @@
     "field": "*",
     "rules": {
       "create": "isAdmin#b15b4fe4",
-      "read": "adminOrNonTemplateForms#28fb328e",
+      "read": "adminOrNonTemplateForms#0d135844",
       "update": "isAdmin#b15b4fe4",
       "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
