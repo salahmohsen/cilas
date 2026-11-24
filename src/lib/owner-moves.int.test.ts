@@ -13,7 +13,7 @@ import { resendInbox } from '../../testing/resend.test-utils'
 import { holdRow, waitForLockWaiters } from '../../testing/row-lock.test-utils'
 import { ownerMove } from './owner-moves'
 import { getReviewQueue } from './review-queue'
-import { type ReviewedDoc, type StatusKey, statusInputOf, statusOf } from './review-status'
+import { type ReviewedDoc, statusInputOf, statusOf } from './review-status'
 
 const inbox = resendInbox()
 mockNetwork(inbox.handler, ...localServices)
