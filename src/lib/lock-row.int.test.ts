@@ -1,4 +1,12 @@
-import { createLocalReq, getPayload, type Payload } from 'payload'
+import {
+  commitTransaction,
+  createLocalReq,
+  getPayload,
+  initTransaction,
+  killTransaction,
+  type Payload,
+  type Where,
+} from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
@@ -12,6 +20,7 @@ import { rest } from '../../testing/payload-rest.test-utils'
 import { resendInbox } from '../../testing/resend.test-utils'
 import { holdRow, waitForLockWaiters } from '../../testing/row-lock.test-utils'
 import { lockRow } from './lock-row'
+import { notify } from './notify'
 
 mockNetwork(resendInbox().handler, ...localServices)
 
@@ -115,5 +124,61 @@ describe('review-events: lockRow', () => {
   it('lockRow refuses outside a transaction', async () => {
     const req = await createLocalReq({}, payload)
     await expect(lockRow(req, 'articles', 1)).rejects.toMatchObject({ status: 500 })
+  })
+})
+
+describe('review-events: savepoint', () => {
+  it('a failed row does not abort the transaction', async () => {
+    const req = await createLocalReq({}, payload)
+    expect(await initTransaction(req)).toBe(true)
+    const transactionID = req.transactionID
+    try {
+      const doc = await payload.create({
+        collection: 'people',
+        data: { name: 'Savepoint Marker', slug: uniq('savepoint-marker') },
+        req,
+      })
+      track('people', doc)
+      await notify(payload, [-1], { kind: 'submitted' }, req)
+      const { docs } = await payload.find({
+        collection: 'users',
+        limit: 1,
+        depth: 0,
+        req,
+      })
+      expect(docs).toHaveLength(1)
+      expect(req.transactionID).toBe(transactionID)
+      await commitTransaction(req)
+      const persisted = await payload.findByID({ collection: 'people', id: doc.id, depth: 0 })
+      expect(persisted.id).toBe(doc.id)
+    } finally {
+      await killTransaction(req)
+    }
+  })
+
+  it('a notification row rolls back with the transaction', async () => {
+    const req = await createLocalReq({}, payload)
+    const description = uniq('notification rolls back')
+    const where: Where = {
+      and: [{ recipient: { equals: author.id } }, { description: { equals: description } }],
+    }
+    expect(await initTransaction(req)).toBe(true)
+    try {
+      await notify(payload, [author.id], { kind: 'submitted', description }, req)
+      const { docs } = await payload.find({
+        collection: 'notifications',
+        where,
+        limit: 1,
+        depth: 0,
+        req,
+      })
+      expect(docs).toHaveLength(1)
+      await killTransaction(req)
+      const visible = await payload.find({ collection: 'notifications', where, limit: 1, depth: 0 })
+      expect(visible.docs).toEqual([])
+    } finally {
+      await killTransaction(req)
+      await payload.delete({ collection: 'notifications', where })
+    }
   })
 })

@@ -273,6 +273,9 @@ const REMOVAL_NOTES: Partial<Record<ReviewState, (noun: string, title: string) =
   rejected: (noun, title) => `Your ${noun} “${title}” stays on the site`,
 }
 
+const withdrawnNote = (title: string, removal: boolean) =>
+  removal ? `Removal request withdrawn: “${title}”` : `Submission withdrawn: “${title}”`
+
 /**
  * Emails admins on a submission and owners on a decision, with a link to the
  * document in the admin. Only for writes by a signed-in account: server
@@ -285,17 +288,39 @@ const notifyReview =
     if (!req.user) return doc
     const { draftSave, live } = reviewContext(req)
     if (draftSave && !live) return doc
+    const byAdmin = isAdminUser(req.user)
     const state: ReviewState = doc.review?.status ?? 'draft'
     const before: ReviewState = previousDoc?.review?.status ?? 'draft'
     const asked = state === 'submitted' ? doc : before === 'submitted' ? previousDoc : null
     const removal = asked?.review?.request === 'removal'
-    // An approved removal takes the document down to a draft: tell its owners.
-    const audience =
-      removal && before === 'submitted' && state === 'draft' ? 'authors' : notifyOn(before, state)
+    const title = doc.title ?? `Untitled ${noun}`
+    const returnedToDraft = before === 'submitted' && state === 'draft'
+    if (!byAdmin && returnedToDraft) {
+      const people = await adminRecipients(req)
+      await notify(
+        req.payload,
+        people.map((p) => p.id),
+        {
+          kind: 'withdrawn',
+          description: withdrawnNote(title, removal),
+          link: documentHref({
+            collection,
+            id: doc.id,
+            viewer: 'admin',
+            waiting: false,
+            locale: routing.defaultLocale,
+          }),
+          actor: await actorOf(req.payload, personOf(req.user)),
+        },
+        req,
+      )
+      return doc
+    }
+    const removed = byAdmin && removal && returnedToDraft
+    const audience = removed ? 'authors' : notifyOn(before, state)
     if (!audience) return doc
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
-    const title = doc.title ?? `Untitled ${noun}`
     const path = documentHref({
       collection,
       id: doc.id,
@@ -305,7 +330,7 @@ const notifyReview =
     })
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
-    if (!(removal && state === 'draft')) {
+    if (!removed) {
       await sendReviewEmail(
         req,
         (await emailRecipients(req, people, state)).map((p) => p.email),
@@ -324,11 +349,12 @@ const notifyReview =
       req.payload,
       people.map((p) => p.id),
       {
-        kind: (removal && state === 'draft' ? 'removed' : state) as NotificationKind,
+        kind: (removed ? 'removed' : state) as NotificationKind,
         description: line,
         link: path,
         actor: await actorOf(req.payload, actingPerson),
       },
+      req,
     )
     return doc
   }

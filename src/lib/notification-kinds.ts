@@ -36,6 +36,7 @@ export const NOTIFICATION_KINDS = {
     icon: 'user-check',
     audience: 'admins',
   },
+  withdrawn: { name: 'Withdrawn', tone: 'info', icon: 'undo-2', audience: 'admins' },
 } as const satisfies Record<
   string,
   {
