@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  EMAIL_KINDS,
   mergePreferences,
+  PREFERENCE_KINDS,
   preferenceChangesSchema,
   readPreferences,
   switchesOf,
@@ -85,5 +87,16 @@ describe('reactionNote', () => {
     expect(reactionNote({ reaction: 'thank_you', target: 'comment', context: '“Seminar”' })).toBe(
       'Someone thanked you for your comment in “Seminar”',
     )
+  })
+})
+
+describe('withdrawn preferences', () => {
+  it('withdrawn is an admin preference after submitted', () => {
+    const submitted = PREFERENCE_KINDS.findIndex(({ kind }) => kind === 'submitted')
+    expect(PREFERENCE_KINDS[submitted + 1]).toEqual({ kind: 'withdrawn', audience: 'admins' })
+  })
+
+  it('withdrawn sends no email', () => {
+    expect(EMAIL_KINDS).not.toContain('withdrawn')
   })
 })

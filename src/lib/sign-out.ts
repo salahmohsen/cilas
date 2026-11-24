@@ -9,7 +9,7 @@ import { forgetThisDevice } from '@/lib/push/forget'
  * Ends the session on this device, then reloads, so nothing of the account
  * stays on the page. Throws when the server keeps the session: the page stays.
  */
-const signOut = async (): Promise<void> => {
+export const signOut = async (): Promise<void> => {
   announceAuthChange()
   // This device stops getting the account's alerts (needs the session, so first).
   await forgetThisDevice()

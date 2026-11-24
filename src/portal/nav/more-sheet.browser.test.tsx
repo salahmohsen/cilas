@@ -2,7 +2,7 @@ import { act, cleanup, screen, within } from '@testing-library/react'
 import { render } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { createTranslator } from 'next-intl'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
@@ -15,6 +15,7 @@ import {
   useToastStack,
   type ToastStackApi,
 } from '@/components/arc/toast-stack/toast-stack'
+import { PendingProvider, usePending, usePendingItem } from '@/portal/pending/pending-provider'
 import { unreadCount } from '@/lib/unread-count'
 import {
   BrowserNavigation,
@@ -47,7 +48,16 @@ function Probe({ into }: { into: { current: ToastStackApi | null } }) {
   return null
 }
 
-function Open({ locale, onSignOut }: { locale: 'en' | 'ar'; onSignOut: () => Promise<void> }) {
+function Open({
+  locale,
+  onSignOut,
+  startOpen = true,
+}: {
+  locale: 'en' | 'ar'
+  onSignOut: () => Promise<void>
+  startOpen?: boolean
+}) {
+  const [open, setOpen] = useState(startOpen)
   const more = useRef<HTMLButtonElement>(null)
   const spaces = Array.from({ length: 40 }, (_, i) =>
     spaceRow({
@@ -57,12 +67,12 @@ function Open({ locale, onSignOut }: { locale: 'en' | 'ar'; onSignOut: () => Pro
   )
   return (
     <div data-page="spaces">
-      <button ref={more} type="button">
+      <button ref={more} type="button" onClick={() => setOpen(true)}>
         More
       </button>
       <MoreSheet
-        open
-        onOpenChange={() => {}}
+        open={open}
+        onOpenChange={setOpen}
         items={[]}
         spaces={spaces}
         returnFocus={more}
@@ -179,4 +189,54 @@ describe('MoreSheet', () => {
     expect(box.top).toBeGreaterThanOrEqual(0)
     expect(844 - box.bottom).toBeLessThan(64)
   })
+})
+
+const pendingKey = 'review:articles:12'
+function PendingItem() {
+  const pending = usePending()
+  const item = usePendingItem(pendingKey)
+  return (
+    <>
+      <button
+        onClick={() =>
+          pending.decide({
+            key: pendingKey,
+            label: 'Approve',
+            request: { url: '/api/review', body: {} },
+          })
+        }
+      >
+        Start a decision
+      </button>
+      <output aria-label="Decision" data-decision-state>
+        {item?.state}
+      </output>
+    </>
+  )
+}
+
+it('opening the More sheet pauses a pending item until it closes', async () => {
+  await page.viewport(390, 844)
+  render(
+    <BrowserNavigation browser={createBrowserRouter()}>
+      <IntlProvider>
+        <ToastStackProvider>
+          <PendingProvider
+            clock={{ now: () => 0, setTimeout: () => 0, clearTimeout: () => {} }}
+            fetcher={async () => Response.json({})}
+          >
+            <PendingItem />
+            <Open locale="en" startOpen={false} onSignOut={async () => {}} />
+          </PendingProvider>
+        </ToastStackProvider>
+      </IntlProvider>
+    </BrowserNavigation>,
+  )
+  await userEvent.click(screen.getByRole('button', { name: 'Start a decision' }))
+  const decision = screen.getByLabelText('Decision')
+  expect(decision).toHaveTextContent('pending')
+  await userEvent.click(screen.getByRole('button', { name: 'More' }))
+  await expect.poll(() => decision.textContent).toBe('paused')
+  await userEvent.keyboard('{Escape}')
+  await expect.poll(() => decision.textContent).toBe('pending')
 })

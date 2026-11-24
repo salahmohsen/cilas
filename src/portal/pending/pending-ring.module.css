@@ -1,0 +1,51 @@
+.ring {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  justify-self: end;
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.ring[aria-disabled='true'] {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.arc {
+  position: absolute;
+  inline-size: 24px;
+  block-size: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.track {
+  stroke: var(--border);
+}
+
+@media (pointer: coarse) {
+  .ring {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc {
+    display: none;
+  }
+}

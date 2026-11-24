@@ -12,6 +12,7 @@ import {
   Reply,
   Shield,
   Trash2,
+  Undo2,
   UserCheck,
   UserPlus,
 } from 'lucide-react'
@@ -35,5 +36,6 @@ export const NOTIFICATION_GLYPHS: Record<NotificationIcon, ReactNode> = {
   shield: <Shield size={18} strokeWidth={1.7} />,
   flag: <Flag size={18} strokeWidth={1.7} />,
   'calendar-clock': <CalendarClock size={18} strokeWidth={1.7} />,
+  'undo-2': <Undo2 size={18} strokeWidth={1.7} />,
   'user-check': <UserCheck size={18} strokeWidth={1.7} />,
 }

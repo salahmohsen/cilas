@@ -8,6 +8,8 @@ import type {
 
 import { routing } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
+import { requireRowLock, rowIdOf } from '@/lib/row-lock'
+import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import { toPersonIds } from '@/lib/fellow-role'
 import { isAdminUser, personOf } from '@/access'
@@ -98,6 +100,8 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     return args
   }
   const trusted = !req.user || isAdminUser(req.user)
+  // Access refuses a write with no user and no override, so it queues on no row lock.
+  const locks = Boolean(req.user) || Boolean((args as { overrideAccess?: boolean }).overrideAccess)
   const write = args as {
     autosave?: boolean
     data?: Doc
@@ -108,6 +112,20 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   if (operation === 'create' && write.duplicateFromID != null) {
     write.draft = true
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
+  }
+  if (operation === 'restoreVersion') {
+    const versionId = rowIdOf(write.id)
+    if (locks) {
+      const { docs } = await req.payload.db.findVersions({
+        collection: collection.slug,
+        where: { id: { equals: versionId } },
+        limit: 1,
+        pagination: false,
+        req,
+      })
+      const parentId = relId(docs[0]?.parent)
+      if (typeof parentId === 'number') await requireRowLock(req, collection.slug, parentId)
+    }
   }
   const context = reviewContext(req)
   context.live = false
@@ -126,11 +144,13 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     throw new APIError('Edit one document at a time.', 403)
   }
   if (operation === 'update' && write.id !== undefined) {
+    const rowId = rowIdOf(write.id)
+    if (locks) await requireRowLock(req, collection.slug, rowId)
     const held = !trusted || HELD.includes(write.data?.review?.status as ReviewState)
     if (held && write.data?._status !== 'published') {
       const live = await req.payload.db.findOne<Doc & { id: number }>({
         collection: collection.slug,
-        where: { id: { equals: write.id } },
+        where: { id: { equals: rowId } },
         req,
       })
       if (live?._status === 'published') {
@@ -173,8 +193,8 @@ const nextRequest = ({
 }
 
 /**
- * The review rules (src/lib/review.ts) on every write: an owner may only
- * submit; only approval publishes. An admin's Publish counts as approval, so
+ * The review rules (src/lib/review.ts) on every write: owners can submit,
+ * withdraw or discard a live copy; only approval publishes. An admin's Publish counts as approval, so
  * admins publish as before. Server calls with no user (seeds, imports) are
  * trusted like an admin.
  */
@@ -203,9 +223,8 @@ const applyReview =
     }
     if (trusted && data._status === 'published' && to === from && to !== 'approved') to = 'approved'
 
-    // Submitted, a change to a published document waits for the admin
-    // unchanged, as a submitted draft does (WITH_OWNER).
-    if (!trusted && from === 'submitted') {
+    // A submission stays frozen for the admin until the owner withdraws it.
+    if (!trusted && from === 'submitted' && to !== 'draft') {
       throw new APIError(
         `This ${noun} waits for review. An admin decides before it changes again.`,
         403,
@@ -260,6 +279,9 @@ const REMOVAL_NOTES: Partial<Record<ReviewState, (noun: string, title: string) =
   rejected: (noun, title) => `Your ${noun} “${title}” stays on the site`,
 }
 
+const withdrawnNote = (title: string, removal: boolean) =>
+  removal ? `Removal request withdrawn: “${title}”` : `Submission withdrawn: “${title}”`
+
 /**
  * Emails admins on a submission and owners on a decision, with a link to the
  * document in the admin. Only for writes by a signed-in account: server
@@ -272,17 +294,39 @@ const notifyReview =
     if (!req.user) return doc
     const { draftSave, live } = reviewContext(req)
     if (draftSave && !live) return doc
+    const byAdmin = isAdminUser(req.user)
     const state: ReviewState = doc.review?.status ?? 'draft'
     const before: ReviewState = previousDoc?.review?.status ?? 'draft'
     const asked = state === 'submitted' ? doc : before === 'submitted' ? previousDoc : null
     const removal = asked?.review?.request === 'removal'
-    // An approved removal takes the document down to a draft: tell its owners.
-    const audience =
-      removal && before === 'submitted' && state === 'draft' ? 'authors' : notifyOn(before, state)
+    const title = doc.title ?? `Untitled ${noun}`
+    const returnedToDraft = before === 'submitted' && state === 'draft'
+    if (!byAdmin && returnedToDraft) {
+      const people = await adminRecipients(req)
+      await notify(
+        req.payload,
+        people.map((p) => p.id),
+        {
+          kind: 'withdrawn',
+          description: withdrawnNote(title, removal),
+          link: documentHref({
+            collection,
+            id: doc.id,
+            viewer: 'admin',
+            waiting: false,
+            locale: routing.defaultLocale,
+          }),
+          actor: await actorOf(req.payload, personOf(req.user)),
+        },
+        req,
+      )
+      return doc
+    }
+    const removed = byAdmin && removal && returnedToDraft
+    const audience = removed ? 'authors' : notifyOn(before, state)
     if (!audience) return doc
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
-    const title = doc.title ?? `Untitled ${noun}`
     const path = documentHref({
       collection,
       id: doc.id,
@@ -292,7 +336,7 @@ const notifyReview =
     })
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
-    if (!(removal && state === 'draft')) {
+    if (!removed) {
       await sendReviewEmail(
         req,
         (await emailRecipients(req, people, state)).map((p) => p.email),
@@ -311,11 +355,12 @@ const notifyReview =
       req.payload,
       people.map((p) => p.id),
       {
-        kind: (removal && state === 'draft' ? 'removed' : state) as NotificationKind,
+        kind: (removed ? 'removed' : state) as NotificationKind,
         description: line,
         link: path,
         actor: await actorOf(req.payload, actingPerson),
       },
+      req,
     )
     return doc
   }

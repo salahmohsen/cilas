@@ -5,6 +5,8 @@ import { CilasLogo } from '@/components/cilas-logo'
 import { SiteNotifications } from '@/components/site-notifications'
 import { Link } from '@/i18n/navigation'
 import { LiveRegion } from '@/portal/feedback/announce'
+import { PendingProvider } from '@/portal/pending/pending-provider'
+import { UndoAllBar } from '@/portal/pending/undo-all-bar'
 
 import { AccountMenu } from './account-menu'
 import { BottomBar } from './bottom-bar'
@@ -40,37 +42,40 @@ export async function PortalShell({
   return (
     <FoldProvider folded={folded} accountId={accountId}>
       <NavCountsProvider key={accountId}>
-        <a href="#main" className={styles.skip}>
-          {t('shell.skip')}
-        </a>
-        <LiveRegion />
-        <div className={styles.shell} data-page="spaces" data-portal-shell>
-          <div className={styles.rail} data-portal-rail>
-            <header className={styles.top}>
-              <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
-                <CilasLogo className={styles.logo} />
-              </Link>
-              <div className={styles.tools}>
-                <SiteNotifications />
-                <div className={styles.account}>
-                  <Suspense fallback={null}>
-                    <AccountMenu />
-                  </Suspense>
+        <PendingProvider>
+          <a href="#main" className={styles.skip}>
+            {t('shell.skip')}
+          </a>
+          <LiveRegion />
+          <div className={styles.shell} data-page="spaces" data-portal-shell>
+            <div className={styles.rail} data-portal-rail>
+              <header className={styles.top}>
+                <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
+                  <CilasLogo className={styles.logo} />
+                </Link>
+                <div className={styles.tools}>
+                  <SiteNotifications />
+                  <div className={styles.account}>
+                    <Suspense fallback={null}>
+                      <AccountMenu />
+                    </Suspense>
+                  </div>
                 </div>
+              </header>
+              <Sidebar items={nav} spaces={spaces} />
+            </div>
+            <main className={styles.main}>
+              <div className={styles.crumbs} data-portal-crumbs>
+                <FoldButton />
               </div>
-            </header>
-            <Sidebar items={nav} spaces={spaces} />
+              <div id="main" tabIndex={-1} className={`${styles.content} mx-auto w-full max-w-300`}>
+                {children}
+              </div>
+            </main>
+            <UndoAllBar />
+            <BottomBar items={nav} spaces={spaces} />
           </div>
-          <main className={styles.main}>
-            <div className={styles.crumbs} data-portal-crumbs>
-              <FoldButton />
-            </div>
-            <div id="main" tabIndex={-1} className={`${styles.content} mx-auto w-full max-w-300`}>
-              {children}
-            </div>
-          </main>
-          <BottomBar items={nav} spaces={spaces} />
-        </div>
+        </PendingProvider>
       </NavCountsProvider>
     </FoldProvider>
   )

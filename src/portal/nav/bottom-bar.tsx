@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Link } from '@/i18n/navigation'
 import { preloadable } from '@/lib/preloadable'
-import { useSignOut } from '@/lib/sign-out'
+import { usePortalSignOut } from '@/portal/pending/sign-out'
 
 import { WIDE } from './breakpoint'
 import { NAV_ICONS } from './nav-icons'
@@ -26,7 +26,7 @@ export function BottomBar({ items, spaces }: { items: PortalNavItem[]; spaces: S
   const t = useTranslations('Portal')
   const locale = useLocale()
   const pathname = usePathname() ?? ''
-  const signOut = useSignOut()
+  const signOut = usePortalSignOut()
   const more = useRef<HTMLButtonElement>(null)
   const [open, setOpen] = useState(false)
   // Kept mounted after the first open, so the sheet plays its exit.

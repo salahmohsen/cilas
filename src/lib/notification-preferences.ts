@@ -22,6 +22,7 @@ const PREFERENCE_ORDER = [
   'rejected',
   'removed',
   'submitted',
+  'withdrawn',
   'application',
   'joined',
 ] as const satisfies readonly PreferenceKind[]
