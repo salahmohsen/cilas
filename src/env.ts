@@ -101,6 +101,7 @@ export const env = createEnv({
   // be a real absolute origin. The admin and frontend share one in
   // development, so it is only needed when they are deployed separately.
   client: {
+    NEXT_PUBLIC_PORTAL_UNDO_MS: z.string().optional(),
     NEXT_PUBLIC_SERVER_URL: z.string().url().default(clientDefaults.NEXT_PUBLIC_SERVER_URL),
 
     // Where the browser asks Typesense directly (InstantSearch). Needs a
@@ -131,6 +132,7 @@ export const env = createEnv({
   },
 
   experimental__runtimeEnv: {
+    NEXT_PUBLIC_PORTAL_UNDO_MS: process.env.NEXT_PUBLIC_PORTAL_UNDO_MS,
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
 
     NEXT_PUBLIC_TYPESENSE_HOST: process.env.NEXT_PUBLIC_TYPESENSE_HOST,
