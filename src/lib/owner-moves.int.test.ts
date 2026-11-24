@@ -191,16 +191,43 @@ const notesAbout = async (title: string, recipient: User) =>
     })
   ).docs
 
-const liveCourse = (title: string, extra: Record<string, unknown> = {}) =>
+let cycle: number | undefined
+const courseCycle = async () => {
+  if (cycle !== undefined) return cycle
+  const place = track(
+    'places',
+    await payload.create({
+      collection: 'places',
+      data: {
+        name: 'Owner moves place',
+        slug: uniq('owner-moves-place'),
+        city: uniq('Movesville'),
+      },
+      overrideAccess: true,
+    }),
+  ).id
+  cycle = track(
+    'cycles',
+    await payload.create({
+      collection: 'cycles',
+      data: { season: 'spring', start_year: 2036, place, start_date: '2036-03-04' },
+      overrideAccess: true,
+    }),
+  ).id
+  return cycle
+}
+
+const liveCourse = async (title: string) =>
   writes().create('courses', {
     title,
     slug: uniq('owner-moves-course'),
     course_type: 'THEMATIC',
     tier: 'public',
+    cycle: await courseCycle(),
     fellows: [Number(fellow.person)],
+    registration: { mode: 'closed' },
     review: { status: 'approved' },
     _status: 'published',
-    ...extra,
   })
 
 const saveDraft = (
