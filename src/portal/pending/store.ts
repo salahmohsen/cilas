@@ -11,6 +11,8 @@ import {
 } from './machine'
 
 export const FINISHED_MS = 8000
+/** A commit with no answer after this long fails, so a stalled network cannot hold sign-out. */
+export const COMMIT_TIMEOUT_MS = 15_000
 const KEEPALIVE_LIMIT = 64 * 1024
 
 /** What a view reads of an item. `remainingMs` is the time left when it is read, not when the item last changed. */
@@ -26,6 +28,8 @@ export type PendingApi = {
   resume(key: string, cause: ManualCause): void
   overlay(open: boolean): void
   flush(): Promise<{ ok: boolean }>
+  /** Refuses `decide` until the returned function runs. Sign-out holds it from its flush until it ends. */
+  seal(): () => void
   readonly items: { key: string; label: string; view: PendingView }[]
   getView(key: string): PendingView | null
 }
@@ -59,6 +63,7 @@ export function createPendingStore({
 }) {
   let items = new Map<string, QueuedItem>()
   let overlays = 0
+  let seals = 0
   const timers = new Map<string, number>()
   const inflight = new Map<string, Promise<boolean>>()
   const listeners = new Set<() => void>()
@@ -90,7 +95,15 @@ export function createPendingStore({
   }
 
   async function send(item: QueuedItem): Promise<PendingEvent> {
-    try {
+    const controller = new AbortController()
+    const timer = clock.setTimeout(() => controller.abort(), COMMIT_TIMEOUT_MS)
+    // A fetcher may ignore the signal, so the race is what bounds the wait.
+    const timedOut = new Promise<never>((_, reject) => {
+      controller.signal.addEventListener('abort', () => reject(new Error('Commit timed out')), {
+        once: true,
+      })
+    })
+    async function request(): Promise<PendingEvent> {
       const response = await fetcher(item.request.url, {
         method: 'POST',
         credentials: 'include',
@@ -98,6 +111,7 @@ export function createPendingStore({
         redirect: 'error',
         headers: { 'Content-Type': 'application/json' },
         body: item.encodedBody,
+        signal: controller.signal,
       })
       const { status } = response
       if (response.ok)
@@ -106,8 +120,13 @@ export function createPendingStore({
         return { type: 'refused', status, result: await response.json().catch(() => null) }
       }
       return { type: 'error', status }
+    }
+    try {
+      return await Promise.race([request(), timedOut])
     } catch {
       return { type: 'error' }
+    } finally {
+      clock.clearTimeout(timer)
     }
   }
 
@@ -171,7 +190,7 @@ export function createPendingStore({
 
   const api: PendingApi = {
     decide(input) {
-      if (items.has(input.key)) return false
+      if (seals > 0 || items.has(input.key)) return false
       const encodedBody = JSON.stringify(input.request.body)
       if (
         encodedBody === undefined ||
@@ -224,6 +243,15 @@ export function createPendingStore({
       if (wasOpen === overlays > 0) return
       for (const key of items.keys()) {
         dispatch(key, { type: open ? 'pause' : 'resume', cause: 'overlay' })
+      }
+    },
+    seal() {
+      seals += 1
+      let released = false
+      return () => {
+        if (released) return
+        released = true
+        seals -= 1
       }
     },
     async flush() {

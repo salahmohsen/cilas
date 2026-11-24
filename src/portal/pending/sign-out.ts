@@ -14,15 +14,19 @@ export function usePortalSignOut(): () => Promise<void> {
   const { toast } = useToastStack()
 
   return useCallback(async () => {
-    const { ok } = await pending.flush()
-    if (!ok) {
-      toast({ type: 'error', title: t('Portal.pending.signOutStopped') })
-      return
-    }
+    // A decision made after the flush would commit without the session, so none starts until this ends.
+    const release = pending.seal()
     try {
+      const { ok } = await pending.flush()
+      if (!ok) {
+        toast({ type: 'error', title: t('Portal.pending.signOutStopped') })
+        return
+      }
       await signOut()
     } catch {
       toast({ type: 'error', title: t('Session.signOutFailed') })
+    } finally {
+      release()
     }
   }, [pending, t, toast])
 }

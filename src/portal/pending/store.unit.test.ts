@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createPendingStore } from './store'
+import { COMMIT_TIMEOUT_MS, createPendingStore } from './store'
 
 const input = {
   key: 'one',
@@ -69,6 +69,7 @@ describe('pending: store', () => {
       redirect: 'error',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input.request.body),
+      signal: expect.any(AbortSignal),
     })
   })
 
@@ -232,5 +233,59 @@ describe('pending: store', () => {
     await flushed
     expect(item()?.state).toBe('pending')
     expect(refresh).not.toHaveBeenCalled()
+  })
+
+  it('fails a commit that gets no answer, so flush ends and the item can be tried again', async () => {
+    const { store, item, fetcher } = setup(() => new Promise<Response>(() => {}))
+    store.decide(input)
+    const flushed = store.flush()
+    vi.advanceTimersByTime(COMMIT_TIMEOUT_MS - 1)
+    expect(item()?.state).toBe('committing')
+    vi.advanceTimersByTime(1)
+    expect(await flushed).toEqual({ ok: false })
+    expect(item()?.state).toBe('failed')
+    store.retry(input.key)
+    expect(item()?.state).toBe('committing')
+    expect(fetcher).toHaveBeenCalledTimes(2)
+  })
+
+  it('aborts the request when the time is up', async () => {
+    let signal: AbortSignal | undefined
+    const stalled = createPendingStore({
+      clock: {
+        now: () => Date.now(),
+        setTimeout: (fn, ms) => Number(setTimeout(fn, ms)),
+        clearTimeout: (id) => clearTimeout(id),
+      },
+      fetcher: (_url, init) => {
+        signal = init?.signal ?? undefined
+        return new Promise<Response>(() => {})
+      },
+      undoMs: 5000,
+      refresh: vi.fn(),
+    })
+    stalled.decide(input)
+    void stalled.flush()
+    vi.advanceTimersByTime(COMMIT_TIMEOUT_MS)
+    expect(signal?.aborted).toBe(true)
+  })
+
+  it('a refusal during flush is an answer, not a failure', async () => {
+    const { store, item, refresh } = setup(async () => Response.json({}, { status: 409 }))
+    store.decide(input)
+    expect(await store.flush()).toEqual({ ok: true })
+    expect(item()?.state).toBe('undone')
+    expect(refresh).toHaveBeenCalledOnce()
+  })
+
+  it('refuses a new decision while sealed and takes it again after release', () => {
+    const { store, item } = setup()
+    const release = store.seal()
+    expect(store.decide(input)).toBe(false)
+    expect(item()).toBeUndefined()
+    release()
+    release()
+    expect(store.decide(input)).toBe(true)
+    expect(item()?.state).toBe('pending')
   })
 })
