@@ -178,6 +178,19 @@ describe('document locks', () => {
     await deleteLock(lock.id, admin)
   })
 
+  it('a takeover on a lock row held too long is refused with a 409', async () => {
+    const lock = await lockOn(course, editor)
+    const holder = await holdRow(payload, locks, lock.id)
+    try {
+      await expect(
+        patchLock(lock.id, { user: holderOf(otherEditor) }, otherEditor),
+      ).rejects.toMatchObject({ status: 409 })
+    } finally {
+      await holder.release()
+      await deleteLock(lock.id, admin)
+    }
+  })
+
   it('hides who is editing a document from a member who can only read it', async () => {
     const place = track(
       'places',

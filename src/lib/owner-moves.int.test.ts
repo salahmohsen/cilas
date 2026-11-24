@@ -22,6 +22,7 @@ let payload: Payload
 let owner: User
 let admin: User
 let stranger: User
+let fellow: User
 let ownerToken: string
 const { track, cleanup } = createTracker()
 
@@ -57,6 +58,7 @@ beforeAll(async () => {
   ownerToken = account.token
   admin = (await makeAccount('owner-moves-admin', ['admin'], false)).user
   stranger = (await makeAccount('owner-moves-stranger', ['member'], true)).user
+  fellow = (await makeAccount('owner-moves-fellow', ['fellow'], true)).user
 })
 
 afterAll(async () => {
@@ -195,7 +197,7 @@ const liveCourse = (title: string, extra: Record<string, unknown> = {}) =>
     slug: uniq('owner-moves-course'),
     course_type: 'THEMATIC',
     tier: 'public',
-    fellows: [Number(owner.person)],
+    fellows: [Number(fellow.person)],
     review: { status: 'approved' },
     _status: 'published',
     ...extra,
@@ -234,14 +236,14 @@ const latestOf = async (collection: 'articles' | 'courses', id: number) => {
 const strip = (value: unknown) =>
   JSON.parse(JSON.stringify(value, (key, inner) => (key === 'id' ? undefined : inner)))
 
-const discardThenRestore = async (collection: 'articles' | 'courses', id: number) => {
-  const discarded = await ownerMove(payload, owner, { collection, id }, { move: 'discard' })
+const discardThenRestore = async (who: User, collection: 'articles' | 'courses', id: number) => {
+  const discarded = await ownerMove(payload, who, { collection, id }, { move: 'discard' })
   if (!discarded.ok || discarded.restoreFrom === undefined) throw new Error('discard failed')
   const afterDiscard = (await latestOf(collection, id)).version
   expect(
     await ownerMove(
       payload,
-      owner,
+      who,
       { collection, id },
       { move: 'restore', from: discarded.restoreFrom },
     ),
@@ -390,12 +392,12 @@ describe('review-events: owner moves', () => {
       version: { credits: enOnly },
     } = await latestVersion(id)
     await saveDraft('articles', id, 'ar', {
-      credits: [{ ...(enOnly as { id: string }[])[0], label: 'محرر' }],
+      credits: [{ id: (enOnly as { id: string }[])[0].id, role: 'editor', label: 'محرر', people }],
     })
     const edited = (await latestVersion(id)).version.credits
     expect(strip(edited)).toMatchObject([{ role: 'editor', label: { en: 'Editor', ar: 'محرر' } }])
 
-    const { afterDiscard, afterRestore } = await discardThenRestore('articles', id)
+    const { afterDiscard, afterRestore } = await discardThenRestore(owner, 'articles', id)
 
     expect(strip(afterDiscard.credits ?? [])).toEqual([])
     expect(strip(afterRestore.credits)).toEqual(strip(edited))
@@ -413,7 +415,15 @@ describe('review-events: owner moves', () => {
     } = await latestOf('courses', id)
     await saveDraft('courses', id, 'ar', {
       title: `${title}, تعديل`,
-      applicant_questions: [{ ...(enOnly as object[])[0], label: 'لماذا؟' }],
+      applicant_questions: [
+        {
+          id: (enOnly as { id: string }[])[0].id,
+          blockType: 'text',
+          name: 'why',
+          label: 'لماذا؟',
+          required: true,
+        },
+      ],
     })
     const { version: edited } = await latestOf('courses', id)
     expect(strip(edited.applicant_questions)).toMatchObject([
@@ -421,9 +431,10 @@ describe('review-events: owner moves', () => {
     ])
     expect(edited.title).toMatchObject({ en: `${title}, edited`, ar: `${title}, تعديل` })
 
-    const { afterDiscard, afterRestore } = await discardThenRestore('courses', id)
+    const { afterDiscard, afterRestore } = await discardThenRestore(fellow, 'courses', id)
 
     expect(afterDiscard.title).toMatchObject({ en: title })
+    expect((afterDiscard.title as { ar?: string | null }).ar ?? null).toBeNull()
     expect(strip(afterDiscard.applicant_questions ?? [])).toEqual([])
     expect(afterRestore.title).toEqual(edited.title)
     expect(strip(afterRestore.applicant_questions)).toEqual(strip(edited.applicant_questions))

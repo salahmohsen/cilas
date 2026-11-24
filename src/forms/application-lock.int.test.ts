@@ -32,6 +32,16 @@ beforeAll(async () => {
           { field: 'name', value: 'Lock Applicant' },
           { field: 'email', value: 'lock-applicant@cilas.test' },
           { field: 'shared', value: 'Shared reply' },
+          { field: 'payment_interests', value: 'Ordinary shared answer' },
+        ],
+        choices: [
+          {
+            course: f.courses[0].id,
+            amount: 900,
+            need_reduction: true,
+            decision: 'pending' as const,
+            answers: [{ name: 'reason', value: 'Lock answer' }],
+          },
         ],
       },
     })
@@ -40,6 +50,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
   if (!f) return
+  await f.payload.delete({
+    collection: 'notifications',
+    where: { link: { equals: `/admin/collections/form-submissions/${submission}` } },
+  })
   await f.payload.delete({ collection: 'users', id: adminId })
   await removeApplicationFixture(f)
 })
