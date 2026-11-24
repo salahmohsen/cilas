@@ -10,7 +10,7 @@ import { menuUser } from '@/components/menu-user'
 import { useOtherLanguage } from '@/components/site-controls'
 import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
-import { useSignOut } from '@/lib/sign-out'
+import { usePortalSignOut } from '@/portal/pending/sign-out'
 import { announce } from '@/portal/feedback/announce'
 
 import { useFold } from './fold-state'
@@ -32,7 +32,7 @@ export function AccountMenu(): React.JSX.Element | null {
   const { other, href } = useOtherLanguage()
   const { theme, setTheme } = useTheme()
   const session = useSession()
-  const signOut = useSignOut()
+  const signOut = usePortalSignOut()
   const { shortcutOn, setShortcutOn } = useFold()
   const user = useMemo(() => (session ? menuUser(session) : null), [session])
   if (!user) return null
