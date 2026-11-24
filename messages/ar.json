@@ -1930,6 +1930,9 @@
       "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
       "unread": "غير مقروء"
     },
+    "pending": {
+      "signOutStopped": "تعذّر حفظ أحد القرارات. لم يتم تسجيل الخروج."
+    },
     "inbox": {
       "title": "الوارد",
       "metaTitle": "الوارد",

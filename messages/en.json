@@ -1930,6 +1930,9 @@
       "moreRows": "{count, plural, one {{count, number, digits} more row.} other {{count, number, digits} more rows.}}",
       "unread": "Unread"
     },
+    "pending": {
+      "signOutStopped": "A decision was not saved. Sign out stopped."
+    },
     "inbox": {
       "title": "Inbox",
       "metaTitle": "Inbox",

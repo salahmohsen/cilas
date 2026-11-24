@@ -1,6 +1,9 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { createBrowserRouter } from '../../../testing/browser-navigation.test-utils'
+import { ToastStack, ToastStackProvider } from '@/components/arc/toast-stack/toast-stack'
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { usePortalSignOut } from './sign-out'
 import { StrictMode, useLayoutEffect, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PendingProvider, usePending, usePendingItem } from './pending-provider'
@@ -23,7 +26,7 @@ function Probe({ start = false, children }: { start?: boolean; children?: ReactN
   )
 }
 
-function setup(children?: ReactNode) {
+function setup(children?: ReactNode, reply = async () => Response.json({ emailed: true })) {
   const fetcher = vi.fn()
   const browser = createBrowserRouter()
   return {
@@ -34,7 +37,7 @@ function setup(children?: ReactNode) {
         <PendingProvider
           fetcher={async (...args) => {
             fetcher(...args)
-            return Response.json({ emailed: true })
+            return reply()
           }}
         >
           {children ?? <Probe />}
@@ -105,5 +108,66 @@ describe('pending: provider', () => {
       modal.remove()
     })
     expect(screen.getByLabelText('State')).toHaveTextContent('pending')
+  })
+})
+
+const { logout } = vi.hoisted(() => ({ logout: vi.fn() }))
+// oxlint-disable-next-line landmines-testing/no-test-doubles -- Vitest cannot load the push server action through the browser sign-out module.
+vi.mock('@/lib/sign-out', () => ({
+  signOut: async () => {
+    logout()
+  },
+}))
+
+function SignOutButton() {
+  const signOut = usePortalSignOut()
+  return <button onClick={signOut}>Sign out</button>
+}
+
+function renderSignOut(reply: () => Promise<Response>) {
+  logout.mockClear()
+  const { ui, fetcher } = setup(
+    <Probe>
+      <SignOutButton />
+    </Probe>,
+    reply,
+  )
+  render(
+    <IntlProvider>
+      <ToastStackProvider>
+        {ui}
+        <ToastStack label="Notifications" />
+      </ToastStackProvider>
+    </IntlProvider>,
+  )
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  return fetcher
+}
+
+describe('pending: sign out', () => {
+  it('waits for a commit in flight, then signs out', async () => {
+    let finish!: (reply: Response) => void
+    const response = new Promise<Response>((resolve) => {
+      finish = resolve
+    })
+    const fetcher = renderSignOut(() => response)
+    act(() => vi.advanceTimersByTime(5100))
+    expect(fetcher).toHaveBeenCalledOnce()
+    fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    expect(logout).not.toHaveBeenCalled()
+    await act(async () => {
+      finish(Response.json({ emailed: true }))
+    })
+    expect(logout).toHaveBeenCalledOnce()
+  })
+
+  it('stops and shows a toast when a commit fails', async () => {
+    const fetcher = renderSignOut(async () => new Response(null, { status: 500 }))
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    })
+    expect(fetcher).toHaveBeenCalledOnce()
+    expect(logout).not.toHaveBeenCalled()
+    expect(screen.getByText('A decision was not saved. Sign out stopped.')).toBeInTheDocument()
   })
 })
