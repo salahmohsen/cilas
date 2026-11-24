@@ -28,12 +28,13 @@ const coverRequests = () =>
 
 describe('course row covers', () => {
   it('fetches a cover only once its row opens', async () => {
-    const { container } = render(
+    const rows = [row(1, '/assets/cover-1.webp'), row(2, '/assets/cover-2.webp')]
+    const { container, rerender } = render(<div style={{ height: 200 }} />)
+    await userEvent.hover(container.firstElementChild as HTMLElement)
+    rerender(
       <IntlProvider>
-        <CourseRows
-          rows={[row(1, '/assets/cover-1.webp'), row(2, '/assets/cover-2.webp')]}
-          start={1}
-        />
+        <div style={{ height: 200 }} />
+        <CourseRows rows={rows} start={1} />
       </IntlProvider>,
     )
     const covers = Array.from(container.querySelectorAll<HTMLElement>('.course-row-cover'))
