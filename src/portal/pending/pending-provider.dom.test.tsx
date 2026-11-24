@@ -73,6 +73,35 @@ describe('pending: provider', () => {
     expect(fetcher).not.toHaveBeenCalled()
   })
 
+  it('a real unmount flushes after one task and destroys the store once the flush settles', async () => {
+    let store: PendingApi | undefined
+    function Capture() {
+      store = usePending()
+      return null
+    }
+    let reply: (response: Response) => void = () => {}
+    const { ui, fetcher } = setup(
+      <>
+        <Probe />
+        <Capture />
+      </>,
+      () => new Promise<Response>((resolve) => (reply = resolve)),
+    )
+    const view = render(ui)
+    fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+    view.unmount()
+    expect(fetcher).not.toHaveBeenCalled()
+    await act(async () => {
+      vi.advanceTimersByTime(1)
+    })
+    expect(fetcher).toHaveBeenCalledOnce()
+    expect(store?.items).toHaveLength(1)
+    await act(async () => {
+      reply(Response.json({ emailed: true }))
+    })
+    expect(store?.items).toHaveLength(0)
+  })
+
   it('pageshow persisted drops items and refreshes', () => {
     const { ui, fetcher, browser } = setup()
     render(ui)

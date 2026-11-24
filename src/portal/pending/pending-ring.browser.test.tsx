@@ -97,6 +97,14 @@ describe('pending: ring', () => {
     expect(state()).toHaveTextContent('pending')
   })
 
+  it('a touch that ends without a tap does not hide a later keyboard focus', async () => {
+    const ring = setup()
+    fireEvent(ring, new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))
+    fireEvent(ring, new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }))
+    ring.focus()
+    await expect.poll(() => state().textContent).toBe('paused')
+  })
+
   it('the name ends Timer paused while paused', async () => {
     const ring = setup()
     expect(ring).toHaveAccessibleName('Article. Undo. 5 seconds left.')
