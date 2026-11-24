@@ -97,13 +97,28 @@ describe('pending: ring', () => {
     expect(state()).toHaveTextContent('pending')
   })
 
-  it('a touch that ends without a tap does not hide a later keyboard focus', async () => {
+  it('a tap pauses once: the focus it causes adds no second pause', () => {
     const ring = setup()
+    const outside = screen.getByRole('button', { name: 'Decide' })
     fireEvent(ring, new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))
     fireEvent(ring, new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }))
     ring.focus()
-    await expect.poll(() => state().textContent).toBe('paused')
+    fireEvent(ring, new PointerEvent('click', { bubbles: true, pointerType: 'touch' }))
+    expect(state()).toHaveTextContent('paused')
+    fireEvent(outside, new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))
+    expect(state()).toHaveTextContent('pending')
   })
+
+  it.each(['pointerout', 'pointercancel', 'contextmenu'])(
+    'a touch that ends with %s does not hide a later keyboard focus',
+    async (end) => {
+      const ring = setup()
+      fireEvent(ring, new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))
+      fireEvent(ring, new PointerEvent(end, { bubbles: true, relatedTarget: document.body }))
+      ring.focus()
+      await expect.poll(() => state().textContent).toBe('paused')
+    },
+  )
 
   it('the name ends Timer paused while paused', async () => {
     const ring = setup()

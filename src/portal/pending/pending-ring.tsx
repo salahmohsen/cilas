@@ -26,8 +26,9 @@ export function PendingRing({ itemKey, label }: { itemKey: string; label: string
   const button = useRef<HTMLButtonElement>(null)
   const arc = useRef<SVGCircleElement>(null)
   const text = useRef<HTMLSpanElement>(null)
-  // `touching` is true while a touch is down, so a focus it causes does not pause. `touched` stays
-  // until the next pointerdown, so a click without `pointerType` still reads as a tap.
+  // `touching` is true from a touch down until the tap's click (or the touch leaves, cancels or opens the
+  // context menu), so the focus a tap causes does not pause. `touched` stays until the next pointerdown,
+  // so a click without `pointerType` still reads as a tap.
   const touching = useRef(false)
   const touched = useRef(false)
   const focused = useRef(false)
@@ -108,10 +109,10 @@ export function PendingRing({ itemKey, label }: { itemKey: string; label: string
       onPointerDown={(event) => {
         touching.current = touched.current = event.pointerType === 'touch'
       }}
-      onPointerUp={() => {
+      onPointerLeave={() => {
         touching.current = false
       }}
-      onPointerLeave={() => {
+      onContextMenu={() => {
         touching.current = false
       }}
       onPointerCancel={() => {
@@ -133,7 +134,7 @@ export function PendingRing({ itemKey, label }: { itemKey: string; label: string
           'pointerType' in pointer
             ? pointer.pointerType === 'touch'
             : event.detail > 0 && touched.current
-        touched.current = false
+        touched.current = touching.current = false
         if (disabled) return
         if (tapped && active && !tapPaused) store.pause(itemKey, 'tap')
         else store.undo(itemKey)
