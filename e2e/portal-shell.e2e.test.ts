@@ -1136,12 +1136,14 @@ test.describe('portal shell', () => {
                 focused = await last.evaluate((link) => link === document.activeElement)
               }
               await expect(last).toBeFocused()
-              const measure = () =>
-                page.evaluate(() => {
+              const toastItem = toastRegion(page, locale)
+                .locator('li')
+                .filter({ hasText: 'E2E comment' })
+                .first()
+              const measure = async () => {
+                const toastTop = (await toastItem.boundingBox())!.y
+                return page.evaluate((toastTop) => {
                   const row = document.activeElement!.getBoundingClientRect()
-                  const toastBox = [...document.querySelectorAll('li')]
-                    .find((li) => li.textContent?.includes('E2E comment'))!
-                    .getBoundingClientRect()
                   const bar = document
                     .querySelector('nav [aria-haspopup="dialog"]')!
                     .closest('nav')!
@@ -1149,12 +1151,13 @@ test.describe('portal shell', () => {
                   const root = getComputedStyle(document.documentElement)
                   return {
                     rowBottom: row.bottom,
-                    limit: Math.min(toastBox.top, bar.top),
+                    limit: Math.min(toastTop, bar.top),
                     padding: parseFloat(root.scrollPaddingBlockEnd),
                     needed:
                       bar.height + parseFloat(root.getPropertyValue('--toast-stack-height') || '0'),
                   }
-                })
+                }, toastTop)
+              }
               await expect(toast).toBeVisible()
               await expect
                 .poll(async () => {
