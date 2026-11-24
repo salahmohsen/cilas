@@ -54,6 +54,7 @@ export function PendingProvider({
   const mounted = useRef(false)
   const modalOpen = useRef(false)
   const toastFocused = useRef(false)
+  const toastFocusTarget = useRef<Element | null>(null)
   const mirrored = useRef(new Map<string, PendingState>())
   const showedLeaveHint = useRef(false)
 
@@ -99,7 +100,9 @@ export function PendingProvider({
             failedToast(key, t(status === 403 ? 'signInAgain' : 'notSaved'), retry, t('tryAgain')),
           )
         } else if (state === 'undone') {
+          // A refusal says why. An undo by the reader (no status) just closes the toast.
           if (status === 409) update(id, sentToast(key, t('changed'), 'error'))
+          else if (status === 400) update(id, sentToast(key, t('notSaved'), 'error'))
           else dismiss(id)
         }
       }
@@ -129,6 +132,7 @@ export function PendingProvider({
     }
     const updateToastFocus = (target: EventTarget | null) => {
       const inside = fromToast({ target })
+      toastFocusTarget.current = inside && target instanceof Element ? target : null
       if (toastFocused.current === inside) return
       toastFocused.current = inside
       store.overlay(inside)
@@ -138,6 +142,12 @@ export function PendingProvider({
     document.addEventListener('focusin', toastFocusIn)
     document.addEventListener('focusout', toastFocusOut)
     updateToastFocus(document.activeElement)
+    // A toast can take its focused button away with no `focusout` (a committing item drops Undo, a toast closes).
+    // Without this, the pause from the toast would stay on and every new decision would start paused.
+    const toastFocusLost = new MutationObserver(() => {
+      if (toastFocused.current && !toastFocusTarget.current?.isConnected) updateToastFocus(null)
+    })
+    toastFocusLost.observe(document.body, { childList: true, subtree: true })
     const stopObserving = observeModals(updateModal)
     updateModal(isModalOpen())
     return () => {
@@ -147,6 +157,7 @@ export function PendingProvider({
       document.removeEventListener('visibilitychange', onVisibilityChange)
       document.removeEventListener('focusin', toastFocusIn)
       document.removeEventListener('focusout', toastFocusOut)
+      toastFocusLost.disconnect()
       stopObserving()
       stopToasts()
       window.setTimeout(() => {

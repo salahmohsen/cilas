@@ -537,17 +537,18 @@
     margin: 0;
     padding: var(--space-4);
     /* Room to scroll the last row clear of the bar and of a showing toast. */
-    padding-block-end: calc(
-      var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
-        var(--pending-bar-block-size, 0px) + var(--space-6)
-    );
+    padding-block-end: var(--portal-clearance);
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
 }
 
 :global(html):has(.shell [data-pending-bar]) {
-  scroll-padding-block-end: calc(
+  scroll-padding-block-end: var(--portal-clearance);
+}
+
+:global(html) {
+  --portal-clearance: calc(
     var(--portal-bar-height, 0px) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
       var(--pending-bar-block-size, 0px) + var(--space-6)
   );

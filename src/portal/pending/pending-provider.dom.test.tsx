@@ -12,7 +12,7 @@ import { usePortalSignOut } from './sign-out'
 import { StrictMode, useLayoutEffect, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PendingProvider, usePending, usePendingItem } from './pending-provider'
-import type { PendingApi, PendingView } from './store'
+import { COMMIT_TIMEOUT_MS, type PendingApi, type PendingView } from './store'
 
 const input = { key: 'one', label: 'Approve', request: { url: '/api/review', body: {} } }
 const useFirstItem = () => usePendingItem(input.key)
@@ -20,13 +20,16 @@ const useFirstItem = () => usePendingItem(input.key)
 function Probe({ start = false, children }: { start?: boolean; children?: ReactNode }) {
   const pending = usePending()
   const item = useFirstItem()
+  const late = usePendingItem('late')
   useLayoutEffect(() => {
     if (start) pending.decide(input)
   }, [pending, start])
   return (
     <>
       <button onClick={() => pending.decide(input)}>Decide</button>
+      <button onClick={() => pending.decide({ ...input, key: 'late' })}>Decide late</button>
       <output aria-label="State">{item?.state ?? 'none'}</output>
+      <output aria-label="Late state">{late?.state ?? 'none'}</output>
       {children}
     </>
   )
@@ -194,6 +197,38 @@ describe('pending: sign out', () => {
     expect(logout).not.toHaveBeenCalled()
     expect(screen.getByText('A decision was not saved. Sign out stopped.')).toBeInTheDocument()
   })
+
+  it('stops after the commit time runs out, and the item can be tried again', async () => {
+    const fetcher = renderSignOut(() => new Promise<Response>(() => {}))
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    })
+    expect(logout).not.toHaveBeenCalled()
+    await act(async () => {
+      vi.advanceTimersByTime(COMMIT_TIMEOUT_MS)
+    })
+    expect(logout).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('State')).toHaveTextContent('failed')
+    expect(screen.getByText('A decision was not saved. Sign out stopped.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
+    expect(fetcher).toHaveBeenCalledOnce()
+  })
+
+  it('keeps a decision made while sign-out waits out of the queue', async () => {
+    let finish!: (reply: Response) => void
+    const response = new Promise<Response>((resolve) => {
+      finish = resolve
+    })
+    renderSignOut(() => response)
+    act(() => vi.advanceTimersByTime(5100))
+    fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Decide late' }))
+    await act(async () => {
+      finish(Response.json({ emailed: true }))
+    })
+    expect(logout).toHaveBeenCalledOnce()
+    expect(screen.getByLabelText('Late state')).toHaveTextContent('none')
+  })
 })
 
 it('dropping the oldest toast leaves its item undoable and updating its id has no effect', async () => {
@@ -247,6 +282,48 @@ it('focus in the toast stack holds the undo window until focus leaves', () => {
   expect(fetcher).not.toHaveBeenCalled()
   act(() => decide.focus())
   expect(screen.getByLabelText('State')).toHaveTextContent('pending')
+})
+
+it.each([
+  [400, 'Not saved.'],
+  [409, 'This changed while you reviewed it.'],
+])('a %s refusal shows its message', async (status, message) => {
+  const { ui } = setup(undefined, async () => Response.json({}, { status }))
+  render(ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  await act(async () => {
+    vi.advanceTimersByTime(5100)
+  })
+  expect(screen.getByLabelText('State')).toHaveTextContent('undone')
+  expect(screen.getByText(message)).toBeInTheDocument()
+})
+
+it('a failed item keeps its toast past the eight seconds of a finished one', async () => {
+  const { ui } = setup(undefined, async () => new Response(null, { status: 500 }))
+  render(ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  await act(async () => {
+    vi.advanceTimersByTime(5100)
+  })
+  expect(screen.getByText('Not saved.')).toBeInTheDocument()
+  await act(async () => {
+    vi.advanceTimersByTime(60_000)
+  })
+  expect(screen.getByText('Not saved.')).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
+})
+
+it('a toast that drops its focused button with no focusout lets the next decision run', async () => {
+  vi.useRealTimers()
+  const { ui } = setup()
+  render(ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  const undo = screen.getByRole('button', { name: 'Undo' })
+  act(() => undo.focus())
+  expect(screen.getByLabelText('State')).toHaveTextContent('paused')
+  await act(async () => undo.remove())
+  fireEvent.click(screen.getByRole('button', { name: 'Decide late' }))
+  expect(screen.getByLabelText('Late state')).toHaveTextContent('pending')
 })
 
 it('shows the leave hint only on the first pending toast of the tab session', () => {

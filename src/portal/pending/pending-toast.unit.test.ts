@@ -34,7 +34,7 @@ describe('pending: toast options', () => {
     })
   })
 
-  it('shows a failure with a retry action for eight seconds', () => {
+  it('shows a failure with a retry action until the item leaves failed', () => {
     const retry = vi.fn()
     expect(failedToast(key, 'Not saved.', retry)).toEqual({
       id,
@@ -42,7 +42,7 @@ describe('pending: toast options', () => {
       title: 'Not saved.',
       description: undefined,
       action: { label: 'Try again', onClick: retry },
-      duration: 8000,
+      duration: Infinity,
     })
   })
 })

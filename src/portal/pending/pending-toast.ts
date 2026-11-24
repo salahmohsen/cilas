@@ -41,6 +41,7 @@ export function failedToast(
 ): ToastOptions {
   return {
     ...sentToast(key, title, 'error'),
+    duration: Infinity,
     action: onRetry ? { label: retryLabel, onClick: onRetry } : undefined,
   }
 }
