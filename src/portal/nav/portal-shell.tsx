@@ -34,7 +34,7 @@ export async function PortalShell({
   nextSession: React.ReactNode
   children: React.ReactNode
 }): Promise<React.JSX.Element> {
-  const t = await getTranslations('Portal')
+  const [t, header] = await Promise.all([getTranslations('Portal'), getTranslations('Header')])
   return (
     <FoldProvider folded={folded} accountId={accountId}>
       <NavCountsProvider key={accountId}>
@@ -47,7 +47,8 @@ export async function PortalShell({
             <div className={styles.rail} data-portal-rail>
               <header className={styles.top}>
                 <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
-                  <CilasLogo className={styles.logo} />
+                  <CilasLogo className={styles.logo} height={32} width={19} />
+                  <span className={styles.wordmark}>{header('brand')}</span>
                 </Link>
                 <FoldButton />
               </header>

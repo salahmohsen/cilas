@@ -649,7 +649,7 @@ test.describe('portal shell', () => {
         })
       })
 
-      test(`the skip link lands below the crumbs row (${locale})`, async ({ browser }) => {
+      test(`the skip link lands at the start of the page (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
           await page.goto(localePath('/en/spaces', locale))
           await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
@@ -1410,10 +1410,12 @@ test.describe('portal shell', () => {
               .toBeGreaterThan(viewport === PHONE ? 1 : 2)
             const found = await sizes(page, targets)
             expect(atLeast(found, 44)).toEqual([])
-            const header = page.locator('[data-portal-rail] header').locator('a, button')
-            await expect(header.first()).toBeVisible()
+            const chrome = page.locator(
+              '[data-portal-rail] header :is(a, button), [data-portal-rail] footer :is(a, button)',
+            )
+            await expect(chrome.first()).toBeVisible()
             const shownIn = () =>
-              header.evaluateAll((els) =>
+              chrome.evaluateAll((els) =>
                 els
                   .filter((el) => el.getClientRects().length > 0)
                   .map((el) => {
@@ -1448,6 +1450,48 @@ test.describe('portal shell', () => {
 
   test.describe('header, landmarks and sign-out', () => {
     const PHONES = [PHONE, { width: 320, height: 640 }]
+
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS))
+        test(`portal top edge and room anchors clear the former site header (${locale} ${viewport.width})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, role: 'fellow' }, async (page) => {
+            await page.emulateMedia({ reducedMotion: 'reduce' })
+            await page.goto(localePath('/en/spaces', locale))
+            const rail = page.locator('[data-portal-rail]')
+            const main = page.getByRole('main')
+            expect((await rail.boundingBox())!.y).toBe(0)
+            expect((await main.boundingBox())!.y).toBeLessThanOrEqual(
+              viewport.width === 1440 ? 8 : 64,
+            )
+            await expect(page.locator('html')).toHaveCSS('scroll-padding-top', '0px')
+            const wordmark = rail.getByText(MESSAGES[locale].Header.brand, { exact: true })
+            if (viewport.width === 1440) {
+              await expect(wordmark).toBeVisible()
+              await rail.locator('[data-portal-fold]').click()
+              await expect(wordmark).toBeHidden()
+            } else {
+              await expect(wordmark).toBeHidden()
+            }
+
+            await page.goto(localePath(world.otherCourse.path, locale))
+            const post = page.locator(`#post-${world.otherCourse.post}`)
+            await expect(post).toHaveCSS('scroll-margin-block-start', '16px')
+            const result = await post.evaluate((el) => {
+              el.scrollIntoView({ block: 'start', behavior: 'instant' })
+              return {
+                top: el.getBoundingClientRect().top,
+                railTop: document.querySelector('[data-portal-rail]')!.getBoundingClientRect().top,
+                scrolled: scrollY,
+              }
+            })
+            expect(result.scrolled).toBeGreaterThan(0)
+            expect(result.top).toBeGreaterThanOrEqual(15)
+            expect(result.top).toBeLessThan(viewport.height)
+            if (viewport.width === 1440) expect(result.railTop).toBe(0)
+          })
+        })
 
     for (const locale of LOCALES)
       for (const viewport of PHONES)

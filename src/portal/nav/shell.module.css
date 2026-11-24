@@ -16,6 +16,9 @@
 }
 
 .shell {
+  /* A public header can leave an inline value on the root after navigation. */
+  --site-header-height: 0px;
+  --portal-sticky-inset: var(--space-4);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   min-block-size: 100dvh;
@@ -53,15 +56,26 @@
 .brand {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
   min-block-size: 44px;
-  padding-inline: var(--space-2);
+  padding-inline: var(--space-1);
   border-radius: var(--radius-control);
   color: var(--foreground);
 }
 
 .logo {
-  block-size: 1.5rem;
-  inline-size: auto;
+  flex: none;
+}
+
+.wordmark {
+  font-size: var(--text-xs);
+  line-height: 1.15;
+  white-space: pre-line;
+}
+
+.shell:has(.sidebar[data-folded]) .wordmark {
+  display: none;
 }
 
 .footer {
@@ -625,6 +639,7 @@
   }
 
   .rail .sidebar,
+  .wordmark,
   .nextCard,
   .account,
   .top .fold {

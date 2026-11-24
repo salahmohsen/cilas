@@ -303,7 +303,7 @@
   border-radius: var(--radius-surface);
   background: var(--surface);
   min-width: 0;
-  scroll-margin-top: var(--space-24);
+  scroll-margin-block-start: var(--portal-sticky-inset, var(--space-24));
 }
 
 /* A pinned post (an announcement pins itself) stands apart in the feed: a faint warning tint. */
@@ -410,7 +410,7 @@
   background: var(--surface);
   color: var(--foreground);
   text-decoration: none;
-  scroll-margin-top: var(--space-24);
+  scroll-margin-block-start: var(--portal-sticky-inset, var(--space-24));
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
@@ -787,7 +787,10 @@
     gap: var(--space-4);
     position: sticky;
     /* Taller than the screen: it scrolls with the page until its end shows, then stays there. */
-    top: min(var(--space-24), calc(100dvh - var(--rail-height, 0px) - var(--space-4)));
+    inset-block-start: min(
+      var(--portal-sticky-inset, var(--space-24)),
+      calc(100dvh - var(--rail-height, 0px) - var(--space-4))
+    );
   }
 
   .phoneOnly {
@@ -855,7 +858,7 @@
 
 .fresh {
   position: sticky;
-  top: var(--space-24);
+  inset-block-start: var(--portal-sticky-inset, var(--space-24));
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -1106,7 +1109,7 @@
   gap: var(--space-2);
   min-width: 0;
   margin: 0;
-  scroll-margin-top: var(--space-24);
+  scroll-margin-block-start: var(--portal-sticky-inset, var(--space-24));
 }
 
 .fileChip {
@@ -1651,7 +1654,7 @@
 
 /* The thread under a post, from the feed or the post page. */
 .composerAnchor {
-  scroll-margin-top: var(--space-24);
+  scroll-margin-block-start: var(--portal-sticky-inset, var(--space-24));
 }
 
 .threadWrap {

@@ -1,7 +1,7 @@
 /* Page-wide rules while the portal shell is on the page. They sit on :root, which a module class cannot reach. */
 :root:has([data-portal-shell]) {
   /* No site header above the content: in-page jumps need no room for one. */
-  --site-header-height: 0px;
+  scroll-padding-block-start: 0;
 }
 
 /* The phone bottom bar: toasts sit above it, and a focused row scrolls clear of the bar and the toasts. */
