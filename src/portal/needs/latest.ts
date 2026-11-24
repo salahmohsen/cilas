@@ -1,6 +1,8 @@
 import type { Payload } from 'payload'
 
 import type { StoredNotification } from '@/lib/realtime/events'
+import { isRoomHref } from '@/lib/space-ref'
+import { spacesOff } from '@/lib/spaces'
 import type { User } from '@/payload-types'
 
 /** Rows one page of Latest holds, and the most pages **Show more** reaches (300 rows). */
@@ -24,6 +26,7 @@ export type LatestPage = {
 /**
  * The newest notification rows of the reader, newest first. A gated read: the
  * collection's read access is the recipient's own rows, so no other reader's row comes back.
+ * With spaces off, a row that would open a space page keeps its text and loses its link.
  */
 export const latestRows = async (payload: Payload, user: User, limit: number) => {
   const found = await payload.find({
@@ -45,7 +48,14 @@ export const latestRows = async (payload: Payload, user: User, limit: number) =>
     user,
     overrideAccess: false,
   })
-  return { rows: found.docs as unknown as StoredNotification[], hasNextPage: found.hasNextPage }
+  const rows = found.docs as unknown as StoredNotification[]
+  const off = await spacesOff(payload)
+  return {
+    rows: off
+      ? rows.map((row) => (row.link && isRoomHref(row.link) ? { ...row, link: null } : row))
+      : rows,
+    hasNextPage: found.hasNextPage,
+  }
 }
 
 export const latestPage = async (
