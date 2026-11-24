@@ -28,13 +28,20 @@ const coverRequests = () =>
 
 describe('course row covers', () => {
   it('fetches a cover only once its row opens', async () => {
-    const { container } = render(
-      <IntlProvider>
-        <CourseRows
-          rows={[row(1, '/assets/cover-1.webp'), row(2, '/assets/cover-2.webp')]}
-          start={1}
-        />
-      </IntlProvider>,
+    const pointerTarget = <button type="button">Outside the course list</button>
+    const { container, getByRole, rerender } = render(pointerTarget)
+    await userEvent.hover(getByRole('button'))
+
+    rerender(
+      <>
+        {pointerTarget}
+        <IntlProvider>
+          <CourseRows
+            rows={[row(1, '/assets/cover-1.webp'), row(2, '/assets/cover-2.webp')]}
+            start={1}
+          />
+        </IntlProvider>
+      </>,
     )
     const covers = Array.from(container.querySelectorAll<HTMLElement>('.course-row-cover'))
     expect(covers).toHaveLength(2)
