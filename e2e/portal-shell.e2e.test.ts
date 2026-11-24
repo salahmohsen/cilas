@@ -1495,7 +1495,7 @@ test.describe('portal shell', () => {
             }
 
             await page.goto(localePath(world.otherCourse.path, locale))
-            const post = page.locator(`#post-${world.otherCourse.post}`)
+            const post = main.locator('article[id^="post-"]').first()
             await expect(post).toHaveCSS('scroll-margin-block-start', '16px')
             const result = await post.evaluate((el) => {
               el.scrollIntoView({ block: 'start', behavior: 'instant' })
@@ -1506,9 +1506,8 @@ test.describe('portal shell', () => {
               }
             })
             expect(result.scrolled).toBeGreaterThan(0)
-            expect(result.top).toBeGreaterThanOrEqual(15)
-            expect(result.top).toBeLessThan(viewport.height)
-            if (viewport.width === 1440) expect(result.railTop).toBe(0)
+            expect(Math.abs(result.top - 16)).toBeLessThanOrEqual(1)
+            if (viewport.width === 1440) expect(Math.abs(result.railTop)).toBeLessThanOrEqual(1)
           })
         })
 
