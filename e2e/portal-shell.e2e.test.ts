@@ -575,13 +575,17 @@ test.describe('portal shell', () => {
             expect(Math.abs(box.x + box.width - (row.x + row.width))).toBeLessThanOrEqual(1)
           else expect(Math.abs(box.x - row.x)).toBeLessThanOrEqual(1)
           await button.hover()
-          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.fold} [`)
+          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.fold} [`, {
+            useInnerText: true,
+          })
           await button.click()
           await expect(button).toHaveAttribute('aria-expanded', 'false')
           await expect(button).toHaveAccessibleName(portal.fold.unfold)
           await button.blur()
           await button.focus()
-          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.unfold} [`)
+          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.unfold} [`, {
+            useInnerText: true,
+          })
           await page.setViewportSize(PHONE)
           await expect(button).toBeHidden()
         })
