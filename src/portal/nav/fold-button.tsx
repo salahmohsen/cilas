@@ -22,7 +22,18 @@ export function FoldButton() {
   const { folded, toggle, shortcutOn } = useFold()
   const label = t(folded ? 'fold.unfold' : 'fold.fold')
   return (
-    <Tooltip side={isRtl(locale) ? 'left' : 'right'} content={shortcutOn ? `${label} [` : label}>
+    <Tooltip
+      side={isRtl(locale) ? 'left' : 'right'}
+      content={
+        shortcutOn ? (
+          <span>
+            {label} <bdi dir="ltr">[</bdi>
+          </span>
+        ) : (
+          label
+        )
+      }
+    >
       <Button
         type="button"
         variant="ghost"

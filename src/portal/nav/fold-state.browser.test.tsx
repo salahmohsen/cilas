@@ -96,6 +96,7 @@ describe('FoldProvider', () => {
     await page.viewport(1440, 800)
     renderFold()
     await userEvent.click(screen.getByRole('button', { name: 'turn off' }))
+    expect(fold()).not.toHaveAttribute('aria-keyshortcuts')
     document.body.focus()
     await userEvent.keyboard('[[')
     expect(fold()).toHaveAttribute('aria-expanded', 'true')

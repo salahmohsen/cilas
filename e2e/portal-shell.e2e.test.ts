@@ -525,6 +525,21 @@ test.describe('portal shell', () => {
         })
       })
 
+  for (const [role, locale, destination] of [
+    ['fellow', 'en', '/en/spaces/courses'],
+    ['student', 'ar', '/ar/spaces'],
+  ] as const) {
+    test(`the empty next session links to ${destination} for a ${role}`, async ({ browser }) => {
+      await inContextAt(browser, { baseURL, viewport: DESKTOP }, async (page) => {
+        await login({ page, user: world.loners[role], next: `/${locale}/spaces` })
+        const copy = MESSAGES[locale].Portal.nextSession
+        const card = page.locator('[data-sidebar-next]')
+        await expect(card).toHaveAccessibleName(`${copy.empty} ${copy[role]}`)
+        await expect(card).toHaveAttribute('href', destination)
+      })
+    })
+  }
+
   test.describe('fold trigger (1440)', () => {
     const foldIn = (page: Page) => page.locator('[data-portal-rail] header [data-portal-fold]')
     const foldCookie = async (page: Page) =>
