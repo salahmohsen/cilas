@@ -8,7 +8,7 @@ import type {
 
 import { routing } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
-import { lockRow } from '@/lib/lock-row'
+import { lockRow, rowIdOf } from '@/lib/lock-row'
 import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import { toPersonIds } from '@/lib/fellow-role'
@@ -100,6 +100,8 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     return args
   }
   const trusted = !req.user || isAdminUser(req.user)
+  // Access refuses a write with no user and no override, so it queues on no row lock.
+  const locks = Boolean(req.user) || Boolean((args as { overrideAccess?: boolean }).overrideAccess)
   const write = args as {
     autosave?: boolean
     data?: Doc
@@ -112,15 +114,18 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
   }
   if (operation === 'restoreVersion') {
-    const { docs } = await req.payload.db.findVersions({
-      collection: collection.slug,
-      where: { id: { equals: write.id } },
-      limit: 1,
-      pagination: false,
-      req,
-    })
-    const parentId = relId(docs[0]?.parent)
-    if (typeof parentId === 'number') await lockRow(req, collection.slug, parentId)
+    const versionId = rowIdOf(write.id)
+    if (locks) {
+      const { docs } = await req.payload.db.findVersions({
+        collection: collection.slug,
+        where: { id: { equals: versionId } },
+        limit: 1,
+        pagination: false,
+        req,
+      })
+      const parentId = relId(docs[0]?.parent)
+      if (typeof parentId === 'number') await lockRow(req, collection.slug, parentId)
+    }
   }
   const context = reviewContext(req)
   context.live = false
@@ -139,12 +144,13 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     throw new APIError('Edit one document at a time.', 403)
   }
   if (operation === 'update' && write.id !== undefined) {
-    await lockRow(req, collection.slug, Number(write.id))
+    const rowId = rowIdOf(write.id)
+    if (locks) await lockRow(req, collection.slug, rowId)
     const held = !trusted || HELD.includes(write.data?.review?.status as ReviewState)
     if (held && write.data?._status !== 'published') {
       const live = await req.payload.db.findOne<Doc & { id: number }>({
         collection: collection.slug,
-        where: { id: { equals: write.id } },
+        where: { id: { equals: rowId } },
         req,
       })
       if (live?._status === 'published') {

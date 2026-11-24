@@ -121,6 +121,62 @@ describe('review-events: lockRow', () => {
     })
   })
 
+  it('a waiter that waits too long is refused with a 409, not left to queue', async () => {
+    const { create } = trustedWrites(payload, track)
+    const id = await writePublishedArticle(create, Number(author.person), 'Live article')
+    const holder = await holdRow(payload, 'articles', id)
+    try {
+      await expect(
+        payload.update({
+          collection: 'articles',
+          id,
+          user: author,
+          overrideAccess: false,
+          depth: 0,
+          draft: true,
+          data: { title: 'Draft article' },
+        }),
+      ).rejects.toMatchObject({ status: 409 })
+    } finally {
+      await holder.release()
+    }
+    await payload.update({
+      collection: 'articles',
+      id,
+      user: author,
+      overrideAccess: false,
+      depth: 0,
+      draft: true,
+      data: { title: 'Draft article, again' },
+    })
+  })
+
+  it('an anonymous write is refused without queueing on the row lock', async () => {
+    const { create } = trustedWrites(payload, track)
+    const id = await writePublishedArticle(create, Number(author.person), 'Live article')
+    const holder = await holdRow(payload, 'articles', id)
+    try {
+      const body = new FormData()
+      body.set('_payload', JSON.stringify({ title: 'Anonymous' }))
+      const started = Date.now()
+      const response = await rest('PATCH', `articles/${id}?draft=true`, { body })
+      expect([401, 403]).toContain(response.status)
+      expect(Date.now() - started).toBeLessThan(3000)
+    } finally {
+      await holder.release()
+    }
+  })
+
+  it.each([
+    ['PATCH', 'articles/abc'],
+    ['POST', 'articles/versions/abc?draft=true'],
+  ] as const)('%s with a non-numeric id is a 404, not a 500', async (method, path) => {
+    const body = new FormData()
+    body.set('_payload', JSON.stringify({ title: 'Nope' }))
+    const response = await rest(method, path, { token: adminToken, body })
+    expect(response.status).toBe(404)
+  })
+
   it('lockRow refuses outside a transaction', async () => {
     const req = await createLocalReq({}, payload)
     await expect(lockRow(req, 'articles', 1)).rejects.toMatchObject({ status: 500 })
