@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { scratchPayload } from '../../testing/scratch-database.test-utils'
+import { scratchPayload } from '../../../testing/scratch-database.test-utils'
 
 describe('review-events: migrations', () => {
   it('withdrawn is a value of enum_notifications_kind', async () => {
