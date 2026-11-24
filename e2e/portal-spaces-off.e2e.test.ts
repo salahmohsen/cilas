@@ -185,7 +185,7 @@ test.describe('portal spaces', () => {
               expect(response!.status()).toBe(200)
               await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
               const portal = MESSAGES[locale].Portal
-              await expect(page.locator('section[data-needs] h2')).toContainText(
+              await expect(page.locator('main section[data-needs] h2')).toContainText(
                 portal.needs.heading,
               )
               await expect(page.getByRole('heading', { name: portal.home.spaces })).toHaveCount(0)
