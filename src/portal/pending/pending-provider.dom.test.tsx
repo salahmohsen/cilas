@@ -46,6 +46,7 @@ function setup(children?: ReactNode, reply = async () => Response.json({ emailed
         <IntlProvider>
           <ToastStackProvider limit={2}>
             <PendingProvider
+              undoMs={5000}
               fetcher={async (...args) => {
                 fetcher(...args)
                 return reply()
