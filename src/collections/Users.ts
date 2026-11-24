@@ -163,6 +163,8 @@ export const Users: CollectionConfig = {
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,
+    // Payload's default lets any account clear another account's login lockout.
+    unlock: isAdmin,
   },
   hooks: {
     beforeChange: [ensurePerson, syncFellowRoleOnLink],
