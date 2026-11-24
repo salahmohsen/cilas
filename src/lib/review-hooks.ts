@@ -8,7 +8,7 @@ import type {
 
 import { routing } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
-import { lockRow, rowIdOf } from '@/lib/lock-row'
+import { requireRowLock, rowIdOf } from '@/lib/row-lock'
 import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import { toPersonIds } from '@/lib/fellow-role'
@@ -124,7 +124,7 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
         req,
       })
       const parentId = relId(docs[0]?.parent)
-      if (typeof parentId === 'number') await lockRow(req, collection.slug, parentId)
+      if (typeof parentId === 'number') await requireRowLock(req, collection.slug, parentId)
     }
   }
   const context = reviewContext(req)
@@ -145,7 +145,7 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   }
   if (operation === 'update' && write.id !== undefined) {
     const rowId = rowIdOf(write.id)
-    if (locks) await lockRow(req, collection.slug, rowId)
+    if (locks) await requireRowLock(req, collection.slug, rowId)
     const held = !trusted || HELD.includes(write.data?.review?.status as ReviewState)
     if (held && write.data?._status !== 'published') {
       const live = await req.payload.db.findOne<Doc & { id: number }>({

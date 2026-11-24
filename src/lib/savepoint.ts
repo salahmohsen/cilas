@@ -1,7 +1,7 @@
 import { sql } from '@payloadcms/db-postgres'
 import type { PayloadRequest } from 'payload'
 
-import { sessionDb } from './lock-row'
+import { sessionDb } from './row-lock'
 
 let nextSavepoint = 0
 

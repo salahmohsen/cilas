@@ -19,7 +19,7 @@ import { trustedWrites, writePublishedArticle } from '../../testing/portal-lists
 import { rest } from '../../testing/payload-rest.test-utils'
 import { resendInbox } from '../../testing/resend.test-utils'
 import { holdRow, waitForLockWaiters } from '../../testing/row-lock.test-utils'
-import { lockRow } from './lock-row'
+import { lockRow, requireRowLock } from './row-lock'
 import { notify } from './notify'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -177,9 +177,27 @@ describe('review-events: lockRow', () => {
     expect(response.status).toBe(404)
   })
 
-  it('lockRow refuses outside a transaction', async () => {
+  it('lockRow locks nothing outside a transaction and says so', async () => {
     const req = await createLocalReq({}, payload)
-    await expect(lockRow(req, 'articles', 1)).rejects.toMatchObject({ status: 500 })
+    await expect(lockRow(req, 'articles', 1)).resolves.toBe(false)
+  })
+
+  it('requireRowLock refuses outside a transaction', async () => {
+    const req = await createLocalReq({}, payload)
+    await expect(requireRowLock(req, 'articles', 1)).rejects.toMatchObject({ status: 500 })
+  })
+
+  it('lockRow in a transaction returns true, also a second time on the same row', async () => {
+    const { create } = trustedWrites(payload, track)
+    const id = await writePublishedArticle(create, Number(author.person), 'Live article')
+    const req = await createLocalReq({}, payload)
+    expect(await initTransaction(req)).toBe(true)
+    try {
+      await expect(lockRow(req, 'articles', id)).resolves.toBe(true)
+      await expect(lockRow(req, 'articles', id)).resolves.toBe(true)
+    } finally {
+      await killTransaction(req)
+    }
   })
 })
 

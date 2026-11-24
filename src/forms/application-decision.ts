@@ -1,6 +1,6 @@
 import { isAdminUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
-import { lockRow } from '@/lib/lock-row'
+import { requireRowLock } from '@/lib/row-lock'
 
 import {
   APIError,
@@ -57,7 +57,7 @@ const local = (req: PayloadRequest) => ({ req, overrideAccess: true, depth: 0 })
  * reads what the first wrote.
  */
 const load = async (req: PayloadRequest, id: number): Promise<FormSubmission> => {
-  await lockRow(req, 'form-submissions', id)
+  await requireRowLock(req, 'form-submissions', id)
   return req.payload.findByID({ collection: 'form-submissions', id, ...local(req) })
 }
 

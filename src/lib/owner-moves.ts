@@ -3,7 +3,7 @@ import { APIError, createLocalReq, NotFound, type Payload, type PayloadRequest }
 import type { User } from '@/payload-types'
 
 import { inTransaction } from './in-transaction'
-import { lockRow } from './lock-row'
+import { requireRowLock } from './row-lock'
 import { relId } from './relation'
 import { statusInputOf, statusOf, waitsOn, type ReviewedDoc } from './review-status'
 import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
@@ -64,7 +64,7 @@ const discard = async (
   const { payload } = req
   const as = READ_ALL(req, user)
   // The lock first: the version read below is then the version this write replaces.
-  await lockRow(req, collection, id)
+  await requireRowLock(req, collection, id)
   const main = (await payload.findByID({
     collection,
     id,
@@ -99,7 +99,7 @@ const restore = async (
 ): Promise<boolean> => {
   const { payload } = req
   const as = READ_ALL(req, user)
-  await lockRow(req, collection, id)
+  await requireRowLock(req, collection, id)
   if (!Number.isSafeInteger(from)) return false
   const version = await payload
     .findVersionByID({ collection, id: String(from), ...as })
