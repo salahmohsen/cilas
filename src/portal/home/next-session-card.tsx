@@ -11,27 +11,28 @@ import { focalPointStyle } from '@/lib/media-image'
 import type { NextSession } from './next-session'
 import styles from './home.module.css'
 
+const BROWSE_SPACES = { href: '/spaces/community', label: 'browseSpaces' } as const
+
 const EMPTY_ACTIONS = {
-  student: { href: '/spaces/community', label: 'browseSpaces' },
+  student: { href: '/study', label: 'seeCourses' },
   fellow: { href: '/spaces/courses', label: 'openCourses' },
   admin: { href: '/spaces/calendar', label: 'openCalendar' },
 } as const
 
-const OPEN_COURSES = { href: '/study', label: 'seeCourses' } as const
-
 export function NextSessionCard({
   session,
   view,
-  spacesOff,
+  browse,
   locale,
 }: {
   session: NextSession | null
   view: AdminView | null
-  spacesOff: boolean
+  /** The student can open a community: "Browse spaces" has a page to go to. */
+  browse: boolean
   locale: Locale
 }) {
   const t = useTranslations('Portal.home')
-  const action = !view ? null : view === 'student' && spacesOff ? OPEN_COURSES : EMPTY_ACTIONS[view]
+  const action = !view ? null : view === 'student' && browse ? BROWSE_SPACES : EMPTY_ACTIONS[view]
   const instant = session?.start ? cairoInstant(session.date, session.start) : null
   const title =
     session?.sessionTitle ??

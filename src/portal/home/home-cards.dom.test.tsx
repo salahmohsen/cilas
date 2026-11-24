@@ -5,6 +5,7 @@ import type { NeedRow } from '@/portal/needs/sources'
 
 import { messagesOf, renderWithIntl } from '../../../testing/intl.test-utils'
 import { CardBoundary } from './card-boundary'
+import { GreetingBoundary } from './greeting-boundary'
 import { NeedsCard } from './needs-card'
 import { NextSessionCard } from './next-session-card'
 import { SpacesCard } from './spaces-card'
@@ -55,7 +56,7 @@ it('writes the Cairo wall-clock time with Arabic digits', () => {
         href: '/ar/spaces/course/study',
       }}
       view="student"
-      spacesOff={false}
+      browse={false}
       locale="ar"
     />,
     { locale: 'ar' },
@@ -70,22 +71,31 @@ it('writes the Cairo wall-clock time with Arabic digits', () => {
 })
 
 it.each([
-  ['student', false, 'Browse spaces', '/en/spaces/community'],
-  ['student', true, 'See open courses', '/en/study'],
+  ['student', true, 'Browse spaces', '/en/spaces/community'],
+  ['student', false, 'See open courses', '/en/study'],
   ['fellow', false, 'Open your courses', '/en/spaces/courses'],
   ['admin', false, 'Open the calendar', '/en/spaces/calendar'],
 ] as const)(
-  'shows the next-session empty action for %s (spaces off: %s)',
-  (view, spacesOff, label, href) => {
-    renderWithIntl(<NextSessionCard session={null} view={view} spacesOff={spacesOff} locale="en" />)
+  'shows the next-session empty action for %s (can browse a community: %s)',
+  (view, browse, label, href) => {
+    renderWithIntl(<NextSessionCard session={null} view={view} browse={browse} locale="en" />)
     expect(screen.getByText('No sessions yet')).toBeVisible()
     expect(screen.getByRole('link', { name: label })).toHaveAttribute('href', href)
+    if (!browse) expect(screen.queryByRole('link', { name: 'Browse spaces' })).toBeNull()
   },
 )
 
-it('hides Your spaces when spaces are off', () => {
-  const { container } = renderWithIntl(<SpacesCard spaces={null} student locale="en" />)
-  expect(container).toBeEmptyDOMElement()
+it('shows a session with no page to open as text, not a link', () => {
+  renderWithIntl(
+    <NextSessionCard
+      session={{ title: 'Studio', date: '2034-10-05', href: null }}
+      view="student"
+      browse={false}
+      locale="en"
+    />,
+  )
+  expect(screen.getByText('Studio')).toBeVisible()
+  expect(screen.queryByRole('link')).toBeNull()
 })
 
 it('uses the capped unread number and speaks it as part of the space name', () => {
@@ -125,5 +135,23 @@ it('offers Retry for a failed card and leaves the other cards visible', () => {
   )
   expect(screen.getByRole('alert')).toHaveTextContent('This could not load.')
   expect(screen.getByRole('button', { name: 'Retry' })).toBeVisible()
+  expect(screen.getByText(messagesOf.en.Portal.latest.empty)).toBeVisible()
+})
+
+it('keeps the page heading and the cards when the greeting fails', () => {
+  const FailedGreeting = () => {
+    throw new Error('test greeting failure')
+  }
+  renderWithIntl(
+    <>
+      <GreetingBoundary>
+        <FailedGreeting />
+      </GreetingBoundary>
+      <CardBoundary>
+        <p>{messagesOf.en.Portal.latest.empty}</p>
+      </CardBoundary>
+    </>,
+  )
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Hello.')
   expect(screen.getByText(messagesOf.en.Portal.latest.empty)).toBeVisible()
 })

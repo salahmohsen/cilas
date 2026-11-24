@@ -13,6 +13,7 @@
   display: none;
 }
 
+.frame,
 .card:has(> section),
 .card:has(> [role='alert']) {
   padding: var(--space-4);

@@ -61,11 +61,20 @@ test.describe('portal Home on the empty seed', () => {
             const actions = {
               admin: portal.home.openCalendar,
               fellow: portal.home.openCourses,
-              student: portal.home.browseSpaces,
+              student: portal.home.seeCourses,
             }
-            await expect(main.getByRole('link', { name: actions[role] })).toBeVisible()
+            await expect(
+              main
+                .locator('section[aria-labelledby="home-next-session"]')
+                .getByRole('link', { name: actions[role] }),
+            ).toBeVisible()
+            await expect(main.getByRole('link', { name: portal.home.browseSpaces })).toHaveCount(0)
             if (role === 'student')
-              await expect(main.getByRole('link', { name: portal.home.seeCourses })).toBeVisible()
+              await expect(
+                main
+                  .locator('section[aria-labelledby="home-spaces"]')
+                  .getByRole('link', { name: portal.home.seeCourses }),
+              ).toBeVisible()
             expect(errors).toEqual([])
           })
         })

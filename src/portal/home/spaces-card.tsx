@@ -14,13 +14,12 @@ export function SpacesCard({
   student,
   locale,
 }: {
-  spaces: SpaceLink[] | null
+  spaces: SpaceLink[]
   student: boolean
   locale: Locale
 }) {
   const t = useTranslations('Portal.home')
   const nav = useTranslations('Portal.nav')
-  if (!spaces) return null
   return (
     <section aria-labelledby="home-spaces" className={styles.section}>
       <h2 id="home-spaces" className={styles.heading}>

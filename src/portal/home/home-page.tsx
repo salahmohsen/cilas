@@ -16,10 +16,11 @@ import { RefreshOnWork } from '@/portal/needs/refresh-on-work'
 
 import { CardBoundary } from './card-boundary'
 import { Greeting } from './greeting'
+import { GreetingBoundary } from './greeting-boundary'
 import styles from './home.module.css'
 import { LatestCard } from './latest-card'
 import { NeedsCard } from './needs-card'
-import { nextSession } from './next-session'
+import { nextSession, roomsOf } from './next-session'
 import { NextSessionCard } from './next-session-card'
 import { SpacesCard } from './spaces-card'
 
@@ -32,10 +33,16 @@ async function NeedsYou({ user, locale }: ReaderProps) {
 
 async function Next({ payload, user, locale }: CardProps) {
   const session = await nextSession(payload, user, locale)
-  const off = !session && (await spacesOff(payload))
+  const browse = !session && (await canBrowseSpaces(payload, user, locale))
   return (
-    <NextSessionCard session={session} view={adminViewOf(user)} spacesOff={off} locale={locale} />
+    <NextSessionCard session={session} view={adminViewOf(user)} browse={browse} locale={locale} />
   )
+}
+
+/** "Browse spaces" opens the community page, which is a 404 for a reader with no readable community. */
+async function canBrowseSpaces(payload: Payload, user: User, locale: Locale) {
+  if (await spacesOff(payload)) return false
+  return Boolean((await roomsOf(payload, user, locale))?.communities.length)
 }
 
 async function YourSpaces({ payload, user, locale }: CardProps) {
@@ -65,9 +72,11 @@ export async function HomePage({ user, locale }: ReaderProps) {
   return (
     <>
       <RefreshOnWork />
-      <Suspense fallback={<PortalPageHeader title={t('greeting')} />}>
-        <Greeting {...props} />
-      </Suspense>
+      <GreetingBoundary>
+        <Suspense fallback={<PortalPageHeader title={t('greeting')} />}>
+          <Greeting {...props} />
+        </Suspense>
+      </GreetingBoundary>
       <div className={styles.board}>
         <CardBoundary>
           <NeedsYou user={user} locale={locale} />
