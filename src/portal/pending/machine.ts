@@ -6,6 +6,7 @@ export type PendingInput = {
   label: string
   request: PendingRequest
   focus?: () => void
+  toastLine?: (seconds: number) => string
 }
 export type PendingItem = PendingInput & {
   state: PendingState

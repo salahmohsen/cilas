@@ -1,8 +1,13 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { createBrowserRouter } from '../../../testing/browser-navigation.test-utils'
-import { ToastStack, ToastStackProvider } from '@/components/arc/toast-stack/toast-stack'
+import {
+  ToastStack,
+  ToastStackProvider,
+  useToastStack,
+} from '@/components/arc/toast-stack/toast-stack'
 import { IntlProvider } from '../../../testing/intl.test-utils'
+import { pendingToastId } from './pending-toast'
 import { usePortalSignOut } from './sign-out'
 import { StrictMode, useLayoutEffect, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -34,14 +39,19 @@ function setup(children?: ReactNode, reply = async () => Response.json({ emailed
     browser,
     ui: (
       <AppRouterContext.Provider value={browser.router}>
-        <PendingProvider
-          fetcher={async (...args) => {
-            fetcher(...args)
-            return reply()
-          }}
-        >
-          {children ?? <Probe />}
-        </PendingProvider>
+        <IntlProvider>
+          <ToastStackProvider limit={2}>
+            <PendingProvider
+              fetcher={async (...args) => {
+                fetcher(...args)
+                return reply()
+              }}
+            >
+              {children ?? <Probe />}
+            </PendingProvider>
+            <ToastStack label="Notifications" />
+          </ToastStackProvider>
+        </IntlProvider>
       </AppRouterContext.Provider>
     ),
   }
@@ -132,14 +142,7 @@ function renderSignOut(reply: () => Promise<Response>) {
     </Probe>,
     reply,
   )
-  render(
-    <IntlProvider>
-      <ToastStackProvider>
-        {ui}
-        <ToastStack label="Notifications" />
-      </ToastStackProvider>
-    </IntlProvider>,
-  )
+  render(ui)
   fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
   return fetcher
 }
@@ -170,4 +173,57 @@ describe('pending: sign out', () => {
     expect(logout).not.toHaveBeenCalled()
     expect(screen.getByText('A decision was not saved. Sign out stopped.')).toBeInTheDocument()
   })
+})
+
+it('dropping the oldest toast leaves its item undoable and updating its id has no effect', async () => {
+  vi.useRealTimers()
+
+  function Decisions() {
+    const pending = usePending()
+    const { update } = useToastStack()
+    const first = useFirstItem()
+    return (
+      <>
+        <button
+          onClick={() => {
+            pending.decide({ ...input, toastLine: () => 'Approving first' })
+            pending.decide({ ...input, key: 'two', toastLine: () => 'Approving second' })
+            pending.decide({ ...input, key: 'three', toastLine: () => 'Approving third' })
+          }}
+        >
+          Decide three
+        </button>
+        <button onClick={() => update(pendingToastId(input.key), { title: 'Resurrected first' })}>
+          Update dropped toast
+        </button>
+        <button onClick={() => pending.undo(input.key)}>Undo first row</button>
+        <output aria-label="First state">{first?.state}</output>
+      </>
+    )
+  }
+  const { ui } = setup(<Decisions />)
+  render(ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide three' }))
+  expect(screen.queryByText('Approving first')).toBeNull()
+  expect(screen.getByText('Approving third')).toBeInTheDocument()
+  expect(screen.getByLabelText('First state')).toHaveTextContent('pending')
+  fireEvent.click(screen.getByRole('button', { name: 'Update dropped toast' }))
+  expect(screen.queryByText('Resurrected first')).toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: 'Undo first row' }))
+  expect(screen.getByLabelText('First state')).toHaveTextContent('undone')
+  expect(screen.queryByText('Approving first')).toBeNull()
+})
+
+it('focus in the toast stack holds the undo window until focus leaves', () => {
+  const { ui, fetcher } = setup()
+  render(ui)
+  const decide = screen.getByRole('button', { name: 'Decide' })
+  fireEvent.click(decide)
+  const action = screen.getByRole('button', { name: 'Undo' })
+  act(() => action.focus())
+  expect(screen.getByLabelText('State')).toHaveTextContent('paused')
+  act(() => vi.advanceTimersByTime(6000))
+  expect(fetcher).not.toHaveBeenCalled()
+  act(() => decide.focus())
+  expect(screen.getByLabelText('State')).toHaveTextContent('pending')
 })

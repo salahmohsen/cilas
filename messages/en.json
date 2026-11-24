@@ -1931,7 +1931,28 @@
       "unread": "Unread"
     },
     "pending": {
-      "signOutStopped": "A decision was not saved. Sign out stopped."
+      "decision": "Saving the decision. Email in {n, number, digits} s",
+      "leaveHint": "Emails go when you leave this page or switch app.",
+      "undo": "Undo",
+      "tryAgain": "Try again",
+      "notSaved": "Not saved.",
+      "signInAgain": "Not saved. Reload the page and sign in again.",
+      "changed": "This changed while you reviewed it.",
+      "emailSent": "Email sent",
+      "emailFailed": "Email failed",
+      "decided": "Decided",
+      "signOutStopped": "A decision was not saved. Sign out stopped.",
+      "bar": {
+        "label": "Pending decisions",
+        "count": "{n, plural, one {{n, number, digits} email waits} other {{n, number, digits} emails wait}}",
+        "announce": "{n, plural, one {{n, number, digits} email waits} other {{n, number, digits} emails wait}}. Undo all is available.",
+        "undoAll": "Undo all"
+      },
+      "ring": {
+        "countdown": "{label}. Undo. {n, plural, one {{n, number, digits} second left} other {{n, number, digits} seconds left}}.",
+        "paused": "{label}. Undo. {n, plural, one {{n, number, digits} second left} other {{n, number, digits} seconds left}}. Timer paused.",
+        "undo": "{label}. Undo."
+      }
     },
     "inbox": {
       "title": "Inbox",

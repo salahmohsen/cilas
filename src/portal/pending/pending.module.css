@@ -1,0 +1,32 @@
+.bar {
+  position: fixed;
+  z-index: 41;
+  inset-inline: 0;
+  inset-block-end: calc(var(--portal-bar-height, 0px) + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  inline-size: min(100%, 35rem);
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.copy {
+  min-inline-size: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.copy p {
+  margin: 0;
+}
+
+.copy .count {
+  color: var(--foreground);
+  font-weight: 500;
+}

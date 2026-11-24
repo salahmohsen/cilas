@@ -1931,7 +1931,28 @@
       "unread": "غير مقروء"
     },
     "pending": {
-      "signOutStopped": "تعذّر حفظ أحد القرارات. لم يتم تسجيل الخروج."
+      "decision": "جارٍ حفظ القرار. يُرسل البريد خلال {n, number, digits} ث",
+      "leaveHint": "يُرسل البريد عند مغادرة الصفحة أو الانتقال إلى تطبيق آخر.",
+      "undo": "تراجع",
+      "tryAgain": "إعادة المحاولة",
+      "notSaved": "لم يتم الحفظ.",
+      "signInAgain": "لم يتم الحفظ. يُرجى إعادة تحميل الصفحة وتسجيل الدخول.",
+      "changed": "طرأ تغيير أثناء المراجعة.",
+      "emailSent": "تم إرسال البريد",
+      "emailFailed": "تعذّر إرسال البريد",
+      "decided": "تم اتخاذ القرار",
+      "signOutStopped": "تعذّر حفظ أحد القرارات. لم يتم تسجيل الخروج.",
+      "bar": {
+        "label": "قرارات قيد الانتظار",
+        "count": "{n, plural, one {رسالة واحدة بانتظار الإرسال} two {رسالتان بانتظار الإرسال} few {{n, number, digits} رسائل بانتظار الإرسال} other {{n, number, digits} رسالة بانتظار الإرسال}}",
+        "announce": "{n, plural, one {رسالة واحدة بانتظار الإرسال} two {رسالتان بانتظار الإرسال} few {{n, number, digits} رسائل بانتظار الإرسال} other {{n, number, digits} رسالة بانتظار الإرسال}}. التراجع عن الكل متاح.",
+        "undoAll": "التراجع عن الكل"
+      },
+      "ring": {
+        "countdown": "{label}. تراجع. {n, plural, one {تبقّت ثانية واحدة} two {تبقّت ثانيتان} few {تبقّت {n, number, digits} ثوانٍ} other {تبقّت {n, number, digits} ثانية}}.",
+        "paused": "{label}. تراجع. {n, plural, one {تبقّت ثانية واحدة} two {تبقّت ثانيتان} few {تبقّت {n, number, digits} ثوانٍ} other {تبقّت {n, number, digits} ثانية}}. المؤقّت متوقّف.",
+        "undo": "{label}. تراجع."
+      }
     },
     "inbox": {
       "title": "الوارد",
