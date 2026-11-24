@@ -1,5 +1,4 @@
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import Link from 'next/link'
 
 import type { AdminView } from '@/access'
@@ -8,6 +7,7 @@ import type { Locale } from '@/i18n/routing'
 import { CAIRO, cairoInstant, cairoNoon } from '@/lib/cairo-day'
 import { numberingSystemOf } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
+import { SpaceCover } from '@/portal/nav/space-parts'
 import type { NextSession } from './next-session'
 import styles from './home.module.css'
 
@@ -39,61 +39,69 @@ export function NextSessionCard({
     (session?.session === undefined
       ? session?.title
       : t('sessionNumber', { number: session.session }))
+  const cairo = (options: Intl.DateTimeFormatOptions, at: Date) =>
+    new Intl.DateTimeFormat(locale, {
+      ...options,
+      timeZone: CAIRO,
+      numberingSystem: numberingSystemOf(locale),
+    }).format(at)
   const content = session && (
     <>
-      {session.cover && (
-        <Image
-          src={session.cover.url}
-          alt=""
-          fill
-          sizes="(min-width: 1240px) 880px, 100vw"
-          className={styles.coverImage}
-          style={focalPointStyle(session.cover)}
-        />
-      )}
+      {instant && (
+        <time className={styles.clock} dateTime={instant}>
+          {cairo({ timeStyle: 'short' }, new Date(instant))}
+        </time>
+      )}{' '}
       <span className={styles.sessionTitle}>
         <bdi>{title}</bdi>
+      </span>{' '}
+      <span className={styles.sessionMeta}>
+        {session.title !== title && (
+          <span>
+            <bdi>{session.title}</bdi>
+          </span>
+        )}{' '}
+        <time dateTime={session.date}>
+          {cairo({ dateStyle: 'long' }, instant ? new Date(instant) : cairoNoon(session.date))}
+        </time>
       </span>
-      {session.title !== title && (
-        <span>
-          <bdi>{session.title}</bdi>
-        </span>
-      )}
-      <time dateTime={instant ?? session.date}>
-        {new Intl.DateTimeFormat(locale, {
-          dateStyle: 'long',
-          ...(instant ? { timeStyle: 'short' } : {}),
-          timeZone: CAIRO,
-          numberingSystem: numberingSystemOf(locale),
-        }).format(instant ? new Date(instant) : cairoNoon(session.date))}
-      </time>
     </>
   )
   return (
-    <section aria-labelledby="home-next-session" className={styles.section}>
-      <h2 id="home-next-session" className={styles.heading}>
+    <section aria-labelledby="home-next-session" className={styles.next}>
+      {session?.cover && (
+        <SpaceCover
+          src={session.cover.url}
+          sizes="(min-width: 1240px) 640px, 100vw"
+          className={styles.nextCover!}
+          imageStyle={focalPointStyle(session.cover)}
+        >
+          <span className={styles.scrim} />
+        </SpaceCover>
+      )}
+      <h2 id="home-next-session" className={styles.chip}>
         {t('nextSession')}
       </h2>
       {session ? (
         session.href ? (
-          <Link href={session.href} className={styles.sessionTile}>
+          <Link href={session.href} className={styles.hero}>
             {content}
           </Link>
         ) : (
-          <div className={styles.sessionTile}>{content}</div>
+          <div className={styles.hero}>{content}</div>
         )
       ) : (
-        <>
-          <p className={styles.empty}>{t('noSession')}</p>
+        <div className={styles.hero}>
+          <p className={styles.sessionTitle}>{t('noSession')}</p>
           {action && (
             <Link
               href={`/${locale}${action.href}`}
-              className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.md} ${styles.action}`}
+              className={`${buttonStyles.button} ${buttonStyles.md} ${styles.onDark}`}
             >
               {t(action.label)}
             </Link>
           )}
-        </>
+        </div>
       )}
     </section>
   )

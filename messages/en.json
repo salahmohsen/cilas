@@ -1890,7 +1890,9 @@
         "removalReview": "{count, plural, one {Decide on {count, number, digits} removal} other {Decide on {count, number, digits} removals}}",
         "changesRequested": "{count, plural, one {Read {count, number, digits} note and edit} other {Read {count, number, digits} notes and edit}}"
       },
-      "owners": "By {names}",
+      "ownersRich": "By <names></names>",
+      "moreItems": "{count, plural, one {{count, number, digits} more} other {{count, number, digits} more}}",
+      "morePeople": "{count, plural, one {{count, number, digits} more} other {{count, number, digits} more}}",
       "untitledArticle": "Untitled article",
       "untitledCourse": "Untitled course",
       "untitledPublication": "Untitled publication",
@@ -1918,6 +1920,15 @@
       "openCalendar": "Open the calendar",
       "seeCourses": "See open courses",
       "spaces": "Your spaces",
+      "spacesList": "All your spaces",
+      "spaceKind": {
+        "community": "Community",
+        "cohort": "Cohort",
+        "course": "Course",
+        "archived": "Archived course"
+      },
+      "activeAgo": "Active {time}",
+      "noPosts": "No posts yet",
       "noSpaces": "Your courses and cohorts appear here once you join them.",
       "openInbox": "Open Inbox"
     },

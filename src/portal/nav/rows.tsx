@@ -1,18 +1,17 @@
 'use client'
 
-import Image from 'next/image'
 import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useState, type ComponentProps } from 'react'
+import type { ComponentProps } from 'react'
 
 import { Link } from '@/i18n/navigation'
-import { unreadCount } from '@/lib/unread-count'
-
 import { NAV_ICONS } from './nav-icons'
 import { NavCountChip, NavCountSpoken } from './nav-counts'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
+import { SpaceCover, UnreadCircle } from './space-parts'
+import { useSpaceUnread } from './space-unread'
 import { isCurrentItem, isCurrentSpace, shownUnread, type SpaceLink } from './space-links'
 
 /** A nav item: its icon and its name. An item that leaves the portal is a plain link (a full load). */
@@ -69,17 +68,7 @@ export function SpaceRow({
   pathname,
   ...rest
 }: { row: SpaceLink; pathname: string } & Omit<ComponentProps<typeof NextLink>, 'href'>) {
-  const t = useTranslations('Portal.nav')
-  const locale = useLocale()
-  const [coverFailed, setCoverFailed] = useState(false)
-  const unread = shownUnread(row, pathname)
-  const count =
-    unread > 0
-      ? unreadCount(unread, locale, {
-          some: (values) => t('unread', values),
-          many: (values) => t('unreadMany', values),
-        })
-      : null
+  const count = useSpaceUnread(shownUnread(row, pathname))
   return (
     <NextLink
       {...rest}
@@ -87,12 +76,9 @@ export function SpaceRow({
       className={styles.row}
       aria-current={isCurrentSpace(pathname, row.href) ? 'page' : undefined}
     >
-      <span className={styles.cover} aria-hidden="true">
-        {row.cover && !coverFailed && (
-          <Image src={row.cover} alt="" fill sizes="40px" onError={() => setCoverFailed(true)} />
-        )}
+      <SpaceCover src={row.cover} sizes="40px" className={styles.cover!}>
         {count && <span className={styles.dot} />}
-      </span>
+      </SpaceCover>
       {/* The name keeps the page's alignment; <bdi> only isolates its direction. With a count, the
           hidden text holds the name and the count together, so the link's name has no gap before the comma. */}
       <span className={styles.label}>
@@ -108,11 +94,7 @@ export function SpaceRow({
           <bdi>{row.label}</bdi>
         )}
       </span>
-      {count && (
-        <span className={styles.count} aria-hidden="true" dir="ltr">
-          {count.shown}
-        </span>
-      )}
+      {count && <UnreadCircle shown={count.shown} />}
     </NextLink>
   )
 }

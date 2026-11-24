@@ -213,7 +213,7 @@ test.describe('portal Home and Inbox', () => {
         const review = needsSection(page).locator('a[data-need-kind="review"]')
         await expect(review).toHaveCount(1)
         await expect(review).toHaveAttribute('href', '/admin/reviews')
-        await expect(review).toHaveAccessibleName(/^Review [0-9]+ items$/)
+        await expect(review).toHaveAccessibleName(/^Review [0-9]+ items /)
       })
     })
 
@@ -245,7 +245,8 @@ test.describe('portal Home and Inbox', () => {
           'a[href="#main"]',
           '[data-needs] li:first-child a',
           '#home-next-session + a',
-          '#home-spaces + ul li:first-child a',
+          '#home-spaces + div [role="region"]',
+          '#home-spaces + div li:first-child a',
           '[data-latest] li:first-child a',
           '[data-latest] > a[href="/en/spaces/inbox"]',
         ]

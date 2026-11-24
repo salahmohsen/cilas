@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 let region: HTMLDivElement | null = null
 let frame = 0
 
@@ -39,4 +41,14 @@ export function LiveRegion(): React.JSX.Element {
       data-portal-live
     />
   )
+}
+
+/**
+ * Reads `message` in the shell's region once this mounts. A `role="status"`
+ * element that arrives with its text already in it may stay silent; the shell's
+ * region is there before the text.
+ */
+export function Announce({ message }: { message: string }): null {
+  useEffect(() => announce(message), [message])
+  return null
 }

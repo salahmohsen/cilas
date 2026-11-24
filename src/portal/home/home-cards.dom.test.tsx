@@ -1,11 +1,13 @@
-import { cleanup, screen } from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, expect, it } from 'vitest'
 
+import { LiveRegion } from '@/portal/feedback/announce'
 import type { NeedRow } from '@/portal/needs/sources'
 
 import { messagesOf, renderWithIntl } from '../../../testing/intl.test-utils'
 import { CardBoundary } from './card-boundary'
 import { GreetingBoundary } from './greeting-boundary'
+import { HomeLoading } from './home-loading'
 import { NeedsCard } from './needs-card'
 import { NextSessionCard } from './next-session-card'
 import { SpacesCard } from './spaces-card'
@@ -32,7 +34,7 @@ it('groups Needs you at six rows, and keeps the same total in its heading', () =
   expect(screen.getAllByRole('link')).toHaveLength(5)
   rerender(<NeedsCard result={{ rows: work(6), failed: [] }} />)
   expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Needs you6')
-  expect(screen.getByRole('link', { name: 'Review 6 items' })).toHaveAttribute(
+  expect(screen.getByRole('link', { name: /^Review 6 items / })).toHaveAttribute(
     'href',
     '/admin/reviews',
   )
@@ -41,7 +43,7 @@ it('groups Needs you at six rows, and keeps the same total in its heading', () =
 it('shows no total when a source failed and keeps the rows that loaded', () => {
   renderWithIntl(<NeedsCard result={{ rows: work(1), failed: ['applicants'] }} />)
   expect(screen.getByRole('heading', { name: /^Needs you$/ })).toBeVisible()
-  expect(screen.getByRole('status')).toHaveTextContent('Some tasks could not load. Reload.')
+  expect(screen.getByText('Some tasks could not load. Reload.')).toBeVisible()
   expect(screen.getByRole('link', { name: 'Review Article 1' })).toBeVisible()
 })
 
@@ -98,25 +100,40 @@ it('shows a session with no page to open as text, not a link', () => {
   expect(screen.queryByRole('link')).toBeNull()
 })
 
+const studio = {
+  id: 1,
+  label: 'Studio',
+  cover: null,
+  href: '/en/spaces/community/1',
+  unread: 12,
+  archived: false,
+  kind: 'community',
+  lastActivity: null,
+} as const
+
 it('uses the capped unread number and speaks it as part of the space name', () => {
-  renderWithIntl(
-    <SpacesCard
-      spaces={[
-        {
-          id: 1,
-          label: 'Studio',
-          cover: null,
-          href: '/en/spaces/community/1',
-          unread: 12,
-          archived: false,
-        },
-      ]}
-      student
-      locale="en"
-    />,
-  )
+  renderWithIntl(<SpacesCard spaces={[studio]} student locale="en" />)
   expect(screen.getByText('9+')).toBeVisible()
-  expect(screen.getByRole('link', { name: 'Studio, more than 9 unread posts' })).toBeVisible()
+  const link = screen.getByRole('link', { name: 'Studio, more than 9 unread posts' })
+  expect(link).toHaveAccessibleDescription('Community No posts yet')
+  expect(screen.getByRole('region', { name: 'All your spaces' })).toHaveAttribute('tabindex', '0')
+})
+
+it('leaves an empty slot when a space cover fails to load', () => {
+  const { container } = renderWithIntl(
+    <SpacesCard spaces={[{ ...studio, cover: '/assets/images/gone.jpg' }]} student locale="en" />,
+  )
+  fireEvent.error(container.querySelector('img')!)
+  expect(container.querySelector('img')).toBeNull()
+})
+
+it('announces the loading Home in the region the shell mounted first', async () => {
+  renderWithIntl(<LiveRegion />)
+  const region = screen.getByRole('status')
+  expect(region).toBeEmptyDOMElement()
+  renderWithIntl(<HomeLoading />)
+  expect(screen.getAllByRole('status')).toEqual([region])
+  await waitFor(() => expect(region).toHaveTextContent('Loading Home'))
 })
 
 it('offers Retry for a failed card and leaves the other cards visible', () => {
@@ -125,10 +142,10 @@ it('offers Retry for a failed card and leaves the other cards visible', () => {
   }
   renderWithIntl(
     <>
-      <CardBoundary>
+      <CardBoundary slot="next">
         <FailedCard />
       </CardBoundary>
-      <CardBoundary>
+      <CardBoundary slot="latest">
         <p>{messagesOf.en.Portal.latest.empty}</p>
       </CardBoundary>
     </>,
@@ -147,7 +164,7 @@ it('keeps the page heading and the cards when the greeting fails', () => {
       <GreetingBoundary>
         <FailedGreeting />
       </GreetingBoundary>
-      <CardBoundary>
+      <CardBoundary slot="latest">
         <p>{messagesOf.en.Portal.latest.empty}</p>
       </CardBoundary>
     </>,

@@ -6,7 +6,7 @@ import { Suspense } from 'react'
 import { adminViewOf } from '@/access'
 import type { Locale } from '@/i18n/routing'
 import { spacesOff } from '@/lib/spaces'
-import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
+import { mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
 import { PortalPageHeader } from '@/portal/lists/page-header'
 import { spaceLinks } from '@/portal/nav/space-links'
@@ -14,10 +14,9 @@ import { latestRows } from '@/portal/needs/latest'
 import { needs } from '@/portal/needs/needs'
 import { RefreshOnWork } from '@/portal/needs/refresh-on-work'
 
-import { CardBoundary } from './card-boundary'
+import { CardBoundary, HomeBoard } from './card-boundary'
 import { Greeting } from './greeting'
 import { GreetingBoundary } from './greeting-boundary'
-import styles from './home.module.css'
 import { LatestCard } from './latest-card'
 import { NeedsCard } from './needs-card'
 import { nextSession, roomsOf } from './next-session'
@@ -51,14 +50,14 @@ async function YourSpaces({ payload, user, locale }: CardProps) {
     mySpaces(payload, user, locale),
     getTranslations('Spaces'),
   ])
-  const communities = spaces.communities.map((space) => ({ ...space, cover: COMMUNITY_COVER }))
-  return (
-    <SpacesCard
-      spaces={spaceLinks({ ...spaces, communities }, words('community'))}
-      student={adminViewOf(user) === 'student'}
-      locale={locale}
-    />
+  const summaries = new Map(
+    [...spaces.communities, ...spaces.cohorts, ...spaces.courses].map((row) => [row.space.id, row]),
   )
+  const cards = spaceLinks(spaces, words('community')).map((link) => {
+    const { space, lastActivity } = summaries.get(link.id)!
+    return { ...link, kind: space.kind, lastActivity }
+  })
+  return <SpacesCard spaces={cards} student={adminViewOf(user) === 'student'} locale={locale} />
 }
 
 async function Latest({ payload, user }: Pick<CardProps, 'payload' | 'user'>) {
@@ -77,20 +76,20 @@ export async function HomePage({ user, locale }: ReaderProps) {
           <Greeting {...props} />
         </Suspense>
       </GreetingBoundary>
-      <div className={styles.board}>
-        <CardBoundary>
+      <HomeBoard>
+        <CardBoundary slot="needs">
           <NeedsYou user={user} locale={locale} />
         </CardBoundary>
-        <CardBoundary>
+        <CardBoundary slot="next">
           <Next {...props} />
         </CardBoundary>
-        <CardBoundary>
+        <CardBoundary slot="spaces">
           <YourSpaces {...props} />
         </CardBoundary>
-        <CardBoundary>
+        <CardBoundary slot="latest">
           <Latest payload={payload} user={user} />
         </CardBoundary>
-      </div>
+      </HomeBoard>
     </>
   )
 }

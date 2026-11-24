@@ -1,25 +1,52 @@
 .board {
-  display: grid;
-  gap: var(--space-4);
+  container-type: inline-size;
   padding-block-end: var(--space-6);
 }
 
-.card {
+/* One column in reading order: Needs you, Next session, Your spaces, Latest. */
+.bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.slot {
   min-inline-size: 0;
 }
 
 /* The spaces card returns no element when spaces are off. */
-.card:empty {
+.slot:empty {
   display: none;
 }
 
-.frame,
-.card:has(> section),
-.card:has(> [role='alert']) {
+.slot[data-slot='needs'],
+.slot[data-slot='latest'],
+.slot:has(> [role='alert']) {
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-panel);
   background: var(--surface);
+}
+
+/* Wide: Next session takes the first seven columns and Needs you the other five. Needs you stays first in the page, so it is first for the keyboard. */
+@container (width > 900px) {
+  .bento {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .slot {
+    grid-column: 1 / -1;
+  }
+
+  .slot[data-slot='next'] {
+    grid-row: 1;
+    grid-column: 1 / span 7;
+  }
+
+  .slot[data-slot='needs'] {
+    grid-row: 1;
+    grid-column: 8 / span 5;
+  }
 }
 
 .section {
@@ -45,71 +72,294 @@
   justify-self: start;
 }
 
-.spaces {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, min(232px, 100%));
+.skeleton {
+  box-sizing: border-box;
+}
+
+.slot[data-slot='next'] > .skeleton {
+  block-size: 100%;
+  min-block-size: 20rem;
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+}
+
+/* The heading, a card of the row and the scrollbar's room. */
+.slot[data-slot='spaces'] > .skeleton {
+  min-block-size: 17.5rem;
+}
+
+.slot[data-slot='latest'] > .skeleton {
+  min-block-size: 12rem;
+}
+
+/* Next session: a dark tile in both themes, over the course cover when the session has one. */
+.next {
+  --poster-ink: oklch(100% 0 0);
+  --poster-paper: oklch(20% 0 0);
+  --focus-outline: var(--poster-ink);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
+  box-sizing: border-box;
+  block-size: 100%;
+  min-block-size: 20rem;
+  min-inline-size: 0;
+  overflow: hidden;
+  padding: var(--space-6);
+  border: 1px solid oklch(100% 0 0 / 0.14);
+  border-radius: var(--radius-surface);
+  background: oklch(27% 0 0);
+  color: oklch(100% 0 0);
+}
+
+.nextCover {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+}
+
+.nextCover img {
+  object-fit: cover;
+}
+
+/* No stop is lighter than 55% black, so white text keeps 4.5:1 over any cover. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.66) 55%, oklch(0% 0 0 / 0.55)),
+    linear-gradient(to top, oklch(0% 0 0 / 0.5), transparent 55%);
+}
+
+:global([dir='rtl']) .scrim {
+  background:
+    linear-gradient(to left, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.66) 55%, oklch(0% 0 0 / 0.55)),
+    linear-gradient(to top, oklch(0% 0 0 / 0.5), transparent 55%);
+}
+
+@media (prefers-contrast: more) {
+  .scrim,
+  :global([dir='rtl']) .scrim {
+    background: oklch(0% 0 0 / 0.8);
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  min-block-size: 1.625rem;
+  margin: 0;
+  padding-inline: 0.625rem;
+  border: 1px solid oklch(100% 0 0 / 0.18);
+  border-radius: var(--radius-pill);
+  background: oklch(100% 0 0 / 0.16);
+  backdrop-filter: blur(12px);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: auto;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+/* The whole tile opens the session; the link's name stays its text. */
+a.hero::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.clock {
+  font-size: 34px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.sessionTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.sessionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  color: oklch(100% 0 0 / 0.82);
+  font-size: 13px;
+}
+
+.sessionMeta time {
+  font-variant-numeric: tabular-nums;
+}
+
+.onDark {
+  align-self: flex-start;
+  border-color: transparent;
+  background: oklch(98% 0 0);
+  color: oklch(18% 0 0);
+}
+
+@media (hover: hover) {
+  a.hero:hover .sessionTitle {
+    text-decoration: underline;
+  }
+
+  .onDark:hover {
+    background: oklch(90% 0 0);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .nextCover img {
+    transition: scale 600ms var(--ease-enter);
+  }
+
+  .next:has(a.hero:hover) .nextCover img {
+    scale: 1.03;
+  }
+}
+
+/* The padding keeps a focused card's ring inside the clipped scroller; the margin takes it back from the layout. */
+.scroller {
+  margin-inline: -4px;
+}
+
+.scrollerViewport {
+  --focus-outline-offset: -2px;
+
+  padding: 4px 4px 14px;
+  scroll-padding-inline: 4px;
+}
+
+.spaces {
+  display: flex;
+  gap: var(--space-3);
+  inline-size: max-content;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.sessionTile,
-.spaceTile {
+.spaces > li {
+  display: flex;
+  flex: none;
+  inline-size: 232px;
+  scroll-snap-align: start;
+}
+
+.spaces .spaceCard {
+  --focus-outline-offset: 2px;
+}
+
+.spaceCard {
   position: relative;
-  isolation: isolate;
-  display: grid;
-  align-content: end;
-  gap: var(--space-1);
-  min-block-size: 8rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-inline-size: 0;
-  padding: var(--space-4);
-  border-radius: var(--radius-control);
-  background: oklch(20% 0 0);
-  color: oklch(98% 0 0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--foreground);
   text-decoration: none;
-  overflow-wrap: anywhere;
 }
 
-.spaceTile {
-  align-content: center;
-  min-block-size: 7rem;
-  block-size: 100%;
+.art {
+  position: relative;
+  display: block;
+  flex: none;
+  block-size: 104px;
+  overflow: hidden;
+  border-start-start-radius: calc(var(--radius-panel) - 1px);
+  border-start-end-radius: calc(var(--radius-panel) - 1px);
+  background: var(--surface-muted);
 }
 
-.sessionTile::before,
-.spaceTile::before {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  border-radius: inherit;
-  background: oklch(12% 0 0 / 0.72);
-  content: '';
-}
-
-.coverImage {
-  z-index: -2;
-  border-radius: inherit;
+.art img {
   object-fit: cover;
 }
 
-.sessionTitle {
-  font-size: var(--text-lg);
+.unread {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  display: flex;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 12px 14px 14px;
+}
+
+/* Two lines whether the name needs them or not, so every card and its skeleton have one height. */
+.spaceName {
+  display: -webkit-box;
+  min-block-size: 2.7em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: 15px;
   font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
-.sessionTile time,
-.unread {
-  font-variant-numeric: tabular-nums;
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.unread {
-  justify-self: start;
+.fact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-inline-size: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.fact > svg {
+  flex: none;
+}
+
+.fact > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noSpaces {
+  display: grid;
+  gap: var(--space-3);
 }
 
 @media (hover: hover) {
-  a.sessionTile:hover .sessionTitle,
-  .spaceTile:hover > span:first-of-type {
+  .spaceCard:hover {
+    border-color: var(--border-strong);
+  }
+
+  .spaceCard:hover .spaceName {
     text-decoration: underline;
   }
 }

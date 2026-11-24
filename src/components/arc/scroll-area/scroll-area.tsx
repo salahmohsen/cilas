@@ -136,8 +136,10 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
       const size = Math.max(MIN_THUMB, (length * client) / total)
       const offset = (length - size) * (scroll / max)
       thumb.style[axis === 'y' ? 'height' : 'width'] = `${size}px`
+      /* Portal patch (phase 1c): in RTL the horizontal thumb starts at the right and travels left. */
+      const sign = axis === 'x' && getComputedStyle(node).direction === 'rtl' ? -1 : 1
       thumb.style.transform =
-        axis === 'y' ? `translate3d(0, ${offset}px, 0)` : `translate3d(${offset}px, 0, 0)`
+        axis === 'y' ? `translate3d(0, ${offset}px, 0)` : `translate3d(${sign * offset}px, 0, 0)`
     }
     if (vertical) place('y', scrollTop, maxY, clientHeight, scrollHeight)
     if (horizontal) place('x', left, maxX, clientWidth, scrollWidth)
