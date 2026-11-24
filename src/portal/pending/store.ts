@@ -19,6 +19,7 @@ const KEEPALIVE_LIMIT = 64 * 1024
 export type PendingView = Readonly<Pick<PendingItem, 'state' | 'remainingMs' | 'status' | 'result'>>
 type ManualCause = Exclude<PauseCause, 'overlay'>
 export type PendingApi = {
+  /** True when the item was queued. False when it was refused: sealed, or the key is already in the queue. */
   decide(input: PendingInput): boolean
   undo(key: string): void
   undoAll(): (() => void) | undefined
@@ -28,7 +29,7 @@ export type PendingApi = {
   resume(key: string, cause: ManualCause): void
   overlay(open: boolean): void
   flush(): Promise<{ ok: boolean }>
-  /** Refuses `decide` until the returned function runs. Sign-out holds it from its flush until it ends. */
+  /** Refuses `decide` until the returned function runs. Sign-out holds it from its flush until it stops, or for good once it succeeds. */
   seal(): () => void
   readonly items: { key: string; label: string; view: PendingView }[]
   getView(key: string): PendingView | null

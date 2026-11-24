@@ -259,6 +259,26 @@ describe('pending: sign out', () => {
     expect(logout).toHaveBeenCalledOnce()
     expect(screen.getByLabelText('Late state')).toHaveTextContent('none')
   })
+
+  it('keeps refusing decisions after sign-out succeeds, while the page reloads', async () => {
+    renderSignOut(async () => Response.json({ emailed: true }))
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    })
+    expect(logout).toHaveBeenCalledOnce()
+    fireEvent.click(screen.getByRole('button', { name: 'Decide late' }))
+    expect(screen.getByLabelText('Late state')).toHaveTextContent('none')
+  })
+
+  it('accepts decisions again after sign-out stops', async () => {
+    renderSignOut(async () => new Response(null, { status: 500 }))
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    })
+    expect(logout).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Decide late' }))
+    expect(screen.getByLabelText('Late state')).toHaveTextContent('pending')
+  })
 })
 
 it('dropping the oldest toast leaves its item undoable and updating its id has no effect', async () => {
