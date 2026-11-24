@@ -5,7 +5,12 @@ export function isModalOpen(doc = document): boolean {
   )
 }
 
-export function observeModals(onChange: (open: boolean) => void, doc = document): () => void {
+/** `onMutation` runs after every body change, so one observer serves a caller that also needs to see nodes leave. */
+export function observeModals(
+  onChange: (open: boolean) => void,
+  doc = document,
+  onMutation?: () => void,
+): () => void {
   let open = false
   function check() {
     const next = isModalOpen(doc)
@@ -13,7 +18,10 @@ export function observeModals(onChange: (open: boolean) => void, doc = document)
     open = next
     onChange(next)
   }
-  const observer = new MutationObserver(check)
+  const observer = new MutationObserver(() => {
+    check()
+    onMutation?.()
+  })
   observer.observe(doc.body, {
     childList: true,
     subtree: true,

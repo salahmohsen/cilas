@@ -144,11 +144,10 @@ export function PendingProvider({
     updateToastFocus(document.activeElement)
     // A toast can take its focused button away with no `focusout` (a committing item drops Undo, a toast closes).
     // Without this, the pause from the toast would stay on and every new decision would start paused.
-    const toastFocusLost = new MutationObserver(() => {
+    const dropToastFocus = () => {
       if (toastFocused.current && !toastFocusTarget.current?.isConnected) updateToastFocus(null)
-    })
-    toastFocusLost.observe(document.body, { childList: true, subtree: true })
-    const stopObserving = observeModals(updateModal)
+    }
+    const stopObserving = observeModals(updateModal, document, dropToastFocus)
     updateModal(isModalOpen())
     return () => {
       mounted.current = false
@@ -157,7 +156,6 @@ export function PendingProvider({
       document.removeEventListener('visibilitychange', onVisibilityChange)
       document.removeEventListener('focusin', toastFocusIn)
       document.removeEventListener('focusout', toastFocusOut)
-      toastFocusLost.disconnect()
       stopObserving()
       stopToasts()
       window.setTimeout(() => {
