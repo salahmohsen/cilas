@@ -1,6 +1,6 @@
 import { isAdminUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
-import { sql } from '@payloadcms/db-postgres'
+import { lockRow } from '@/lib/lock-row'
 
 import {
   APIError,
@@ -57,16 +57,8 @@ const local = (req: PayloadRequest) => ({ req, overrideAccess: true, depth: 0 })
  * reads what the first wrote.
  */
 const load = async (req: PayloadRequest, id: number): Promise<FormSubmission> => {
-  const { payload } = req
-  const sessions = (
-    payload.db as unknown as {
-      sessions?: Record<string, { db: { execute: (query: unknown) => Promise<unknown> } }>
-    }
-  ).sessions
-  const db = (req.transactionID && sessions?.[String(req.transactionID)]?.db) || null
-  if (!db) throw new APIError('Could not lock the application. Try again.', 500)
-  await db.execute(sql`select id from form_submissions where id = ${id} for update`)
-  return payload.findByID({ collection: 'form-submissions', id, ...local(req) })
+  await lockRow(req, 'form-submissions', id)
+  return req.payload.findByID({ collection: 'form-submissions', id, ...local(req) })
 }
 
 /** The account and person an acceptance gives the applicant. Made on the first acceptance, found after. */

@@ -8,6 +8,8 @@ import type {
 
 import { routing } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
+import { lockRow } from '@/lib/lock-row'
+import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import { toPersonIds } from '@/lib/fellow-role'
 import { isAdminUser, personOf } from '@/access'
@@ -109,6 +111,17 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     write.draft = true
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
   }
+  if (operation === 'restoreVersion') {
+    const { docs } = await req.payload.db.findVersions({
+      collection: collection.slug,
+      where: { id: { equals: write.id } },
+      limit: 1,
+      pagination: false,
+      req,
+    })
+    const parentId = relId(docs[0]?.parent)
+    if (typeof parentId === 'number') await lockRow(req, collection.slug, parentId)
+  }
   const context = reviewContext(req)
   context.live = false
   // Payload fills a field the write left out from the stored document before
@@ -126,6 +139,7 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     throw new APIError('Edit one document at a time.', 403)
   }
   if (operation === 'update' && write.id !== undefined) {
+    await lockRow(req, collection.slug, Number(write.id))
     const held = !trusted || HELD.includes(write.data?.review?.status as ReviewState)
     if (held && write.data?._status !== 'published') {
       const live = await req.payload.db.findOne<Doc & { id: number }>({
