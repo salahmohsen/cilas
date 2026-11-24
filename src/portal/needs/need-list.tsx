@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
+import { useId } from 'react'
 
 import { localeOf, type Locale } from '@/i18n/routing'
 import { localDigits } from '@/lib/digits'
@@ -66,6 +67,7 @@ export function NeedList({ result, group }: { result: NeedsResult; group: boolea
   const { rows } = result
   const total = needsTotal(result)
   const t = useTranslations('Portal')
+  const headingId = useId()
   const locale = localeOf(useLocale())
   const shown: Shown[] = group ? grouped(rows, locale) : rows
   const untitled = (collection: NeedRow['collection']) =>
@@ -77,8 +79,8 @@ export function NeedList({ result, group }: { result: NeedsResult; group: boolea
           : 'needs.untitledArticle',
     )
   return (
-    <section className={styles.section} data-needs>
-      <h2 className={styles.heading}>
+    <section className={styles.section} aria-labelledby={headingId} data-needs>
+      <h2 id={headingId} className={styles.heading}>
         {t('needs.heading')}
         {total !== null && total > 0 && (
           <span className={styles.total}>{localDigits(total, locale)}</span>

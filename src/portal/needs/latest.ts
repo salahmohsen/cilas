@@ -22,19 +22,15 @@ export type LatestPage = {
 }
 
 /**
- * The newest `30 x pages` notification rows of the reader, newest first. A gated read: the
+ * The newest notification rows of the reader, newest first. A gated read: the
  * collection's read access is the recipient's own rows, so no other reader's row comes back.
  */
-export const latestRows = async (
-  payload: Payload,
-  user: User,
-  pages: number,
-): Promise<LatestPage> => {
+export const latestRows = async (payload: Payload, user: User, limit: number) => {
   const found = await payload.find({
     collection: 'notifications',
     where: { recipient: { equals: user.id } },
     sort: ['-createdAt', '-id'],
-    limit: LATEST_PAGE * pages,
+    limit,
     depth: 0,
     select: {
       kind: true,
@@ -49,9 +45,18 @@ export const latestRows = async (
     user,
     overrideAccess: false,
   })
+  return { rows: found.docs as unknown as StoredNotification[], hasNextPage: found.hasNextPage }
+}
+
+export const latestPage = async (
+  payload: Payload,
+  user: User,
+  pages: number,
+): Promise<LatestPage> => {
+  const { rows, hasNextPage } = await latestRows(payload, user, LATEST_PAGE * pages)
   return {
-    rows: found.docs as unknown as StoredNotification[],
+    rows,
     pages,
-    more: found.hasNextPage ? (pages < LATEST_MAX_PAGES ? 'link' : 'cap') : null,
+    more: hasNextPage ? (pages < LATEST_MAX_PAGES ? 'link' : 'cap') : null,
   }
 }

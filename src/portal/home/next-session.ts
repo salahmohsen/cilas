@@ -11,7 +11,7 @@ import type { User } from '@/payload-types'
 
 export type NextSession = Pick<
   CalendarMeeting,
-  'title' | 'sessionTitle' | 'date' | 'start' | 'cover' | 'href'
+  'title' | 'session' | 'sessionTitle' | 'date' | 'start' | 'cover' | 'href'
 >
 
 export async function nextSession(
@@ -29,9 +29,10 @@ export async function nextSession(
 
   const { courses } = await mySpaces(payload, user, locale)
   const room = courses.find(({ space }) => relId(space.course) === meeting.courseId)
-  const { title, sessionTitle, date, start, cover, href } = meeting
+  const { title, session, sessionTitle, date, start, cover, href } = meeting
   return {
     title,
+    session,
     sessionTitle,
     date,
     start,

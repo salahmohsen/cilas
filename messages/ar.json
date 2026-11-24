@@ -1930,6 +1930,22 @@
       "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
       "unread": "غير مقروء"
     },
+    "home": {
+      "metaTitle": "الرئيسية",
+      "greeting": "مرحبًا.",
+      "greetingName": "مرحبًا، <person>{name}</person>.",
+      "loading": "جارٍ تحميل الصفحة الرئيسية",
+      "nextSession": "الجلسة القادمة",
+      "sessionNumber": "الجلسة {number, number, digits}",
+      "noSession": "لا توجد جلسات بعد",
+      "browseSpaces": "تصفّح المساحات",
+      "openCourses": "افتح مقرراتك",
+      "openCalendar": "افتح التقويم",
+      "seeCourses": "اطّلع على المقررات المفتوحة",
+      "spaces": "مساحاتك",
+      "noSpaces": "تظهر مقرراتك ودفعاتك هنا بعد انضمامك إليها.",
+      "openInbox": "افتح صندوق الوارد"
+    },
     "inbox": {
       "title": "الوارد",
       "metaTitle": "الوارد",

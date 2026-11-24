@@ -6,7 +6,7 @@ import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
 import type { User } from '@/payload-types'
 import { PortalPageHeader } from '@/portal/lists/page-header'
-import { latestRows } from '@/portal/needs/latest'
+import { latestPage } from '@/portal/needs/latest'
 import { LatestList } from '@/portal/needs/latest-list'
 import { NeedList } from '@/portal/needs/need-list'
 import { needs } from '@/portal/needs/needs'
@@ -30,7 +30,7 @@ async function LatestSection({
   focus: boolean
 }) {
   const payload = await getPayload({ config })
-  return <LatestList page={await latestRows(payload, user, pages)} focus={focus} />
+  return <LatestList page={await latestPage(payload, user, pages)} focus={focus} />
 }
 
 /** Inbox: the work that waits on the reader, then the newest notifications. Each section loads on its own. */

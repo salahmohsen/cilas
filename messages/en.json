@@ -1930,6 +1930,22 @@
       "moreRows": "{count, plural, one {{count, number, digits} more row.} other {{count, number, digits} more rows.}}",
       "unread": "Unread"
     },
+    "home": {
+      "metaTitle": "Home",
+      "greeting": "Hello.",
+      "greetingName": "Hello, <person>{name}</person>.",
+      "loading": "Loading Home",
+      "nextSession": "Next session",
+      "sessionNumber": "Session {number, number, digits}",
+      "noSession": "No sessions yet",
+      "browseSpaces": "Browse spaces",
+      "openCourses": "Open your courses",
+      "openCalendar": "Open the calendar",
+      "seeCourses": "See open courses",
+      "spaces": "Your spaces",
+      "noSpaces": "Your courses and cohorts appear here once you join them.",
+      "openInbox": "Open Inbox"
+    },
     "inbox": {
       "title": "Inbox",
       "metaTitle": "Inbox",
