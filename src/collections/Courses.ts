@@ -31,7 +31,7 @@ import { timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { grantFellow, publishedCourse, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
-import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
+import { lockRow } from '@/lib/row-lock'
 import { reviewHooks } from '@/lib/review-hooks'
 import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
@@ -42,6 +42,7 @@ import type {
   Condition,
   Field,
   PayloadRequest,
+  RequestContext,
 } from 'payload'
 import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
@@ -66,37 +67,42 @@ const publishedFellows = async (req: PayloadRequest, id: number): Promise<number
   return toPersonIds(published?.fellows)
 }
 
-const fellowBaseline = new WeakMap<PayloadRequest, Map<number, number[]>>()
+const FELLOWS_BEFORE = 'publishedFellowsBefore'
+type FellowsBefore = Map<number, number[]>
+
+/**
+ * The baseline rides in the request context as a value. Neither the request
+ * (a version restore hands each hook a different proxy) nor the context object
+ * (a nested Local API call swaps it for a copy) keeps its identity between
+ * beforeChange and afterChange, but a copy keeps the entries.
+ */
+const baselineIn = (context: RequestContext) =>
+  (context[FELLOWS_BEFORE] ??= new Map()) as FellowsBefore
 
 /** Capture the live row before both ordinary edits and version restores. */
 const capturePublishedFellows: CollectionBeforeChangeHook<Course> = async ({
+  context,
   operation,
   originalDoc,
   req,
 }) => {
   if (operation !== 'update' || !originalDoc) return
   const id = originalDoc.id
-  const adapter = req.payload.db as unknown as PostgresAdapter
-  const transactionID = await req.transactionID
-  const transaction = transactionID && adapter.sessions[transactionID]?.db
-  if (transaction) {
-    // A concurrent write must capture the publication this write leaves behind.
-    await transaction.execute(sql`SELECT id FROM courses WHERE id = ${id} FOR UPDATE`)
-  }
-  const baseline = fellowBaseline.get(req) ?? new Map<number, number[]>()
-  baseline.set(id, await publishedFellows(req, id))
-  fellowBaseline.set(req, baseline)
+  // A concurrent write must capture the publication this write leaves behind.
+  await lockRow(req, 'courses', id)
+  baselineIn(context).set(id, await publishedFellows(req, id))
 }
 
 /** Accounts follow the main row, which changes independently of the draft history. */
 export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
+  context,
   doc,
   operation,
   req,
 }) => {
-  const baseline = fellowBaseline.get(req)
-  const before = operation === 'update' ? (baseline?.get(doc.id) ?? []) : []
-  baseline?.delete(doc.id)
+  const baseline = baselineIn(context)
+  const before = operation === 'update' ? (baseline.get(doc.id) ?? []) : []
+  baseline.delete(doc.id)
   const after = await publishedFellows(req, doc.id)
 
   for (const id of after) {

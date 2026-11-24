@@ -84,6 +84,13 @@ describe('access audit', () => {
     })
     expect(rules('collection:users', '*')).toMatchObject({
       admin: 'payload:loggedIn',
+      unlock: 'isAdmin',
+    })
+    expect(rules('collection:payload-locked-documents', '*')).toMatchObject({
+      create: 'lockInCallersNameOnEditableTarget',
+      read: 'readLocksOnEditableTarget',
+      update: 'takeOverEditableTargetLock',
+      delete: 'releaseOwnEditableTargetLock',
     })
     expect(rules('collection:oauth-auth-codes', '*')).toMatchObject({
       read: 'plugin:mcp-oauth:denyPublic',

@@ -146,7 +146,7 @@ describe('document locks', () => {
           },
           editor,
         ),
-      ).resolves.toMatchObject({ user: holderOf(editor) })
+      ).rejects.toMatchObject({ status: 400 })
       await expect(
         patchLock(lock.id, { document: courseRef(otherCourse), user: holderOf(editor) }, editor),
       ).rejects.toBeInstanceOf(Forbidden)
@@ -160,6 +160,42 @@ describe('document locks', () => {
       await expect(deleteLock(lock.id, otherEditor)).resolves.toMatchObject({ id: lock.id })
     } finally {
       await deleteLock(lock.id, admin).catch(() => null)
+    }
+  })
+
+  it('hides who is editing a document from a member who can only read it', async () => {
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: uniq('lock-place'), city: 'Cairo', slug: uniq('lock-place') },
+        ...actor(admin),
+      }),
+    ).id
+    const lock = track(
+      locks,
+      await payload.create({
+        collection: locks,
+        data: { document: { relationTo: 'places', value: place }, user: holderOf(editor) },
+        depth: 0,
+        ...actor(admin),
+      }),
+    )
+    const where = {
+      'document.relationTo': { equals: 'places' },
+      'document.value': { equals: place },
+    }
+    try {
+      await expect(
+        payload.findByID({ collection: 'places', id: place, ...actor(member) }),
+      ).resolves.toMatchObject({ id: place })
+      await expect(lockLookup(where, member)).rejects.toBeInstanceOf(Forbidden)
+      await expect(
+        payload.findByID({ collection: locks, id: lock.id, ...actor(member) }),
+      ).rejects.toBeInstanceOf(Forbidden)
+      await expect(lockLookup(where, admin)).resolves.toMatchObject({ docs: [{ id: lock.id }] })
+    } finally {
+      await deleteLock(lock.id, admin)
     }
   })
 

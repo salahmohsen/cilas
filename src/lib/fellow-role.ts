@@ -1,5 +1,5 @@
 import { relId } from '@/lib/relation'
-import type { PayloadRequest, Where } from 'payload'
+import { isolateObjectProperty, type PayloadRequest, type Where } from 'payload'
 
 import type { Role } from '@/access'
 import type { User } from '@/payload-types'
@@ -65,12 +65,23 @@ export const teaches = async (
   return res.totalDocs > 0
 }
 
+/**
+ * A write to the account runs in its own context. The save that fired the hook
+ * may be a version restore, which flags the shared context, and Payload then
+ * skips the defaults of the account's own fields and fails its validation.
+ */
+const accountWrite = (req: PayloadRequest): PayloadRequest => {
+  const own = isolateObjectProperty(req, 'context')
+  own.context = {}
+  return own
+}
+
 export const grantFellow = async (req: PayloadRequest, person: number): Promise<void> => {
   const account = await accountOf(req, person)
   if (!account || account.roles.includes('fellow')) return
 
   await req.payload.update({
-    req,
+    req: accountWrite(req),
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, true) },
@@ -91,7 +102,7 @@ export const revokeIfUnteaching = async (
   if (!account || !account.roles.includes('fellow')) return
 
   await req.payload.update({
-    req,
+    req: accountWrite(req),
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, false) },
