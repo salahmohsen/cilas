@@ -21,6 +21,7 @@ mockNetwork(inbox.handler, ...localServices)
 let payload: Payload
 let owner: User
 let admin: User
+let stranger: User
 let ownerToken: string
 const { track, cleanup } = createTracker()
 
@@ -55,6 +56,7 @@ beforeAll(async () => {
   owner = account.user
   ownerToken = account.token
   admin = (await makeAccount('owner-moves-admin', ['admin'], false)).user
+  stranger = (await makeAccount('owner-moves-stranger', ['member'], true)).user
 })
 
 afterAll(async () => {
@@ -132,6 +134,28 @@ const submittedNew = async (title: string) => {
   return id
 }
 
+const lexical = (text: string) => ({
+  root: {
+    type: 'root',
+    format: '',
+    indent: 0,
+    version: 1,
+    direction: 'ltr',
+    children: [
+      {
+        type: 'paragraph',
+        format: '',
+        indent: 0,
+        version: 1,
+        direction: 'ltr',
+        children: [
+          { type: 'text', text, format: 0, detail: 0, mode: 'normal', style: '', version: 1 },
+        ],
+      },
+    ],
+  },
+})
+
 const live = (title: string) => writePublishedArticle(writes().create, Number(owner.person), title)
 
 const withdrawnNotes = async (title: string) =>
@@ -151,12 +175,27 @@ const withdrawnNotes = async (title: string) =>
     })
   ).docs
 
+const notesAbout = async (title: string, recipient: User) =>
+  (
+    await payload.find({
+      collection: 'notifications',
+      where: {
+        and: [{ recipient: { equals: recipient.id } }, { description: { contains: title } }],
+      },
+      depth: 0,
+      limit: 5,
+      overrideAccess: true,
+    })
+  ).docs
+
 describe('review-events: owner moves', () => {
   it('withdraw a new submission', async () => {
     const title = uniq('Withdraw new')
     const id = await submittedNew(title)
     expect(await keyOf(id)).toBe('submitted')
-    expect(await getReviewQueue(payload).then((q) => q.some((i) => i.id === id))).toBe(true)
+    expect(
+      await getReviewQueue(payload).then((q) => q.some((i) => i.kind === 'article' && i.id === id)),
+    ).toBe(true)
     const before = inbox.sent.length
 
     expect(await ownerMove(payload, owner, target(id), { move: 'withdraw' })).toEqual({ ok: true })
@@ -164,7 +203,9 @@ describe('review-events: owner moves', () => {
     expect(await keyOf(id)).toBe('draft')
     expect(await withdrawnNotes(title)).toHaveLength(1)
     expect(inbox.sent.length).toBe(before)
-    expect(await getReviewQueue(payload).then((q) => q.some((i) => i.id === id))).toBe(false)
+    expect(
+      await getReviewQueue(payload).then((q) => q.some((i) => i.kind === 'article' && i.id === id)),
+    ).toBe(false)
   })
 
   it('withdraw changes on a live article', async () => {
@@ -244,7 +285,20 @@ describe('review-events: owner moves', () => {
       locale: 'ar',
       overrideAccess: true,
     })
-    const edited = (await latestVersion(id)).version.title
+    for (const locale of ['en', 'ar'] as const) {
+      await payload.update({
+        collection: 'articles',
+        id,
+        data: { body: lexical(`Body ${locale}`) } as never,
+        draft: true,
+        locale,
+        overrideAccess: true,
+      })
+    }
+    const { version: editedVersion } = await latestVersion(id)
+    const edited = editedVersion.title
+    const editedBody = editedVersion.body
+    expect(editedBody).toMatchObject({ en: expect.anything(), ar: expect.anything() })
     const before = inbox.sent.length
 
     const discarded = await ownerMove(payload, owner, target(id), { move: 'discard' })
@@ -257,7 +311,9 @@ describe('review-events: owner moves', () => {
     ).toEqual({ ok: true })
 
     expect(await keyOf(id)).toBe('published_unsent')
-    expect((await latestVersion(id)).version.title).toEqual(edited)
+    const restored = (await latestVersion(id)).version
+    expect(restored.title).toEqual(edited)
+    expect(restored.body).toEqual(editedBody)
     expect(inbox.sent.length).toBe(before)
   })
 
@@ -268,6 +324,69 @@ describe('review-events: owner moves', () => {
     expect(await ownerMove(payload, owner, target(id), { move: 'restore', from: foreign })).toEqual(
       { ok: false, reason: 'refused' },
     )
+  })
+
+  it('refuses a restore of a version that does not exist', async () => {
+    const id = await live(uniq('Restore missing'))
+    expect(
+      await ownerMove(payload, owner, target(id), { move: 'restore', from: 2_000_000_000 }),
+    ).toEqual({ ok: false, reason: 'refused' })
+  })
+
+  it('refuses every move to a person who is not an author, and leaks nothing', async () => {
+    const title = uniq('Not yours')
+    const id = await submittedNew(title)
+    const w = writes()
+    const other = await live(uniq('Not yours live'))
+    await w.edit('articles', other, { title: uniq('Not yours edited') })
+    const otherKey = await keyOf(other)
+    const moves = [
+      { target: target(id), move: { move: 'withdraw' } },
+      { target: target(other), move: { move: 'requestRemoval' } },
+      { target: target(other), move: { move: 'discard' } },
+    ] as const
+    for (const { target: t, move } of moves) {
+      expect(await ownerMove(payload, stranger, t, move), move.move).toEqual({
+        ok: false,
+        reason: 'refused',
+      })
+    }
+    expect(await keyOf(id)).toBe('submitted')
+    expect(await keyOf(other)).toBe(otherKey)
+    expect(await withdrawnNotes(title)).toEqual([])
+    expect(await notesAbout(title, owner)).toEqual([])
+    expect(await notesAbout(title, stranger)).toEqual([])
+  })
+
+  it('a removal request reaches the admins and no one else', async () => {
+    const title = uniq('Ask removal')
+    const id = await live(title)
+
+    expect(await ownerMove(payload, owner, target(id), { move: 'requestRemoval' })).toEqual({
+      ok: true,
+    })
+
+    expect(await keyOf(id)).toBe('published_removal')
+    const { version } = await latestVersion(id)
+    expect(version.review).toMatchObject({ status: 'submitted', request: 'removal' })
+    expect(await notesAbout(title, admin)).toHaveLength(1)
+    expect(await notesAbout(title, owner)).toEqual([])
+    expect(await notesAbout(title, stranger)).toEqual([])
+    expect(await withdrawnNotes(title)).toEqual([])
+    for (const person of [owner, stranger]) {
+      expect(inbox.to(person.email).filter((m) => m.html.includes(title))).toEqual([])
+    }
+  })
+
+  it('a withdraw notifies the admins and no one else', async () => {
+    const title = uniq('Withdraw audience')
+    const id = await submittedNew(title)
+
+    expect(await ownerMove(payload, owner, target(id), { move: 'withdraw' })).toEqual({ ok: true })
+
+    expect(await withdrawnNotes(title)).toHaveLength(1)
+    expect(await notesAbout(title, owner)).toEqual([])
+    expect(await notesAbout(title, stranger)).toEqual([])
   })
 
   it("an owner's withdraw is refused once an admin decided", async () => {

@@ -1,15 +1,8 @@
-import {
-  APIError,
-  commitTransaction,
-  createLocalReq,
-  initTransaction,
-  killTransaction,
-  type Payload,
-  type PayloadRequest,
-} from 'payload'
+import { APIError, createLocalReq, NotFound, type Payload, type PayloadRequest } from 'payload'
 
 import type { User } from '@/payload-types'
 
+import { inTransaction } from './in-transaction'
 import { lockRow } from './lock-row'
 import { relId } from './relation'
 import { statusInputOf, statusOf, waitsOn, type ReviewedDoc } from './review-status'
@@ -27,26 +20,9 @@ export type OwnerMove =
 
 export type OwnerMoveResult =
   /** `restoreFrom` is set by `discard`: the version id before the discard. */
-  { ok: true; restoreFrom?: number } | { ok: false; reason: 'decided' | 'refused' }
+  { ok: true; restoreFrom?: number } | { ok: false; reason: 'decided' | 'refused' | 'busy' }
 
 type Target = { collection: ReviewedCollection; id: number }
-
-const inTransaction = async <T>(
-  payload: Payload,
-  user: User,
-  run: (req: PayloadRequest) => Promise<T>,
-): Promise<T> => {
-  const req = await createLocalReq({ user }, payload)
-  const owns = await initTransaction(req)
-  try {
-    const result = await run(req)
-    if (owns) await commitTransaction(req)
-    return result
-  } catch (error) {
-    if (owns) await killTransaction(req)
-    throw error
-  }
-}
 
 /** The reviewed fields of a row, every locale, as a write. */
 const reviewedFieldsOf = (collection: ReviewedCollection, row: Record<string, unknown>) =>
@@ -60,6 +36,25 @@ const reviewedFieldsOf = (collection: ReviewedCollection, row: Record<string, un
 const READ_ALL = (req: PayloadRequest, user: User) =>
   ({ req, user, overrideAccess: false, depth: 0, locale: 'all' }) as const
 const LOCALE_ALL = 'all' as unknown as 'en'
+
+/** The newest copy of a document, every locale. `access` is a gated read or `overrideAccess: true`. */
+const latestCopy = async (
+  payload: Payload,
+  collection: ReviewedCollection,
+  id: number,
+  access: Record<string, unknown>,
+) => {
+  const { docs } = await payload.findVersions({
+    collection,
+    where: { parent: { equals: id }, latest: { equals: true } },
+    sort: '-updatedAt',
+    limit: 1,
+    depth: 0,
+    locale: 'all',
+    ...access,
+  })
+  return docs[0]
+}
 
 const discard = async (
   req: PayloadRequest,
@@ -76,14 +71,8 @@ const discard = async (
     draft: false,
     ...as,
   })) as unknown as Record<string, unknown>
-  const { docs } = await payload.findVersions({
-    collection,
-    where: { parent: { equals: id }, latest: { equals: true } },
-    sort: '-updatedAt',
-    limit: 1,
-    ...as,
-  })
-  const copy = docs[0]?.version as unknown as
+  const latest = await latestCopy(payload, collection, id, as)
+  const copy = latest?.version as unknown as
     | { review?: { status?: string | null } | null }
     | undefined
   const returned =
@@ -99,7 +88,7 @@ const discard = async (
     ...as,
     locale: LOCALE_ALL,
   })
-  return docs[0] ? Number(docs[0].id) : undefined
+  return latest ? Number(latest.id) : undefined
 }
 
 const restore = async (
@@ -111,8 +100,11 @@ const restore = async (
   const { payload } = req
   const as = READ_ALL(req, user)
   await lockRow(req, collection, id)
-  const version = await payload.findVersionByID({ collection, id: String(from), ...as })
-  if (relId(version?.parent) !== id) return false
+  if (!Number.isSafeInteger(from)) return false
+  const version = await payload
+    .findVersionByID({ collection, id: String(from), ...as })
+    .catch((error) => (error instanceof NotFound ? null : Promise.reject(error)))
+  if (!version || relId(version.parent) !== id) return false
   await payload.update({
     collection,
     id,
@@ -135,17 +127,7 @@ const decidedByAdmin = async (payload: Payload, { collection, id }: Target) => {
     draft: false,
     ...read,
   })) as unknown as ReviewedDoc
-  const {
-    docs: [version],
-  } = await payload.findVersions({
-    collection,
-    where: { parent: { equals: id }, latest: { equals: true } },
-    sort: '-updatedAt',
-    limit: 1,
-    depth: 0,
-    locale: 'all',
-    overrideAccess: true,
-  })
+  const version = await latestCopy(payload, collection, id, { overrideAccess: true })
   const latest = version ? ({ ...version.version, id } as unknown as ReviewedDoc) : null
   const key = statusOf(statusInputOf({ collection, main, latest, read: 'full' }), () => undefined)
   return waitsOn(key) !== 'admin'
@@ -164,7 +146,8 @@ export const ownerMove = async (
 ): Promise<OwnerMoveResult> => {
   const { collection, id } = target
   try {
-    return await inTransaction(payload, user, async (req) => {
+    const req = await createLocalReq({ user }, payload)
+    return await inTransaction(req, async () => {
       const write = (data: Record<string, unknown>, draft = true) =>
         payload.update({
           collection,
@@ -194,6 +177,7 @@ export const ownerMove = async (
       }
     })
   } catch (error) {
+    if (error instanceof APIError && error.status === 409) return { ok: false, reason: 'busy' }
     if (!(error instanceof APIError) || error.status !== 403) throw error
     const decided = move.move === 'withdraw' && (await decidedByAdmin(payload, target))
     return { ok: false, reason: decided ? 'decided' : 'refused' }
