@@ -918,6 +918,10 @@
         "label": "Review requests",
         "hint": "Someone submits work for review. Shown to admins."
       },
+      "withdrawn": {
+        "label": "Withdrawn",
+        "hint": "Someone withdraws a submission or removal request. Shown to admins."
+      },
       "application": {
         "label": "New applications",
         "hint": "Someone applies to a course or programme. Shown to admins."
@@ -1036,6 +1040,7 @@
     "triggerUnreadMany": ", more than {cap} unread",
     "kinds": {
       "submitted": "Review requested",
+      "withdrawn": "Withdrawn",
       "approved": "Approved",
       "changes_requested": "Changes requested",
       "rejected": "Rejected",

@@ -4,10 +4,11 @@ import { subscribeNotifications } from '@/lib/realtime/stream-client'
 
 /**
  * Whether a new notification of this kind means the reader's work changed. A new kind is a type
- * error until it says so here. `withdrawn` joins with the withdraw move (phase 2).
+ * error until it says so here.
  */
 export const REFRESHES_WORK: Record<NotificationKind, boolean> = {
   submitted: true,
+  withdrawn: true,
   approved: true,
   changes_requested: true,
   rejected: true,
