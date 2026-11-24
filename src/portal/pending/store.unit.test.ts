@@ -288,4 +288,38 @@ describe('pending: store', () => {
     expect(store.decide(input)).toBe(true)
     expect(item()?.state).toBe('pending')
   })
+
+  it('keeps the keepalive bytes in flight under the shared 64 KiB cap, and frees them on settle', async () => {
+    const replies: ReturnType<typeof deferred>[] = []
+    const { store, fetcher } = setup(() => {
+      const reply = deferred()
+      replies.push(reply)
+      return reply.promise
+    })
+    const body = { note: 'x'.repeat(40 * 1024) }
+    const large = (key: string) => ({ ...input, key, request: { ...input.request, body } })
+    const keepalives = () => fetcher.mock.calls.map(([, init]) => init.keepalive)
+    store.decide(large('one'))
+    store.decide(large('two'))
+    const flushed = store.flush()
+    expect(keepalives()).toEqual([true, false])
+    replies[0]!.reject(new Error('offline'))
+    replies[1]!.resolve(ok())
+    expect(await flushed).toEqual({ ok: false })
+    expect(fetcher).toHaveBeenCalledTimes(2)
+    store.retry('one')
+    expect(keepalives()).toEqual([true, false, true])
+  })
+
+  it('holds the keepalive bytes of a request that outlives a reset', () => {
+    const { store, fetcher } = setup(() => new Promise<Response>(() => {}))
+    const body = { note: 'x'.repeat(40 * 1024) }
+    const large = { ...input, request: { ...input.request, body } }
+    store.decide(large)
+    void store.flush()
+    store.reset()
+    store.decide(large)
+    void store.flush()
+    expect(fetcher.mock.calls.map(([, init]) => init.keepalive)).toEqual([true, false])
+  })
 })

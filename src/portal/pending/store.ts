@@ -13,7 +13,9 @@ import {
 export const FINISHED_MS = 8000
 /** A commit with no answer after this long fails, so a stalled network cannot hold sign-out. */
 export const COMMIT_TIMEOUT_MS = 15_000
+/** Browsers apply this to the bodies of all `keepalive` requests in flight together. */
 const KEEPALIVE_LIMIT = 64 * 1024
+let stores = 0
 
 /** What a view reads of an item. `remainingMs` is the time left when it is read, not when the item last changed. */
 export type PendingView = Readonly<Pick<PendingItem, 'state' | 'remainingMs' | 'status' | 'result'>>
@@ -35,7 +37,7 @@ export type PendingApi = {
   getView(key: string): PendingView | null
 }
 
-type QueuedItem = PendingItem & { encodedBody: string }
+type QueuedItem = PendingItem & { encodedBody: string; bytes: number }
 
 function sameOriginPath(url: string) {
   const origin = globalThis.location?.origin ?? 'https://pending.invalid'
@@ -65,6 +67,7 @@ export function createPendingStore({
   let items = new Map<string, QueuedItem>()
   let overlays = 0
   let seals = 0
+  let keepaliveBytes = 0
   const timers = new Map<string, number>()
   const inflight = new Map<string, Promise<boolean>>()
   const listeners = new Set<() => void>()
@@ -105,22 +108,30 @@ export function createPendingStore({
       })
     })
     async function request(): Promise<PendingEvent> {
-      const response = await fetcher(item.request.url, {
-        method: 'POST',
-        credentials: 'include',
-        keepalive: true,
-        redirect: 'error',
-        headers: { 'Content-Type': 'application/json' },
-        body: item.encodedBody,
-        signal: controller.signal,
-      })
-      const { status } = response
-      if (response.ok)
-        return { type: 'ok', status, result: await response.json().catch(() => null) }
-      if (status === 400 || status === 409) {
-        return { type: 'refused', status, result: await response.json().catch(() => null) }
+      // Over the cap the browser fails the request. Without `keepalive` it still sends while the page lives.
+      const keepalive = keepaliveBytes + item.bytes <= KEEPALIVE_LIMIT
+      const held = keepalive ? item.bytes : 0
+      keepaliveBytes += held
+      try {
+        const response = await fetcher(item.request.url, {
+          method: 'POST',
+          credentials: 'include',
+          keepalive,
+          redirect: 'error',
+          headers: { 'Content-Type': 'application/json' },
+          body: item.encodedBody,
+          signal: controller.signal,
+        })
+        const { status } = response
+        if (response.ok)
+          return { type: 'ok', status, result: await response.json().catch(() => null) }
+        if (status === 400 || status === 409) {
+          return { type: 'refused', status, result: await response.json().catch(() => null) }
+        }
+        return { type: 'error', status }
+      } finally {
+        keepaliveBytes -= held
       }
-      return { type: 'error', status }
     }
     try {
       return await Promise.race([request(), timedOut])
@@ -156,7 +167,7 @@ export function createPendingStore({
       items.delete(key)
       clearTimer(key)
     } else {
-      const item = { ...after, encodedBody: before.encodedBody }
+      const item = { ...after, encodedBody: before.encodedBody, bytes: before.bytes }
       items.set(key, item)
       armTimer(item, now)
       if (sends(before, item)) commit(item)
@@ -193,10 +204,8 @@ export function createPendingStore({
     decide(input) {
       if (seals > 0 || items.has(input.key)) return false
       const encodedBody = JSON.stringify(input.request.body)
-      if (
-        encodedBody === undefined ||
-        new TextEncoder().encode(encodedBody).length >= KEEPALIVE_LIMIT
-      ) {
+      const bytes = new TextEncoder().encode(encodedBody).length
+      if (encodedBody === undefined || bytes >= KEEPALIVE_LIMIT) {
         throw new Error('Pending decision body must be JSON under 64 KB')
       }
       const url = sameOriginPath(input.request.url)
@@ -209,6 +218,7 @@ export function createPendingStore({
           overlays > 0,
         ),
         encodedBody,
+        bytes,
       }
       items = new Map(items).set(item.key, item)
       armTimer(item, now)
@@ -274,6 +284,8 @@ export function createPendingStore({
   }
 
   return Object.assign(api, {
+    /** Tells this store apart from every other store the page made. */
+    scope: ++stores,
     undoMs,
     clock,
     getSnapshot: (): ReadonlyMap<string, PendingItem> => items,

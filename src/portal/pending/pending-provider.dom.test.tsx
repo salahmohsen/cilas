@@ -11,7 +11,7 @@ import { pendingToastId } from './pending-toast'
 import { usePortalSignOut } from './sign-out'
 import { StrictMode, useLayoutEffect, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { PendingProvider, usePending, usePendingItem } from './pending-provider'
+import { PendingProvider, usePending, usePendingItem, usePendingStore } from './pending-provider'
 import { COMMIT_TIMEOUT_MS, type PendingApi, type PendingView } from './store'
 
 const input = { key: 'one', label: 'Approve', request: { url: '/api/review', body: {} } }
@@ -286,6 +286,7 @@ it('dropping the oldest toast leaves its item undoable and updating its id has n
 
   function Decisions() {
     const pending = usePending()
+    const { scope } = usePendingStore()
     const { update } = useToastStack()
     const first = useFirstItem()
     return (
@@ -299,7 +300,9 @@ it('dropping the oldest toast leaves its item undoable and updating its id has n
         >
           Decide three
         </button>
-        <button onClick={() => update(pendingToastId(input.key), { title: 'Resurrected first' })}>
+        <button
+          onClick={() => update(pendingToastId(scope, input.key), { title: 'Resurrected first' })}
+        >
           Update dropped toast
         </button>
         <button onClick={() => pending.undo(input.key)}>Undo first row</button>
@@ -391,6 +394,37 @@ it('an item that fails during the unmount flush leaves a finite toast with no Tr
   })
   expect(screen.getByText('Not saved.')).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull()
+})
+
+it('a remounted provider never touches a toast of the earlier store', async () => {
+  function Page({ session }: { session: number }) {
+    return (
+      <AppRouterContext.Provider value={createBrowserRouter().router}>
+        <IntlProvider>
+          <ToastStackProvider limit={2}>
+            <PendingProvider
+              key={session}
+              undoMs={5000}
+              fetcher={() => new Promise<Response>(() => {})}
+            >
+              <Probe />
+            </PendingProvider>
+            <ToastStack label="Notifications" />
+          </ToastStackProvider>
+        </IntlProvider>
+      </AppRouterContext.Provider>
+    )
+  }
+  const view = render(<Page session={1} />)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  view.rerender(<Page session={2} />)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  await act(async () => {
+    vi.advanceTimersByTime(1)
+  })
+  expect(screen.getByLabelText('State')).toHaveTextContent('pending')
+  for (const undo of screen.getAllByRole('button', { name: 'Undo' })) fireEvent.click(undo)
+  expect(screen.getByLabelText('State')).toHaveTextContent('undone')
 })
 
 it('a toast that drops its focused button with no focusout lets the next decision run', async () => {

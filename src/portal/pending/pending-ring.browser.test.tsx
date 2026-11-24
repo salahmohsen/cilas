@@ -13,7 +13,8 @@ import { PendingRing } from './pending-ring'
 
 const itemKey = 'review:articles:12'
 const label = 'Article'
-const clock = { now: () => 0, setTimeout: () => 0, clearTimeout: () => {} }
+let now = 0
+const clock = { now: () => now, setTimeout: () => 0, clearTimeout: () => {} }
 
 function Trial({ rtl = false }: { rtl?: boolean }) {
   const pending = usePending()
@@ -59,7 +60,10 @@ const touch = (el: HTMLElement) => {
   fireEvent(el, new PointerEvent('click', { bubbles: true, pointerType: 'touch' }))
 }
 
-afterEach(resetMedia)
+afterEach(async () => {
+  now = 0
+  await resetMedia()
+})
 
 describe('pending: ring', () => {
   it('reduced motion shows time as text and no arc', async () => {
@@ -127,6 +131,23 @@ describe('pending: ring', () => {
     await expect
       .poll(() => ring.getAttribute('aria-label'))
       .toBe('Article. Undo. 5 seconds left. Timer paused.')
+  })
+
+  it('counts down as the clock advances, holds while paused and goes on after', async () => {
+    const ring = setup()
+    const outside = screen.getByRole('button', { name: 'Decide' })
+    const shows = async (seconds: number, paused = '') => {
+      await expect.poll(() => ring.textContent).toBe(String(seconds))
+      expect(ring).toHaveAccessibleName(`Article. Undo. ${seconds} seconds left.${paused}`)
+    }
+    now = 2000
+    await shows(3)
+    touch(ring)
+    now = 9000
+    await shows(3, ' Timer paused.')
+    fireEvent(outside, new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))
+    now = 10_000
+    await shows(2)
   })
 
   it('carries the configured undo window', () => {

@@ -1,16 +1,17 @@
 import type { ToastOptions } from '@/components/arc/toast-stack/toast-stack'
 import { FINISHED_MS } from './store'
 
-export const pendingToastId = (key: string) => `pending:${key}`
+/** `scope` is the store's, so a later store never reuses the id of a toast that an earlier one still updates. */
+export const pendingToastId = (scope: number, key: string) => `pending:${scope}:${key}`
 
 export function pendingToast(
-  key: string,
+  id: string,
   title: string,
   onUndo: () => void,
   undoLabel = 'Undo',
 ): ToastOptions {
   return {
-    id: pendingToastId(key),
+    id,
     type: 'info',
     title,
     action: { label: undoLabel, onClick: onUndo },
@@ -19,12 +20,12 @@ export function pendingToast(
 }
 
 export function sentToast(
-  key: string,
+  id: string,
   title: string,
   type: 'success' | 'error' = 'success',
 ): ToastOptions {
   return {
-    id: pendingToastId(key),
+    id,
     type,
     title,
     description: undefined,
@@ -34,13 +35,13 @@ export function sentToast(
 }
 
 export function failedToast(
-  key: string,
+  id: string,
   title: string,
   onRetry?: () => void,
   retryLabel = 'Try again',
 ): ToastOptions {
   return {
-    ...sentToast(key, title, 'error'),
+    ...sentToast(id, title, 'error'),
     duration: Infinity,
     action: onRetry ? { label: retryLabel, onClick: onRetry } : undefined,
   }

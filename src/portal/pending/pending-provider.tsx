@@ -71,12 +71,12 @@ export function PendingProvider({
         const before = prior.get(key)
         if (before === state) continue
         prior.set(key, state)
-        const id = pendingToastId(key)
+        const id = pendingToastId(store.scope, key)
         if ((state === 'pending' || state === 'paused') && before === undefined) {
           const n = Math.ceil(store.undoMs / 1000)
           toast({
             ...pendingToast(
-              key,
+              id,
               item.toastLine?.(n) ?? t('decision', { n }),
               () => store.undo(key),
               t('undo'),
@@ -92,17 +92,17 @@ export function PendingProvider({
           const title = t(
             emailed === null ? 'decided' : emailed === false ? 'emailFailed' : 'emailSent',
           )
-          update(id, sentToast(key, title, emailed === false ? 'error' : 'success'))
+          update(id, sentToast(id, title, emailed === false ? 'error' : 'success'))
         } else if (state === 'failed') {
           const retry = status === 403 ? undefined : () => store.retry(key)
           update(
             id,
-            failedToast(key, t(status === 403 ? 'signInAgain' : 'notSaved'), retry, t('tryAgain')),
+            failedToast(id, t(status === 403 ? 'signInAgain' : 'notSaved'), retry, t('tryAgain')),
           )
         } else if (state === 'undone') {
           // A refusal says why. An undo by the reader (no status) just closes the toast.
-          if (status === 409) update(id, sentToast(key, t('changed'), 'error'))
-          else if (status === 400) update(id, sentToast(key, t('notSaved'), 'error'))
+          if (status === 409) update(id, sentToast(id, t('changed'), 'error'))
+          else if (status === 400) update(id, sentToast(id, t('notSaved'), 'error'))
           else dismiss(id)
         }
       }
@@ -117,7 +117,7 @@ export function PendingProvider({
     }
     const onPageShow = (event: PageTransitionEvent) => {
       if (!event.persisted) return
-      for (const key of mirrored.current.keys()) dismiss(pendingToastId(key))
+      for (const key of mirrored.current.keys()) dismiss(pendingToastId(store.scope, key))
       mirrored.current.clear()
       store.reset()
       refresh()
@@ -167,10 +167,8 @@ export function PendingProvider({
           // The store ends here, so a "Try again" would do nothing. A failed toast gets a normal finish instead.
           for (const { key, state, status } of store.getSnapshot().values()) {
             if (state !== 'failed') continue
-            update(
-              pendingToastId(key),
-              sentToast(key, t(status === 403 ? 'signInAgain' : 'notSaved'), 'error'),
-            )
+            const id = pendingToastId(store.scope, key)
+            update(id, sentToast(id, t(status === 403 ? 'signInAgain' : 'notSaved'), 'error'))
           }
           store.destroy()
         })
