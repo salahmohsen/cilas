@@ -98,15 +98,9 @@ export const mayRunEditorLocking = (
   return target ? mayEditTarget(req, target) : false
 }
 
-const namesCaller = (holder: LockFields['user'], user: PayloadRequest['user']) => {
-  const id = relId(holder?.value)
-  return Boolean(
-    user &&
-    holder?.relationTo === user.collection &&
-    (typeof id === 'number' || typeof id === 'string') &&
-    String(id) === String(user.id),
-  )
-}
+/** Ids are compared as stored: a string id for a numeric key names nobody. */
+const namesCaller = (holder: LockFields['user'], user: PayloadRequest['user']) =>
+  Boolean(user && holder?.relationTo === user.collection && relId(holder.value) === user.id)
 
 const lockInCallersNameOnEditableTarget: Access = ({ req, data }) => {
   if (isAdminUser(req.user)) return true
@@ -187,13 +181,22 @@ const scopeLockLookup: CollectionBeforeOperationHook = ({
   return { ...args, req: scopedReq }
 }
 
-/** Who is editing is for the people who can edit, not everyone who can read. */
+/** Ids start at 1. Payload's edit view reads locks of every document it opens. */
+const noLocks: Where = { id: { equals: 0 } }
+
+/**
+ * Who is editing is for the people who can edit, not everyone who can read.
+ * Someone who can read but not edit sees no locks rather than an error:
+ * Payload's edit view does not catch a refused lock read, so the page would
+ * render blank.
+ */
 const readLocksOnEditableTarget: Access = async ({ req, id }) => {
   if (isAdminUser(req.user)) return true
   if (!req.user) return false
   const lock = id === undefined ? null : await lockByID(req, id)
   const target = lock ? targetOf(lock) : (req.context[LOCK_SCOPE] as LockTarget | undefined)
-  return target ? (await mayEditTarget(req, target)) && targetWhere(target) : false
+  if (!target) return false
+  return (await mayEditTarget(req, target)) ? targetWhere(target) : noLocks
 }
 
 /** Payload generates this hidden collection while sanitizing config. */

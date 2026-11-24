@@ -9731,7 +9731,7 @@
     "field": "*",
     "rules": {
       "create": "lockInCallersNameOnEditableTarget#f4a34e9d",
-      "read": "readLocksOnEditableTarget#478aa41c",
+      "read": "readLocksOnEditableTarget#e44bf588",
       "update": "takeOverEditableTargetLock#b2df6dfa",
       "delete": "releaseOwnEditableTargetLock#32a6ed68",
       "unlock": "payload:defaultUnlock"

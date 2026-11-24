@@ -75,8 +75,9 @@ const browserFor = async (role) => {
     ab(role, ['find', 'label', 'Email', 'fill', email])
     try {
       run(role, ['find', 'label', 'Password', 'fill', password])
-    } catch {
-      throw new Error(`could not fill the ${role} password`)
+    } catch (error) {
+      // Never the error's stderr, stdout or cmd: the command line holds the password.
+      throw new Error(`could not fill the ${role} password (exit status ${error.status})`)
     }
     ab(role, ['find', 'role', 'button', 'click', '--name', 'Sign in'])
     await sleep(6000)

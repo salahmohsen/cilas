@@ -146,7 +146,7 @@ describe('document locks', () => {
           },
           editor,
         ),
-      ).rejects.toMatchObject({ status: 400 })
+      ).rejects.toBeInstanceOf(Forbidden)
       await expect(
         patchLock(lock.id, { document: courseRef(otherCourse), user: holderOf(editor) }, editor),
       ).rejects.toBeInstanceOf(Forbidden)
@@ -189,10 +189,10 @@ describe('document locks', () => {
       await expect(
         payload.findByID({ collection: 'places', id: place, ...actor(member) }),
       ).resolves.toMatchObject({ id: place })
-      await expect(lockLookup(where, member)).rejects.toBeInstanceOf(Forbidden)
+      await expect(lockLookup(where, member)).resolves.toMatchObject({ docs: [] })
       await expect(
         payload.findByID({ collection: locks, id: lock.id, ...actor(member) }),
-      ).rejects.toBeInstanceOf(Forbidden)
+      ).rejects.toMatchObject({ status: 404 })
       await expect(lockLookup(where, admin)).resolves.toMatchObject({ docs: [{ id: lock.id }] })
     } finally {
       await deleteLock(lock.id, admin)
@@ -203,10 +203,12 @@ describe('document locks', () => {
     const lock = await lockOn(otherCourse, member, admin)
     try {
       await expect(lockOn(otherCourse, member)).rejects.toBeInstanceOf(Forbidden)
-      await expect(lockLookup(courseWhere(otherCourse), member)).rejects.toBeInstanceOf(Forbidden)
+      await expect(lockLookup(courseWhere(otherCourse), member)).resolves.toMatchObject({
+        docs: [],
+      })
       await expect(
         payload.findByID({ collection: locks, id: lock.id, ...actor(member) }),
-      ).rejects.toBeInstanceOf(Forbidden)
+      ).rejects.toMatchObject({ status: 404 })
       await expect(patchLock(lock.id, { user: holderOf(member) }, member)).rejects.toBeInstanceOf(
         Forbidden,
       )
