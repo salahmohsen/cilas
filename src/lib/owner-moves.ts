@@ -3,6 +3,7 @@ import { APIError, createLocalReq, NotFound, type Payload, type PayloadRequest }
 import type { User } from '@/payload-types'
 
 import { inTransaction } from './in-transaction'
+import { dataForLocale, type SplitBlock, type SplitField } from './locale-split'
 import { requireRowLock } from './row-lock'
 import { relId } from './relation'
 import { statusInputOf, statusOf, waitsOn, type ReviewedDoc } from './review-status'
@@ -24,7 +25,7 @@ export type OwnerMoveResult =
 
 type Target = { collection: ReviewedCollection; id: number }
 
-/** The reviewed fields of a row, every locale, as a write. */
+/** The reviewed fields of a row, read with every locale. */
 const reviewedFieldsOf = (collection: ReviewedCollection, row: Record<string, unknown>) =>
   Object.fromEntries(
     REVIEWED_FIELDS[collection]
@@ -32,10 +33,48 @@ const reviewedFieldsOf = (collection: ReviewedCollection, row: Record<string, un
       .map((field) => [field, row[field]]),
   )
 
-/** Gated reads and writes of every locale. Payload types `locale: 'all'` for reads only. */
+/** Gated reads of every locale. */
 const READ_ALL = (req: PayloadRequest, user: User) =>
   ({ req, user, overrideAccess: false, depth: 0, locale: 'all' }) as const
-const LOCALE_ALL = 'all' as unknown as 'en'
+
+/**
+ * Writes a value read with `locale: 'all'` as the owner, one `update` per
+ * locale (Payload ignores `locale: 'all'` on update). `first` goes with the
+ * default locale only. Every write is a draft save, so each one takes the row
+ * lock and runs the review hooks; the lock is held by the same transaction.
+ */
+const writeEveryLocale = async (
+  req: PayloadRequest,
+  user: User,
+  { collection, id }: Target,
+  source: Record<string, unknown>,
+  first: Record<string, unknown> = {},
+) => {
+  const { payload } = req
+  const { defaultLocale, localeCodes } = payload.config.localization as {
+    defaultLocale: string
+    localeCodes: string[]
+  }
+  const fields = payload.collections[collection].config.flattenedFields as unknown as SplitField[]
+  const blocks = payload.blocks as unknown as Record<string, SplitBlock | undefined>
+  const reviewed = fields.filter(({ name }) => REVIEWED_FIELDS[collection].includes(name))
+  for (const locale of [defaultLocale, ...localeCodes.filter((code) => code !== defaultLocale)]) {
+    await payload.update({
+      collection,
+      id,
+      draft: true,
+      data: {
+        ...dataForLocale(reviewed, source, locale, blocks),
+        ...(locale === defaultLocale ? first : {}),
+      } as never,
+      req,
+      user,
+      overrideAccess: false,
+      depth: 0,
+      locale: locale as 'en',
+    })
+  }
+}
 
 /** The newest copy of a document, every locale. `access` is a gated read or `overrideAccess: true`. */
 const latestCopy = async (
@@ -77,17 +116,13 @@ const discard = async (
     | undefined
   const returned =
     copy?.review?.status === 'changes_requested' || copy?.review?.status === 'rejected'
-  await payload.update({
-    collection,
-    id,
-    draft: true,
-    data: {
-      ...reviewedFieldsOf(collection, main),
-      ...(returned ? { review: { status: 'draft' } } : {}),
-    } as never,
-    ...as,
-    locale: LOCALE_ALL,
-  })
+  await writeEveryLocale(
+    req,
+    user,
+    { collection, id },
+    reviewedFieldsOf(collection, main),
+    returned ? { review: { status: 'draft' } } : {},
+  )
   return latest ? Number(latest.id) : undefined
 }
 
@@ -105,17 +140,12 @@ const restore = async (
     .findVersionByID({ collection, id: String(from), ...as })
     .catch((error) => (error instanceof NotFound ? null : Promise.reject(error)))
   if (!version || relId(version.parent) !== id) return false
-  await payload.update({
-    collection,
-    id,
-    draft: true,
-    data: reviewedFieldsOf(
-      collection,
-      version.version as unknown as Record<string, unknown>,
-    ) as never,
-    ...as,
-    locale: LOCALE_ALL,
-  })
+  await writeEveryLocale(
+    req,
+    user,
+    { collection, id },
+    reviewedFieldsOf(collection, version.version as unknown as Record<string, unknown>),
+  )
   return true
 }
 

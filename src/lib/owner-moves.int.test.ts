@@ -121,11 +121,12 @@ const publicTitle = async (id: number) =>
   (await payload.findByID({ collection: 'articles', id, draft: false, locale: 'en', depth: 0 }))
     .title
 
+let slugs = 0
 const submittedNew = async (title: string) => {
   const w = writes()
   const id = await w.create('articles', {
     title,
-    slug: uniq('owner-moves-new'),
+    slug: uniq(`owner-moves-new-${++slugs}`),
     authors: [Number(owner.person)],
     tier: 'owner',
     review: { status: 'draft' },
