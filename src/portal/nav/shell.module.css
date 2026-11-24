@@ -548,8 +548,9 @@
 }
 
 :global(html) {
+  --portal-bottom-inset: calc(var(--portal-bar-height, 0px) + env(safe-area-inset-bottom));
   --portal-clearance: calc(
-    var(--portal-bar-height, 0px) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
+    var(--portal-bottom-inset) + var(--toast-stack-height, 0px) +
       var(--pending-bar-block-size, 0px) + var(--space-6)
   );
 }

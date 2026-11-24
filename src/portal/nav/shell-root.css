@@ -11,10 +11,7 @@
     /* The whole bar above the safe area: 4rem of items and the 1px top border. */
     --portal-bar-border: 1px;
     --portal-bar-height: calc(4rem + var(--portal-bar-border));
-    --toast-stack-offset: calc(var(--portal-bar-height) + env(safe-area-inset-bottom));
-    scroll-padding-block-end: calc(
-      var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
-        var(--space-6)
-    );
+    --toast-stack-offset: var(--portal-bottom-inset);
+    scroll-padding-block-end: var(--portal-clearance);
   }
 }

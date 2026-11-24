@@ -32,10 +32,7 @@ export function UndoAllBar() {
     const priorOffset = root.getPropertyValue(TOAST_OFFSET)
     const measure = () => root.setProperty(BAR_SIZE, `${node.getBoundingClientRect().height}px`)
     measure()
-    root.setProperty(
-      TOAST_OFFSET,
-      `calc(var(--portal-bar-height, 0px) + env(safe-area-inset-bottom) + var(${BAR_SIZE}, 0px))`,
-    )
+    root.setProperty(TOAST_OFFSET, `calc(var(--portal-bottom-inset, 0px) + var(${BAR_SIZE}, 0px))`)
     const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null
     observer?.observe(node)
     return () => {

@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 41;
   inset-inline: 0;
-  inset-block-end: calc(var(--portal-bar-height, 0px) + env(safe-area-inset-bottom));
+  inset-block-end: var(--portal-bottom-inset, 0px);
   display: flex;
   align-items: center;
   justify-content: space-between;
