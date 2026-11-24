@@ -112,8 +112,8 @@ describe('Sidebar', () => {
     const space = screen.getByRole('link', { name: /^Other course/ })
     const names = [home, space].map((link) => link.textContent)
     expect(space).toHaveAccessibleName('Other course, more than 9 unread posts')
-    await userEvent.click(screen.getByRole('button', { name: 'Sidebar' }))
-    expect(screen.getByRole('button', { name: 'Sidebar' })).toHaveAttribute(
+    await userEvent.click(screen.getByRole('button', { name: /^(Fold|Unfold) sidebar$/ }))
+    expect(screen.getByRole('button', { name: /^(Fold|Unfold) sidebar$/ })).toHaveAttribute(
       'aria-expanded',
       'false',
     )
@@ -182,19 +182,26 @@ describe('Sidebar rows', () => {
     ).toBeGreaterThanOrEqual(3)
   })
 
-  it('a long name wraps and shows whole, beside the cover (ar)', async () => {
+  it('an expanded Arabic row truncates visually and reveals its full name on focus and hover', async () => {
     await page.viewport(1440, 800)
     document.documentElement.setAttribute('dir', 'rtl')
     renderSidebar({
       locale: 'ar',
-      spaces: [spaceRow({ label: 'Course on Arabic and Latin, part two' })],
+      spaces: [spaceRow({ label: LONG_ARABIC, unread: 3 })],
+      box: { width: 256, height: 600 },
     })
-    const row = screen.getByRole('link', { name: /^Course on Arabic/ })
-    const label = row.querySelector('bdi')!
-    const cover = row.querySelector('span')!.getBoundingClientRect()
-    const name = label.getBoundingClientRect()
-    expect(label.parentElement!.scrollHeight).toBeLessThanOrEqual(label.parentElement!.clientHeight)
-    expect(cover.left - name.right).toBeLessThan(16)
+    const row = screen.getByRole('link', { name: new RegExp(LONG_ARABIC) })
+    const label = row.querySelector('bdi[aria-hidden]')!.parentElement!
+    expect(getComputedStyle(label).textOverflow).toBe('ellipsis')
+    expect(getComputedStyle(label).whiteSpace).toBe('nowrap')
+    expect(label.scrollWidth).toBeGreaterThan(label.clientWidth)
+    row.focus()
+    await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent(LONG_ARABIC))
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull())
+    expect(row).toHaveFocus()
+    await userEvent.hover(row)
+    await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent(LONG_ARABIC))
   })
 
   it('a cover that fails to load leaves the empty slot', async () => {

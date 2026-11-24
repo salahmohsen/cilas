@@ -1796,6 +1796,8 @@
       "spacesNext": "A space opens when a course or a cohort you joined starts."
     },
     "fold": {
+      "fold": "Fold sidebar",
+      "unfold": "Unfold sidebar",
       "folded": "Sidebar folded",
       "unfolded": "Sidebar unfolded",
       "shortcutIsOn": "Sidebar shortcut on",

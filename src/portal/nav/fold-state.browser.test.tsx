@@ -42,7 +42,7 @@ const renderFold = () =>
     </IntlProvider>,
   )
 
-const fold = () => screen.getByRole('button', { name: 'Sidebar' })
+const fold = () => screen.getByRole('button', { name: /^(Fold|Unfold) sidebar$/ })
 const region = () => document.querySelector('[data-portal-live]')!
 const sidebar = () => document.querySelector('nav')!.parentElement!
 

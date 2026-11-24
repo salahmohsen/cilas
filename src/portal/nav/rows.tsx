@@ -91,7 +91,6 @@ export function SpaceRow({
         {row.cover && !coverFailed && (
           <Image src={row.cover} alt="" fill sizes="40px" onError={() => setCoverFailed(true)} />
         )}
-        {count && <span className={styles.dot} />}
       </span>
       {/* The name keeps the page's alignment; <bdi> only isolates its direction. With a count, the
           hidden text holds the name and the count together, so the link's name has no gap before the comma. */}

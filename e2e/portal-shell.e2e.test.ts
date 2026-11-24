@@ -321,7 +321,7 @@ test.describe('portal shell', () => {
             const labels = NAV_BY_ROLE[role].map(
               (item) => portal.nav[item.key as keyof typeof portal.nav],
             )
-            const fold = page.locator('[data-portal-crumbs] [data-portal-fold]')
+            const fold = page.locator('[data-portal-rail] header [data-portal-fold]')
             await fold.click()
             await expect(fold).toHaveAttribute('aria-expanded', 'false')
             for (const label of labels)
@@ -427,8 +427,7 @@ test.describe('portal shell', () => {
       ['student', 'admin'],
     ] as const
 
-    const foldButton = (page: Page, locale: Locale) =>
-      page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
+    const foldButton = (page: Page) => page.locator('[data-portal-rail] header [data-portal-fold]')
 
     const signOutHere = async (page: Page, locale: Locale) => {
       await accountButton(page, locale).click()
@@ -444,18 +443,18 @@ test.describe('portal shell', () => {
           const spacesPath = localePath('/en/spaces', locale)
           await inContextAt(browser, { baseURL, viewport: DESKTOP }, async (page) => {
             await login({ page, user: world.accounts[first], next: spacesPath })
-            await foldButton(page, locale).click()
-            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+            await foldButton(page).click()
+            await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'false')
             await page.reload()
-            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+            await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'false')
             await signOutHere(page, locale)
 
             await login({ page, user: world.accounts[second], next: spacesPath })
-            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'true')
+            await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'true')
             await signOutHere(page, locale)
 
             await login({ page, user: world.accounts[first], next: spacesPath })
-            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+            await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'false')
           })
         })
 
@@ -469,14 +468,14 @@ test.describe('portal shell', () => {
       try {
         const page = await context.newPage()
         await page.goto('/en/spaces')
-        await expect(foldButton(page, 'en')).toHaveAttribute('aria-expanded', 'true')
+        await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'true')
         expect(
           await page.evaluate(() =>
             getComputedStyle(document.documentElement).getPropertyValue('--portal-duration'),
           ),
         ).toMatch(/^\s*0m?s\s*$/)
-        await foldButton(page, 'en').click()
-        await expect(foldButton(page, 'en')).toHaveAttribute('aria-expanded', 'false')
+        await foldButton(page).click()
+        await expect(foldButton(page)).toHaveAttribute('aria-expanded', 'false')
         expect(
           await page
             .locator('[data-portal-rail]')
@@ -489,10 +488,7 @@ test.describe('portal shell', () => {
   })
 
   test.describe('fold trigger (1440)', () => {
-    const foldIn = (page: Page, locale: Locale) =>
-      page
-        .locator('[data-portal-crumbs]')
-        .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar, exact: true })
+    const foldIn = (page: Page) => page.locator('[data-portal-rail] header [data-portal-fold]')
     const foldCookie = async (page: Page) =>
       (await page.context().cookies()).some(
         (cookie) => cookie.name === `portal-folded-${world.accounts.fellow.id}`,
@@ -503,19 +499,14 @@ test.describe('portal shell', () => {
     for (const locale of LOCALES) {
       const portal = MESSAGES[locale].Portal
 
-      test(`the trigger is at the inline start of the header row (${locale})`, async ({
-        browser,
-      }) => {
+      test(`the trigger is at the inline end of the brand row (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const button = foldIn(page, locale)
+          const button = foldIn(page)
           await expect(button).toHaveCount(1)
-          await expect(page.locator('[data-portal-rail] [data-portal-fold]')).toHaveCount(0)
-          expect(
-            await page
-              .locator('main')
-              .evaluate((main) => main.firstElementChild?.hasAttribute('data-portal-crumbs')),
-          ).toBe(true)
+          await expect(page.locator('main [data-portal-fold]')).toHaveCount(0)
+          await expect(page.locator('main > :first-child')).toHaveAttribute('id', 'main')
+          await expect(button).toHaveAccessibleName(portal.fold.fold)
           await expect(button).toHaveAttribute('aria-expanded', 'true')
           await expect(button).toHaveAttribute('aria-keyshortcuts', '[')
           const target = await button.getAttribute('aria-controls')
@@ -525,24 +516,20 @@ test.describe('portal shell', () => {
               target,
             ),
           ).toBe(true)
-          const row = (await page.locator('[data-portal-crumbs]').boundingBox())!
+          const row = (await page.locator('[data-portal-rail] header').boundingBox())!
           const box = (await button.boundingBox())!
-          if (locale === 'en') expect(Math.abs(box.x - row.x)).toBeLessThanOrEqual(1)
-          else expect(Math.abs(box.x + box.width - (row.x + row.width))).toBeLessThanOrEqual(1)
-          const offset = async () =>
-            page.evaluate((rtl) => {
-              const main = document.querySelector('main')!.getBoundingClientRect()
-              const fold = document
-                .querySelector('[data-portal-crumbs] [data-portal-fold]')!
-                .getBoundingClientRect()
-              return rtl ? main.right - fold.right : fold.left - main.left
-            }, locale === 'ar')
-          const open = await offset()
+          if (locale === 'en')
+            expect(Math.abs(box.x + box.width - (row.x + row.width))).toBeLessThanOrEqual(1)
+          else expect(Math.abs(box.x - row.x)).toBeLessThanOrEqual(1)
+          await button.hover()
+          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.fold} [`)
           await button.click()
           await expect(button).toHaveAttribute('aria-expanded', 'false')
-          expect(Math.abs((await offset()) - open)).toBeLessThanOrEqual(1)
+          await expect(button).toHaveAccessibleName(portal.fold.unfold)
+          await button.blur()
+          await button.focus()
+          await expect(page.getByRole('tooltip')).toHaveText(`${portal.fold.unfold} [`)
           await page.setViewportSize(PHONE)
-          await expect(page.locator('[data-portal-crumbs]')).toBeHidden()
           await expect(button).toBeHidden()
         })
       })
@@ -550,7 +537,7 @@ test.describe('portal shell', () => {
       test(`[ folds from the main and not from an input (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const button = foldIn(page, locale)
+          const button = foldIn(page)
           await focusMain(page)
           await page.keyboard.press('BracketLeft')
           await expect(button).toHaveAttribute('aria-expanded', 'false')
@@ -604,7 +591,7 @@ test.describe('portal shell', () => {
         })
         await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const button = foldIn(page, locale)
+          const button = foldIn(page)
           await button.click()
           await expect(button).toHaveAttribute('aria-expanded', 'false')
           await expect(live(page)).toHaveText('')
@@ -635,7 +622,7 @@ test.describe('portal shell', () => {
           expect(
             await page
               .locator('main > #main')
-              .evaluate((el) => el.previousElementSibling?.hasAttribute('data-portal-crumbs')),
+              .evaluate((el) => el === el.parentElement?.firstElementChild),
           ).toBe(true)
           await page.keyboard.press('Tab')
           expect(
@@ -647,7 +634,7 @@ test.describe('portal shell', () => {
       test(`the shortcut turns off (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const button = foldIn(page, locale)
+          const button = foldIn(page)
           const item = (name: string) => page.getByRole('menuitem', { name, exact: true })
           await accountButton(page, locale).click()
           await item(portal.account.shortcutOff).click()
@@ -702,10 +689,7 @@ test.describe('portal shell', () => {
       inner.y >= outer.y - 1 &&
       inner.x + inner.width <= outer.x + outer.width + 1 &&
       inner.y + inner.height <= outer.y + outer.height + 1
-    const foldIn = (page: Page, locale: Locale) =>
-      page
-        .locator('[data-portal-crumbs]')
-        .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar, exact: true })
+    const foldIn = (page: Page) => page.locator('[data-portal-rail] header [data-portal-fold]')
     const bell = (page: Page, locale: Locale) =>
       page.getByRole('button', {
         name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
@@ -718,8 +702,8 @@ test.describe('portal shell', () => {
           await expect(accountButton(page, locale)).toBeVisible()
           for (const folded of [false, true]) {
             if (folded) {
-              await foldIn(page, locale).click()
-              await expect(foldIn(page, locale)).toHaveAttribute('aria-expanded', 'false')
+              await foldIn(page).click()
+              await expect(foldIn(page)).toHaveAttribute('aria-expanded', 'false')
               await expect
                 .poll(() =>
                   page
@@ -764,7 +748,7 @@ test.describe('portal shell', () => {
       test(`keyboard (${locale})`, async ({ browser }) => {
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          await accountButton(page, locale).focus()
+          await foldIn(page).focus()
           await page.keyboard.press('Tab')
           await expect(region(page, locale)).toBeFocused()
           const scrolledPast = async (from: number) => {
@@ -877,7 +861,7 @@ test.describe('portal shell', () => {
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
           for (const folded of [false, true]) {
-            if (folded) await foldIn(page, locale).click()
+            if (folded) await foldIn(page).click()
             await expect(track(page)).toBeVisible()
             await expect
               .poll(async () => {
@@ -909,6 +893,8 @@ test.describe('portal shell', () => {
         expect(await region(page, 'en').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
           'auto',
         )
+        await region(page, 'en').focus()
+        await expect(track(page)).toHaveCSS('opacity', '1')
         const bar = (await track(page).boundingBox())!
         const before = await metrics(page, 'en')
         const target = Math.min(
@@ -1297,9 +1283,7 @@ test.describe('portal shell', () => {
                   }
                   const nav = portalNavOf(page, locale)
                   await expect(nav.locator(other)).toBeVisible()
-                  const fold = page.getByRole('button', {
-                    name: MESSAGES[locale].Portal.nav.sidebar,
-                  })
+                  const fold = page.locator('[data-portal-rail] header [data-portal-fold]')
                   await fold.click()
                   await expect(fold).toHaveAttribute('aria-expanded', 'false')
                   await expect(nav.locator(other)).toBeVisible()
@@ -1320,7 +1304,7 @@ test.describe('portal shell', () => {
           const main = (await page.locator('main').boundingBox())!
           expect(rail.x > main.x, locale).toBe(locale === 'ar')
           chevron[locale] = await page
-            .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
+            .locator('[data-portal-rail] header [data-portal-fold]')
             .locator('svg')
             .evaluate((svg) => `${getComputedStyle(svg).transform} ${getComputedStyle(svg).scale}`)
         })
@@ -1381,7 +1365,7 @@ test.describe('portal shell', () => {
               viewport === PHONE
                 ? nav.locator('a, button')
                 : page.locator(
-                    '[data-portal-rail] nav a, [data-portal-crumbs] button[data-portal-fold]',
+                    '[data-portal-rail] nav a, [data-portal-rail] button[data-portal-fold]',
                   )
             await expect
               .poll(async () => (await sizes(page, targets)).length)
@@ -1449,7 +1433,7 @@ test.describe('portal shell', () => {
                 ])
               const page = await context.newPage()
               await page.goto(localePath('/en/spaces', locale))
-              const header = page.locator('[data-portal-rail] header')
+              const header = page.locator('[data-portal-rail]')
               const box = (await header.boundingBox())!
               const bell = (await header
                 .getByRole('button', {
@@ -1474,9 +1458,8 @@ test.describe('portal shell', () => {
           const sheet = await openMore(page, locale)
           await page.setViewportSize({ width: 1000, height: 800 })
           await expect(sheet).toHaveCount(0)
-          const focused = page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
+          const focused = page.locator('[data-portal-rail] header [data-portal-fold]')
           await expect(focused).toBeFocused()
-          await expect(page.locator('[data-portal-crumbs] [data-portal-fold]')).toBeFocused()
           await expect(focused).toHaveAttribute('aria-keyshortcuts', '[')
         })
       })

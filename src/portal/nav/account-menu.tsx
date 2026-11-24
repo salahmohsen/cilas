@@ -33,12 +33,14 @@ export function AccountMenu(): React.JSX.Element | null {
   const { theme, setTheme } = useTheme()
   const session = useSession()
   const signOut = usePortalSignOut()
-  const { shortcutOn, setShortcutOn } = useFold()
+  const { folded, shortcutOn, setShortcutOn } = useFold()
   const user = useMemo(() => (session ? menuUser(session) : null), [session])
   if (!user) return null
   return (
     <UserMenu
       user={user}
+      showName={!folded}
+      align="center"
       showTheme
       theme={theme && THEMES.has(theme) ? (theme as ThemePreference) : 'system'}
       onThemeChange={setTheme}
