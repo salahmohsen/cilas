@@ -25,8 +25,7 @@ import {
   adminRecipients,
   emailRecipients,
   ownerRecipients,
-  reviewEmailUrl,
-  sendReviewEmail,
+  sendReviewEmails,
 } from '@/lib/review-mail'
 
 /**
@@ -344,16 +343,14 @@ const notifyReview =
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
     if (!removed) {
-      for (const recipient of await emailRecipients(req, people, state)) {
-        await sendReviewEmail(
-          req,
-          recipient,
-          state,
-          removal ? `${title} (removal from the site)` : title,
-          doc.review?.review_note,
-          { noun, url: reviewEmailUrl(recipient, target) },
-        )
-      }
+      await sendReviewEmails(
+        req,
+        await emailRecipients(req, people, state),
+        state,
+        removal ? `${title} (removal from the site)` : title,
+        doc.review?.review_note,
+        { noun, target },
+      )
     }
     // The bell (src/components/admin/notification-bell.tsx) takes the short
     // name by kind, and `line` is the detail under it.

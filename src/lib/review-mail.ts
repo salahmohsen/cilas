@@ -119,23 +119,39 @@ export const reviewEmailUrl = (recipient: LocalRecipient, target: DocumentTarget
   absoluteLink(documentHref(target), recipient.locale)
 
 /**
- * One message to one address, so no recipient sees another's.
+ * One message to each address, so no recipient sees another's, sent one at a
+ * time. A dropped message is logged with its account id, and the next one still
+ * goes.
  *
- * The settings are read without `req`, so a failed read cannot roll back the
- * request's transaction. `withSavepoint` cannot hold this read: it populates.
+ * The settings are read once, without `req`, so a failed read cannot roll back
+ * the request's transaction. `withSavepoint` cannot hold this read: it
+ * populates.
  */
-export const sendReviewEmail = async (
+export const sendReviewEmails = async (
   req: PayloadRequest,
-  recipient: Recipient,
+  recipients: LocalRecipient[],
   state: ReviewState,
   title: string,
   note: string | null | undefined,
-  about: { noun: string; url: string },
+  { noun, target }: { noun: string; target: DocumentTarget },
 ): Promise<void> => {
-  try {
-    const mail = await reviewMail(await getEmailSettings(req.payload), state, title, note, about)
-    await req.payload.sendEmail({ to: recipient.email, ...mail })
-  } catch (error) {
-    req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
+  if (!recipients.length) return
+  const settings = getEmailSettings(req.payload)
+  const byUrl = new Map<string, ReturnType<typeof reviewMail>>()
+  for (const recipient of recipients) {
+    try {
+      const url = reviewEmailUrl(recipient, target)
+      const mail =
+        byUrl.get(url) ??
+        settings.then((read) => reviewMail(read, state, title, note, { noun, url }))
+      byUrl.set(url, mail)
+      await req.payload.sendEmail({ to: recipient.email, ...(await mail) })
+    } catch (error) {
+      req.payload.logger.error({
+        err: error,
+        recipient: recipient.id,
+        msg: `Review email for "${title}" failed`,
+      })
+    }
   }
 }
