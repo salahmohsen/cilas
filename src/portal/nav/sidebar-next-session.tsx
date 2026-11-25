@@ -85,10 +85,12 @@ export async function SidebarNextSession({
       {next.cover && (
         <Image src={next.cover.url} alt="" fill sizes="232px" style={focalPointStyle(next.cover)} />
       )}
-      <small>
-        {t('next')} · <time dateTime={dateTime}>{schedule}</time>
-      </small>
-      <bdi className={styles.nextTitle}>{next.sessionTitle ?? next.title}</bdi>
+      <span className={styles.nextCopy}>
+        <small>
+          {t('next')} · <time dateTime={dateTime}>{schedule}</time>
+        </small>
+        <bdi className={styles.nextTitle}>{next.sessionTitle ?? next.title}</bdi>
+      </span>
     </Link>
   )
 }

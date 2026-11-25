@@ -86,13 +86,14 @@
 }
 
 .nextCard {
+  --next-card-padding: var(--space-3);
   position: relative;
   isolation: isolate;
   display: grid;
   align-content: end;
   gap: var(--space-1);
   min-block-size: 44px;
-  padding: var(--space-3);
+  padding: var(--next-card-padding);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface);
@@ -129,8 +130,45 @@
 
 .nextCard[data-session-cover]::before {
   z-index: -1;
-  background: oklch(12% 0 0 / 0.72);
+  background: linear-gradient(
+    180deg,
+    oklch(0% 0 0 / 0.2) 0%,
+    oklch(0% 0 0 / 0.35) 40%,
+    oklch(0% 0 0 / 0.78) 100%
+  );
   content: '';
+}
+
+.nextCopy {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* A long title moves the copy up into the lighter part of the cover. Keep the
+   extra contrast tied to the copy's real height so the rest of the photo stays visible. */
+.nextCard[data-session-cover] .nextCopy::before {
+  position: absolute;
+  inset: calc(-1 * var(--next-card-padding));
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    oklch(0% 0 0 / 0.44) var(--next-card-padding),
+    oklch(0% 0 0 / 0.44) calc(100% - var(--next-card-padding)),
+    transparent
+  );
+  content: '';
+}
+
+@media (prefers-contrast: more) {
+  .nextCard[data-session-cover]::before {
+    background: oklch(0% 0 0 / 0.8);
+  }
+
+  .nextCard[data-session-cover] .nextCopy::before {
+    content: none;
+  }
 }
 
 .nextTitle {
