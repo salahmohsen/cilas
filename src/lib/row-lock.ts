@@ -38,19 +38,15 @@ const timedOut = (error: unknown): boolean => {
  * `requireRowLock` for a caller that cannot). A collection the adapter has no
  * table for is a programming error and throws.
  *
- * The default mode, `writers`, is `for no key update`: it conflicts with
- * itself, with `for update` and with an ordinary row update, so writers wait
- * for each other. It does not conflict with `for key share`, which every
- * insert of a row that references this one (a version row, for example) takes
- * through its foreign key. The `references` mode is `for update`: it also
- * holds back those inserts, for a delete that must see every row that points
- * at this one before it decides.
+ * The mode is `for no key update`: it conflicts with itself, with `for update`
+ * and with an ordinary row update, so writers wait for each other. It does not
+ * conflict with `for key share`, which every insert of a row that references
+ * this one (a version row, for example) takes through its foreign key.
  */
 export const lockRow = async (
   req: PayloadRequest,
   collection: string,
   id: number | string,
-  mode: 'writers' | 'references' = 'writers',
 ): Promise<boolean> => {
   const adapter = req.payload.db as unknown as PostgresAdapter
   const tableName = adapter.tableNameMap.get(toSnakeCase(collection))
@@ -63,9 +59,7 @@ export const lockRow = async (
   try {
     await db.execute(sql`set local lock_timeout = '5s'`)
     await db.execute(
-      mode === 'references'
-        ? sql`SELECT ${table.id} FROM ${table} WHERE ${table.id} = ${id} FOR UPDATE`
-        : sql`SELECT ${table.id} FROM ${table} WHERE ${table.id} = ${id} FOR NO KEY UPDATE`,
+      sql`SELECT ${table.id} FROM ${table} WHERE ${table.id} = ${id} FOR NO KEY UPDATE`,
     )
   } catch (error) {
     if (timedOut(error)) throw new APIError('This document is busy. Try again.', 409)
@@ -81,9 +75,8 @@ export const requireRowLock = async (
   req: PayloadRequest,
   collection: string,
   id: number | string,
-  mode: 'writers' | 'references' = 'writers',
 ): Promise<void> => {
-  if (!(await lockRow(req, collection, id, mode))) {
+  if (!(await lockRow(req, collection, id))) {
     throw new APIError('Could not lock the document. Try again.', 500)
   }
 }
