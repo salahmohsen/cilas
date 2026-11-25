@@ -289,7 +289,8 @@ const recordReviewEvent =
       docs: [version],
     } = await req.payload.findVersions({
       collection,
-      where: { parent: { equals: doc.id } },
+      // WARNING: a publish of one locale saves a snapshot after the write's own version.
+      where: { parent: { equals: doc.id }, snapshot: { not_equals: true } },
       sort: ['-updatedAt', '-id'],
       limit: 1,
       depth: 0,
