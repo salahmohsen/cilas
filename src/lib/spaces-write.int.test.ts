@@ -1617,6 +1617,8 @@ describe('spaces write', () => {
           title: 'Probe untaught course',
           slug: `${COURSE_SLUG}-untaught`,
           course_type: 'THEMATIC',
+          tier: 'owner',
+          cycle: (await payload.findByID({ collection: 'courses', id: course.id, depth: 0 })).cycle,
           _status: 'published',
         } as never,
         draft: false,
