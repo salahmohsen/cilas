@@ -1,7 +1,7 @@
 import { getPayload, type Payload } from 'payload'
 
 import config from '@/payload.config'
-import { pageSiteSettings } from '@/lib/ai-buttons'
+import { pageSiteSettings } from '@/lib/site-settings'
 import { CONTACT_FORM_TITLE } from '@/lib/contact'
 
 /** The Contact form, its topics in the page's language, and the address shown beside it. */
