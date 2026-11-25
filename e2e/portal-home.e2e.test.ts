@@ -294,9 +294,11 @@ test.describe('portal Home and Inbox', () => {
 
           await row.focus()
           await expect(row).toBeFocused()
-          for (let i = 0; i < count; i++) await page.keyboard.press('Tab')
-          await expect(cards.nth(count - 1)).toBeFocused()
-          await expect(cards.nth(count - 1)).toBeInViewport({ ratio: 0.99 })
+          for (let i = 0; i < count; i++) {
+            await page.keyboard.press('Tab')
+            await expect(cards.nth(i)).toBeFocused()
+            await expect(cards.nth(i)).toBeInViewport({ ratio: 0.99 })
+          }
           expect(
             await page.evaluate(() => {
               const root = document.scrollingElement!

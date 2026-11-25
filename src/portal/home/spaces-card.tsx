@@ -10,6 +10,7 @@ import type { SpaceLink } from '@/portal/nav/space-links'
 import { SpaceCover, UnreadCircle } from '@/portal/nav/space-parts'
 import { useSpaceUnread } from '@/portal/nav/space-unread'
 import styles from './home.module.css'
+import { SpaceList } from './space-list'
 
 /** One card of "Your spaces": the nav row's data, what the space is, and when it last had a post. */
 export type SpaceCardData = SpaceLink & { kind: SpaceKind; lastActivity: string | null }
@@ -82,13 +83,13 @@ export function SpacesCard({
           className={styles.scroller}
           viewportClassName={styles.scrollerViewport}
         >
-          <ul className={styles.spaces} role="list">
+          <SpaceList className={styles.spaces!}>
             {spaces.map((space) => (
               <li key={space.id}>
                 <SpaceCard space={space} />
               </li>
             ))}
-          </ul>
+          </SpaceList>
         </ScrollArea>
       ) : (
         <div className={styles.noSpaces}>
