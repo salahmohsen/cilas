@@ -392,7 +392,7 @@ test.describe('portal Home and Inbox', () => {
           '[data-latest] li:first-child a',
           '[data-latest] > a[href="/en/spaces/inbox"]',
           '[data-week] a[href="/en/spaces/calendar"]',
-          '[data-week] button[aria-pressed]',
+          '[data-week] button[aria-pressed][tabindex="0"]',
         ]
         for (const target of targets.slice(1)) await expect(page.locator(target)).toBeVisible()
         const stops: number[] = []
