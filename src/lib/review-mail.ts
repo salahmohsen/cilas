@@ -123,9 +123,8 @@ export const reviewEmailUrl = (recipient: LocalRecipient, target: DocumentTarget
  * time. A dropped message is logged with its account id, and the next one still
  * goes.
  *
- * The settings are read once, without `req`, so a failed read cannot roll back
- * the request's transaction. `withSavepoint` cannot hold this read: it
- * populates.
+ * Read settings once on the request's connection. If the read fails, roll
+ * back to the savepoint so the review decision can still commit.
  */
 export const sendReviewEmails = async (
   req: PayloadRequest,
@@ -136,7 +135,7 @@ export const sendReviewEmails = async (
   { noun, target }: { noun: string; target: DocumentTarget },
 ): Promise<void> => {
   if (!recipients.length) return
-  const settings = getEmailSettings(req.payload)
+  const settings = withSavepoint(req, (scoped) => getEmailSettings(req.payload, scoped))
   const byUrl = new Map<string, ReturnType<typeof reviewMail>>()
   for (const recipient of recipients) {
     try {

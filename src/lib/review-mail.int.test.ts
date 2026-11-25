@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, afterEach, beforeAll, describe, expect, it, onTestFinished, vi } from 'vitest'
@@ -113,17 +114,6 @@ const breakCollectionRead = (
       return args
     },
   )
-  return broken
-}
-
-const breakEmailSettingsRead = () => {
-  const broken = { times: 0 }
-  const { hooks } = payload.globals.config.find((item) => item.slug === 'email-settings')!
-  hookForThisTest(hooks.beforeRead, async ({ doc, req }) => {
-    broken.times += 1
-    await failInPostgres(req)
-    return doc
-  })
   return broken
 }
 
@@ -257,17 +247,73 @@ describe('review-events: one email per recipient', () => {
     },
   )
 
-  it('keeps the decision and names who missed the email when the settings read fails', async () => {
+  it('keeps the decision when the settings read fails on the approval connection', async () => {
     const id = await submitAsOwner('broken-settings')
     const logged = vi.spyOn(payload.logger, 'error')
-    const broken = breakEmailSettingsRead()
+    let approvalSession: Awaited<ReturnType<typeof sessionDb>> = null
+    const settingsSessions: Array<Awaited<ReturnType<typeof sessionDb>>> = []
+    hookForThisTest(payload.collections.articles.config.hooks.beforeChange, async ({ req }) => {
+      approvalSession = await sessionDb(req)
+    })
+    const { hooks } = payload.globals.config.find((item) => item.slug === 'email-settings')!
+    hookForThisTest(hooks.beforeRead, async ({ req }) => {
+      settingsSessions.push(await sessionDb(req))
+      await failInPostgres(req)
+    })
 
     await approve(id)
 
-    expect(broken.times).toBe(1)
+    expect(approvalSession).not.toBeNull()
+    expect(settingsSessions).toHaveLength(1)
+    expect(settingsSessions[0]).toBe(approvalSession)
     expect(await storedStatus(id)).toBe('approved')
     expect(inbox.to(owner.email)).toHaveLength(0)
     expect(logged).toHaveBeenCalledWith(expect.objectContaining({ recipient: owner.id }))
+  })
+
+  it('uses the configured logo and address in an approval email', async () => {
+    const id = await submitAsOwner('settings-relations')
+    const image = await readFile(new URL('../../testing/files/pixel.png', import.meta.url))
+    const logo = track(
+      'media',
+      await payload.create({
+        collection: 'media',
+        data: { alt: 'Review mail logo' },
+        file: {
+          name: `${uniq('review-mail-logo')}.png`,
+          mimetype: 'image/png',
+          data: image,
+          size: image.length,
+        },
+      }),
+    )
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        locale: 'en',
+        data: {
+          name: 'Review mail place',
+          slug: uniq('review-mail-place'),
+          address: '21 Review Mail Street',
+        },
+      }),
+    )
+    const { hooks } = payload.globals.config.find((item) => item.slug === 'email-settings')!
+    hookForThisTest(hooks.beforeRead, ({ doc }) => ({
+      ...doc,
+      logo: logo.id,
+      address_place: place.id,
+    }))
+
+    await approve(id)
+
+    const messages = inbox.to(owner.email)
+    expect(messages).toHaveLength(1)
+    expect(logo.url).toBeTruthy()
+    expect(messages[0]!.html).toContain(`src="${logo.url}"`)
+    expect(messages[0]!.html).toContain('21 Review Mail Street')
+    expect(await storedStatus(id)).toBe('approved')
   })
 
   it.each([
