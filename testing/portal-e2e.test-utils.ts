@@ -77,6 +77,34 @@ export const axeOver = async (page: Page, allowed: Record<string, number>) =>
 
 export const PHONE = WIDTHS.phone
 
+/** Marks `<html data-work-stream-open>` when the next document's own notification stream opens. */
+export const observeWorkStream = (page: Page) =>
+  page.addInitScript({
+    content: `
+      window.EventSource = new Proxy(window.EventSource, {
+        construct(target, args) {
+          const stream = Reflect.construct(target, args)
+          if (new URL(stream.url).pathname === '/api/notifications/stream') {
+            stream.addEventListener('open', () => {
+              document.documentElement.dataset.workStreamOpen = 'true'
+            })
+          }
+          return stream
+        },
+      })
+    `,
+  })
+
+/**
+ * Opens `path` and returns once that document hears new notifications. A wait for
+ * any stream response is not enough: the page being left can answer it.
+ */
+export const gotoLive = async (page: Page, path: string) => {
+  await observeWorkStream(page)
+  await page.goto(path)
+  await expect(page.locator('html')).toHaveAttribute('data-work-stream-open', 'true')
+}
+
 /** Opens the phone More sheet from the bottom bar; returns the open sheet. */
 export const openMore = async (page: Page, locale: Locale) => {
   const portal = MESSAGES[locale].Portal

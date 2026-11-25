@@ -15,7 +15,7 @@ import {
   MESSAGES,
   WIDTHS,
 } from '../testing/portal.fixture'
-import { mailOff, navName } from '../testing/portal-e2e.test-utils'
+import { mailOff, navName, observeWorkStream } from '../testing/portal-e2e.test-utils'
 
 type Role = keyof typeof EMPTY_ACCOUNTS
 
@@ -130,23 +130,6 @@ const chipOf = (page: Page) => inboxLink(page).locator('[data-nav-count]')
 const totalOf = (page: Page) => page.locator('main section[data-needs] h2 > span')
 const write = (page: Page, id: number, data: object) =>
   page.request.patch(`/api/articles/${id}?depth=0&locale=en`, { data })
-
-const observeWorkStream = (page: Page) =>
-  page.addInitScript({
-    content: `
-      window.EventSource = new Proxy(window.EventSource, {
-        construct(target, args) {
-          const stream = Reflect.construct(target, args)
-          if (new URL(stream.url).pathname === '/api/notifications/stream') {
-            stream.addEventListener('open', () => {
-              document.documentElement.dataset.workStreamOpen = 'true'
-            })
-          }
-          return stream
-        },
-      })
-    `,
-  })
 
 test.describe('portal Inbox with a small review queue', () => {
   test.describe.configure({ timeout: 120_000 })

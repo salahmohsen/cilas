@@ -27,6 +27,7 @@ import {
 import {
   AXE_TAGS,
   axeOver,
+  gotoLive,
   known,
   navHref,
   navName,
@@ -65,14 +66,6 @@ const accountButton = (page: Page, locale: Locale) =>
   page
     .locator('[data-portal-rail]')
     .getByRole('button', { name: new RegExp(`^${MESSAGES[locale].Portal.account.label}, `) })
-
-const gotoLive = async (page: Page, path: string) => {
-  const stream = page.waitForResponse((response) =>
-    response.url().includes('/api/notifications/stream'),
-  )
-  await page.goto(path)
-  await stream
-}
 
 const toastRegion = (scope: Page | ReturnType<Page['getByRole']>, locale: Locale) =>
   scope.getByRole('region', { name: new RegExp(`^${MESSAGES[locale].Notifications.label}`) })
