@@ -43,6 +43,7 @@ export const SpacePosts: CollectionConfig = {
   admin: {
     group: 'Community',
     components: {
+      beforeListTable: ['/components/admin/intro-post#IntroPostsFilter'],
       edit: {
         editMenuItems: [
           {
@@ -55,6 +56,11 @@ export const SpacePosts: CollectionConfig = {
     defaultColumns: ['space', 'kind', 'author', 'last_activity_at', 'updatedAt'],
   },
   fields: [
+    {
+      name: 'introduction_note',
+      type: 'ui',
+      admin: { components: { Field: '/components/admin/intro-post#IntroPostNote' } },
+    },
     {
       name: 'space',
       type: 'relationship',
@@ -78,6 +84,7 @@ export const SpacePosts: CollectionConfig = {
       defaultValue: 'discussion',
       options: [...POST_KINDS],
       access: { update: nobody },
+      admin: { components: { Cell: '/components/admin/intro-post#IntroKindCell' } },
     },
     { name: 'body', type: 'textarea', required: true },
     {
