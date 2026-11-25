@@ -23,6 +23,7 @@ import {
 } from 'motion/react'
 import { CircleAlert } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { textUnits } from '../lib/text-units'
 import styles from './action-swap.module.css'
 
 export type ActionSwapTone = 'neutral' | 'accent' | 'success' | 'warning' | 'quiet'
@@ -136,20 +137,16 @@ function useMorphWidth(content: RefObject<HTMLElement | null>, key: string, redu
 }
 
 type Glyph = { id: string; char: string; order: number; lead: number }
-/** Arabic letters join their neighbours, so a word moves as one piece there; other scripts move letter by letter. */
-const JOINING = /[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff\ufb50-\ufdff\ufe70-\ufeff]/
-const unitsOf = (text: string): string[] =>
-  JOINING.test(text) ? text.split(/(\s+)/).filter(Boolean) : [...text]
 const toGlyphs = (chars: string[], seq: number, lead = 0): Glyph[] =>
   chars.map((char, order) => ({ id: `${seq}:${order}`, char, order, lead }))
 
 /** Shared leading and trailing characters keep their identity, so only the changed run of text is replaced.
  *  Letters that grow out of a folded pill wait a beat, so they arrive as the shape opens instead of crowding its edge. */
 function useGlyphs(text: string) {
-  const [state, setState] = useState(() => ({ text, seq: 0, glyphs: toGlyphs(unitsOf(text), 0) }))
+  const [state, setState] = useState(() => ({ text, seq: 0, glyphs: toGlyphs(textUnits(text), 0) }))
   if (state.text === text) return state.glyphs
-  const prev = unitsOf(state.text),
-    next = unitsOf(text)
+  const prev = textUnits(state.text),
+    next = textUnits(text)
   let start = 0,
     end = 0
   while (start < prev.length && start < next.length && prev[start] === next[start]) start++
