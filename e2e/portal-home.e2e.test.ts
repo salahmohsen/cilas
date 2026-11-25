@@ -384,29 +384,30 @@ test.describe('portal Home and Inbox', () => {
         await page.goto(homePath('en'))
         await expect(latestRows(page)).toHaveCount(5)
         const targets = [
-          'a[href="#main"]',
-          '[data-needs] li:first-child a',
-          '#home-next-session + a',
-          '#home-spaces + div [role="region"]',
-          '#home-spaces + div li:first-child a',
-          '[data-latest] li:first-child a',
-          '[data-latest] > a[href="/en/spaces/inbox"]',
-          '[data-week] a[href="/en/spaces/calendar"]',
-          '[data-week] button[aria-pressed][tabindex="0"]',
+          page.locator('a[href="#main"]'),
+          page.locator('[data-needs] li:first-child a'),
+          nextSession(page).getByRole('link', { name: /Portal e2e session/ }),
+          page.locator('#home-spaces + div [role="region"]'),
+          page.locator('#home-spaces + div li:first-child a'),
+          page.locator('[data-latest] li:first-child a'),
+          page.locator('[data-latest] > a[href="/en/spaces/inbox"]'),
+          page.locator('[data-week] a[href="/en/spaces/calendar"]'),
+          page.locator('[data-week] button[aria-pressed][tabindex="0"]'),
         ]
-        for (const target of targets.slice(1)) await expect(page.locator(target)).toBeVisible()
+        for (const target of targets.slice(1)) await expect(target).toBeVisible()
+        const elements = await Promise.all(targets.map((target) => target.elementHandle()))
         const stops: number[] = []
         for (let i = 0; i < 160 && stops.length < targets.length; i++) {
           await page.keyboard.press('Tab')
-          const stop = await page.evaluate((selectors) => {
+          const stop = await page.evaluate((targets) => {
             const element = document.activeElement
             return element
               ? {
-                  index: selectors.findIndex((selector) => element.matches(selector)),
+                  index: targets.findIndex((target) => target === element),
                   outline: getComputedStyle(element).outlineStyle,
                 }
               : null
-          }, targets)
+          }, elements)
           if (!stop || stop.index === -1) continue
           expect(stop.outline).not.toBe('none')
           stops.push(stop.index)
