@@ -337,15 +337,14 @@ test.describe('portal Home and Inbox', () => {
           'href',
           /^\/admin\//,
         )
-        const post = latestSection(page).locator(`a[href="/en${fixture.link}"]`)
+        const post = latestSection(page).locator(`a[href="${fixture.link}"]`)
         const navigation = page.waitForRequest(
           (request) =>
-            request.isNavigationRequest() &&
-            new URL(request.url()).pathname === `/en${fixture.link}`,
+            request.isNavigationRequest() && new URL(request.url()).pathname === fixture.link,
         )
         await post.click()
         await navigation
-        await expect(page).toHaveURL(new RegExp(`/en${fixture.link}$`))
+        await expect(page).toHaveURL(new RegExp(`${fixture.link}$`))
         await expect(page.getByRole('dialog')).toHaveCount(0)
         await expect(page.locator('main article').first()).toBeVisible()
       })
@@ -460,7 +459,7 @@ test.describe('portal Home and Inbox', () => {
                   path,
                 ).toBe(true)
               await expect(
-                latestSection(page).locator(`a[href="/${locale}${fixture.link}"]`).first(),
+                latestSection(page).locator(`a[href="${fixture.link}"]`).first(),
               ).toBeVisible()
             })
           })
@@ -583,12 +582,12 @@ test.describe('portal Home and Inbox', () => {
           await expect(bell).toHaveAccessibleName(
             `${MESSAGES[locale].Notifications.label}${unread}`,
           )
-          await latestSection(page).locator(`a[href="/${locale}${fixture.link}"]`).click()
-          await page.waitForURL(`**/${locale}${fixture.link}`)
+          await latestSection(page).locator(`a[href="${fixture.link}"]`).click()
+          await page.waitForURL(`**${fixture.link}`)
           const landed = page.getByRole('button', {
-            name: new RegExp(`^${MESSAGES[locale].Notifications.label}`),
+            name: new RegExp(`^${MESSAGES.en.Notifications.label}`),
           })
-          await expect(landed).toHaveAccessibleName(MESSAGES[locale].Notifications.label, {
+          await expect(landed).toHaveAccessibleName(MESSAGES.en.Notifications.label, {
             timeout: 5_000,
           })
         })
