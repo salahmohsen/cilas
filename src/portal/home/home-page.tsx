@@ -76,7 +76,7 @@ export async function HomePage({ user, locale }: ReaderProps) {
           <Greeting {...props} />
         </Suspense>
       </GreetingBoundary>
-      <HomeBoard>
+      <HomeBoard view={adminViewOf(user)}>
         <CardBoundary slot="needs">
           <NeedsYou user={user} locale={locale} />
         </CardBoundary>

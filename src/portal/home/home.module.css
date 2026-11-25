@@ -94,6 +94,15 @@
   min-block-size: 12rem;
 }
 
+/* Needs you is first in the column, so its placeholder decides how far the rest moves: two rows for most readers, an admin's four grouped rows. */
+.slot[data-slot='needs'] > .skeleton {
+  min-block-size: 10.5rem;
+}
+
+.board[data-view='admin'] .slot[data-slot='needs'] > .skeleton {
+  min-block-size: 26rem;
+}
+
 /* Next session: a dark tile in both themes, over the course cover when the session has one. */
 .next {
   --poster-ink: oklch(100% 0 0);

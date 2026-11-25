@@ -1,5 +1,6 @@
 import { Suspense, type ReactNode } from 'react'
 
+import type { AdminView } from '@/access'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 import styles from './home.module.css'
@@ -20,10 +21,13 @@ export function HomeCardSkeleton({ slot }: { slot: HomeSlot }) {
   )
 }
 
-/** The board: one column, and twelve columns when the page frame is wider than 900px. */
-export function HomeBoard({ children }: { children: ReactNode }) {
+/**
+ * The board: one column, and twelve columns when the page frame is wider than
+ * 900px. `view` sizes the Needs you placeholder: an admin's card is the tall one.
+ */
+export function HomeBoard({ view, children }: { view?: AdminView | null; children: ReactNode }) {
   return (
-    <div className={styles.board}>
+    <div className={styles.board} data-view={view ?? undefined}>
       <div className={styles.bento}>{children}</div>
     </div>
   )
