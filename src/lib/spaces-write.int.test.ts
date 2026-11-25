@@ -1702,6 +1702,8 @@ describe('spaces write', () => {
     const siteSwitch = (ai_buttons: boolean) =>
       payload.updateGlobal({ slug: 'site-settings', data: { ai_buttons }, overrideAccess: true })
 
+    const siteBefore = (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true }))
+      .ai_buttons
     await siteSwitch(true)
     await allSay(true)
     expect((await set(fellow, courseSpace.id, false)).ok).toBe(true)
@@ -1715,7 +1717,7 @@ describe('spaces write', () => {
       await siteSwitch(false)
       await allSay(false)
     } finally {
-      await siteSwitch(true)
+      await siteSwitch(siteBefore ?? true)
     }
   })
 
