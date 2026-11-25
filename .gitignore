@@ -66,3 +66,6 @@ typesense-data
 # Vitest browser-mode failure screenshots
 __screenshots__/
 .vitest-attachments/
+
+# OpenCode page snapshots
+.opencode-snap.json
