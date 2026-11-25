@@ -12,7 +12,7 @@ export const SiteSettings: GlobalConfig = {
   label: 'Site settings',
   access: { read: isAdmin, update: isAdmin },
   hooks: {
-    // Every page's layout reads these settings (header, footer, people pages).
+    // WARNING: keep the root path. `/en` matches no layout tag, and the sitemap sits outside `/(frontend)/[locale]`.
     afterChange: [
       ({ doc }) => {
         try {
