@@ -1,5 +1,6 @@
 @import 'payload-theme/styles.css';
 @import 'shadcn/tailwind.css';
+@import '../../components/admin/admin-switch.css';
 
 @layer theme, base, components, utilities;
 

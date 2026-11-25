@@ -123,7 +123,7 @@ export const Spaces: CollectionConfig = {
     },
     {
       name: 'ai_buttons',
-      label: 'Show the Study with AI buttons in this space',
+      label: 'Show the Study with AI buttons',
       type: 'checkbox',
       defaultValue: true,
       admin: {
