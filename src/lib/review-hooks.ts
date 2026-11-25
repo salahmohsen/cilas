@@ -101,6 +101,8 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   if (operation !== 'create' && operation !== 'update' && operation !== 'restoreVersion') {
     return args
   }
+  // WARNING: the review hooks read `review` from the written doc, so a write returns the whole doc.
+  delete (args as { select?: unknown }).select
   const trusted = !req.user || isAdminUser(req.user)
   // Access refuses a write with no user and no override, so it queues on no row lock.
   const locks = Boolean(req.user) || Boolean((args as { overrideAccess?: boolean }).overrideAccess)
