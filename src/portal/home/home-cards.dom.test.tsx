@@ -114,8 +114,11 @@ const studio = {
 it('uses the capped unread number and speaks it as part of the space name', () => {
   renderWithIntl(<SpacesCard spaces={[studio]} student locale="en" />)
   expect(screen.getByText('9+')).toBeVisible()
-  const link = screen.getByRole('link', { name: 'Studio, more than 9 unread posts' })
-  expect(link).toHaveAccessibleDescription('Community No posts yet')
+  expect(
+    screen.getByRole('link', {
+      name: 'Studio, more than 9 unread posts Community No posts yet',
+    }),
+  ).toBeVisible()
   expect(screen.getByRole('region', { name: 'All your spaces' })).toHaveAttribute('tabindex', '0')
 })
 

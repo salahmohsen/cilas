@@ -1,7 +1,6 @@
 import { BookOpen, Clock, MessagesSquare, Users } from 'lucide-react'
 import { useFormatter, useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useId } from 'react'
 
 import buttonStyles from '@/components/arc/button/button.module.css'
 import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
@@ -21,27 +20,21 @@ function SpaceCard({ space }: { space: SpaceCardData }) {
   const t = useTranslations('Portal.home')
   const format = useFormatter()
   const count = useSpaceUnread(space.unread)
-  const id = useId()
   const Kind = KIND_ICON[space.kind]
   return (
-    <Link
-      href={space.href}
-      className={styles.spaceCard}
-      aria-labelledby={`${id}-name`}
-      aria-describedby={`${id}-info`}
-    >
-      <SpaceCover src={space.cover} sizes="232px" className={styles.art!} />
+    <Link href={space.href} className={styles.spaceCard}>
+      <SpaceCover src={space.cover} sizes="232px" className={styles.art!} />{' '}
       {count && (
         <span className={styles.unread}>
           <UnreadCircle shown={count.shown} />
         </span>
       )}
       <span className={styles.info}>
-        <span className={styles.spaceName} id={`${id}-name`}>
+        <span className={styles.spaceName}>
           <bdi>{space.label}</bdi>
           {count && <span className="sr-only">{count.spoken}</span>}
-        </span>
-        <span className={styles.facts} id={`${id}-info`}>
+        </span>{' '}
+        <span className={styles.facts}>
           <span className={styles.fact}>
             <Kind size={14} strokeWidth={1.75} aria-hidden="true" />
             <span>{t(space.archived ? 'spaceKind.archived' : `spaceKind.${space.kind}`)}</span>

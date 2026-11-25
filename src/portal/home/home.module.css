@@ -127,18 +127,18 @@
   object-fit: cover;
 }
 
-/* No stop is lighter than 55% black, so white text keeps 4.5:1 over any cover. */
+/* The prototype's two gradients: darkest at the reading start and along the bottom, where the text sits. */
 .scrim {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to right, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.66) 55%, oklch(0% 0 0 / 0.55)),
+    linear-gradient(to right, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.5) 55%, oklch(0% 0 0 / 0.2)),
     linear-gradient(to top, oklch(0% 0 0 / 0.5), transparent 55%);
 }
 
 :global([dir='rtl']) .scrim {
   background:
-    linear-gradient(to left, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.66) 55%, oklch(0% 0 0 / 0.55)),
+    linear-gradient(to left, oklch(0% 0 0 / 0.82), oklch(0% 0 0 / 0.5) 55%, oklch(0% 0 0 / 0.2)),
     linear-gradient(to top, oklch(0% 0 0 / 0.5), transparent 55%);
 }
 
@@ -158,7 +158,7 @@
   padding-inline: 0.625rem;
   border: 1px solid oklch(100% 0 0 / 0.18);
   border-radius: var(--radius-pill);
-  background: oklch(100% 0 0 / 0.16);
+  background: oklch(0% 0 0 / 0.24);
   backdrop-filter: blur(12px);
   font-size: 12px;
   font-weight: 500;
@@ -168,10 +168,26 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-block-start: auto;
+  margin: auto calc(-1 * var(--space-6)) calc(-1 * var(--space-6));
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border-end-start-radius: var(--radius-surface);
+  border-end-end-radius: var(--radius-surface);
   color: inherit;
   text-decoration: none;
   overflow-wrap: anywhere;
+}
+
+a.hero {
+  --focus-outline-offset: -4px;
+}
+
+/* Over a cover, one more layer of shade that is only as tall as the text: on a narrow tile or with a long title the text reaches the light end of the scrim. */
+.nextCover ~ .hero {
+  background: linear-gradient(
+    to top,
+    oklch(0% 0 0 / 0.35) calc(100% - var(--space-8)),
+    transparent
+  );
 }
 
 /* The whole tile opens the session; the link's name stays its text. */
