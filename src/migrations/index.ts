@@ -90,6 +90,7 @@ import * as migration_20261113_140328_course_announced_timing from './20261113_1
 import * as migration_20261113_155502_space_post_course_session from './20261113_155502_space_post_course_session';
 import * as migration_20261114_072207_drop_course_timing_fields from './20261114_072207_drop_course_timing_fields';
 import * as migration_20261124_173506_portal_withdrawn_kind from './20261124_173506_portal_withdrawn_kind';
+import * as migration_20261125_142440_space_display_name_stored from './20261125_142440_space_display_name_stored';
 
 export const migrations = [
   {
@@ -550,6 +551,11 @@ export const migrations = [
   {
     up: migration_20261124_173506_portal_withdrawn_kind.up,
     down: migration_20261124_173506_portal_withdrawn_kind.down,
-    name: '20261124_173506_portal_withdrawn_kind'
+    name: '20261124_173506_portal_withdrawn_kind',
+  },
+  {
+    up: migration_20261125_142440_space_display_name_stored.up,
+    down: migration_20261125_142440_space_display_name_stored.down,
+    name: '20261125_142440_space_display_name_stored'
   },
 ];
