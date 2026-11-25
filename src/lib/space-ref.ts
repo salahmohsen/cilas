@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 
-import type { Locale } from '@/i18n/routing'
+import { routing, type Locale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { SpaceKind } from '@/lib/spaces'
 
@@ -70,6 +70,18 @@ export const spaceHref = (
       : encodeURIComponent(parent?.slug ?? parentRef(space)?.id ?? '')
   return `${locale ? `/${locale}` : ''}/spaces/${space.kind}/${key}${postId == null ? '' : `/posts/${postId}`}`
 }
+
+const ROOM_PATH = new RegExp(
+  `^(?:/(?:${routing.locales.join('|')}))?/spaces/(?:community|cohort|course)(?:/|$)`,
+)
+
+/**
+ * The link opens a page of the portal's `(rooms)` group: a path `spaceHref`
+ * builds, or the community index. With spaces off each of them is not found
+ * (`(rooms)/layout.tsx`). Reads the path only, so give it a link on this site.
+ */
+export const isRoomHref = (href: string): boolean =>
+  URL.canParse(href, 'http://site') && ROOM_PATH.test(new URL(href, 'http://site').pathname)
 
 export const spaceLink = async (
   payload: Payload,

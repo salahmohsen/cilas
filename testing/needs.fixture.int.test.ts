@@ -1,7 +1,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { latestRows } from '@/portal/needs/latest'
+import { latestPage } from '@/portal/needs/latest'
 import { workSetsOf } from '@/portal/needs/needs'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
@@ -79,7 +79,7 @@ describe('portalNeedsWorld', () => {
       new Set([createdAt]),
     )
 
-    const result = await latestRows(payload, await userOf(account), 1)
+    const result = await latestPage(payload, await userOf(account), 1)
     expect(result.rows.map(({ id }) => id)).toEqual(
       notes
         .map(({ id }) => id)

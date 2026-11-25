@@ -147,6 +147,11 @@
 .track[data-axis='x'] .thumb {
   height: 100%;
 }
+/* Portal patch (phase 1c): the horizontal thumb starts at the right in RTL. */
+:global([dir='rtl']) .track[data-axis='x'] .thumb {
+  right: 0;
+  left: auto;
+}
 .thumb::after {
   content: '';
   position: absolute;

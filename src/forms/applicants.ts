@@ -260,8 +260,9 @@ export async function waitingApplicantChoices(
 export async function countWaitingApplicants(
   payload: Payload,
   user: TypedUser | User | null | undefined,
-): Promise<{ total: number }> {
-  return { total: (await waitingApplicantChoices(payload, user)).length }
+): Promise<{ total: number; courses: number[] }> {
+  const waiting = await waitingApplicantChoices(payload, user)
+  return { total: waiting.length, courses: [...new Set(waiting.map((choice) => choice.course))] }
 }
 
 export type ApplicantsData = Awaited<ReturnType<typeof applicantsFor>>

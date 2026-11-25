@@ -5,7 +5,7 @@ import { getPayload, type Payload } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { countWaitingApplicants } from '@/forms/applicants'
-import type { Locale } from '@/i18n/routing'
+import { otherLocale, type Locale } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
 import { adminQueue, adminReviewRows, type AdminSets } from '@/lib/review-queue'
 import type { StatusKey } from '@/lib/review-status'
@@ -25,7 +25,7 @@ import {
 /** The work of one reader: the ids that wait on them, each with its key. `failed` names a source that did not read. */
 export type WorkSets = {
   reviewQueue?: AdminSets
-  applicants?: number
+  applicants?: { total: number; courses: number[] }
   ownArticles?: Map<number, StatusKey>
   ownCourses?: Map<number, StatusKey>
   failed: NeedSource[]
@@ -37,7 +37,7 @@ const readSource = async (payload: Payload, user: User, source: NeedSource) => {
       if (!isAdminUser(user)) throw new Error('the review queue is for admins')
       return { reviewQueue: await adminQueue(payload) }
     case 'applicants':
-      return { applicants: (await countWaitingApplicants(payload, user)).total }
+      return { applicants: await countWaitingApplicants(payload, user) }
     case 'ownArticles':
       return { ownArticles: await ownSet(payload, user, 'articles') }
     case 'ownCourses':
@@ -75,7 +75,7 @@ const sizeOf = (sets: WorkSets, source: NeedSource): number | null | undefined =
         ? Object.values(sets.reviewQueue).reduce((sum, set) => sum + set.size, 0)
         : undefined
     case 'applicants':
-      return sets.applicants
+      return sets.applicants?.total
     case 'ownArticles':
       return sets.ownArticles?.size
     case 'ownCourses':
@@ -95,6 +95,23 @@ export const countsOf = (sets: WorkSets): NeedsCounts => {
     total: sizes.includes(null) ? null : sizes.reduce<number>((sum, n) => sum + (n ?? 0), 0),
     by,
   }
+}
+
+const courseTitles = async (payload: Payload, user: User, ids: number[], locale: Locale) => {
+  const { docs } = await payload.find({
+    collection: 'courses',
+    where: { id: { in: ids } },
+    sort: 'id',
+    depth: 0,
+    pagination: false,
+    draft: true,
+    select: { title: true },
+    locale,
+    fallbackLocale: otherLocale(locale),
+    user,
+    overrideAccess: false,
+  })
+  return docs.flatMap((course) => titleOf(course.title, locale) ?? [])
 }
 
 /**
@@ -120,7 +137,7 @@ export const rowsOf = async (
     }
   }
   const { reviewQueue, applicants, ownArticles, ownCourses } = sets
-  const [review, articles, courses] = await Promise.all([
+  const [review, applicantRows, articles, courses] = await Promise.all([
     reviewQueue && isAdminUser(user)
       ? part('reviewQueue', async () =>
           (await adminReviewRows(payload, reviewQueue, locale)).map((row): NeedRow => {
@@ -143,6 +160,20 @@ export const rowsOf = async (
           }),
         )
       : [],
+    applicants && applicants.total > 0
+      ? part('applicants', async (): Promise<NeedRow[]> => [
+          {
+            kind: 'applicants',
+            verbKey: VERB_OF.applicants,
+            href: '/admin/applicants',
+            label: null,
+            count: applicants.total,
+            owners: [],
+            courses: await courseTitles(payload, user, applicants.courses, locale),
+            collection: null,
+          },
+        ])
+      : [],
     ownArticles
       ? part('ownArticles', () => ownRows(payload, user, 'articles', ownArticles, locale))
       : [],
@@ -150,19 +181,6 @@ export const rowsOf = async (
       ? part('ownCourses', () => ownRows(payload, user, 'courses', ownCourses, locale))
       : [],
   ])
-  const applicantRows: NeedRow[] = applicants
-    ? [
-        {
-          kind: 'applicants',
-          verbKey: VERB_OF.applicants,
-          href: '/admin/applicants',
-          label: null,
-          count: applicants,
-          owners: [],
-          collection: null,
-        },
-      ]
-    : []
   const own = [...articles, ...courses]
     .sort((a, b) => a.since.localeCompare(b.since))
     .map(({ row }) => row)

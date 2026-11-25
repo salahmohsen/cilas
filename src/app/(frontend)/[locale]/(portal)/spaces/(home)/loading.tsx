@@ -1,1 +1,1 @@
-export { MySpacesLoading as default } from '@/components/space/space-loading'
+export { HomeLoading as default } from '@/portal/home/home-loading'

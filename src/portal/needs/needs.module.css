@@ -21,10 +21,10 @@
 }
 
 .total {
-  color: var(--text-muted);
-  font-size: 13px;
+  color: var(--text-secondary);
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .rows {
@@ -69,6 +69,38 @@
   min-inline-size: 0;
 }
 
+.tile {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+.tile[data-tone='warning'] {
+  background: color-mix(in oklab, var(--warning) 14%, transparent);
+  color: color-mix(in oklab, var(--warning) 70%, var(--foreground));
+}
+
+.tile[data-tone='success'] {
+  background: color-mix(in oklab, var(--success) 13%, transparent);
+  color: color-mix(in oklab, var(--success) 70%, var(--foreground));
+}
+
+.details {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.details > span + span::before {
+  content: '· ' / '';
+}
+
 .verb,
 .noteTitle {
   font-size: 15px;
@@ -77,8 +109,6 @@
   overflow-wrap: anywhere;
 }
 
-.label,
-.owners,
 .noteDetail,
 .time {
   font-size: 13px;
@@ -87,11 +117,6 @@
   text-wrap: pretty;
 }
 
-.label {
-  color: var(--text-secondary);
-}
-
-.owners,
 .noteDetail,
 .time {
   color: var(--text-muted);
