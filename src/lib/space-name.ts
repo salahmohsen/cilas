@@ -1,14 +1,38 @@
-import type { CollectionAfterChangeHook, PayloadRequest, TypedLocale } from 'payload'
+import {
+  createLocalReq,
+  type CollectionAfterChangeHook,
+  type PayloadRequest,
+  type TypedLocale,
+} from 'payload'
 
 import { relId } from '@/lib/relation'
 import type { Course, Programme } from '@/payload-types'
 
+/** Set on the context of refreshSpaceName's own write, so that write does not refresh again. */
+const WRITING = 'spaceNameWriting'
+
 /**
- * Set on `req.context` while refreshSpaceName writes one space's name, so
- * that write does not refresh it again. Keyed by space: a bulk update saves
- * several spaces on one request, and each must still refresh.
+ * A request of its own for one locale, in the caller's transaction and with
+ * the caller's context. The local API sets locale and fallback on the request
+ * it is given, and a bulk update saves its documents in parallel on one
+ * request: reads and writes here must never change the caller's.
  */
-const writing = (id: number | string) => `spaceNameWriting:${id}`
+const localeReq = (
+  req: PayloadRequest,
+  locale: TypedLocale,
+  fallbackLocale: TypedLocale | false,
+  context: Record<string, unknown> = {},
+) =>
+  createLocalReq(
+    {
+      context: { ...req.context, ...context },
+      fallbackLocale,
+      locale,
+      req: { transactionID: req.transactionID } as Partial<PayloadRequest>,
+      user: req.user ?? undefined,
+    },
+    req.payload,
+  )
 
 type SpaceRow = {
   kind: 'community' | 'course' | 'cohort'
@@ -54,62 +78,39 @@ export const refreshSpaceName = async (
   req: PayloadRequest,
   id: number,
 ): Promise<Partial<Record<TypedLocale, string>>> => {
-  // Each local-API call below sets its locale and fallback on the shared
-  // request: put back the caller's, so the rest of its save reads as before.
-  const { locale, fallbackLocale } = req
-  try {
-    return await refreshEachLocale(req, id)
-  } finally {
-    req.locale = locale
-    req.fallbackLocale = fallbackLocale
-  }
-}
-
-const refreshEachLocale = async (
-  req: PayloadRequest,
-  id: number,
-): Promise<Partial<Record<TypedLocale, string>>> => {
   const { payload } = req
   const { localization } = payload.config
   if (!localization) return {}
-  const locales = localization.localeCodes as TypedLocale[]
   const defaultLocale = localization.defaultLocale as TypedLocale
   const names: Partial<Record<TypedLocale, string>> = {}
-  for (const locale of locales) {
+  for (const locale of localization.localeCodes as TypedLocale[]) {
     // The name comes from a read with fallback (an Arabic space without an
     // Arabic name is called by its English one); the comparison is with the
-    // value stored in this locale, which that fallback would hide. One read
-    // after the other, each with its own fallback: the local API sets it on
-    // the shared request.
-    const read = (fallbackLocale: TypedLocale | false) =>
-      payload.findByID({
+    // value stored in this locale, which that fallback would hide.
+    const read = async (fallbackLocale: TypedLocale | false) =>
+      (await payload.findByID({
         collection: 'spaces',
         id,
         depth: 0,
         locale,
         fallbackLocale,
         overrideAccess: true,
-        req,
+        req: await localeReq(req, locale, fallbackLocale),
         select: { kind: true, name: true, course: true, programme: true, display_name: true },
-      }) as Promise<SpaceRow>
+      })) as SpaceRow
     const space = await read(defaultLocale)
     const stored = await read(false)
-    const name = await nameOf(req, space, locale)
+    const name = await nameOf(await localeReq(req, locale, defaultLocale), space, locale)
     names[locale] = name
     if (name === stored.display_name) continue
-    req.context[writing(id)] = true
-    try {
-      await payload.update({
-        collection: 'spaces',
-        id,
-        locale,
-        data: { display_name: name } as never,
-        overrideAccess: true,
-        req,
-      })
-    } finally {
-      delete req.context[writing(id)]
-    }
+    await payload.update({
+      collection: 'spaces',
+      id,
+      locale,
+      data: { display_name: name } as never,
+      overrideAccess: true,
+      req: await localeReq(req, locale, defaultLocale, { [WRITING]: true }),
+    })
   }
   return names
 }
@@ -119,7 +120,7 @@ const refreshEachLocale = async (
  * gets its name, and the save returns it in the request's locale.
  */
 export const refreshOwnName: CollectionAfterChangeHook = async ({ doc, req }) => {
-  if (req.context[writing(doc.id)]) return doc
+  if (req.context[WRITING]) return doc
   const { localization } = req.payload.config
   const locale = (req.locale ??
     (localization ? localization.defaultLocale : undefined)) as TypedLocale

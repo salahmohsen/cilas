@@ -141,7 +141,7 @@ describe('a space’s stored name', () => {
     expect(arabic.display_name).toBe('غرفة')
   })
 
-  it('refreshes every space of one bulk rename', async () => {
+  it('refreshes every space of one bulk rename, each in its own languages', async () => {
     const make = async () =>
       track(
         'spaces',
@@ -152,14 +152,27 @@ describe('a space’s stored name', () => {
         }),
       ).id
     const ids = [await make(), await make()]
+    const arabic = ['قاعة أ', 'قاعة ب']
+    for (const [i, id] of ids.entries())
+      await payload.update({
+        collection: 'spaces',
+        id,
+        locale: 'ar',
+        data: { name: arabic[i] } as never,
+        overrideAccess: true,
+      })
     const title = uniq('Name bulk renamed')
-    await payload.update({
+    const { docs } = await payload.update({
       collection: 'spaces',
       where: { id: { in: ids } },
       data: { name: title } as never,
       overrideAccess: true,
     })
-    for (const id of ids) expect(await storedTitleReadAlone(id)).toBe(title)
+    expect(docs.map((d) => d.display_name)).toEqual([title, title])
+    for (const [i, id] of ids.entries()) {
+      expect(await storedTitleReadAlone(id)).toBe(title)
+      expect(await storedTitleReadAlone(id, 'ar')).toBe(arabic[i])
+    }
   })
 
   it('follows a published course rename, and ignores a draft one', async () => {

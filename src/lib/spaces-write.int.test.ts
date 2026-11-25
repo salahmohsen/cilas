@@ -1,9 +1,9 @@
-import { sql } from '@payloadcms/db-postgres'
-import { getPayload, type Payload } from 'payload'
+import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
+import { createLocalReq, getPayload, type Payload } from 'payload'
 
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { http, HttpResponse, passthrough } from 'msw'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import sharp from 'sharp'
 import { readFileSync } from 'node:fs'
@@ -944,6 +944,73 @@ describe('spaces write', () => {
     const data = readFileSync(new URL('../../testing/files/pixel.png', import.meta.url))
     return { data, mimetype: 'image/png', name, size: data.length }
   }
+
+  it('postRemove keeps the post, the reply and its photo when a reply wins the race', async () => {
+    const id = await newPost(student, community, 'Race me')
+    expect(
+      (await appendPhoto({ payload, user: student, post: id, file: editFile('race.png') })).ok,
+    ).toBe(true)
+    const [photo] = (
+      await payload.find({
+        collection: 'space-files',
+        where: { post: { equals: id } },
+        overrideAccess: true,
+      })
+    ).docs
+    track('space-files', photo!.id)
+
+    const { pool } = payload.db as unknown as PostgresAdapter
+    const replier = await pool.connect()
+    let removing: ReturnType<typeof postRemove> | undefined
+    try {
+      await replier.query('BEGIN')
+      const { rows } = await replier.query<{ id: number }>(
+        'INSERT INTO space_comments (space_id, post_id, author_id, body) VALUES ($1, $2, $3, $4) RETURNING id',
+        [community.id, id, fellowPerson, 'I was first'],
+      )
+      track('space-comments', rows[0]!.id)
+      removing = postRemove({ payload, user: student, id })
+      await vi.waitFor(
+        async () => {
+          const { rows: waiting } = await pool.query(
+            `SELECT 1 FROM pg_stat_activity WHERE wait_event_type = 'Lock' AND datname = current_database()`,
+          )
+          expect(waiting.length).toBeGreaterThan(0)
+        },
+        { timeout: 4000, interval: 20 },
+      )
+      await replier.query('COMMIT')
+    } finally {
+      replier.release()
+    }
+    expect(await removing).toMatchObject({ ok: true })
+
+    const post = await payload.findByID({ collection: 'space-posts', id, overrideAccess: true })
+    expect(post.deleted_at).toBeTruthy()
+    expect(
+      (
+        await payload.count({
+          collection: 'space-comments',
+          where: { post: { equals: id } },
+          overrideAccess: true,
+        })
+      ).totalDocs,
+    ).toBe(1)
+    const stored = await payload.findByID({
+      collection: 'space-files',
+      id: photo!.id,
+      overrideAccess: true,
+    })
+    const served = (await payload.collections['space-files'].config.upload.handlers![0]!(
+      await createLocalReq({}, payload),
+      {
+        doc: stored,
+        headers: new Headers(),
+        params: { collection: 'space-files', filename: stored.filename! },
+      },
+    )) as Response
+    expect(served.status).toBe(200)
+  })
 
   it('post editing replaces attachments and saves people mentions together', async () => {
     const id = await newPost(student, community, 'Before attachments')

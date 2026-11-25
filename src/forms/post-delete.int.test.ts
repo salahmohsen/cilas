@@ -168,7 +168,8 @@ describe('an admin deletes a post from the admin panel', () => {
     const client = await (payload.db as unknown as PostgresAdapter).pool.connect()
     try {
       await lockRow(req, 'space-posts', id, 'references')
-      await client.query(`SET lock_timeout = '300ms'`)
+      await client.query('BEGIN')
+      await client.query(`SET LOCAL lock_timeout = '300ms'`)
       await expect(
         client.query('INSERT INTO space_comments (space_id, post_id, body) VALUES ($1, $2, $3)', [
           space,
@@ -177,6 +178,7 @@ describe('an admin deletes a post from the admin panel', () => {
         ]),
       ).rejects.toMatchObject({ code: '55P03' })
     } finally {
+      await client.query('ROLLBACK')
       client.release()
       await payload.db.rollbackTransaction(transactionID!)
     }
