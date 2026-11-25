@@ -311,6 +311,24 @@ test.describe('portal Home and Inbox', () => {
       })
     }
 
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS)) {
+        test(`an admin with no session gets Open the calendar, and it opens /spaces/calendar (${locale} ${viewport.width})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, reader: 'admin' }, async (page) => {
+            await page.goto(homePath(locale))
+            await nextSession(page)
+              .getByRole('link', { name: portalOf(locale).home.openCalendar })
+              .click()
+            await expect(page).toHaveURL((url) => url.pathname === `/${locale}/spaces/calendar`)
+            await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+              MESSAGES[locale].Calendar.title,
+            )
+          })
+        })
+      }
+
     test('more than five rows group by kind and keep the same total', async ({ browser }) => {
       await inContext(browser, { viewport: DESKTOP, reader: 'admin' }, async (page) => {
         await page.goto(inboxPath('en'))
