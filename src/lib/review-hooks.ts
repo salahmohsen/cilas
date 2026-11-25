@@ -73,6 +73,8 @@ export type ReviewOptions = {
   collection: (typeof REVIEWED)[number]['collection']
   ownersOf: (doc: Doc) => number[]
   onApprove?: (args: { data: Doc; originalDoc?: Doc; now: Date }) => Record<string, unknown>
+  /** What the owners' bell says happened to an approved document, if not the default. */
+  approvalOutcome?: (doc: Doc) => string | undefined
 }
 
 /**
@@ -263,19 +265,13 @@ const applyReview =
     }
   }
 
-/** Where an approved article went, by its tier. */
-const ARTICLE_PUBLISHED: Partial<Record<string, string>> = {
-  community: 'was published for the community',
-  public: 'was published on the public site',
-}
-
 /** The line under the bell for each move. */
-const NOTES: Partial<Record<ReviewState, (noun: string, title: string, doc: Doc) => string>> = {
+const NOTES: Partial<
+  Record<ReviewState, (noun: string, title: string, outcome?: string) => string>
+> = {
   submitted: (noun, title) => `A ${noun} waits for review: “${title}”`,
-  approved: (noun, title, doc) =>
-    `Your ${noun} “${title}” ${
-      (noun === 'article' && ARTICLE_PUBLISHED[String(doc.tier)]) || 'was approved and published'
-    }`,
+  approved: (noun, title, outcome = 'was approved and published') =>
+    `Your ${noun} “${title}” ${outcome}`,
   changes_requested: (noun, title) => `Changes were asked for on your ${noun} “${title}”`,
   rejected: (noun, title) => `Your ${noun} “${title}” was not accepted`,
 }
@@ -297,7 +293,7 @@ const withdrawnNote = (title: string, removal: boolean) =>
  * published document is all draft saves, and is announced like any other.
  */
 const notifyReview =
-  ({ noun, collection, ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
+  ({ noun, collection, ownersOf, approvalOutcome }: ReviewOptions): CollectionAfterChangeHook =>
   async ({ doc, previousDoc, req }) => {
     if (!req.user) return doc
     const { draftSave, live } = reviewContext(req)
@@ -354,7 +350,8 @@ const notifyReview =
     }
     // The bell (src/components/admin/notification-bell.tsx) takes the short
     // name by kind, and `line` is the detail under it.
-    const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title, doc) ?? title
+    const line =
+      (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title, approvalOutcome?.(doc)) ?? title
     // The bell's avatar is the submitter's for admins, the decider's for owners.
     const actingPerson = audience === 'admins' ? ownersOf(doc)[0] : personOf(req.user)
     await notify(
@@ -395,7 +392,7 @@ const publishOwners =
 /** The review path's hooks, to spread into a collection's `hooks`. */
 export const reviewHooks = (
   kind: ReviewOptions['noun'],
-  extra: Pick<ReviewOptions, 'onApprove'> = {},
+  extra: Pick<ReviewOptions, 'onApprove' | 'approvalOutcome'> = {},
 ) => {
   const entry = REVIEWED.find((item) => item.kind === kind)!
   const options: ReviewOptions = {
