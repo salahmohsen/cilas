@@ -1,5 +1,6 @@
-import { createLocalReq, getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
+import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
+import { afterAll, afterEach, beforeAll, describe, expect, it, onTestFinished, vi } from 'vitest'
 
 import type { Locale } from '@/i18n/routing'
 import config from '@/payload.config'
@@ -11,6 +12,7 @@ import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
 import { trustedWrites } from '../../testing/portal-lists.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 import { emailRecipients, reviewEmailUrl, type LocalRecipient } from './review-mail'
+import { sessionDb } from './row-lock'
 
 const inbox = resendInbox()
 mockNetwork(inbox.handler, ...localServices)
@@ -67,6 +69,10 @@ beforeAll(async () => {
   optedOut = await account('muted-admin', 'admin', undefined, true)
 })
 
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 afterAll(async () => {
   if (!payload) return
   await cleanup(payload)
@@ -80,6 +86,65 @@ const draftArticle = (title: string, slug: string) =>
     authors: [Number(owner.person)],
     tier: 'owner',
     review: { status: 'draft' },
+  })
+
+const failInPostgres = async (req: PayloadRequest) => {
+  const adapter = payload.db as unknown as PostgresAdapter
+  await ((await sessionDb(req)) ?? adapter.drizzle).execute(sql`select 1 / 0`)
+}
+
+const hookForThisTest = <Hook>(hooks: Hook[], hook: Hook) => {
+  hooks.push(hook)
+  onTestFinished(() => void hooks.splice(hooks.indexOf(hook), 1))
+}
+
+const breakCollectionRead = (
+  slug: 'space-preferences' | 'users',
+  matches: (args: { select?: Record<string, unknown> }) => boolean = () => true,
+) => {
+  const broken = { times: 0 }
+  hookForThisTest(
+    payload.collections[slug].config.hooks.beforeOperation,
+    async ({ args, operation, req }) => {
+      if (operation === 'read' && matches(args as { select?: Record<string, unknown> })) {
+        broken.times += 1
+        await failInPostgres(req)
+      }
+      return args
+    },
+  )
+  return broken
+}
+
+const breakEmailSettingsRead = () => {
+  const broken = { times: 0 }
+  const { hooks } = payload.globals.config.find((item) => item.slug === 'email-settings')!
+  hookForThisTest(hooks.beforeRead, async ({ doc, req }) => {
+    broken.times += 1
+    await failInPostgres(req)
+    return doc
+  })
+  return broken
+}
+
+const storedStatus = async (id: number) => {
+  const doc = await payload.findByID({
+    collection: 'articles',
+    id,
+    depth: 0,
+    overrideAccess: true,
+  })
+  return doc.review?.status
+}
+
+const approve = (id: number, tier: 'community' | 'public' = 'community') =>
+  payload.update({
+    collection: 'articles',
+    id,
+    user: arabicAdmin,
+    overrideAccess: false,
+    locale: 'en',
+    data: { tier, _status: 'published', review: { status: 'approved' } },
   })
 
 describe('review-events: one email per recipient', () => {
@@ -131,12 +196,78 @@ describe('review-events: one email per recipient', () => {
     expect(inbox.to(optedOut.email)).toHaveLength(0)
   })
 
-  it('still sends the others their message when Resend refuses one recipient', async () => {
-    inbox.failFor = englishAdmin.email
-    await submitAsOwner('refused')
+  it.each(['ar', 'en'] as const)(
+    'sends the others their message and names who missed it when Resend refuses the %s admin',
+    async (locale) => {
+      const [refused, other] =
+        locale === 'ar' ? [arabicAdmin, englishAdmin] : [englishAdmin, arabicAdmin]
+      const logged = vi.spyOn(payload.logger, 'error')
+      inbox.failFor = refused.email
+      await submitAsOwner(`refused-${locale}`)
 
-    expect(inbox.to(englishAdmin.email)).toHaveLength(0)
+      expect(inbox.to(refused.email)).toHaveLength(0)
+      expect(inbox.to(other.email)).toHaveLength(1)
+      const entries = logged.mock.calls.map(([entry]) => entry as Record<string, unknown>)
+      const dropped = entries.filter((entry) => entry.recipient === refused.id)
+      expect(dropped).toHaveLength(1)
+      expect(JSON.stringify(dropped)).not.toContain(refused.email)
+    },
+  )
+
+  it('reads the email settings once, however many admins get the message', async () => {
+    const reads = vi.spyOn(payload.db, 'findGlobal')
+    await submitAsOwner('one-read')
+
     expect(inbox.to(arabicAdmin.email)).toHaveLength(1)
+    expect(inbox.to(englishAdmin.email)).toHaveLength(1)
+    expect(reads.mock.calls.filter(([args]) => args.slug === 'email-settings')).toHaveLength(1)
+  })
+
+  it.each([
+    ['language', () => breakCollectionRead('space-preferences'), 'en'],
+    [
+      'preference',
+      () => breakCollectionRead('users', (args) => Boolean(args.select?.notification_preferences)),
+      'ar',
+    ],
+  ] as const)(
+    'keeps the decision and still sends when the %s read fails in Postgres',
+    async (label, breakIt, ownerLocale) => {
+      const broken = breakIt()
+      const id = await submitAsOwner(`broken-${label}`)
+
+      expect(await storedStatus(id)).toBe('submitted')
+      expect(inbox.to(arabicAdmin.email)).toHaveLength(1)
+      expect(inbox.to(englishAdmin.email)).toHaveLength(1)
+
+      await approve(id)
+
+      expect(broken.times).toBe(2)
+      expect(await storedStatus(id)).toBe('approved')
+      const messages = inbox.to(owner.email)
+      expect(messages).toHaveLength(1)
+      expect(hrefsOf(messages[0]!.html)).toContain(
+        reviewEmailUrl(localRecipient(owner, ownerLocale), {
+          collection: 'articles',
+          id,
+          viewer: 'owner',
+          waiting: false,
+        }),
+      )
+    },
+  )
+
+  it('keeps the decision and names who missed the email when the settings read fails', async () => {
+    const id = await submitAsOwner('broken-settings')
+    const logged = vi.spyOn(payload.logger, 'error')
+    const broken = breakEmailSettingsRead()
+
+    await approve(id)
+
+    expect(broken.times).toBe(1)
+    expect(await storedStatus(id)).toBe('approved')
+    expect(inbox.to(owner.email)).toHaveLength(0)
+    expect(logged).toHaveBeenCalledWith(expect.objectContaining({ recipient: owner.id }))
   })
 
   it.each([
@@ -146,14 +277,7 @@ describe('review-events: one email per recipient', () => {
     const title = uniq(`Review mail approval ${tier}`)
     const id = await draftArticle(title, tier)
     await trustedWrites(payload, track).submit('articles', id)
-    await payload.update({
-      collection: 'articles',
-      id,
-      user: arabicAdmin,
-      overrideAccess: false,
-      locale: 'en',
-      data: { tier, _status: 'published', review: { status: 'approved' } },
-    })
+    await approve(id, tier)
 
     const { docs } = await payload.find({
       collection: 'notifications',
