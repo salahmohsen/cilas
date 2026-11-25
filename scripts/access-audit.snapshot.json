@@ -5722,9 +5722,9 @@
     "entity": "collection:spaces",
     "field": "display_name",
     "rules": {
-      "create": "open",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5753,7 +5753,7 @@
       "read": "readablePosts#c8edbabd",
       "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
-      "delete": "isAdmin#b15b4fe4",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -5842,9 +5842,9 @@
     "entity": "collection:space-posts",
     "field": "event_cover",
     "rules": {
-      "create": "open",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {

@@ -138,6 +138,7 @@ export const courseDeleteSummary = async (req: PayloadRequest, id: number) => {
   return {
     name: (typeof course.title === 'string' && course.title.trim()) || `Course ${id}`,
     noun: 'course',
+    typeToConfirm: true,
     deletes: nonEmpty([
       group(
         'sessions',

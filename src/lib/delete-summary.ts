@@ -12,8 +12,10 @@ export type DeleteGroup = {
 }
 
 export type DeleteSummary = {
-  /** The document's title; the dialog asks for it before the delete runs. */
+  /** The document's title, shown in the dialog. */
   name: string
+  /** The dialog asks for the name before the delete runs: for a document that takes much with it. */
+  typeToConfirm: boolean
   /** What the dialog deletes, such as "course". */
   noun: string
   /** What is deleted with the document. */

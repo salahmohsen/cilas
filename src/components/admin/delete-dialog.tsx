@@ -2,19 +2,17 @@
 
 import { Button, Modal, PopupList, toast, useDocumentInfo, useModal } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useId, useState } from 'react'
 
 import type { DeleteGroup, DeleteSummary } from '@/lib/delete-summary'
 
 import { postAction } from './post-action'
 
 /** Collections whose stock delete is closed in favour of this dialog. */
-export const DIALOG_DELETE = ['spaces', 'courses'] as const
+export const DIALOG_DELETE = ['spaces', 'courses', 'space-posts'] as const
 export type DialogDeleteSlug = (typeof DIALOG_DELETE)[number]
 
 type Loaded = (DeleteSummary & { error?: undefined }) | { error: string }
-
-const MODAL_SLUG = 'delete-dialog'
 
 function Groups({ groups }: { groups: DeleteGroup[] }) {
   return (
@@ -38,24 +36,34 @@ function Groups({ groups }: { groups: DeleteGroup[] }) {
 
 /**
  * The delete dialog: lists what goes with the document and what loses its
- * link, and asks for its name before the delete runs
+ * link, and, where the summary says so, asks for its name before the delete runs
  * (src/forms/delete-endpoints.ts). `open(collection, id)` starts it; used by
  * the document menu below and by the list's row actions
  * (src/components/admin/list-row-actions.tsx).
  */
 export function useDeleteDialog(onDeleted: () => void) {
   const { openModal, closeModal } = useModal()
-  const [target, setTarget] = useState<{ collection: DialogDeleteSlug; id: string } | null>(null)
-  const [summary, setSummary] = useState<Loaded | null>(null)
+  // One slug per dialog: the list's dialog (a provider) stays mounted on the
+  // document page beside the menu's, and a shared slug opened both.
+  const modalSlug = `delete-dialog-${useId()}`
+  // The document and its summary in one value, tagged with the request that
+  // opened it: a slow answer to an earlier open cannot fill a later one, so
+  // Delete always acts on the document whose summary the dialog shows.
+  const [shown, setShown] = useState<{
+    collection: DialogDeleteSlug
+    id: string
+    request: object
+    summary: Loaded | null
+  } | null>(null)
   const [typed, setTyped] = useState('')
   const [busy, setBusy] = useState(false)
 
   const open = useCallback(
     async (collection: DialogDeleteSlug, id: number | string) => {
-      setTarget({ collection, id: String(id) })
-      setSummary(null)
+      const request = {}
+      setShown({ collection, id: String(id), request, summary: null })
       setTyped('')
-      openModal(MODAL_SLUG)
+      openModal(modalSlug)
       const res = await fetch(`/api/${collection}/${id}/delete-summary`, {
         credentials: 'include',
       }).catch(() => null)
@@ -64,45 +72,52 @@ export function useDeleteDialog(onDeleted: () => void) {
             error?: string
           })
         | null
-      setSummary(
+      const summary: Loaded =
         res?.ok && body && !body.error
           ? body
-          : { error: body?.error ?? 'Could not list what this delete removes.' },
-      )
+          : { error: body?.error ?? 'Could not list what this delete removes.' }
+      setShown((now) => (now?.request === request ? { ...now, summary } : now))
     },
-    [openModal],
+    [openModal, modalSlug],
   )
 
+  const summary = shown?.summary ?? null
   const loaded = summary && !summary.error ? (summary as DeleteSummary) : null
   const name = loaded?.name ?? ''
   const noun = loaded?.noun ?? 'item'
   const close = () => {
-    if (!busy) closeModal(MODAL_SLUG)
+    if (!busy) closeModal(modalSlug)
   }
 
   const confirm = async () => {
-    if (!target) return
+    if (!shown || !loaded) return
     setBusy(true)
     const { ok } = await postAction(
-      `/api/${target.collection}/${target.id}/delete`,
+      `/api/${shown.collection}/${shown.id}/delete`,
       'The delete failed. Try again.',
     )
     setBusy(false)
     if (!ok) return
-    closeModal(MODAL_SLUG)
+    closeModal(modalSlug)
     toast.success(`Deleted “${name}”.`)
     onDeleted()
   }
 
   const canDelete = Boolean(loaded)
-  const ready = canDelete && name !== '' && typed.trim() === name && !busy
-  const inputId = `${MODAL_SLUG}-name`
+  const typeToConfirm = loaded?.typeToConfirm ?? true
+  const ready = canDelete && name !== '' && (!typeToConfirm || typed.trim() === name) && !busy
+  const inputId = `${modalSlug}-name`
 
   const modal = (
-    <Modal className="confirmation-modal" closeOnBlur={false} slug={MODAL_SLUG}>
+    <Modal
+      aria-labelledby={`${modalSlug}-title`}
+      className="confirmation-modal"
+      closeOnBlur={false}
+      slug={modalSlug}
+    >
       <div className="confirmation-modal__wrapper">
         <div className="confirmation-modal__content">
-          <h1>{name ? `Delete “${name}”?` : 'Delete?'}</h1>
+          <h1 id={`${modalSlug}-title`}>{name ? `Delete “${name}”?` : 'Delete?'}</h1>
           {!summary ? (
             <p>Finding what this delete removes…</p>
           ) : summary.error ? (
@@ -124,19 +139,21 @@ export function useDeleteDialog(onDeleted: () => void) {
                 </>
               ) : null}
               <p>You cannot undo this.</p>
-              <label className="cilas-admin-stack" htmlFor={inputId}>
-                <span>
-                  Type <strong>{name}</strong> to confirm.
-                </span>
-                <input
-                  autoComplete="off"
-                  className="cilas-delete-input"
-                  disabled={busy}
-                  id={inputId}
-                  onChange={(e) => setTyped(e.target.value)}
-                  value={typed}
-                />
-              </label>
+              {typeToConfirm ? (
+                <label className="cilas-admin-stack" htmlFor={inputId}>
+                  <span>
+                    Type <strong>{name}</strong> to confirm.
+                  </span>
+                  <input
+                    autoComplete="off"
+                    className="cilas-delete-input"
+                    disabled={busy}
+                    id={inputId}
+                    onChange={(e) => setTyped(e.target.value)}
+                    value={typed}
+                  />
+                </label>
+              ) : null}
             </>
           ) : null}
         </div>
