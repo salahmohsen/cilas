@@ -1608,6 +1608,115 @@ describe('spaces write', () => {
     await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
   })
 
+  it("only a space's moderators switch its AI buttons, and the page reads follow both switches", async () => {
+    const other = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Probe untaught course',
+          slug: `${COURSE_SLUG}-untaught`,
+          course_type: 'THEMATIC',
+          _status: 'published',
+        } as never,
+        draft: false,
+        overrideAccess: true,
+      }),
+    )
+    const { docs } = await payload.find({
+      collection: 'spaces',
+      where: { course: { equals: other.id } },
+      depth: 0,
+      overrideAccess: true,
+    })
+    const otherSpace = docs[0]!
+    track('spaces', otherSpace.id)
+    track('space-posts', introOf(otherSpace))
+    expect(otherSpace.ai_buttons).toBe(true)
+
+    const set = (user: User, space: number, aiButtons: boolean) =>
+      spaceSettingsSet({ payload, user, space, aiButtons })
+    const row = (id: number) =>
+      payload.findByID({ collection: 'spaces', id, depth: 0, overrideAccess: true })
+
+    expect(await set(fellow, otherSpace.id, false)).toMatchObject({
+      ok: false,
+      error: 'not-yours',
+    })
+    expect(await set(student, courseSpace.id, false)).toMatchObject({
+      ok: false,
+      error: 'not-yours',
+    })
+    await expect(
+      payload.update({
+        collection: 'spaces',
+        id: courseSpace.id,
+        user: fellow,
+        overrideAccess: false,
+        data: { ai_buttons: false },
+      }),
+    ).rejects.toThrow()
+    expect((await row(courseSpace.id)).ai_buttons).toBe(true)
+    expect((await set(admin, otherSpace.id, false)).ok).toBe(true)
+    expect((await row(otherSpace.id)).ai_buttons).toBe(false)
+
+    const linked = track(
+      'sessions',
+      await payload.create({
+        collection: 'sessions',
+        data: { course: course.id, title: 'Probe AI session', position: 50 },
+        overrideAccess: true,
+      }),
+    )
+    const post = track(
+      'space-posts',
+      await payload.create({
+        collection: 'space-posts',
+        data: {
+          space: courseSpace.id,
+          author: fellowPerson,
+          kind: 'announcement',
+          body: 'QA probe AI session',
+          course_session: linked.id,
+          last_activity_at: new Date().toISOString(),
+        } as never,
+        overrideAccess: true,
+      }),
+    )
+    const sessionCardReads = async () => {
+      const feed = await spaceFeed(payload, fellow, courseSpace.id)
+      const view = await postView(payload, fellow, await row(courseSpace.id), post.id)
+      return [
+        feed.sessions,
+        feed.rows.find((r) => r.post.id === post.id)?.session,
+        view?.sessions,
+        view?.row.session,
+      ]
+    }
+    const allSay = async (ai: boolean) => {
+      for (const read of await sessionCardReads())
+        expect(read).toMatchObject({ state: 'shown', ai })
+    }
+    const siteSwitch = (ai_buttons: boolean) =>
+      payload.updateGlobal({ slug: 'site-settings', data: { ai_buttons }, overrideAccess: true })
+
+    await siteSwitch(true)
+    await allSay(true)
+    expect((await set(fellow, courseSpace.id, false)).ok).toBe(true)
+    expect((await row(courseSpace.id)).ai_buttons).toBe(false)
+    await allSay(false)
+    await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
+    expect((await row(courseSpace.id)).ai_buttons).toBe(false)
+    expect((await set(fellow, courseSpace.id, true)).ok).toBe(true)
+    await allSay(true)
+    try {
+      await siteSwitch(false)
+      await allSay(false)
+    } finally {
+      await siteSwitch(true)
+    }
+  })
+
   it('a member answers an event once, changes or withdraws it; archive, lock and a past event refuse', async () => {
     const day = 86_400_000
     const starts = new Date(Date.now() + day).toISOString()
