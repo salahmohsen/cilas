@@ -39,13 +39,14 @@ const readsLatestVersion = async (
   }
 }
 
-const personNames = async (payload: Payload, accounts: number[]) => {
+const personNames = async (payload: Payload, accounts: number[], locale: Locale) => {
   const { docs } = await payload.find({
     collection: 'users',
     where: { id: { in: accounts } },
     depth: 1,
     select: { person: true },
     populate: { people: { name: true } },
+    locale,
     pagination: false,
     overrideAccess: true,
   })
@@ -55,7 +56,7 @@ const personNames = async (payload: Payload, accounts: number[]) => {
 /**
  * A document's review moves, oldest first, for a user who reads its latest
  * version (a current owner or an admin); anyone else gets none. A row names
- * the actor and carries no account.
+ * the actor, in `locale`, and carries no account.
  */
 export const reviewHistoryFor = async (
   payload: Payload,
@@ -76,6 +77,7 @@ export const reviewHistoryFor = async (
   const names = await personNames(
     payload,
     events.flatMap((event) => relId(event.actor) ?? []),
+    locale,
   )
   return events.map(({ at, from, to, request, note, actor }) => ({
     at,
