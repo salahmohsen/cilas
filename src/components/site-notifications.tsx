@@ -10,7 +10,9 @@ import {
 } from '@/components/arc/notification-center/notification-center'
 import { useToastStack } from '@/components/arc/toast-stack/toast-stack'
 import { NOTIFICATION_GLYPHS } from '@/components/notification-glyphs'
+import type { Locale } from '@/i18n/routing'
 import { localDigits } from '@/lib/digits'
+import { localizedLink } from '@/lib/document-href'
 import { unreadCount } from '@/lib/unread-count'
 import { isNotificationKind, NOTIFICATION_KINDS } from '@/lib/notification-kinds'
 import {
@@ -49,7 +51,7 @@ const relativeTime = (date: Date) => {
  */
 export function SiteNotifications() {
   const t = useTranslations('Notifications')
-  const locale = useLocale()
+  const locale = useLocale() as Locale
   const { toast } = useToastStack()
   const [items, setItems] = useState<NotificationItem[] | null>(null)
 
@@ -69,10 +71,10 @@ export function SiteNotifications() {
         time: relativeTime(new Date(n.createdAt)),
         read: Boolean(n.read_at),
         tone: kind?.tone,
-        href: n.link ?? undefined,
+        href: n.link ? localizedLink(n.link, locale) : undefined,
       }
     },
-    [t],
+    [locale, t],
   )
 
   const load = useCallback(async () => {
