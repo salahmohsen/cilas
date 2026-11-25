@@ -41,6 +41,7 @@ type ReviewWrite = {
   autosave: boolean
   /** The `review.request` the write sent, if it is an allowed value. */
   sentRequest: ReviewRequest | null
+  sentNote: string | null
 }
 
 const CONTEXT_KEY = 'reviewWrite'
@@ -51,6 +52,7 @@ const reviewContext = (req: PayloadRequest): ReviewWrite =>
     draftSave: false,
     autosave: false,
     sentRequest: null,
+    sentNote: null,
   }) as ReviewWrite
 
 const allowedRequest = (value: unknown): ReviewRequest | null =>
@@ -133,6 +135,7 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   // beforeChange runs, so `data.review.request` there cannot say whether the
   // write sent it. The operation args can.
   context.sentRequest = allowedRequest(write.data?.review?.request)
+  context.sentNote = write.data?.review?.review_note ?? null
 
   if (operation === 'restoreVersion') {
     if (!trusted) write.draft = true
@@ -262,6 +265,48 @@ const applyReview =
       _status: 'published',
       ...onApprove?.({ data, originalDoc, now: new Date() }),
     }
+  }
+
+const recordReviewEvent =
+  ({ collection }: ReviewOptions): CollectionAfterChangeHook =>
+  async ({ doc, previousDoc, req }) => {
+    const from: ReviewState = previousDoc?.review?.status ?? 'draft'
+    const to: ReviewState = doc.review?.status ?? 'draft'
+    const { autosave, sentNote } = reviewContext(req)
+    if (from === to || autosave) return doc
+
+    const {
+      docs: [version],
+    } = await req.payload.findVersions({
+      collection,
+      where: { parent: { equals: doc.id } },
+      sort: ['-updatedAt', '-id'],
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+      req,
+    })
+    const request = (to === 'submitted' ? doc : previousDoc)?.review?.request ?? null
+    const removed = from === 'submitted' && to === 'draft' && request === 'removal'
+    const decision = removed || notifyOn(from, to) === 'authors'
+    await req.payload.create({
+      collection: 'review-events',
+      data: {
+        collection,
+        doc: doc.id,
+        version: version ? Number(version.id) : null,
+        from,
+        to,
+        request,
+        note: isAdminUser(req.user) && decision ? sentNote : null,
+        actor: req.user?.id ?? null,
+        at: new Date().toISOString(),
+      },
+      depth: 0,
+      overrideAccess: true,
+      req,
+    })
+    return doc
   }
 
 /** The line under the bell for each move. */
@@ -401,6 +446,6 @@ export const reviewHooks = (
   return {
     beforeOperation: [recordDraftSave],
     beforeChange: [applyReview(options)],
-    afterChange: [publishOwners(options), notifyReview(options)],
+    afterChange: [publishOwners(options), recordReviewEvent(options), notifyReview(options)],
   }
 }

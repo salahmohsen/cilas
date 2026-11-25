@@ -7719,6 +7719,98 @@
     }
   },
   {
+    "entity": "collection:review-events",
+    "field": "*",
+    "rules": {
+      "create": "nobody#c75af6b3",
+      "read": "isAdmin#b15b4fe4",
+      "update": "nobody#c75af6b3",
+      "delete": "nobody#c75af6b3",
+      "unlock": "payload:defaultUnlock"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "collection",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "doc",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "version",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "from",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "to",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "request",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "note",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "actor",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:review-events",
+    "field": "at",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
     "entity": "collection:push-subscriptions",
     "field": "*",
     "rules": {
