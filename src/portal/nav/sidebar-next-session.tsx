@@ -16,8 +16,10 @@ import type { User } from '@/payload-types'
 
 import styles from './shell.module.css'
 
+const CALENDAR = '/spaces/calendar'
+
 const EMPTY_DESTINATION = {
-  admin: '/spaces/calendar',
+  admin: CALENDAR,
   fellow: '/spaces/courses',
   student: '/spaces',
 } satisfies Record<AdminView, string>
@@ -53,7 +55,6 @@ export async function SidebarNextSession({
       (meeting.date > day || (meeting.date === day && (!meeting.start || meeting.start >= time))),
   )
 
-  const calendar = `/${locale}${EMPTY_DESTINATION.admin}`
   if (!next) {
     const view = adminViewOf(user) ?? 'student'
     return (
@@ -69,7 +70,7 @@ export async function SidebarNextSession({
   }
 
   const course = courses.find(({ space }) => parentRef(space)?.id === next.courseId)
-  const href = course?.href ?? (next.href ? `/${locale}${next.href}` : calendar)
+  const href = course?.href ?? `/${locale}${next.href ?? CALENDAR}`
   const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: CAIRO }).format(
     cairoNoon(next.date),
   )
