@@ -5,13 +5,14 @@ import type { Payload } from 'payload'
 
 import { adminViewOf, type AdminView } from '@/access'
 import type { Locale } from '@/i18n/routing'
-import { cairoDay, cairoNoon, cairoTime, CAIRO } from '@/lib/cairo-day'
+import { cairoNoon, CAIRO } from '@/lib/cairo-day'
 import { localDigits } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
 import { parentRef } from '@/lib/space-ref'
 import type { SpaceSummary } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
 import { readerMeetings } from '@/portal/calendar/reader-meetings'
+import { upcoming } from '@/portal/home/upcoming'
 
 import styles from './shell.module.css'
 
@@ -43,14 +44,7 @@ export async function SidebarNextSession({
   ])
   if (!meetings) return null
 
-  const now = new Date()
-  const day = cairoDay(now)!
-  const time = cairoTime(now)!
-  const next = meetings.find(
-    (meeting) =>
-      !meeting.cancelled &&
-      (meeting.date > day || (meeting.date === day && (!meeting.start || meeting.start >= time))),
-  )
+  const next = upcoming(meetings, new Date())
 
   if (!next) {
     const view = adminViewOf(user) ?? 'student'
