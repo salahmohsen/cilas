@@ -289,6 +289,7 @@ describe('the edge bar', () => {
       fireEvent.click(block('Other')!)
       expect(bar(document.querySelector('[class*="detailsMark"]'))).toEqual(hollow)
       view.rerender({ items: [mine, other, talk], view: 'month', details: true })
+      expect(screen.getByRole('button', { name: 'Month' })).toHaveAttribute('aria-pressed', 'true')
       expect(bar(block('Mine'))).toEqual(solid)
       expect(bar(block('Other'))).toEqual(hollow)
     },
