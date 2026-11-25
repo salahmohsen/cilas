@@ -21,10 +21,22 @@ mockNetwork(inbox.handler, ...localServices)
 const { track, cleanup } = createTracker()
 let payload: Payload
 let admin: User
+let adminToken: string
 let owner: User
 let ownerToken: string
 let other: User
 const reviewerName = 'Review Events Reviewer'
+const reviewerArabicName = 'مراجع سجل المراجعة'
+
+const session = async ({ email, password }: { email: string; password: string }) => {
+  const { user, token } = await payload.login({
+    collection: 'users',
+    data: { email, password },
+    depth: 0,
+  })
+  if (!token || !user) throw new Error(`No session for ${email}`)
+  return { user, token }
+}
 
 beforeAll(async () => {
   payload = await getPayload({ config })
@@ -36,21 +48,21 @@ beforeAll(async () => {
       data: { name: reviewerName, slug: uniq('history-reviewer') },
     }),
   )
+  await payload.update({
+    collection: 'people',
+    id: person.id,
+    data: { name: reviewerArabicName },
+    locale: 'ar',
+  })
   admin = await payload.update({
     collection: 'users',
     id: adminAccount.id,
     data: { person: person.id },
     depth: 0,
   })
+  adminToken = (await session(adminAccount)).token
   const member = await account(payload, track, 'student', 'history-owner')
-  const { user, token } = await payload.login({
-    collection: 'users',
-    data: { email: member.email, password: member.password },
-    depth: 0,
-  })
-  if (!token || !user) throw new Error('No owner session')
-  owner = user
-  ownerToken = token
+  ;({ user: owner, token: ownerToken } = await session(member))
   const stranger = await account(payload, track, 'student', 'history-other')
   other = await payload.findByID({ collection: 'users', id: stranger.id, depth: 0 })
 })
@@ -130,6 +142,55 @@ const rowsAddedBy = async (id: number, run: () => Promise<unknown>) => {
   return (await eventsOf(id)).slice(before)
 }
 
+const ADMIN_FORM_SAVES = {
+  approved: { _status: 'published', status: 'approved' },
+  changes_requested: { _status: 'draft', status: 'changes_requested' },
+  rejected: { _status: 'draft', status: 'rejected' },
+  removed: { _status: 'draft', status: 'draft' },
+} as const
+
+const decideAsForm = (id: number, decision: keyof typeof ADMIN_FORM_SAVES, note: string | null) =>
+  payload.update({
+    collection: 'articles',
+    id,
+    data: {
+      _status: ADMIN_FORM_SAVES[decision]._status,
+      review: { status: ADMIN_FORM_SAVES[decision].status, review_note: note },
+    },
+    user: admin,
+    overrideAccess: false,
+    depth: 0,
+  })
+
+const patchArticle = async (id: number, token: string, query: string, data: object) => {
+  const body = new FormData()
+  body.set('_payload', JSON.stringify(data))
+  const response = await rest('PATCH', `articles/${id}?${query}`, { token, body })
+  expect(response.status).toBe(200)
+}
+
+const autosave = (id: number, title: string) =>
+  payload.update({
+    collection: 'articles',
+    id,
+    draft: true,
+    autosave: true,
+    data: { title },
+    user: owner,
+    overrideAccess: false,
+    depth: 0,
+  })
+
+const latestVersionOf = async (id: number) => {
+  const { docs } = await payload.findVersions({
+    collection: 'articles',
+    where: { parent: { equals: id }, latest: { equals: true } },
+    limit: 1,
+    depth: 0,
+  })
+  return docs[0]!
+}
+
 const asOwner = (id: number, move: 'withdraw' | 'requestRemoval' | 'discard') => async () =>
   expect(await ownerMove(payload, owner, { collection: 'articles', id }, { move })).toMatchObject({
     ok: true,
@@ -167,7 +228,7 @@ describe('review-events: history', () => {
     const ownerName = (await payload.findByID({ collection: 'people', id: Number(owner.person) }))
       .name
 
-    const rows = await reviewHistoryFor(payload, 'articles', id, owner)
+    const rows = await reviewHistoryFor(payload, 'articles', id, owner, 'en')
     const at = expect.any(String)
     const sent = (from: ReviewState) => ({
       at,
@@ -199,14 +260,16 @@ describe('review-events: history', () => {
       (await payload.findByID({ collection: 'articles', id, user: other, overrideAccess: false }))
         .id,
     ).toBe(id)
-    expect(await reviewHistoryFor(payload, 'articles', id, other)).toEqual([])
-    expect(await reviewHistoryFor(payload, 'articles', id, { ...other, person: null })).toEqual([])
+    expect(await reviewHistoryFor(payload, 'articles', id, other, 'en')).toEqual([])
+    expect(
+      await reviewHistoryFor(payload, 'articles', id, { ...other, person: null }, 'en'),
+    ).toEqual([])
   })
 
   it('a move by the server has no actor name', async () => {
     const id = await liveCopyAt('approved')
 
-    expect(await reviewHistoryFor(payload, 'articles', id, owner)).toMatchObject([
+    expect(await reviewHistoryFor(payload, 'articles', id, owner, 'en')).toMatchObject([
       { from: 'draft', to: 'approved', actorName: null },
     ])
   })
@@ -284,5 +347,191 @@ describe('review-events: history', () => {
           : [],
       )
     }
+  })
+
+  it('a removed author reads no history; the other author and an admin read all of it', async () => {
+    const id = await draftArticle('review-event-removed-author')
+    await payload.update({
+      collection: 'articles',
+      id,
+      data: { authors: [Number(owner.person), Number(other.person)] },
+      depth: 0,
+    })
+    await moveArticle(id, owner, 'submitted')
+    await moveArticle(id, admin, 'changes_requested', 'Two authors read this.')
+    expect(await reviewHistoryFor(payload, 'articles', id, other, 'en')).toHaveLength(2)
+
+    await payload.update({
+      collection: 'articles',
+      id,
+      data: { authors: [Number(owner.person)] },
+      user: admin,
+      overrideAccess: false,
+      depth: 0,
+    })
+    await moveArticle(id, owner, 'submitted')
+
+    expect(await reviewHistoryFor(payload, 'articles', id, other, 'en')).toEqual([])
+    expect(await reviewHistoryFor(payload, 'articles', id, owner, 'en')).toHaveLength(3)
+    expect(await reviewHistoryFor(payload, 'articles', id, admin, 'en')).toHaveLength(3)
+  })
+
+  it('actor names come in the locale of the read', async () => {
+    const id = await draftArticle('review-event-actor-locale')
+    await moveArticle(id, owner, 'submitted')
+    await moveArticle(id, admin, 'changes_requested', 'A note.')
+
+    for (const [locale, name] of [
+      ['en', reviewerName],
+      ['ar', reviewerArabicName],
+    ] as const) {
+      const rows = await reviewHistoryFor(payload, 'articles', id, owner, locale)
+      expect(rows[1]?.actorName, locale).toBe(name)
+    }
+  })
+
+  it('an owner submit with ?select= writes the submit row', async () => {
+    const id = await draftArticle('review-event-select-submit')
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, ownerToken, 'select[title]=true', { review: { status: 'submitted' } }),
+    )
+    expect(rows).toMatchObject([{ from: 'draft', to: 'submitted', actor: owner.id }])
+  })
+
+  it('an admin decision with ?select= writes the decision row with its note', async () => {
+    const id = await draftArticle('review-event-select-decide')
+    await moveArticle(id, owner, 'submitted')
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, adminToken, 'select[title]=true', {
+        review: { status: 'changes_requested', review_note: 'Sent with a select.' },
+      }),
+    )
+    expect(rows).toMatchObject([
+      {
+        from: 'submitted',
+        to: 'changes_requested',
+        note: 'Sent with a select.',
+        actor: admin.id,
+      },
+    ])
+  })
+
+  it('an edit with ?select= that keeps the status writes no row', async () => {
+    const id = await draftArticle('review-event-select-edit')
+    await moveArticle(id, owner, 'submitted')
+    await moveArticle(id, admin, 'changes_requested', 'Edit this.')
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, ownerToken, 'select[review]=false', { title: uniq('select-edited') }),
+    )
+    expect(rows).toEqual([])
+  })
+
+  it('a submit with ?autosave=true and no draft writes one row and its own version', async () => {
+    const id = await draftArticle('review-event-autosave-submit')
+    await autosave(id, uniq('autosaved-before-submit'))
+    const autosaved = await latestVersionOf(id)
+    expect(autosaved).toMatchObject({ autosave: true })
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, ownerToken, 'autosave=true', { review: { status: 'submitted' } }),
+    )
+    expect(rows).toMatchObject([{ from: 'draft', to: 'submitted' }])
+    expect(rows[0]!.version).not.toBe(autosaved.id)
+    expect(rows[0]!.version).toBe((await latestVersionOf(id)).id)
+  })
+
+  it('a new submission clears the old note, so no later row repeats it', async () => {
+    const id = await draftArticle('review-event-old-note')
+    await moveArticle(id, owner, 'submitted')
+    await decideAsForm(id, 'changes_requested', 'An old note.')
+    await moveArticle(id, owner, 'submitted')
+
+    const stored = (await latestVersionOf(id)).version.review?.review_note ?? null
+    expect(stored).toBeNull()
+
+    const rows = await rowsAddedBy(id, () => decideAsForm(id, 'approved', stored))
+    expect(rows).toMatchObject([{ from: 'submitted', to: 'approved', note: null }])
+  })
+
+  it('declining, keeping and removing each record the note', async () => {
+    const declined = await draftArticle('review-event-note-declined')
+    await moveArticle(declined, owner, 'submitted')
+    expect(
+      await rowsAddedBy(declined, () => decideAsForm(declined, 'rejected', 'Not for us.')),
+    ).toMatchObject([{ from: 'submitted', to: 'rejected', note: 'Not for us.' }])
+
+    for (const [decision, to, note] of [
+      ['rejected', 'rejected', 'It stays on the site.'],
+      ['removed', 'draft', 'Taken down as asked.'],
+    ] as const) {
+      const id = await liveCopyAt('approved')
+      await asOwner(id, 'requestRemoval')()
+      expect(await rowsAddedBy(id, () => decideAsForm(id, decision, note)), decision).toMatchObject(
+        [{ from: 'submitted', to, request: 'removal', note }],
+      )
+    }
+  })
+
+  it('a publish of one locale records a version that is not the snapshot', async () => {
+    const id = await liveCopyAt('approved')
+    await trustedWrites(payload, track).edit('articles', id, { title: uniq('one-locale-edit') })
+    await trustedWrites(payload, track).submit('articles', id, 'changes')
+
+    const rows = await rowsAddedBy(id, () =>
+      payload.update({
+        collection: 'articles',
+        id,
+        data: { _status: 'published', review: { status: 'approved' } },
+        publishSpecificLocale: 'en',
+        user: admin,
+        overrideAccess: false,
+        depth: 0,
+      }),
+    )
+    const { docs: versions } = await payload.db.findVersions<{ id: number }>({
+      collection: 'articles',
+      where: { parent: { equals: id } },
+      pagination: false,
+    })
+    const snapshots = versions
+      .filter((version) => (version as { snapshot?: boolean }).snapshot)
+      .map((version) => Number(version.id))
+    expect(snapshots).toHaveLength(1)
+    expect(rows).toMatchObject([{ from: 'submitted', to: 'approved' }])
+    expect(versions.map((version) => Number(version.id))).toContain(rows[0]!.version)
+    expect(snapshots).not.toContain(rows[0]!.version)
+  })
+
+  it('an admin cannot create, change or delete a row through REST', async () => {
+    const id = await draftArticle('review-event-rest-writes')
+    await moveArticle(id, owner, 'submitted')
+    const [row] = await eventsOf(id)
+    const json = (data: object) => {
+      const body = new FormData()
+      body.set('_payload', JSON.stringify(data))
+      return body
+    }
+
+    const created = await rest('POST', 'review-events', {
+      token: adminToken,
+      body: json({
+        collection: 'articles',
+        doc: id,
+        from: 'draft',
+        to: 'approved',
+        at: new Date().toISOString(),
+      }),
+    })
+    const changed = await rest('PATCH', `review-events/${row!.id}`, {
+      token: adminToken,
+      body: json({ note: 'Forged.' }),
+    })
+    const deleted = await rest('DELETE', `review-events/${row!.id}`, { token: adminToken })
+
+    expect([created.status, changed.status, deleted.status]).toEqual([403, 403, 403])
+    expect(await eventsOf(id)).toMatchObject([{ id: row!.id, note: null }])
   })
 })

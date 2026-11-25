@@ -1,5 +1,6 @@
 import { Forbidden, type Payload } from 'payload'
 
+import type { Locale } from '@/i18n/routing'
 import type { Person, User } from '@/payload-types'
 
 import { relation, relId } from './relation'
@@ -61,6 +62,7 @@ export const reviewHistoryFor = async (
   collection: ReviewedCollection,
   id: number,
   user: User,
+  locale: Locale,
 ): Promise<ReviewHistoryRow[]> => {
   if (!(await readsAVersion(payload, collection, id, user))) return []
   const { docs: events } = await payload.find({
