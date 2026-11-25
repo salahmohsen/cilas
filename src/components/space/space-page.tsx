@@ -34,6 +34,7 @@ import { profileMessages } from '@/components/profile/load-messages'
 import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { AIInstructions } from '@/components/ai-instructions'
+import { aiButtonsOn } from '@/lib/ai-buttons'
 import { cairoDay } from '@/lib/cairo-day'
 import { numberedSessions, upcomingSession } from '@/lib/meetings'
 import {
@@ -425,12 +426,14 @@ export async function SpacePage({
     ? upcomingSession(numberedSessions(course.sessions), cairoDay(new Date()) ?? '')
     : null
   const nextId = next ? String(next.session.id) : null
+  const showAi = aiButtonsOn(feed.settings, space)
   const nextCard = (titled: boolean) =>
     course && nextId ? (
       <NextSession
         course={course}
         session={nextId}
         tentative={Boolean(course.syllabus_tentative)}
+        ai={showAi}
         titled={titled}
       />
     ) : null
@@ -511,7 +514,7 @@ export async function SpacePage({
           </div>
           {course && (
             <div className="poster-strip">
-              {course && (
+              {showAi && (
                 <div
                   className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
                 >

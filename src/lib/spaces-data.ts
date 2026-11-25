@@ -4,6 +4,7 @@ import type { Payload, Where } from 'payload'
 import { cache } from 'react'
 
 import { personOf } from '@/access'
+import { aiButtonsOn } from '@/lib/ai-buttons'
 import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archiveOf, archivedNow } from '@/lib/space-lifecycle'
 import { isGhostCourse, parentOf, parentRef, spaceHref, spaceTitle } from '@/lib/space-ref'
@@ -514,26 +515,28 @@ export type SessionCourse = Pick<
  * read the course.
  */
 export type SessionView =
-  | { state: 'shown'; course: SessionCourse; session: string }
+  | { state: 'shown'; course: SessionCourse; session: string; ai: boolean }
   | { state: 'gone' }
   | { state: 'hidden' }
 
 /** The space's course as the reader may read it, for the sessions its posts name. */
 export type SessionRead =
-  | { state: 'shown'; course: SessionCourse }
+  | { state: 'shown'; course: SessionCourse; ai: boolean }
   | { state: 'gone' }
   | { state: 'hidden' }
 
 /**
  * The course behind a course space's session links and mentions, in one read
  * through the reader's access: a post shows no more of the course than its
- * page would. Null outside a course space.
+ * page would. `ai`: whether the session cards offer the "Study with AI"
+ * buttons. Null outside a course space.
  */
 const sessionRead = async (
   payload: Payload,
   user: null | User,
   courseId: number | null,
   locale: 'en' | 'ar',
+  ai: boolean,
 ): Promise<SessionRead | null> => {
   if (courseId == null) return null
   const { docs } = await payload.find({
@@ -564,6 +567,7 @@ const sessionRead = async (
     return {
       state: 'shown',
       course: { ...course, sessions: sessions.get(course.id) ?? [], place },
+      ai,
     }
   }
   // Unread, the course is either deleted or not the reader's to read; only
@@ -592,7 +596,7 @@ const sessionViews = (posts: SpacePost[], read: SessionRead | null): Map<number,
         : read.state !== 'shown'
           ? read
           : read.course.sessions.some((s) => String(s.id) === session)
-            ? { state: 'shown', course: read.course, session }
+            ? { ...read, session }
             : { state: 'gone' },
     )
   }
@@ -679,7 +683,13 @@ export const spaceFeed = async (
       postThreads(payload, user, postIds),
       voteViews(payload, user, docs, locale),
       rsvpViews(payload, user, docs, locale),
-      sessionRead(payload, user, row.kind === 'course' ? relId(row.course) : null, locale),
+      sessionRead(
+        payload,
+        user,
+        row.kind === 'course' ? relId(row.course) : null,
+        locale,
+        aiButtonsOn(settings, row),
+      ),
       postIds.length
         ? payload.find({
             collection: 'space-reactions',
@@ -901,13 +911,20 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
+  const settings = await spacesSettings(payload)
   const [{ archived }, threads, votes, rsvps, read, { docs: reactions }, { docs: files }] =
     await Promise.all([
       archiveState(payload, space),
       postThreads(payload, user, [post.id]),
       voteViews(payload, user, [post], locale),
       rsvpViews(payload, user, [post], locale),
-      sessionRead(payload, user, space.kind === 'course' ? relId(space.course) : null, locale),
+      sessionRead(
+        payload,
+        user,
+        space.kind === 'course' ? relId(space.course) : null,
+        locale,
+        aiButtonsOn(settings, space),
+      ),
       payload.find({
         collection: 'space-reactions',
         user: user ?? undefined,
