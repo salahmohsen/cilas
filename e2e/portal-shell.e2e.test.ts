@@ -1492,11 +1492,15 @@ test.describe('portal shell', () => {
               viewport.width === 1440 ? 8 : 64,
             )
             await expect(page.locator('html')).toHaveCSS('scroll-padding-top', '0px')
-            const wordmark = rail.getByText(MESSAGES[locale].Header.brand, { exact: true })
+            const name = MESSAGES[locale].Header.brand.replace(/\s+/g, ' ')
+            const brand = rail.getByRole('link', { name, exact: true })
+            const wordmark = brand.getByText(name, { exact: true })
+            await expect(brand).toBeVisible()
             if (viewport.width === 1440) {
               await expect(wordmark).toBeVisible()
               await rail.locator('[data-portal-fold]').click()
               await expect(wordmark).toBeHidden()
+              await expect(brand).toBeVisible()
             } else {
               await expect(wordmark).toBeHidden()
             }

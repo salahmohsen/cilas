@@ -1753,7 +1753,6 @@
       "unread": "{count, plural, one {, {shown} unread post} other {, {shown} unread posts}}",
       "unreadMany": ", more than {cap} unread posts",
       "more": "More",
-      "brand": "CILAS home",
       "scroll": "Pages and spaces",
       "articles": "Articles",
       "courses": "Courses",
