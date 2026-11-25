@@ -363,6 +363,7 @@ test.describe('portal Home and Inbox', () => {
           '[data-latest] li:first-child a',
           '[data-latest] > a[href="/en/spaces/inbox"]',
         ]
+        for (const target of targets.slice(1)) await expect(page.locator(target)).toBeVisible()
         const stops: number[] = []
         for (let i = 0; i < 160 && stops.length < targets.length; i++) {
           await page.keyboard.press('Tab')
