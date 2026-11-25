@@ -1,13 +1,19 @@
-import { ADMIN_ROLES } from '@/access'
 import type { PayloadRequest } from 'payload'
 
-import { getEmailSettings } from '@/emails/settings'
+import { ADMIN_ROLES } from '@/access'
+import { getEmailSettings, type EmailSettings } from '@/emails/settings'
 import { reviewMail } from '@/emails/transactional'
-import { env } from '@/env'
+import { localeOf, type Locale } from '@/i18n/routing'
+import { absoluteLink, documentHref, type DocumentTarget } from '@/lib/document-href'
 import { readPreferences, wantsChannel } from '@/lib/notification-preferences'
+import { relId } from '@/lib/relation'
 import type { ReviewState } from '@/lib/review'
+import { withSavepoint } from '@/lib/savepoint'
 
 export type Recipient = { id: number; email: string }
+
+/** A recipient of a review email, with the language its link opens in. */
+export type LocalRecipient = Recipient & { locale: Locale }
 
 const recipientsOf = (docs: Array<{ id: number; email?: string | null }>): Recipient[] =>
   docs.flatMap((d) => (d.email ? [{ id: d.id, email: d.email }] : []))
@@ -44,23 +50,25 @@ export const ownerRecipients = async (
  * The recipients who have not turned this kind's email off (Settings →
  * Notifications). A failed read keeps everyone: the default is to send.
  */
-export const emailRecipients = async (
+const wantingEmail = async (
   req: PayloadRequest,
   people: Recipient[],
   kind: string,
 ): Promise<Recipient[]> => {
   if (!people.length) return people
   try {
-    const { docs } = await req.payload.find({
-      collection: 'users',
-      where: { id: { in: people.map((p) => p.id) } },
-      depth: 0,
-      limit: people.length,
-      pagination: false,
-      overrideAccess: true,
-      select: { notification_preferences: true },
-      req,
-    })
+    const { docs } = await withSavepoint(req, (scoped) =>
+      req.payload.find({
+        collection: 'users',
+        where: { id: { in: people.map((p) => p.id) } },
+        depth: 0,
+        limit: people.length,
+        pagination: false,
+        overrideAccess: true,
+        select: { notification_preferences: true },
+        req: scoped,
+      }),
+    )
     const refused = new Set(
       docs
         .filter((u) => !wantsChannel(readPreferences(u.notification_preferences), 'email', kind))
@@ -73,25 +81,83 @@ export const emailRecipients = async (
   }
 }
 
-export const sendReviewEmail = async (
+/**
+ * Adds the language each account last saved (space-preferences), else the
+ * site's default. A failed read keeps everyone, in the default.
+ */
+const withLocale = async (req: PayloadRequest, people: Recipient[]): Promise<LocalRecipient[]> => {
+  if (!people.length) return []
+  const saved = new Map<unknown, unknown>()
+  try {
+    const { docs } = await withSavepoint(req, (scoped) =>
+      req.payload.find({
+        collection: 'space-preferences',
+        where: { account: { in: people.map((p) => p.id) } },
+        depth: 0,
+        pagination: false,
+        overrideAccess: true,
+        select: { account: true, locale: true },
+        req: scoped,
+      }),
+    )
+    for (const row of docs) saved.set(relId(row.account), row.locale)
+  } catch (error) {
+    req.payload.logger.error({ err: error, msg: 'Email languages not read; using the default' })
+  }
+  return people.map((p) => ({ ...p, locale: localeOf(saved.get(p.id)) }))
+}
+
+/** Who gets this kind of email, each with the language for their link. */
+export const emailRecipients = async (
   req: PayloadRequest,
-  to: string[],
+  people: Recipient[],
+  kind: string,
+): Promise<LocalRecipient[]> => withLocale(req, await wantingEmail(req, people, kind))
+
+/** The link in a review email to this recipient. */
+export const reviewEmailUrl = (recipient: LocalRecipient, target: DocumentTarget): string =>
+  absoluteLink(documentHref(target), recipient.locale)
+
+/**
+ * One message to each address, so no recipient sees another's, sent one at a
+ * time. A dropped message is logged with its account id, and the next one still
+ * goes.
+ *
+ * Read settings once on the request's connection. If the read fails, roll
+ * back to the savepoint so the review decision can still commit.
+ */
+export const sendReviewEmails = async (
+  req: PayloadRequest,
+  recipients: LocalRecipient[],
   state: ReviewState,
   title: string,
-  note?: string | null,
-  about: { noun?: string; path?: string } = {},
+  note: string | null | undefined,
+  { noun, target }: { noun: string; target: DocumentTarget },
 ): Promise<void> => {
-  if (!to.length) return
-  try {
-    const url = about.path
-      ? `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${about.path}`
-      : undefined
-    const mail = await reviewMail(await getEmailSettings(req.payload, req), state, title, note, {
-      noun: about.noun,
-      url,
+  if (!recipients.length) return
+  const logFailure = (error: unknown, recipient: LocalRecipient) =>
+    req.payload.logger.error({
+      err: error,
+      recipient: recipient.id,
+      msg: `Review email for "${title}" failed`,
     })
-    await req.payload.sendEmail({ to, ...mail })
+  let settings: EmailSettings
+  try {
+    settings = await withSavepoint(req, (scoped) => getEmailSettings(req.payload, scoped))
   } catch (error) {
-    req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
+    for (const recipient of recipients) logFailure(error, recipient)
+    return
+  }
+
+  const byUrl = new Map<string, ReturnType<typeof reviewMail>>()
+  for (const recipient of recipients) {
+    try {
+      const url = reviewEmailUrl(recipient, target)
+      const mail = byUrl.get(url) ?? reviewMail(settings, state, title, note, { noun, url })
+      byUrl.set(url, mail)
+      await req.payload.sendEmail({ to: recipient.email, ...(await mail) })
+    } catch (error) {
+      logFailure(error, recipient)
+    }
   }
 }

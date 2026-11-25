@@ -3,7 +3,7 @@ import 'server-only'
 import type { Payload } from 'payload'
 
 import type { Locale } from '@/i18n/routing'
-import { documentHref } from '@/lib/document-href'
+import { documentHref, localizedLink } from '@/lib/document-href'
 import { keyedRows, waitingSet, type ReadCtx } from '@/lib/review-candidates'
 import type { StatusKey } from '@/lib/review-status'
 import { titleOf } from '@/lib/title-of'
@@ -61,7 +61,10 @@ export const ownRows = async (
       row: {
         kind,
         verbKey: VERB_OF[kind],
-        href: documentHref({ collection, id, viewer: 'owner', waiting: false, locale }),
+        href: localizedLink(
+          documentHref({ collection, id, viewer: 'owner', waiting: false }),
+          locale,
+        ),
         label: source ? titleOf(source.title, locale) : null,
         count: 1,
         owners: [],

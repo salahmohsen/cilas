@@ -26,7 +26,7 @@ const page = (rows: StoredNotification[], over: Partial<LatestPage> = {}) =>
   ({ rows, pages: 1, more: null, ...over }) satisfies LatestPage
 
 describe('LatestList', () => {
-  it('a Latest row links to its stored link unchanged', () => {
+  it('opens Spaces links in Arabic and keeps admin, localized and absolute links', () => {
     const sameOrigin = new URL('/en/spaces/z', clientEnv.NEXT_PUBLIC_SERVER_URL).href
     renderWithIntl(
       <LatestList
@@ -36,15 +36,18 @@ describe('LatestList', () => {
           note({ id: 2, link: '/en/spaces/x' }),
           note({ id: 3, link: '/spaces/y', read_at: null }),
           note({ id: 4, link: sameOrigin }),
+          note({ id: 5, link: '/spaces/review/articles/5' }),
         ])}
       />,
+      { locale: 'ar' },
     )
     const hrefs = screen.getAllByRole('link').map((link) => link.getAttribute('href'))
     expect(hrefs).toEqual([
       '/admin/applicants?application=4',
       '/en/spaces/x',
-      '/spaces/y',
+      '/ar/spaces/y',
       sameOrigin,
+      '/ar/spaces/review/articles/5',
     ])
   })
 

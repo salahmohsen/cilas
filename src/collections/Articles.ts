@@ -44,8 +44,17 @@ const approveArticle: ReviewOptions['onApprove'] = ({ data, originalDoc, now }) 
   }
 }
 
+/** Where an approved article went, by its tier. */
+const PUBLISHED_BY_TIER: Partial<Record<string, string>> = {
+  community: 'was published for the community',
+  public: 'was published on the public site',
+}
+
 const articleNoun = 'article' as const
-const articleReview = reviewHooks(articleNoun, { onApprove: approveArticle })
+const articleReview = reviewHooks(articleNoun, {
+  onApprove: approveArticle,
+  approvalOutcome: (doc) => PUBLISHED_BY_TIER[String(doc.tier)],
+})
 
 /** A piece of writing by members of the community, published after review. */
 export const Articles: CollectionConfig = {

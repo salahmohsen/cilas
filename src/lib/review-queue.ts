@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { documentHref } from '@/lib/document-href'
 import { relId } from '@/lib/relation'
 import { ADMIN_LIST_KEYS, gate, keyedRows, waitingSet } from '@/lib/review-candidates'
 import { ADMIN_VISIBLE, type StatusKey } from '@/lib/review-status'
@@ -144,6 +145,6 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
     removal: row.key === 'published_removal',
     by: row.owners.join(', '),
     since: row.since,
-    href: `/admin/collections/${row.collection}/${row.id}`,
+    href: documentHref({ collection: row.collection, id: row.id, viewer: 'admin', waiting: true }),
   }))
 }

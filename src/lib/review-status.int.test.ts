@@ -552,7 +552,7 @@ describe('review status over real writes', () => {
         limit: 1,
         overrideAccess: true,
       })
-      expect(docs[0]?.description).toContain('was approved and published')
+      expect(docs[0]?.description).toContain('was published on the public site')
     })
 
     it('an owner save on a declined copy keeps request', async () => {
