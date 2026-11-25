@@ -14,6 +14,7 @@ import { trustedWrites } from '../../testing/portal-lists.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 import { emailRecipients, reviewEmailUrl, type LocalRecipient } from './review-mail'
 import { sessionDb } from './row-lock'
+import { withSavepoint } from './savepoint'
 
 const inbox = resendInbox()
 mockNetwork(inbox.handler, ...localServices)
@@ -138,6 +139,27 @@ const approve = (id: number, tier: 'community' | 'public' = 'community') =>
   })
 
 describe('review-events: one email per recipient', () => {
+  it('rejects population inside a savepoint and restores the request transaction', async () => {
+    const req = await createLocalReq({}, payload)
+    const transactionID = await payload.db.beginTransaction()
+    if (!transactionID) throw new Error('Savepoint test requires a database transaction')
+    req.transactionID = transactionID
+    try {
+      await expect(
+        withSavepoint(req, (scoped) =>
+          payload.findByID({ collection: 'users', id: owner.id, depth: 1, req: scoped }),
+        ),
+      ).rejects.toThrow('withSavepoint requires depth 0')
+      expect(req.transactionID).toBe(transactionID)
+
+      const db = await sessionDb(req)
+      expect(db).not.toBeNull()
+      await db!.execute(sql`select 1`)
+    } finally {
+      await payload.db.rollbackTransaction(transactionID)
+    }
+  })
+
   it('keeps the saved locale, defaults to English, and filters email opt-outs', async () => {
     const req = await createLocalReq({}, payload)
     const recipients = [arabicAdmin, englishAdmin, optedOut].map(({ id, email }) => ({ id, email }))

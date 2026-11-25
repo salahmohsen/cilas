@@ -1,7 +1,7 @@
-import { ADMIN_ROLES } from '@/access'
 import type { PayloadRequest } from 'payload'
 
-import { getEmailSettings } from '@/emails/settings'
+import { ADMIN_ROLES } from '@/access'
+import { getEmailSettings, type EmailSettings } from '@/emails/settings'
 import { reviewMail } from '@/emails/transactional'
 import { localeOf, type Locale } from '@/i18n/routing'
 import { absoluteLink, documentHref, type DocumentTarget } from '@/lib/document-href'
@@ -135,22 +135,29 @@ export const sendReviewEmails = async (
   { noun, target }: { noun: string; target: DocumentTarget },
 ): Promise<void> => {
   if (!recipients.length) return
-  const settings = withSavepoint(req, (scoped) => getEmailSettings(req.payload, scoped))
+  const logFailure = (error: unknown, recipient: LocalRecipient) =>
+    req.payload.logger.error({
+      err: error,
+      recipient: recipient.id,
+      msg: `Review email for "${title}" failed`,
+    })
+  let settings: EmailSettings
+  try {
+    settings = await withSavepoint(req, (scoped) => getEmailSettings(req.payload, scoped))
+  } catch (error) {
+    for (const recipient of recipients) logFailure(error, recipient)
+    return
+  }
+
   const byUrl = new Map<string, ReturnType<typeof reviewMail>>()
   for (const recipient of recipients) {
     try {
       const url = reviewEmailUrl(recipient, target)
-      const mail =
-        byUrl.get(url) ??
-        settings.then((read) => reviewMail(read, state, title, note, { noun, url }))
+      const mail = byUrl.get(url) ?? reviewMail(settings, state, title, note, { noun, url })
       byUrl.set(url, mail)
       await req.payload.sendEmail({ to: recipient.email, ...(await mail) })
     } catch (error) {
-      req.payload.logger.error({
-        err: error,
-        recipient: recipient.id,
-        msg: `Review email for "${title}" failed`,
-      })
+      logFailure(error, recipient)
     }
   }
 }

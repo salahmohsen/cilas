@@ -34,7 +34,14 @@ export const withSavepoint = async <T>(
   const name = sql.identifier(`sp_${++nextSavepoint}`)
   await db.execute(sql`savepoint ${name}`)
   try {
-    return await write(scoped)
+    try {
+      return await write(scoped)
+    } finally {
+      if (req.transactionID !== transactionID) {
+        req.transactionID = transactionID
+        throw new Error('withSavepoint requires depth 0')
+      }
+    }
   } catch (error) {
     await db.execute(sql`rollback to savepoint ${name}`)
     throw error
