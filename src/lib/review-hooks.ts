@@ -169,6 +169,8 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     operation === 'create'
       ? Boolean(write.draft)
       : Boolean(write.draft) && write.data?._status !== 'published'
+  // WARNING: only a draft save is an autosave; any other write gets its own version.
+  if (write.autosave && !context.draftSave) write.autosave = false
   context.autosave = Boolean(write.autosave)
   return args
 }
@@ -274,8 +276,8 @@ const recordReviewEvent =
   async ({ doc, previousDoc, req }) => {
     const from: ReviewState = previousDoc?.review?.status ?? 'draft'
     const to: ReviewState = doc.review?.status ?? 'draft'
-    const { autosave, sentNote } = reviewContext(req)
-    if (from === to || autosave) return doc
+    const { sentNote } = reviewContext(req)
+    if (from === to) return doc
 
     const {
       docs: [version],
