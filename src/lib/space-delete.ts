@@ -202,15 +202,21 @@ export const countPostContent = async (
   return { comments: comments.length, files, reactions, votes, rsvps }
 }
 
+/** Set on `req.context` by deletePostKeepingReplies: the delete then refuses while any reply exists. */
+const KEEP_REPLIES = 'postDeleteKeepsReplies'
+
 /**
  * The space-posts collection's beforeDelete. Child rows hold `post_id NOT
  * NULL` under `ON DELETE set null`, so the database refuses a bare delete
  * while any comment, vote or RSVP is left. Runs inside the delete's
  * transaction (`req`); files go one at a time so their storage objects go
- * with them.
+ * with them. An admin's delete takes the comments too; a member's
+ * (deletePostKeepingReplies) is refused while one exists, before anything goes.
  */
 export const deletePostContent = async (req: PayloadRequest, id: number): Promise<void> => {
   const { comments, where } = await postContent(req, id)
+  if (comments.length > 0 && req.context[KEEP_REPLIES])
+    throw new APIError('This post has replies.', 409)
   for (const collection of [
     'space-files',
     'space-reactions',
@@ -219,6 +225,33 @@ export const deletePostContent = async (req: PayloadRequest, id: number): Promis
   ] as const)
     await req.payload.delete({ collection, where: where[collection], overrideAccess: true, req })
   await deleteComments(req, comments)
+}
+
+/**
+ * A member's delete (postRemove): the post goes with its files, reactions,
+ * votes and RSVPs, unless it has a reply when the delete runs. Then nothing
+ * is deleted and the result is false, so the caller keeps the post as a
+ * placeholder. A reply that commits between the hook's read and the post's
+ * delete makes the database refuse the delete, with the same result.
+ */
+export const deletePostKeepingReplies = async (payload: Payload, id: number): Promise<boolean> => {
+  try {
+    await payload.delete({
+      collection: 'space-posts',
+      id,
+      overrideAccess: true,
+      context: { [KEEP_REPLIES]: true },
+    })
+    return true
+  } catch (error) {
+    const { totalDocs } = await payload.count({
+      collection: 'space-comments',
+      where: { post: { equals: id } },
+      overrideAccess: true,
+    })
+    if (totalDocs > 0) return false
+    throw error
+  }
 }
 
 /**

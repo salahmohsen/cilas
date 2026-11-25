@@ -29,6 +29,7 @@ import {
 import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
+import { deletePostKeepingReplies } from '@/lib/space-delete'
 import { cleanSessionRefs, sessionIdsIn } from '@/lib/session-refs'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
@@ -563,12 +564,7 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
   if (idOf(g.space.introduction_post) === id) return err('intro-post')
   const cover = post.event_cover != null ? idOf(post.event_cover) : null
 
-  const { totalDocs: replyCount } = await payload.count({
-    collection: 'space-comments',
-    where: { post: { equals: id } },
-    overrideAccess: true,
-  })
-  if (replyCount > 0) {
+  if (!(await deletePostKeepingReplies(payload, id))) {
     // The required textarea cannot take '', so the tombstone holds one
     // space: content is gone, the row shows "deleted" (plan fix, Task 8).
     await payload.update({
@@ -583,9 +579,6 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
       overrideAccess: true,
     })
     await removeFile(payload, cover)
-  } else {
-    // The collection's beforeDelete takes the files, reactions, votes, RSVPs and cover with it.
-    await payload.delete({ collection: 'space-posts', id, overrideAccess: true })
   }
   return { ok: true, data: true }
 }

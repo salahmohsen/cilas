@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
+import { deletePostKeepingReplies } from '@/lib/space-delete'
 import { REACTION_KINDS } from '@/lib/space-reactions'
 
 import { localServices } from '../../testing/local-services.test-utils'
@@ -148,6 +149,22 @@ describe('an admin deletes a post from the admin panel', () => {
     expect(await count('space-posts', [id])).toBe(0)
     expect(await count('space-comments', [first, reply])).toBe(0)
     expect(await count('space-reactions', [onComment.id, onPost.id])).toBe(0)
+  })
+
+  it('a member’s delete keeps a post that has a reply, and deletes nothing', async () => {
+    const id = await post()
+    const reply = await comment(id)
+    expect(await deletePostKeepingReplies(payload, id)).toBe(false)
+    expect(await count('space-posts', [id])).toBe(1)
+    expect(await count('space-comments', [reply])).toBe(1)
+  })
+
+  it('a member’s delete removes a post with no reply', async () => {
+    const id = await post()
+    const onPost = await react({ post: id })
+    expect(await deletePostKeepingReplies(payload, id)).toBe(true)
+    expect(await count('space-posts', [id])).toBe(0)
+    expect(await count('space-reactions', [onPost.id])).toBe(0)
   })
 
   it('refuses a member', async () => {

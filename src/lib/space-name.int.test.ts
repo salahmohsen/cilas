@@ -83,6 +83,64 @@ describe('a space’s stored name', () => {
     expect(await storedTitleReadAlone(space.id)).toBe(title)
   })
 
+  it('stores the Arabic name itself, so an Arabic filter finds it', async () => {
+    const title = uniq('Name stored')
+    const space = track(
+      'spaces',
+      await payload.create({
+        collection: 'spaces',
+        data: { kind: 'community', name: title } as never,
+        overrideAccess: true,
+      }),
+    )
+    const stored = await payload.findByID({
+      collection: 'spaces',
+      id: space.id,
+      locale: 'ar',
+      fallbackLocale: false,
+      depth: 0,
+      overrideAccess: true,
+      select: { display_name: true },
+    })
+    expect(stored.display_name).toBe(title)
+    const { docs } = await payload.find({
+      collection: 'spaces',
+      locale: 'ar',
+      where: { display_name: { equals: title } },
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(docs.map((d) => d.id)).toEqual([space.id])
+  })
+
+  it('returns the new name from the save itself', async () => {
+    const title = uniq('Name returned')
+    const created = track(
+      'spaces',
+      await payload.create({
+        collection: 'spaces',
+        data: { kind: 'community', name: title } as never,
+        overrideAccess: true,
+      }),
+    )
+    expect(created.display_name).toBe(title)
+    const updated = await payload.update({
+      collection: 'spaces',
+      id: created.id,
+      data: { name: `${title} renamed` } as never,
+      overrideAccess: true,
+    })
+    expect(updated.display_name).toBe(`${title} renamed`)
+    const arabic = await payload.update({
+      collection: 'spaces',
+      id: created.id,
+      locale: 'ar',
+      data: { name: 'غرفة' } as never,
+      overrideAccess: true,
+    })
+    expect(arabic.display_name).toBe('غرفة')
+  })
+
   it('follows a published course rename, and ignores a draft one', async () => {
     const title = uniq('Name course')
     const course = track(
