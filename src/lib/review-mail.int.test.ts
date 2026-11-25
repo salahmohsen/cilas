@@ -143,7 +143,7 @@ describe('review-events: one email per recipient', () => {
     ['community', 'for the community'],
     ['public', 'on the public site'],
   ] as const)('names the %s tier in the approval notification', async (tier, wording) => {
-    const title = uniq('Review mail approval')
+    const title = uniq(`Review mail approval ${tier}`)
     const id = await draftArticle(title, tier)
     await trustedWrites(payload, track).submit('articles', id)
     await payload.update({
