@@ -13,6 +13,7 @@ import { account } from '../../testing/portal.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 import { ownerMove } from './owner-moves'
 import type { ReviewState } from './review'
+import { reviewHistoryFor } from './review-history'
 
 const inbox = resendInbox()
 mockNetwork(inbox.handler, ...localServices)
@@ -22,6 +23,7 @@ let payload: Payload
 let admin: User
 let owner: User
 let ownerToken: string
+let other: User
 const reviewerName = 'Review Events Reviewer'
 
 beforeAll(async () => {
@@ -49,6 +51,8 @@ beforeAll(async () => {
   if (!token || !user) throw new Error('No owner session')
   owner = user
   ownerToken = token
+  const stranger = await account(payload, track, 'student', 'history-other')
+  other = await payload.findByID({ collection: 'users', id: stranger.id, depth: 0 })
 })
 
 afterAll(async () => {
@@ -155,6 +159,56 @@ describe('review-events: history', () => {
     expect(events.map((event) => event.version)).toEqual(versions.slice(1).map(({ id }) => id))
     expect(new Set(events.map((event) => event.version)).size).toBe(6)
     expect(new Set(events.map((event) => event.at.slice(0, 19))).size).toBe(1)
+  })
+
+  it('the owner reads the history; another member reads none', async () => {
+    const id = await draftArticle('review-event-readers')
+    await sixMoves(id)
+    const ownerName = (await payload.findByID({ collection: 'people', id: Number(owner.person) }))
+      .name
+
+    const rows = await reviewHistoryFor(payload, 'articles', id, owner)
+    const at = expect.any(String)
+    const sent = (from: ReviewState) => ({
+      at,
+      from,
+      to: 'submitted',
+      request: null,
+      note: null,
+      actorName: ownerName,
+    })
+    const decided = (to: ReviewState, note: string | null) => ({
+      at,
+      from: 'submitted',
+      to,
+      request: null,
+      note,
+      actorName: reviewerName,
+    })
+    expect(rows).toStrictEqual([
+      sent('draft'),
+      decided('changes_requested', 'Clarify the first paragraph.'),
+      sent('changes_requested'),
+      decided('changes_requested', 'Clarify the conclusion.'),
+      sent('changes_requested'),
+      decided('approved', null),
+    ])
+    expect(rows.map((row) => row.at)).toEqual(rows.map((row) => row.at).toSorted())
+
+    expect(
+      (await payload.findByID({ collection: 'articles', id, user: other, overrideAccess: false }))
+        .id,
+    ).toBe(id)
+    expect(await reviewHistoryFor(payload, 'articles', id, other)).toEqual([])
+    expect(await reviewHistoryFor(payload, 'articles', id, { ...other, person: null })).toEqual([])
+  })
+
+  it('a move by the server has no actor name', async () => {
+    const id = await liveCopyAt('approved')
+
+    expect(await reviewHistoryFor(payload, 'articles', id, owner)).toMatchObject([
+      { from: 'draft', to: 'approved', actorName: null },
+    ])
   })
 
   it('a REST read of review-events as a member returns no docs', async () => {
