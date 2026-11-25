@@ -4,8 +4,6 @@ import { nobody, isAdmin } from '@/access'
 import { POST_KINDS } from '@/lib/space-rules'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
-import { deletePostContent } from '@/lib/space-delete'
-import { postDeleteEndpoints } from '@/forms/post-delete'
 
 /** The posts of the spaces the reader may see (contentWhere, src/lib/spaces.ts). */
 const readablePosts: Access = async ({ req }) =>
@@ -31,36 +29,18 @@ export const SpacePosts: CollectionConfig = {
     readVersions: isAdmin,
     create: isAdmin,
     update: isAdmin,
-    // Members delete through the actions' postRemove, which leaves the
-    // placeholder when replies exist (spec §3). Admins delete through the
-    // "Delete post" dialog (src/forms/post-delete.ts), which shows the
-    // comments that go with the post first; closed here so the panel's stock
-    // delete never shows.
-    delete: nobody,
+    // Deletes (authors included) go through the actions' postRemove, which
+    // leaves the placeholder when replies exist (spec §3) and removes the
+    // row's files. A REST hard-delete would orphan replies, reactions and
+    // files — the rules above already refuse create/update from REST.
+    delete: isAdmin,
   },
-  endpoints: postDeleteEndpoints,
   versions: { drafts: false },
   admin: {
     group: 'Community',
-    components: {
-      beforeListTable: ['/components/admin/intro-post#IntroPostsFilter'],
-      edit: {
-        editMenuItems: [
-          {
-            path: '/components/admin/delete-dialog#DeleteMenuItem',
-            clientProps: { collection: 'space-posts' },
-          },
-        ],
-      },
-    },
     defaultColumns: ['space', 'kind', 'author', 'last_activity_at', 'updatedAt'],
   },
   fields: [
-    {
-      name: 'introduction_note',
-      type: 'ui',
-      admin: { components: { Field: '/components/admin/intro-post#IntroPostNote' } },
-    },
     {
       name: 'space',
       type: 'relationship',
@@ -83,7 +63,6 @@ export const SpacePosts: CollectionConfig = {
       defaultValue: 'discussion',
       options: [...POST_KINDS],
       access: { update: nobody },
-      admin: { components: { Cell: '/components/admin/intro-post#IntroKindCell' } },
     },
     { name: 'body', type: 'textarea', required: true },
     {
@@ -130,14 +109,11 @@ export const SpacePosts: CollectionConfig = {
     {
       // A space file with no post or comment of its own, so it is neither one
       // of the post's attachments nor counted against them; postRemove and
-      // eventEdit delete it with the post or when it is replaced. Only their
-      // server writes set it: a post's delete deletes its cover, so a cover an
-      // admin pointed at another post's file would take that file with it.
+      // eventEdit delete it with the post or when it is replaced.
       name: 'event_cover',
       label: 'Cover',
       type: 'relationship',
       relationTo: 'space-files',
-      access: { create: nobody, update: nobody },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
     },
     {
@@ -212,8 +188,6 @@ export const SpacePosts: CollectionConfig = {
     { name: 'deleted_at', type: 'date', index: true },
   ],
   hooks: {
-    // Child rows hold post_id NOT NULL, so they go first.
-    beforeDelete: [({ id, req }) => deletePostContent(req, Number(id))],
     afterChange: [searchChanged('post')],
     afterDelete: [searchDeleted('post')],
     beforeChange: [

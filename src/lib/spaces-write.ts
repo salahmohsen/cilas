@@ -29,7 +29,6 @@ import {
 import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
-import { deletePostKeepingReplies } from '@/lib/space-delete'
 import { cleanSessionRefs, sessionIdsIn } from '@/lib/session-refs'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
@@ -564,7 +563,12 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
   if (idOf(g.space.introduction_post) === id) return err('intro-post')
   const cover = post.event_cover != null ? idOf(post.event_cover) : null
 
-  if (!(await deletePostKeepingReplies(payload, id))) {
+  const { totalDocs: replyCount } = await payload.count({
+    collection: 'space-comments',
+    where: { post: { equals: id } },
+    overrideAccess: true,
+  })
+  if (replyCount > 0) {
     // The required textarea cannot take '', so the tombstone holds one
     // space: content is gone, the row shows "deleted" (plan fix, Task 8).
     await payload.update({
@@ -578,6 +582,27 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
       } as never,
       overrideAccess: true,
     })
+    await removeFile(payload, cover)
+  } else {
+    const { docs: files } = await payload.find({
+      collection: 'space-files',
+      where: { post: { equals: id } },
+      overrideAccess: true,
+      pagination: false,
+      limit: 1000,
+    })
+    for (const f of files)
+      await payload.delete({
+        collection: 'space-files',
+        id: (f as { id: number }).id,
+        overrideAccess: true,
+      })
+    // Their post column is NOT NULL under an ON DELETE SET NULL key, so the
+    // post's delete fails while any answer or vote is left (reactions would
+    // stay behind pointing at nothing).
+    for (const collection of ['space-rsvps', 'space-votes', 'space-reactions'] as const)
+      await payload.delete({ collection, where: { post: { equals: id } }, overrideAccess: true })
+    await payload.delete({ collection: 'space-posts', id, overrideAccess: true })
     await removeFile(payload, cover)
   }
   return { ok: true, data: true }
