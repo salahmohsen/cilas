@@ -52,6 +52,7 @@ import { splitBody } from '@/lib/article-body'
 import { toArticleCard } from '@/lib/article-cards'
 import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
 import { localDigits } from '@/lib/digits'
+import { siteAiButtons } from '@/lib/ai-buttons'
 import { editableIn } from '@/lib/editable'
 import { footnotesOf } from '@/lib/footnotes'
 import { mediaImage } from '@/lib/media-image'
@@ -81,7 +82,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
   const publicationCovers = await getPublicationCovers(payload)
   // The institute's email, the share bar's mail recipient.
   const email = await getContactEmail()
-  const [t, tl, tArticles, tShare, format, collection, tf, tm] = await Promise.all([
+  const [t, tl, tArticles, tShare, format, collection, tf, tm, showAi] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
     getTranslations('Articles'),
@@ -90,6 +91,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
     getArticleCollection(payload, article, locale, user),
     getTranslations('Study.filters'),
     getTranslations('Meta'),
+    siteAiButtons(payload),
   ])
   // A collection's article shows its editor's picks, else the rest of its
   // collection, in order; any other article its related ones.
@@ -291,11 +293,13 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                 />
               </div>
             </SideCardSection>
-            <SideCardSection label={tShare('aiHeading')} labelAction={<AIInstructions />}>
-              <div className="side-card-body side-card-flush">
-                <StudyWithAI kind="article" path={articlePath} />
-              </div>
-            </SideCardSection>
+            {showAi && (
+              <SideCardSection label={tShare('aiHeading')} labelAction={<AIInstructions />}>
+                <div className="side-card-body side-card-flush">
+                  <StudyWithAI kind="article" path={articlePath} />
+                </div>
+              </SideCardSection>
+            )}
           </>
         )}
       </>
@@ -551,19 +555,21 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
             </section>
 
             {/* Taking it with AI, its own section at the tools' spacing. */}
-            <section
-              aria-labelledby="article-ai"
-              className="mt-6 grid gap-3 border-t border-border pt-6 xl:hidden"
-            >
-              <h2
-                className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
-                id="article-ai"
+            {showAi && (
+              <section
+                aria-labelledby="article-ai"
+                className="mt-6 grid gap-3 border-t border-border pt-6 xl:hidden"
               >
-                {tShare('aiHeading')}
-                <AIInstructions />
-              </h2>
-              <StudyWithAI kind="article" path={articlePath} />
-            </section>
+                <h2
+                  className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+                  id="article-ai"
+                >
+                  {tShare('aiHeading')}
+                  <AIInstructions />
+                </h2>
+                <StudyWithAI kind="article" path={articlePath} />
+              </section>
+            )}
 
             {/* The original this text translates, with a way to read it. */}
             {hasOriginal && original && (
