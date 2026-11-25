@@ -280,7 +280,7 @@ const discardThenRestore = async (who: User, collection: 'articles' | 'courses',
 
 const historyOf = async (id: number) => {
   const { docs } = await payload.find({
-    collection: 'review-events' as never,
+    collection: 'review-events',
     where: { collection: { equals: 'articles' }, doc: { equals: id } },
     depth: 0,
     pagination: false,
