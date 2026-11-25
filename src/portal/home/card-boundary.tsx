@@ -5,12 +5,18 @@ import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 import styles from './home.module.css'
 
-/** The four places of the board, in reading order. */
-export const HOME_SLOTS = ['needs', 'next', 'spaces', 'latest'] as const
+/** The five places of the board, in reading order. */
+export const HOME_SLOTS = ['needs', 'next', 'spaces', 'latest', 'week'] as const
 
 export type HomeSlot = (typeof HOME_SLOTS)[number]
 
-const SKELETON_LINES: Record<HomeSlot, number> = { needs: 4, next: 3, spaces: 3, latest: 5 }
+const SKELETON_LINES: Record<HomeSlot, number> = {
+  needs: 4,
+  next: 3,
+  spaces: 3,
+  latest: 5,
+  week: 4,
+}
 
 /** Decorative: the page announces "Loading Home" once (`HomeLoading`), not once per card. It holds the height its card needs, so what is below moves less when the card arrives. */
 export function HomeCardSkeleton({ slot }: { slot: HomeSlot }) {

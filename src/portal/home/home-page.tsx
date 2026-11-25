@@ -4,10 +4,13 @@ import { getPayload, type Payload } from 'payload'
 import { Suspense } from 'react'
 
 import { adminViewOf } from '@/access'
+import { getCachedCalendarItems } from '@/api/calendar.api'
 import type { Locale } from '@/i18n/routing'
+import { cairoDay } from '@/lib/cairo-day'
 import { spacesOff } from '@/lib/spaces'
 import { mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
+import { readerMeetings } from '@/portal/calendar/reader-meetings'
 import { PortalPageHeader } from '@/portal/lists/page-header'
 import { spaceLinks } from '@/portal/nav/space-links'
 import { latestRows } from '@/portal/needs/latest'
@@ -22,6 +25,8 @@ import { NeedsCard } from './needs-card'
 import { nextSession, roomsOf } from './next-session'
 import { NextSessionCard } from './next-session-card'
 import { SpacesCard } from './spaces-card'
+import { weekAgenda } from './week'
+import { WeekCard } from './week-card'
 
 type ReaderProps = { user: User; locale: Locale }
 type CardProps = ReaderProps & { payload: Payload }
@@ -65,6 +70,23 @@ async function Latest({ payload, user }: Pick<CardProps, 'payload' | 'user'>) {
   return <LatestCard rows={rows} />
 }
 
+async function ThisWeek({ payload, user, locale }: CardProps) {
+  const today = cairoDay(new Date())!
+  const [own, publicList, rooms] = await Promise.all([
+    readerMeetings(payload, user, locale),
+    getCachedCalendarItems(locale),
+    roomsOf(payload, user, locale),
+  ])
+  return (
+    <WeekCard
+      week={weekAgenda(own, publicList, today)}
+      today={today}
+      rooms={rooms}
+      locale={locale}
+    />
+  )
+}
+
 export async function HomePage({ user, locale }: ReaderProps) {
   const [payload, t] = await Promise.all([getPayload({ config }), getTranslations('Portal.home')])
   const props = { payload, user, locale }
@@ -88,6 +110,9 @@ export async function HomePage({ user, locale }: ReaderProps) {
         </CardBoundary>
         <CardBoundary slot="latest">
           <Latest payload={payload} user={user} />
+        </CardBoundary>
+        <CardBoundary slot="week">
+          <ThisWeek {...props} />
         </CardBoundary>
       </HomeBoard>
     </>
