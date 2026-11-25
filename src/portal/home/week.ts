@@ -1,6 +1,9 @@
 import { addDays } from '@/lib/cairo-day'
 import { byTime, weekStart, type CalendarMeeting } from '@/lib/calendar'
 
+/** The card's heading, which also names the strip of days. */
+export const WEEK_HEADING_ID = 'home-week'
+
 export type WeekDay = { date: string; meetings: CalendarMeeting[] }
 
 /** The seven Cairo days of the week of `today`, from Saturday, each with the reader's own meetings and the public events that are not cancelled. */

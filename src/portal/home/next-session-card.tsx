@@ -4,10 +4,10 @@ import Link from 'next/link'
 import type { AdminView } from '@/access'
 import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
-import { CAIRO, cairoInstant, cairoNoon } from '@/lib/cairo-day'
-import { numberingSystemOf } from '@/lib/digits'
+import { cairoInstant, cairoNoon } from '@/lib/cairo-day'
 import { focalPointStyle } from '@/lib/media-image'
 import { SpaceCover } from '@/portal/nav/space-parts'
+import { cairoFormat, meetingHeading } from './meeting-words'
 import type { NextSession } from './next-session'
 import styles from './home.module.css'
 
@@ -34,22 +34,12 @@ export function NextSessionCard({
   const t = useTranslations('Portal.home')
   const action = !view ? null : view === 'student' && browse ? BROWSE_SPACES : EMPTY_ACTIONS[view]
   const instant = session?.start ? cairoInstant(session.date, session.start) : null
-  const title =
-    session?.sessionTitle ??
-    (session?.session === undefined
-      ? session?.title
-      : t('sessionNumber', { number: session.session }))
-  const cairo = (options: Intl.DateTimeFormatOptions, at: Date) =>
-    new Intl.DateTimeFormat(locale, {
-      ...options,
-      timeZone: CAIRO,
-      numberingSystem: numberingSystemOf(locale),
-    }).format(at)
+  const title = session && meetingHeading(session, (number) => t('sessionNumber', { number }))
   const content = session && (
     <>
       {instant && (
         <time className={styles.clock} dateTime={instant}>
-          {cairo({ timeStyle: 'short' }, new Date(instant))}
+          {cairoFormat(locale, { timeStyle: 'short' }, new Date(instant))}
         </time>
       )}{' '}
       <span className={styles.sessionTitle}>
@@ -62,7 +52,11 @@ export function NextSessionCard({
           </span>
         )}{' '}
         <time dateTime={session.date}>
-          {cairo({ dateStyle: 'long' }, instant ? new Date(instant) : cairoNoon(session.date))}
+          {cairoFormat(
+            locale,
+            { dateStyle: 'long' },
+            instant ? new Date(instant) : cairoNoon(session.date),
+          )}
         </time>
       </span>
     </>

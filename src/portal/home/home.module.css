@@ -21,6 +21,7 @@
 
 .slot[data-slot='needs'],
 .slot[data-slot='latest'],
+.slot[data-slot='week'],
 .slot:has(> [role='alert']) {
   padding: var(--space-4);
   border: 1px solid var(--border);
@@ -45,6 +46,14 @@
 
   .slot[data-slot='needs'] {
     grid-row: 1;
+    grid-column: 8 / span 5;
+  }
+
+  .slot[data-slot='latest'] {
+    grid-column: 1 / span 7;
+  }
+
+  .slot[data-slot='week'] {
     grid-column: 8 / span 5;
   }
 }
@@ -92,6 +101,10 @@
 
 .slot[data-slot='latest'] > .skeleton {
   min-block-size: 12rem;
+}
+
+.slot[data-slot='week'] > .skeleton {
+  min-block-size: 14rem;
 }
 
 /* Needs you is first in the column, so its placeholder decides how far the rest moves: two rows for most readers, an admin's four grouped rows. */
@@ -390,6 +403,107 @@ a.hero::after {
   }
 
   .spaceCard:hover .spaceName {
+    text-decoration: underline;
+  }
+}
+
+.weekHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.dayName {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.dayNumber {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Today has a line under its number, so the cue is not a colour. */
+.weekDays [aria-current='date'] .dayNumber {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+/* A dot is made of its border, so forced colours keep it. */
+.dayDots {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  block-size: 6px;
+}
+
+.dayDots > span {
+  border: 3px solid currentColor;
+  border-radius: var(--radius-pill);
+}
+
+.weekRows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weekRows > li + li {
+  border-block-start: 1px solid var(--border);
+}
+
+.weekRow {
+  --focus-outline-offset: -2px;
+
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+  min-block-size: 2.75rem;
+  padding: var(--space-2);
+  border-radius: var(--radius-control);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.weekTime {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.weekCopy {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.weekTitle {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.weekMeta {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (hover: hover) {
+  .weekRow:hover .weekTitle {
     text-decoration: underline;
   }
 }
