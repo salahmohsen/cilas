@@ -26,6 +26,7 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "pr:shots": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/pr-shots.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=--no-deprecation playwright test --config=playwright.config.ts",

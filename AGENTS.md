@@ -37,11 +37,15 @@ Apply these to every change, not only to refactors. Before you write code, ask o
 
 Keep a decision log for structural work. List the problems first, then write each fix above the problems it solves. Done means a typical change lands in one place, and no module imports anything more volatile than itself.
 
-<!-- BEGIN:nextjs-agent-rules -->
+## Screenshots on pull requests
+
+A pull request that changes UI gets screenshots, posted as a PR comment with `gh issue comment <pr> --attach '<file>#<alt>'`. Follow the `pr-screenshots` skill (`~/.claude/skills/pr-screenshots/`). In this repo, take the shots with `pnpm pr:shots <shots.yml> [base-url]` while `pnpm dev` runs: it signs shot-scraper in as a throwaway admin and deletes the admin after. Keep the YAML file and the images outside the repo.
 
 ## Commit hooks
 
 Never commit or push with `LEFTHOOK=0` (or `--no-verify`) unless the user says so. The hooks format staged files in every worktree, also ones with no `node_modules`; see `docs/commit-checks.md`.
+
+<!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
 
