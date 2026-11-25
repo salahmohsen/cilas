@@ -6,7 +6,7 @@ import type {
   PayloadRequest,
 } from 'payload'
 
-import { documentHref } from '@/lib/document-href'
+import { documentHref, type DocumentTarget } from '@/lib/document-href'
 import { requireRowLock, rowIdOf } from '@/lib/row-lock'
 import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
@@ -25,6 +25,7 @@ import {
   adminRecipients,
   emailRecipients,
   ownerRecipients,
+  reviewEmailUrl,
   sendReviewEmail,
 } from '@/lib/review-mail'
 
@@ -263,10 +264,19 @@ const applyReview =
     }
   }
 
+/** Where an approved article went, by its tier. */
+const ARTICLE_PUBLISHED: Partial<Record<string, string>> = {
+  community: 'was published for the community',
+  public: 'was published on the public site',
+}
+
 /** The line under the bell for each move. */
-const NOTES: Partial<Record<ReviewState, (noun: string, title: string) => string>> = {
+const NOTES: Partial<Record<ReviewState, (noun: string, title: string, doc: Doc) => string>> = {
   submitted: (noun, title) => `A ${noun} waits for review: “${title}”`,
-  approved: (noun, title) => `Your ${noun} “${title}” was approved and published`,
+  approved: (noun, title, doc) =>
+    `Your ${noun} “${title}” ${
+      (noun === 'article' && ARTICLE_PUBLISHED[String(doc.tier)]) || 'was approved and published'
+    }`,
   changes_requested: (noun, title) => `Changes were asked for on your ${noun} “${title}”`,
   rejected: (noun, title) => `Your ${noun} “${title}” was not accepted`,
 }
@@ -325,27 +335,29 @@ const notifyReview =
     if (!audience) return doc
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
-    const path = documentHref({
+    const target: DocumentTarget = {
       collection,
       id: doc.id,
       viewer: audience === 'admins' ? 'admin' : 'owner',
       waiting: audience === 'admins',
-    })
+    }
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
     if (!removed) {
-      await sendReviewEmail(
-        req,
-        (await emailRecipients(req, people, state)).map((p) => p.email),
-        state,
-        removal ? `${title} (removal from the site)` : title,
-        doc.review?.review_note,
-        { noun, path },
-      )
+      for (const recipient of await emailRecipients(req, people, state)) {
+        await sendReviewEmail(
+          req,
+          recipient,
+          state,
+          removal ? `${title} (removal from the site)` : title,
+          doc.review?.review_note,
+          { noun, url: reviewEmailUrl(recipient, target) },
+        )
+      }
     }
     // The bell (src/components/admin/notification-bell.tsx) takes the short
     // name by kind, and `line` is the detail under it.
-    const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title) ?? title
+    const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title, doc) ?? title
     // The bell's avatar is the submitter's for admins, the decider's for owners.
     const actingPerson = audience === 'admins' ? ownersOf(doc)[0] : personOf(req.user)
     await notify(
@@ -354,7 +366,7 @@ const notifyReview =
       {
         kind: (removed ? 'removed' : state) as NotificationKind,
         description: line,
-        link: path,
+        link: documentHref(target),
         actor: await actorOf(req.payload, actingPerson),
       },
       req,

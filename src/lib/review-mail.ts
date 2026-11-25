@@ -3,11 +3,16 @@ import type { PayloadRequest } from 'payload'
 
 import { getEmailSettings } from '@/emails/settings'
 import { reviewMail } from '@/emails/transactional'
-import { env } from '@/env'
+import { localeOf, type Locale } from '@/i18n/routing'
+import { absoluteLink, documentHref, type DocumentTarget } from '@/lib/document-href'
 import { readPreferences, wantsChannel } from '@/lib/notification-preferences'
+import { relId } from '@/lib/relation'
 import type { ReviewState } from '@/lib/review'
 
 export type Recipient = { id: number; email: string }
+
+/** A recipient of a review email, with the language its link opens in. */
+export type LocalRecipient = Recipient & { locale: Locale }
 
 const recipientsOf = (docs: Array<{ id: number; email?: string | null }>): Recipient[] =>
   docs.flatMap((d) => (d.email ? [{ id: d.id, email: d.email }] : []))
@@ -44,7 +49,7 @@ export const ownerRecipients = async (
  * The recipients who have not turned this kind's email off (Settings →
  * Notifications). A failed read keeps everyone: the default is to send.
  */
-export const emailRecipients = async (
+const wantingEmail = async (
   req: PayloadRequest,
   people: Recipient[],
   kind: string,
@@ -73,24 +78,59 @@ export const emailRecipients = async (
   }
 }
 
+/**
+ * Adds the language each account last saved (space-preferences), else the
+ * site's default. A failed read keeps everyone, in the default.
+ */
+const withLocale = async (req: PayloadRequest, people: Recipient[]): Promise<LocalRecipient[]> => {
+  if (!people.length) return []
+  const saved = new Map<unknown, unknown>()
+  try {
+    const { docs } = await req.payload.find({
+      collection: 'space-preferences',
+      where: { account: { in: people.map((p) => p.id) } },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+      select: { account: true, locale: true },
+      req,
+    })
+    for (const row of docs) saved.set(relId(row.account), row.locale)
+  } catch (error) {
+    req.payload.logger.error({ err: error, msg: 'Email languages not read; using the default' })
+  }
+  return people.map((p) => ({ ...p, locale: localeOf(saved.get(p.id)) }))
+}
+
+/** Who gets this kind of email, each with the language for their link. */
+export const emailRecipients = async (
+  req: PayloadRequest,
+  people: Recipient[],
+  kind: string,
+): Promise<LocalRecipient[]> => withLocale(req, await wantingEmail(req, people, kind))
+
+/** The link in a review email to this recipient. */
+export const reviewEmailUrl = (recipient: LocalRecipient, target: DocumentTarget): string =>
+  absoluteLink(documentHref(target), recipient.locale)
+
+/** One message to one address, so no recipient sees another's. */
 export const sendReviewEmail = async (
   req: PayloadRequest,
-  to: string[],
+  recipient: Recipient,
   state: ReviewState,
   title: string,
-  note?: string | null,
-  about: { noun?: string; path?: string } = {},
+  note: string | null | undefined,
+  about: { noun: string; url: string },
 ): Promise<void> => {
-  if (!to.length) return
   try {
-    const url = about.path
-      ? `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${about.path}`
-      : undefined
-    const mail = await reviewMail(await getEmailSettings(req.payload, req), state, title, note, {
-      noun: about.noun,
-      url,
-    })
-    await req.payload.sendEmail({ to, ...mail })
+    const mail = await reviewMail(
+      await getEmailSettings(req.payload, req),
+      state,
+      title,
+      note,
+      about,
+    )
+    await req.payload.sendEmail({ to: recipient.email, ...mail })
   } catch (error) {
     req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
   }
