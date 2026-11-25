@@ -141,13 +141,13 @@ describe('shared search filters', () => {
       fireEvent.click(second)
       expect(second).not.toBeChecked()
       await settle()
-      if (privateScope) expect(sent.at(-1)!.spaces).toEqual([])
+      if (privateScope) await waitFor(() => expect(sent.at(-1)?.spaces).toEqual([]))
       fireEvent.click(lane.getByRole('button', { name: 'Clear all' }))
       expect(first).toBeChecked()
       expect(second).toBeChecked()
       expect(lane.queryByRole('button', { name: 'Clear all' })).toBeNull()
       await settle()
-      if (privateScope) expect(sent.at(-1)!.spaces).toEqual([7, 8])
+      if (privateScope) await waitFor(() => expect(sent.at(-1)?.spaces).toEqual([7, 8]))
     },
   )
 
@@ -173,9 +173,11 @@ describe('shared search filters', () => {
     expect(second).toBeEnabled()
     fireEvent.click(second)
     await settle()
-    expect(second).toBeChecked()
-    expect(second).toBeDisabled()
-    expect(lane.getAllByText('0').length).toBeGreaterThan(0)
+    await waitFor(() => {
+      expect(second).toBeChecked()
+      expect(second).toBeDisabled()
+      expect(lane.getAllByText('0').length).toBeGreaterThan(0)
+    })
   })
 
   it('leaves unknown counts enabled and never presents a fabricated zero', async () => {
@@ -183,11 +185,13 @@ describe('shared search filters', () => {
     renderWithIntl(<Harness />)
     await settle()
     const lane = within(screen.getByRole('complementary'))
+    await waitFor(() =>
+      expect(
+        screen.getAllByText('Search is incomplete. Try a more specific phrase.').length,
+      ).toBeGreaterThan(0),
+    )
     expect(lane.getByRole('checkbox', { name: choices[1].label })).toBeEnabled()
     expect(lane.queryByText('0')).toBeNull()
-    expect(
-      screen.getAllByText('Search is incomplete. Try a more specific phrase.').length,
-    ).toBeGreaterThan(0)
   })
 
   it('uses counted choices and the same Show results action in the mobile sheet, restoring focus on close', async () => {
@@ -230,7 +234,7 @@ describe('shared search filters', () => {
     fireEvent.keyDown(screen.getByRole('button', { name: 'Newest' }), { key: 'ArrowRight' })
     expect(screen.getByRole('button', { name: 'A to Z' })).toHaveAttribute('aria-pressed', 'true')
     await settle()
-    expect(sent.at(-1)!.sort).toBe('alpha')
+    await waitFor(() => expect(sent.at(-1)?.sort).toBe('alpha'))
     const query = screen.getByRole('searchbox')
     query.focus()
     fireEvent.keyDown(query, { key: 'ArrowDown' })
@@ -273,7 +277,7 @@ describe('shared search filters', () => {
     const { container } = renderWithIntl(<Harness />)
     await settle()
     const header = container.querySelector('strong[aria-hidden="true"]') as HTMLElement
-    expect(within(header).getAllByText('42').length).toBeGreaterThan(0)
+    await waitFor(() => expect(within(header).getAllByText('42').length).toBeGreaterThan(0))
     expect(within(header).getByText('results')).toBeInTheDocument()
     expect(screen.getAllByText(/^Showing \d+ of 42$/).length).toBeGreaterThan(0)
     fireEvent.click(screen.getByRole('button', { name: 'Show more results' }))
