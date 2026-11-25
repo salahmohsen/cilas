@@ -15,6 +15,7 @@ import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
 import { deleteOwnedSpaces } from '@/lib/space-delete'
 import { ensureSpaceFor } from '@/lib/space-hooks'
+import { refreshOwnedSpaceNames } from '@/lib/space-name'
 
 /**
  * A path through several cycles that people join as a cohort. Its courses are
@@ -199,7 +200,11 @@ export const Programmes: CollectionConfig = {
       copyRegistrationTemplate('bridge_template', (programme) => programme.kind === 'bridge'),
     ],
     beforeOperation: [recordRevalidationDraft],
-    afterChange: [ensureSpaceFor('cohort'), revalidateAfterChange('programmes')],
+    afterChange: [
+      ensureSpaceFor('cohort'),
+      refreshOwnedSpaceNames('programme'),
+      revalidateAfterChange('programmes'),
+    ],
     beforeDelete: [deleteOwnedSpaces('programme')],
     afterDelete: [revalidateAfterDelete('programmes')],
   },

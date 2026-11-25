@@ -5,7 +5,7 @@ import { readSpaces } from '@/lib/spaces'
 import { spaceDeleteEndpoints } from '@/forms/space-delete'
 import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
 import { addIntroPost } from '@/lib/space-hooks'
-import { spaceDisplayName } from '@/lib/space-display-name'
+import { refreshOwnName } from '@/lib/space-name'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
@@ -31,6 +31,7 @@ export const Spaces: CollectionConfig = {
   },
   endpoints: spaceDeleteEndpoints,
   admin: {
+    useAsTitle: 'display_name',
     group: 'Community',
     components: {
       edit: {
@@ -159,17 +160,18 @@ export const Spaces: CollectionConfig = {
       },
     },
     {
-      // The list's "Name" column for every kind: a community's own name, or
-      // the title of the course or programme the space belongs to. Virtual,
-      // so it never goes stale when a course is renamed.
+      // The space's title everywhere in the admin (useAsTitle): a community's
+      // own name, or the title of the course or programme the space belongs
+      // to. Stored, because Payload reads only a stored column for the label
+      // of a relationship field or a filter; refreshSpaceName
+      // (src/lib/space-name.ts) rewrites it after each save of the space and
+      // each publish of its course or programme.
       name: 'display_name',
       label: 'Name',
       type: 'text',
-      virtual: true,
-      // Worked out on read: Payload turns off sorting for a virtual column, and
-      // filtering is turned off here.
-      admin: { readOnly: true, condition: () => false, disableListFilter: true },
-      hooks: { afterRead: [spaceDisplayName] },
+      localized: true,
+      access: { create: nobody, update: nobody },
+      admin: { readOnly: true, condition: () => false },
     },
   ],
   hooks: {
@@ -177,6 +179,7 @@ export const Spaces: CollectionConfig = {
     beforeDelete: [({ id, req }) => deleteSpaceContent(req, Number(id))],
     afterDelete: [({ id, req }) => deleteSpaceBells(req, Number(id))],
     afterChange: [
+      refreshOwnName,
       // However the space is made (a course or programme going live, or by hand
       // here), a course or cohort space opens with its intro post and its gate.
       async ({ doc, operation, req }) => {

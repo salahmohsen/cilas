@@ -34,6 +34,7 @@ import { grantFellow, publishedCourse, revokeIfUnteaching, toPersonIds } from '@
 import { lockRow } from '@/lib/row-lock'
 import { reviewHooks } from '@/lib/review-hooks'
 import { ensureSpaceFor } from '@/lib/space-hooks'
+import { refreshOwnedSpaceNames } from '@/lib/space-name'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -632,6 +633,7 @@ export const Courses: CollectionConfig = {
       propagateFellowRole,
       revalidateAfterChange('courses'),
       ensureSpaceFor('course'),
+      refreshOwnedSpaceNames('course'),
     ],
     beforeDelete: [deleteOwnedSpaces('course'), deleteCourseDependents],
     afterDelete: [revokeDeletedCourseFellows, revalidateAfterDelete('courses')],

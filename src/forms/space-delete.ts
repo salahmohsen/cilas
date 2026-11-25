@@ -13,7 +13,7 @@ const readSpace = (req: PayloadRequest, id: number) =>
     depth: 0,
     overrideAccess: true,
     req,
-    select: { kind: true, name: true, course: true, programme: true },
+    select: { kind: true, display_name: true, course: true, programme: true },
   })
 
 /**
@@ -25,9 +25,10 @@ export const spaceDeleteEndpoints = deleteEndpoints('spaces', {
   summarize: async (req, id) => {
     const space = await readSpace(req, id)
     return {
-      // The dialog asks for this name; a space with no name is confirmed by its ID.
-      name: (typeof space.name === 'string' && space.name.trim()) || `Space ${id}`,
+      // The dialog asks for this name.
+      name: space.display_name ?? `Space ${id}`,
       noun: 'space',
+      typeToConfirm: true,
       deletes: nonEmpty(spaceContentGroups(await countSpaceContent(req.payload, id, req))),
       unlinks: [],
     }
