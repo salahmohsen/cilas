@@ -12,7 +12,7 @@ import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) => {
   const changes: boolean[] = []
   const saved: FormData[] = []
-  renderWithNavigation(
+  const sheet = (stored: typeof aiButtons, open: boolean) => (
     <IntlProvider>
       <SpaceSettings
         space={1}
@@ -23,8 +23,8 @@ const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) 
         aboutDefault="Default about"
         rules=""
         rulesDefault="Default rules"
-        aiButtons={aiButtons}
-        open
+        aiButtons={stored}
+        open={open}
         onOpenChange={(next) => changes.push(next)}
         anchor={<span>anchor</span>}
         save={async (form) => {
@@ -32,9 +32,11 @@ const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) 
           return { status: 'ok' }
         }}
       />
-    </IntlProvider>,
+    </IntlProvider>
   )
-  return { changes, saved }
+  const { rerender } = renderWithNavigation(sheet(aiButtons, true))
+  const showStored = (space: boolean, open = true) => rerender(sheet({ space, site: true }, open))
+  return { changes, saved, showStored }
 }
 
 const aiSwitch = () => screen.queryByRole('switch', { name: messages.Spaces.aiButtons })
@@ -116,7 +118,7 @@ describe('SpaceSettings', () => {
     expect(saved[0]!.has('ai_buttons')).toBe(false)
   })
 
-  it('sends the AI buttons switch as it stands, off and on', async () => {
+  it('sends the AI buttons switch the moderator changed, off or on', async () => {
     const { saved } = mount({ space: true, site: true })
     const toggle = aiSwitch()!
     expect(toggle.getAttribute('aria-checked')).toBe('true')
@@ -135,6 +137,59 @@ describe('SpaceSettings', () => {
     expect(again.saved[0]!.get('ai_buttons')).toBe('true')
   })
 
+  it.each([true, false])(
+    'sends no AI buttons value from a save that leaves the switch alone (stored: %s)',
+    async (stored) => {
+      const { saved } = mount({ space: stored, site: true })
+      save()
+      await waitFor(() => expect(saved).toHaveLength(1))
+      expect(saved[0]!.has('ai_buttons')).toBe(false)
+    },
+  )
+
+  it('sends no AI buttons value for a switch turned back', async () => {
+    const { saved } = mount({ space: true, site: true })
+    fireEvent.click(aiSwitch()!)
+    fireEvent.click(aiSwitch()!)
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(saved[0]!.has('ai_buttons')).toBe(false)
+  })
+
+  it('shows a newer stored value, and a save of the other settings leaves it alone', async () => {
+    const { saved, showStored } = mount({ space: true, site: true })
+    showStored(false)
+    await waitFor(() => expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false'))
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(saved[0]!.has('ai_buttons')).toBe(false)
+  })
+
+  it('leaves a newer stored value alone after its own change was saved', async () => {
+    const { saved, showStored } = mount({ space: true, site: true })
+    fireEvent.click(aiSwitch()!)
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    showStored(false)
+    showStored(true)
+    await waitFor(() => expect(aiSwitch()!.getAttribute('aria-checked')).toBe('true'))
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(messages.Spaces.saveSettings) }))
+    await waitFor(() => expect(saved).toHaveLength(2))
+    expect(saved[1]!.has('ai_buttons')).toBe(false)
+  })
+
+  it('drops an unsaved AI buttons change when the sheet closes', async () => {
+    const { saved, showStored } = mount({ space: true, site: true })
+    fireEvent.click(aiSwitch()!)
+    showStored(true, false)
+    await waitFor(() => expect(aiSwitch()).toBeNull())
+    showStored(true)
+    await waitFor(() => expect(aiSwitch()?.getAttribute('aria-checked')).toBe('true'))
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(saved[0]!.has('ai_buttons')).toBe(false)
+  })
+
   it('turns the AI buttons switch with the Space key', async () => {
     mount({ space: true, site: true })
     aiSwitch()!.focus()
@@ -142,7 +197,7 @@ describe('SpaceSettings', () => {
     expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
   })
 
-  it('locks the AI buttons switch, says why, and keeps its value, while the site switch is off', async () => {
+  it('locks the AI buttons switch, says why, and sends none, while the site switch is off', async () => {
     const { saved } = mount({ space: true, site: false })
     const toggle = aiSwitch()!
     expect(toggle).toBeDisabled()
@@ -151,7 +206,7 @@ describe('SpaceSettings', () => {
     expect(toggle.getAttribute('aria-checked')).toBe('true')
     save()
     await waitFor(() => expect(saved).toHaveLength(1))
-    expect(saved[0]!.get('ai_buttons')).toBe('true')
+    expect(saved[0]!.has('ai_buttons')).toBe(false)
   })
 
   it('keeps the AI switch help in a tooltip, which keyboard focus opens and Escape closes', async () => {

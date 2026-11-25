@@ -69,7 +69,11 @@ export function SpaceSettings({
   const [text, setText] = useState(about)
   const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
-  const [ai, setAi] = useState(aiButtons?.space ?? true)
+  // The moderator's own change to the AI switch. Without one the switch shows the stored value
+  // and a save leaves it alone, so an old sheet never writes over a newer value. The change ends
+  // when the sheet closes, or once the stored value is the same.
+  const [aiChange, setAiChange] = useState<boolean | null>(null)
+  if (aiChange !== null && (!open || aiChange === aiButtons?.space)) setAiChange(null)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -126,7 +130,13 @@ export function SpaceSettings({
           {t('rulesReset')}
         </Button>
       </div>
-      {aiButtons && <AiButtonsField checked={ai} onCheckedChange={setAi} siteOn={aiButtons.site} />}
+      {aiButtons && (
+        <AiButtonsField
+          checked={aiChange ?? aiButtons.space}
+          onCheckedChange={setAiChange}
+          siteOn={aiButtons.site}
+        />
+      )}
       {archived && (
         <Checkbox
           label={t('reopen')}
@@ -156,7 +166,7 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          if (aiButtons) form.set('ai_buttons', String(ai))
+          if (aiChange !== null) form.set('ai_buttons', String(aiChange))
           const result = await save(form)
           if (result.status === 'error') {
             setError(tp(saveErrorKey(result.error)))
