@@ -1533,6 +1533,8 @@ export const spaceSettingsSet = async (
     posting?: PostingLevel
     events?: EventPosting
     reopened?: boolean
+    /** Whether this space shows the "Study with AI" buttons. */
+    aiButtons?: boolean
     /** The custom About text in `locale`; an empty string goes back to the default. */
     about?: string
     /** This space's own "Privacy and rules" in `locale`; an empty string goes back to the site's. */
@@ -1540,7 +1542,7 @@ export const spaceSettingsSet = async (
     locale?: 'en' | 'ar'
   }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, space, posting, events, reopened, about, rules, locale } = i
+  const { payload, user, space, posting, events, reopened, aiButtons, about, rules, locale } = i
   const sp = (await payload.findByID({
     collection: 'spaces',
     id: space,
@@ -1553,6 +1555,7 @@ export const spaceSettingsSet = async (
   if (posting) data.posting = posting
   if (events === 'members' || events === 'moderators') data.events = events
   if (typeof reopened === 'boolean') data.reopened = reopened
+  if (typeof aiButtons === 'boolean') data.ai_buttons = aiButtons
   if (typeof about === 'string') {
     const text = about.replace(/\r\n?/g, '\n').trim()
     if (text.length > ABOUT_MAX) return err('about')

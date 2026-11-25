@@ -1073,6 +1073,8 @@
     "closeSettings": "Close settings",
     "posting": "Posting level",
     "reopen": "Reopen this archive",
+    "aiButtons": "Show the Study with AI buttons",
+    "aiButtonsHint": "Off hides them in this space only.",
     "all": "All",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",

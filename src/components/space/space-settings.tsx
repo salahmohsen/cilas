@@ -21,7 +21,7 @@ import { useNarrow } from '@/lib/use-narrow'
 import { saveErrorKey } from '@/lib/space-rules'
 import styles from './space.module.css'
 
-/** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, and reopening an archived course space. */
+/** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, the AI buttons switch, and reopening an archived course space. */
 export function SpaceSettings({
   space,
   posting,
@@ -31,6 +31,7 @@ export function SpaceSettings({
   aboutDefault,
   rules,
   rulesDefault,
+  aiButtons,
   open,
   onOpenChange,
   anchor,
@@ -46,6 +47,8 @@ export function SpaceSettings({
   /** This space's own "Privacy and rules" in this language, empty when the site's text shows. */
   rules: string
   rulesDefault: string
+  /** The space's "Study with AI" switch; left out in a space that has no such buttons. */
+  aiButtons?: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
   /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
@@ -62,6 +65,7 @@ export function SpaceSettings({
   const [text, setText] = useState(about)
   const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
+  const [ai, setAi] = useState(aiButtons)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -118,6 +122,14 @@ export function SpaceSettings({
           {t('rulesReset')}
         </Button>
       </div>
+      {ai !== undefined && (
+        <Checkbox
+          label={t('aiButtons')}
+          description={t('aiButtonsHint')}
+          checked={ai}
+          onCheckedChange={(v) => setAi(v === true)}
+        />
+      )}
       {archived && (
         <Checkbox
           label={t('reopen')}
@@ -147,6 +159,7 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
+          if (ai !== undefined) form.set('ai_buttons', String(ai))
           const result = await save(form)
           if (result.status === 'error') {
             setError(tp(saveErrorKey(result.error)))
