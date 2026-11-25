@@ -6,7 +6,6 @@ import type {
   PayloadRequest,
 } from 'payload'
 
-import { routing } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
 import { requireRowLock, rowIdOf } from '@/lib/row-lock'
 import { relId } from '@/lib/relation'
@@ -314,7 +313,6 @@ const notifyReview =
             id: doc.id,
             viewer: 'admin',
             waiting: false,
-            locale: routing.defaultLocale,
           }),
           actor: await actorOf(req.payload, personOf(req.user)),
         },
@@ -332,7 +330,6 @@ const notifyReview =
       id: doc.id,
       viewer: audience === 'admins' ? 'admin' : 'owner',
       waiting: audience === 'admins',
-      locale: routing.defaultLocale,
     })
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
