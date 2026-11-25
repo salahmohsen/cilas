@@ -125,7 +125,11 @@ export const Spaces: CollectionConfig = {
       label: 'Show the Study with AI buttons in this space',
       type: 'checkbox',
       defaultValue: true,
-      admin: { condition: (data) => (data as { kind?: string }).kind === 'course' },
+      admin: {
+        condition: (data) => (data as { kind?: string }).kind === 'course',
+        description:
+          'Off hides them in this space. While the switch in Site settings (Spaces rollout) is off, they stay hidden whatever this says.',
+      },
     },
     {
       name: 'about',

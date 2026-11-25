@@ -2433,6 +2433,9 @@ export interface Space {
   programme?: (number | null) | Programme;
   posting?: ('open' | 'members_comment' | 'fellows_only') | null;
   events?: ('members' | 'moderators') | null;
+  /**
+   * Off hides them in this space. While the switch in Site settings (Spaces rollout) is off, they stay hidden whatever this says.
+   */
   ai_buttons?: boolean | null;
   about?: string | null;
   /**
