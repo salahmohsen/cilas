@@ -35,6 +35,14 @@ let world: CalendarWorld
 let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 let baseURL: string | undefined
 const states = {} as Record<PortalRole, StorageState>
+let token: string
+
+const asAdmin = (path: string, method: 'PATCH' | 'DELETE', data?: object) =>
+  fetch(`${baseURL}/api/${path}`, {
+    method,
+    headers: { 'content-type': 'application/json', authorization: `JWT ${token}` },
+    body: data && JSON.stringify(data),
+  })
 
 const inContext = (
   browser: Browser,
@@ -102,13 +110,44 @@ test.describe('portal calendar', () => {
         await context.close()
       }
     }
+    const { email, password } = world.accounts.admin
+    const signedIn = await fetch(`${baseURL}/api/users/login`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    token = ((await signedIn.json()) as { token: string }).token
+    const saved = await asAdmin(`events/${world.event.id}?locale=en`, 'PATCH', {
+      title: world.event.title,
+    })
+    expect(saved.ok).toBe(true)
+    const { slug } = await payload.findByID({
+      collection: 'events',
+      id: world.event.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    for (const locale of LOCALES)
+      await expect
+        .poll(
+          async () =>
+            (
+              await (await fetch(`${baseURL}/${locale}/calendar?view=week&date=2034-10-08`)).text()
+            ).includes(String(slug)),
+          { timeout: 60_000 },
+        )
+        .toBe(true)
   })
 
   test.afterAll(async () => {
     try {
-      await cleanup(payload)
+      expect((await asAdmin(`events/${world.event.id}`, 'DELETE')).ok).toBe(true)
     } finally {
-      await spaces.release()
+      try {
+        await cleanup(payload)
+      } finally {
+        await spaces.release()
+      }
     }
   })
 

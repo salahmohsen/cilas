@@ -1172,7 +1172,9 @@ test.describe('portal shell', () => {
               )
               const toast = toastRegion(page, locale).getByText('E2E comment')
               await expect(toast).toBeVisible()
-              const last = page.locator('main section[data-latest] a').last()
+              const last = page
+                .locator('main section[data-week] :is(button[tabindex="0"], ul a)')
+                .last()
               let focused = false
               for (let i = 0; i < 80 && !focused; i++) {
                 await page.keyboard.press('Tab')

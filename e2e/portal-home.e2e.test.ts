@@ -4,7 +4,10 @@ import { getPayload, type Payload } from 'payload'
 
 import config from '../src/payload.config.js'
 import { formatsOf } from '../src/i18n/formats'
+import { addDays, cairoDay, cairoInstant, weekdayOf } from '../src/lib/cairo-day'
+import { weekStart } from '../src/lib/calendar'
 import { localDigits } from '../src/lib/digits'
+import { relId } from '../src/lib/relation'
 import { login } from '../testing/login.test-utils'
 import { portalNeedsWorld, type PortalNeedsWorld } from '../testing/needs.fixture'
 import { createTracker, uniq } from '../testing/payload.fixture'
@@ -64,6 +67,8 @@ const yourSpaces = (page: Page) => page.locator('main section[aria-labelledby="h
 const needsSection = (page: Page) => page.locator('main section[data-needs]')
 const latestSection = (page: Page) => page.locator('main section[data-latest]')
 const latestRows = (page: Page) => latestSection(page).locator('ol > li')
+const weekSection = (page: Page) => page.locator('main section[data-week]')
+const weekDays = (page: Page) => weekSection(page).getByRole('group').getByRole('button')
 
 const totalOf = async (page: Page) => {
   const text = await needsSection(page).locator('h2 > span').textContent()
@@ -203,12 +208,14 @@ test.describe('portal Home and Inbox', () => {
       await expect(yourSpaces(page).locator('li').first()).toBeVisible()
       await expect(needsSection(page)).toBeVisible()
       await expect(nextSession(page)).toBeVisible()
+      await expect(weekSection(page)).toBeVisible()
       const box = (slot: string) => page.locator(`main [data-slot="${slot}"]`).boundingBox()
       return {
         needs: (await box('needs'))!,
         next: (await box('next'))!,
         spaces: (await box('spaces'))!,
         latest: (await box('latest'))!,
+        week: (await box('week'))!,
       }
     }
 
@@ -216,7 +223,7 @@ test.describe('portal Home and Inbox', () => {
       test(`wide Home puts Next session beside Needs you (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
           await page.goto(homePath(locale))
-          const { needs, next, spaces, latest } = await boxesOf(page)
+          const { needs, next, spaces, latest, week } = await boxesOf(page)
           expect(next.y).toBe(needs.y)
           expect(next.height).toBe(needs.height)
           expect(next.height).toBeGreaterThanOrEqual(320)
@@ -224,7 +231,11 @@ test.describe('portal Home and Inbox', () => {
           expect(first.x + first.width).toBeLessThan(second.x)
           expect(next.width / needs.width).toBeCloseTo(7 / 5, 1)
           expect(spaces.width).toBeCloseTo(next.width + needs.width + 12, 0)
-          expect(latest.width).toBeCloseTo(spaces.width, 0)
+          expect(latest.y).toBe(week.y)
+          expect(latest.width / week.width).toBeCloseTo(7 / 5, 1)
+          expect(spaces.width).toBeCloseTo(latest.width + week.width + 12, 0)
+          const [lead, trail] = locale === 'ar' ? [week, latest] : [latest, week]
+          expect(lead.x + lead.width).toBeLessThan(trail.x)
           expect(spaces.y).toBeGreaterThan(next.y + next.height)
           expect(latest.y).toBeGreaterThan(spaces.y + spaces.height)
         })
@@ -233,8 +244,8 @@ test.describe('portal Home and Inbox', () => {
       test(`stacked Home keeps the reading order (${locale})`, async ({ browser }) => {
         await inContext(browser, { viewport: PHONE, reader: 'student' }, async (page) => {
           await page.goto(homePath(locale))
-          const { needs, next, spaces, latest } = await boxesOf(page)
-          const column = [needs, next, spaces, latest]
+          const { needs, next, spaces, latest, week } = await boxesOf(page)
+          const column = [needs, next, spaces, latest, week]
           expect(column.map((box) => box.y)).toEqual(
             column.map((box) => box.y).toSorted((a, b) => a - b),
           )
@@ -380,6 +391,8 @@ test.describe('portal Home and Inbox', () => {
           '#home-spaces + div li:first-child a',
           '[data-latest] li:first-child a',
           '[data-latest] > a[href="/en/spaces/inbox"]',
+          '[data-week] a[href="/en/spaces/calendar"]',
+          '[data-week] button[aria-pressed]',
         ]
         for (const target of targets.slice(1)) await expect(page.locator(target)).toBeVisible()
         const stops: number[] = []
@@ -418,6 +431,7 @@ test.describe('portal Home and Inbox', () => {
             nextSession(page),
             yourSpaces(page),
             latestSection(page),
+            weekSection(page),
           ]
           for (const section of sections) {
             const heading = section.getByRole('heading', { level: 2 })
@@ -699,5 +713,304 @@ test.describe('portal Home and Inbox', () => {
         await context.close()
       }
     })
+  })
+
+  test.describe('This week', () => {
+    const { track: trackWeek, cleanup: cleanupWeek } = createTracker()
+    const today = cairoDay(new Date())!
+    const first = weekStart(today)
+    const week = Array.from({ length: 7 }, (_, offset) => addDays(first, offset))
+    const second = today === first ? addDays(today, 1) : first
+    const todayAt = week.indexOf(today)
+    const secondAt = week.indexOf(second)
+    const titles = {
+      today: uniq('Week today'),
+      second: uniq('Week second'),
+      event: uniq('Week event'),
+    }
+    const made: string[] = []
+    let loner: StorageState
+    let token: string
+
+    const asAdmin = (path: string, method: 'PATCH' | 'DELETE', data?: object) =>
+      fetch(`${baseURL}/api/${path}`, {
+        method,
+        headers: { 'content-type': 'application/json', authorization: `JWT ${token}` },
+        body: data && JSON.stringify(data),
+      })
+
+    test.beforeAll(async ({ browser }) => {
+      test.setTimeout(300_000)
+      const space = await payload.findByID({
+        collection: 'spaces',
+        id: fixture.world.course.space,
+        depth: 0,
+        overrideAccess: true,
+      })
+      const session = async (title: string, date: string) => {
+        const { id } = trackWeek(
+          'sessions',
+          await payload.create({
+            collection: 'sessions',
+            data: {
+              course: Number(relId(space.course)),
+              title,
+              meetings: [{ date, start_time: '19:00', end_time: '21:00' }],
+            },
+            overrideAccess: true,
+          }),
+        )
+        made.push(`sessions/${id}`)
+      }
+      await session(titles.today, today)
+      await session(titles.second, second)
+      const slug = uniq('week-event')
+      const event = trackWeek(
+        'events',
+        await payload.create({
+          collection: 'events',
+          locale: 'en',
+          data: {
+            title: titles.event,
+            slug,
+            tier: 'public',
+            event_type: 'talk',
+            schedule: {
+              mode: 'single',
+              start_date: today,
+              start_time: '18:00',
+              end_time: '19:00',
+            },
+            _status: 'published',
+          } as never,
+          overrideAccess: true,
+        }),
+      )
+      made.push(`events/${event.id}`)
+
+      const context = await browser.newContext({ baseURL })
+      try {
+        await login({
+          page: await context.newPage(),
+          user: fixture.world.loners.student,
+          next: '/en/spaces',
+        })
+        loner = await context.storageState()
+      } finally {
+        await context.close()
+      }
+
+      const { email, password } = fixture.world.accounts.admin
+      const signedIn = await fetch(`${baseURL}/api/users/login`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      token = ((await signedIn.json()) as { token: string }).token
+      const saved = await asAdmin(`events/${event.id}?locale=en`, 'PATCH', {
+        title: titles.event,
+      })
+      expect(saved.ok).toBe(true)
+      for (const locale of LOCALES)
+        await expect
+          .poll(
+            async () =>
+              (
+                await (await fetch(`${baseURL}/${locale}/calendar?view=week&date=${today}`)).text()
+              ).includes(slug),
+            { timeout: 60_000 },
+          )
+          .toBe(true)
+    })
+
+    test.afterAll(async () => {
+      try {
+        for (const path of made) expect((await asAdmin(path, 'DELETE')).ok, path).toBe(true)
+      } finally {
+        await cleanupWeek(payload)
+      }
+    })
+
+    const open = async (page: Page, locale: Locale) => {
+      await page.clock.setFixedTime(new Date(cairoInstant(today, '12:00')!))
+      await page.goto(homePath(locale))
+      await expect(weekDays(page)).toHaveCount(7)
+    }
+    const list = (page: Page) => weekSection(page).getByRole('list')
+    const fits = (page: Page) =>
+      page.evaluate(() => {
+        const root = document.scrollingElement!
+        return root.scrollWidth <= root.clientWidth
+      })
+
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS))
+        test(`a student sees this week's sessions and switches days (${locale} ${viewport.width})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, reader: 'student' }, async (page) => {
+            await open(page, locale)
+            const todayButton = weekDays(page).nth(todayAt)
+            await expect(todayButton).toHaveAttribute('aria-pressed', 'true')
+            await expect(todayButton).toHaveAttribute('aria-current', 'date')
+            const weekday = portalOf(locale).home.week.weekdays[weekdayOf(today)]
+            const number = localDigits(Number(today.slice(8)), locale)
+            await expect(todayButton).toHaveAccessibleName(
+              new RegExp(`^${weekday} ${number}[,،] `, 'u'),
+            )
+            await expect(list(page)).toContainText(titles.today)
+            await expect(list(page)).toContainText(titles.event)
+            await expect(list(page)).not.toContainText(titles.second)
+
+            await weekDays(page).nth(secondAt).click()
+            await expect(weekDays(page).nth(secondAt)).toHaveAttribute('aria-pressed', 'true')
+            await expect(todayButton).toHaveAttribute('aria-pressed', 'false')
+            await expect(list(page)).toContainText(titles.second)
+            await expect(list(page)).not.toContainText(titles.today)
+            await expect(page.locator('[data-portal-live]')).toContainText(
+              (await list(page).getAttribute('aria-label'))!,
+            )
+            await expect(
+              list(page).getByRole('link').filter({ hasText: titles.second }),
+            ).toHaveAttribute('href', localePath(fixture.world.course.path, locale))
+          })
+        })
+
+    test('a student with no course sees this week’s public event and no course session', async ({
+      browser,
+    }) => {
+      await inContextAt(browser, { baseURL, viewport: DESKTOP, state: loner }, async (page) => {
+        await open(page, 'en')
+        await expect(list(page)).toContainText(titles.event)
+        await expect(weekSection(page)).not.toContainText(titles.today)
+        await weekDays(page).nth(secondAt).click()
+        await expect(weekDays(page).nth(secondAt)).toHaveAttribute('aria-pressed', 'true')
+        await expect(weekSection(page)).not.toContainText(titles.second)
+      })
+    })
+
+    for (const locale of LOCALES)
+      test(`the week’s day buttons are big enough to press and hold their labels (${locale})`, async ({
+        browser,
+      }) => {
+        for (const [width, minimum] of [
+          [390, 44],
+          [320, 24],
+        ] as const)
+          await inContext(
+            browser,
+            { viewport: { width, height: 800 }, reader: 'student' },
+            async (page) => {
+              await open(page, locale)
+              const cells = await weekDays(page).evaluateAll((buttons) =>
+                buttons.map((button) => {
+                  const box = button.getBoundingClientRect()
+                  const labels = [...button.querySelectorAll(':scope > span[aria-hidden]')].slice(
+                    0,
+                    2,
+                  )
+                  return {
+                    width: box.width,
+                    height: box.height,
+                    labelSize: parseFloat(getComputedStyle(labels[0]!).fontSize),
+                    labelsFit: labels.every((label) => {
+                      const text = label.getBoundingClientRect()
+                      const oneLine = text.height < 2 * parseFloat(getComputedStyle(label).fontSize)
+                      return (
+                        oneLine &&
+                        label.scrollWidth <= Math.ceil(text.width) &&
+                        text.left >= box.left + button.clientLeft &&
+                        text.right <= box.right - button.clientLeft
+                      )
+                    }),
+                  }
+                }),
+              )
+              test.info().annotations.push({
+                type: `day cells ${locale} ${width}`,
+                description: JSON.stringify(cells),
+              })
+              for (const cell of cells) {
+                expect(cell.width, `width at ${width}`).toBeGreaterThanOrEqual(minimum)
+                expect(cell.height, `height at ${width}`).toBeGreaterThanOrEqual(44)
+                expect(cell.labelSize).toBeGreaterThanOrEqual(11)
+                expect(cell.labelsFit, `labels at ${width}`).toBe(true)
+              }
+              expect(await fits(page)).toBe(true)
+            },
+          )
+      })
+
+    test('in Arabic Saturday is the rightmost day', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await open(page, 'ar')
+        await expect(weekDays(page).first()).toHaveAccessibleName(
+          new RegExp(`^${portalOf('ar').home.week.weekdays.sat} `, 'u'),
+        )
+        const lefts = await weekDays(page).evaluateAll((buttons) =>
+          buttons.map((button) => button.getBoundingClientRect().left),
+        )
+        expect(lefts).toEqual(lefts.toSorted((a, b) => b - a))
+      })
+    })
+
+    for (const locale of LOCALES)
+      test(`the keyboard chooses a day (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+          await open(page, locale)
+          await weekSection(page)
+            .getByRole('link', { name: portalOf(locale).nav.calendar, exact: true })
+            .focus()
+          await page.keyboard.press('Tab')
+          await expect(weekDays(page).nth(todayAt)).toBeFocused()
+          const step = todayAt < 6 ? 1 : -1
+          const [onward, back] =
+            locale === 'ar' ? ['ArrowLeft', 'ArrowRight'] : ['ArrowRight', 'ArrowLeft']
+          await page.keyboard.press(step === 1 ? onward! : back!)
+          const target = weekDays(page).nth(todayAt + step)
+          await expect(target).toBeFocused()
+          await expect(weekDays(page).nth(todayAt)).toHaveAttribute('aria-pressed', 'true')
+          await page.keyboard.press('Space')
+          await expect(target).toHaveAttribute('aria-pressed', 'true')
+          await expect(target).toBeFocused()
+          await page.keyboard.press('Tab')
+          expect(
+            await page.evaluate(() =>
+              Boolean(document.activeElement?.closest('[data-week] [role="group"]')),
+            ),
+          ).toBe(false)
+        })
+      })
+
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS))
+        for (const colorScheme of ['light', 'dark'] as const)
+          test(`This week has no axe violation with rows (${locale} ${viewport.width} ${colorScheme})`, async ({
+            browser,
+          }) => {
+            const context = await browser.newContext({
+              baseURL,
+              viewport,
+              colorScheme,
+              storageState: states.student,
+            })
+            try {
+              const page = await context.newPage()
+              await open(page, locale)
+              await expect(page.locator('html')).toHaveAttribute('data-theme', colorScheme)
+              await expect(list(page).getByRole('link').first()).toBeVisible()
+              await expect(latestRows(page).first()).toBeVisible()
+              const height = (await weekSection(page).boundingBox())!.height
+              await weekDays(page).nth(secondAt).click()
+              await expect(list(page)).toContainText(titles.second)
+              test.info().annotations.push({
+                type: `week card height ${locale} ${viewport.width}`,
+                description: `today ${height} px; second day ${(await weekSection(page).boundingBox())!.height} px with ${await list(page).getByRole('link').count()} row(s)`,
+              })
+              expect(await axeOver(page, {})).toEqual({})
+            } finally {
+              await context.close()
+            }
+          })
   })
 })

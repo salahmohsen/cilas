@@ -56,6 +56,7 @@ test.describe('portal Home on the empty seed', () => {
               portal.home.noSession,
               portal.home.noSpaces,
               portal.latest.empty,
+              portal.home.week.emptyWeek,
             ])
               await expect(main.getByText(empty, { exact: true })).toBeVisible()
             const actions = {

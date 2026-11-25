@@ -71,6 +71,8 @@ describe('ToggleStrip', () => {
     day('before').focus()
     await userEvent.keyboard('{Tab}')
     expect(day('Mon')).toHaveFocus()
+    expect(DAYS.map((name) => day(name).tabIndex)).toEqual([-1, -1, 0, -1])
+    expect(day('Mon')).toHaveAttribute('tabindex', '0')
     expect(getComputedStyle(day('Mon')).outlineStyle).toBe('solid')
     await userEvent.keyboard('{Tab}')
     expect(day('after')).toHaveFocus()
