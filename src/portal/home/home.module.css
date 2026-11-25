@@ -190,6 +190,11 @@ a.hero {
   --focus-outline-offset: -4px;
 }
 
+/* The ring's top edge can cross the light end of the scrim: dark behind it keeps the white ring at 3:1 or more over any cover. */
+a.hero:focus-visible {
+  box-shadow: inset 0 0 0 8px oklch(0% 0 0 / 0.55);
+}
+
 /* Over a cover, one more layer of shade that is only as tall as the text: on a narrow tile or with a long title the text reaches the light end of the scrim. */
 .nextCover ~ .hero {
   background: linear-gradient(
