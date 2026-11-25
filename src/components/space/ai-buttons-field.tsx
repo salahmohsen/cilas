@@ -18,6 +18,16 @@ function InfoTip({ label, help }: { label: string; help: string }) {
         type="button"
         className={styles.infoTip}
         aria-label={label}
+        // A tooltip closes on any scroll around it, and keyboard focus may scroll the button
+        // into view: open a frame later, after that scroll.
+        onFocus={(e) => {
+          e.preventDefault()
+          const button = e.currentTarget
+          if (!button.matches(':focus-visible')) return
+          requestAnimationFrame(() => {
+            if (document.activeElement === button) setOpen(true)
+          })
+        }}
         // A tooltip closes on a press, and a touch screen has no hover: here a press opens it.
         // Cancelling both events stops the tooltip's own close.
         onPointerDown={(e) => e.preventDefault()}

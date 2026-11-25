@@ -49,6 +49,8 @@ const middle = (el: Element) => {
   const box = el.getBoundingClientRect()
   return box.top + box.height / 2
 }
+const nextFrames = () =>
+  new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())))
 const save = () =>
   fireEvent.click(screen.getByRole('button', { name: messages.Spaces.saveSettings }))
 
@@ -163,6 +165,24 @@ describe('SpaceSettings', () => {
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(tooltip()).toBeNull())
     expect(changes).toEqual([])
+  })
+
+  it('keeps the tooltip open when keyboard focus has to scroll the sheet to the button', async () => {
+    await page.viewport(390, 844)
+    mount({ space: true, site: true })
+    const saveButton = screen.getByRole('button', { name: messages.Spaces.saveSettings })
+    let body = aiInfo().parentElement!
+    while (getComputedStyle(body).overflowY !== 'auto') body = body.parentElement!
+    await waitFor(() => expect(body.getBoundingClientRect().bottom).toBeLessThanOrEqual(845))
+    saveButton.focus()
+    body.scrollTop = 0
+    await nextFrames()
+    await userEvent.tab({ shift: true })
+    expect(document.activeElement).toBe(aiInfo())
+    await nextFrames()
+    expect(body.scrollTop).toBeGreaterThan(0)
+    await waitFor(() => expect(tooltip()?.textContent).toContain(messages.Spaces.aiButtonsHint))
+    expect(aiInfo().getAttribute('data-state')).not.toBe('closed')
   })
 
   it('opens the AI switch tooltip on hover, and leaves the switch as it was', async () => {
