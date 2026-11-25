@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { startTransition, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -71,7 +71,7 @@ export function SpaceSettings({
   const [reopen, setReopen] = useState(false)
   // The moderator's own change to the AI switch. Without one the switch shows the stored value
   // and a save leaves it alone, so an old sheet never writes over a newer value. The change ends
-  // when the sheet closes, or once the stored value is the same.
+  // when it is saved, when the sheet closes, or once the stored value is the same.
   const [aiChange, setAiChange] = useState<boolean | null>(null)
   if (aiChange !== null && (!open || aiChange === aiButtons?.space)) setAiChange(null)
   const [error, setError] = useState<string | null>(null)
@@ -172,7 +172,11 @@ export function SpaceSettings({
             setError(tp(saveErrorKey(result.error)))
             throw new Error(result.error)
           }
-          router.refresh()
+          // One transition, so the switch moves to the refreshed value without showing the old one.
+          startTransition(() => {
+            router.refresh()
+            setAiChange((now) => (now === aiChange ? null : now))
+          })
         }}
       />
     </div>

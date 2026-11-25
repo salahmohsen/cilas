@@ -9,7 +9,11 @@ import messages from '../../../messages/en.json'
 import { IntlProvider } from '../../../testing/intl.test-utils'
 import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 
-const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) => {
+const mount = (
+  aiButtons?: { space: boolean; site: boolean },
+  archived = false,
+  outcome: 'ok' | 'error' = 'ok',
+) => {
   const changes: boolean[] = []
   const saved: FormData[] = []
   const sheet = (stored: typeof aiButtons, open: boolean) => (
@@ -29,7 +33,7 @@ const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) 
         anchor={<span>anchor</span>}
         save={async (form) => {
           saved.push(form)
-          return { status: 'ok' }
+          return outcome === 'ok' ? { status: 'ok' } : { status: 'error', error: 'failed' }
         }}
       />
     </IntlProvider>
@@ -176,6 +180,29 @@ describe('SpaceSettings', () => {
     fireEvent.click(screen.getByRole('button', { name: new RegExp(messages.Spaces.saveSettings) }))
     await waitFor(() => expect(saved).toHaveLength(2))
     expect(saved[1]!.has('ai_buttons')).toBe(false)
+  })
+
+  it('does not send a saved change again when the refresh brings back another value', async () => {
+    const { saved } = mount({ space: false, site: true })
+    fireEvent.click(aiSwitch()!)
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(saved[0]!.get('ai_buttons')).toBe('true')
+    await waitFor(() => expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false'))
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(messages.Spaces.saveSettings) }))
+    await waitFor(() => expect(saved).toHaveLength(2))
+    expect(saved[1]!.has('ai_buttons')).toBe(false)
+  })
+
+  it('keeps the change after a save that failed, and sends it again', async () => {
+    const { saved } = mount({ space: true, site: true }, false, 'error')
+    fireEvent.click(aiSwitch()!)
+    save()
+    await screen.findByRole('alert')
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(messages.Spaces.saveSettings) }))
+    await waitFor(() => expect(saved).toHaveLength(2))
+    expect(saved[1]!.get('ai_buttons')).toBe('false')
   })
 
   it('drops an unsaved AI buttons change when the sheet closes', async () => {
