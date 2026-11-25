@@ -16,7 +16,8 @@ import styles from './space.module.css'
 /**
  * The course session a post points at, as the syllabus shows it, from the
  * course's live data, with a way to discuss it with AI unless a switch turned
- * that off. A session the course dropped, or a course the reader may not read, says so instead.
+ * that off. A session the course dropped, or a course the reader may not read,
+ * says so instead.
  */
 export function PostSession({
   session,
