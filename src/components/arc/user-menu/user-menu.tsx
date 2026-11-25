@@ -878,7 +878,9 @@ export function UserMenu({
         <Face user={user} status={showStatus ? status : undefined} size="sm" />
         {showName && (
           <>
-            <span className={styles.triggerName}>{user.name}</span>
+            <span className={styles.triggerName} dir="auto">
+              {user.name}
+            </span>
             <ChevronDown
               className={styles.chevron}
               size={16}

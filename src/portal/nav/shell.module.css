@@ -442,6 +442,19 @@
   white-space: nowrap;
 }
 
+/* A space name draws its own ellipsis: <bdi> takes the name's direction, so a long name loses its end
+   in either script. It stays aligned with the page, beside its cover. */
+.nav .label > bdi {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+:global([dir='rtl']) .nav .label > bdi {
+  text-align: right;
+}
+
 .spaceTip {
   overflow-wrap: anywhere;
 }
