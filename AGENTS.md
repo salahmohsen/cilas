@@ -39,9 +39,7 @@ Keep a decision log for structural work. List the problems first, then write eac
 
 ## Screenshots on pull requests
 
-A pull request that changes UI gets screenshots, posted as a PR comment with `gh issue comment <pr> --attach '<file>#<alt>'` (gh 2.103 or later). The images live on GitHub, never in the repo, a branch or a gist. Each UI change on the PR adds a new comment that names the commit, so the PR keeps the history.
-
-Take them with `pnpm pr:shots <spec.json> <pr>` while `pnpm dev` runs: it signs in as a throwaway admin, saves the PNGs and posts the comment (the spec format is at the top of `scripts/pr-shots.ts`). Keep the spec outside the repo. Look at an image only when a shot may have gone wrong: each look costs tokens.
+A pull request that changes UI gets screenshots, posted as a PR comment with `gh issue comment <pr> --attach '<file>#<alt>'`. Follow the `pr-screenshots` skill (`~/.claude/skills/pr-screenshots/`). In this repo, take the shots with `pnpm pr:shots <shots.yml> [base-url]` while `pnpm dev` runs: it signs shot-scraper in as a throwaway admin and deletes the admin after. Keep the YAML file and the images outside the repo.
 
 ## Commit hooks
 

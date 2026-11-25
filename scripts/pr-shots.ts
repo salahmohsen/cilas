@@ -1,54 +1,47 @@
-// Screenshots of a running local app for a pull request, taken without an
-// agent looking at the pages (each look costs tokens).
+// Screenshots of the running local app for a pull request, signed in as an
+// admin. shot-scraper takes them (https://shot-scraper.datasette.io); this
+// script adds only what is Payload's own: the sign-in.
 //
-//   pnpm pr:shots <spec.json> [pr-number]
+//   pnpm pr:shots <shots.yml> [base-url]
 //
-// The app must already run against the local database (`pnpm dev`). The
-// script signs in as a throwaway admin it makes and deletes, and saves one PNG
-// per shot next to the spec. Given a PR number, it posts them as one PR comment
-// that names the commit they show (`gh issue comment --attach`, gh 2.103 or
-// later), so each UI change adds a comment and the PR keeps the history. The spec:
-//
-//   {
-//     "base": "http://localhost:3000",          // optional
-//     "shots": [{
-//       "name": "posts-list",                     // the file name
-//       "alt": "Posts list with space names",     // the image's alt text
-//       "path": "/admin/collections/space-posts",
-//       "click": ["button[aria-label='Delete']"], // optional, in order
-//       "wait": "text=This permanently deletes",  // optional selector to wait for
-//       "element": ".confirmation-modal"          // optional: shoot this element only
-//     }]
-//   }
-import { execFileSync } from 'node:child_process'
+// `pnpm dev` must run against the local database; base-url defaults to
+// http://localhost:3000. The script makes a throwaway admin, writes
+// shot-scraper's sign-in file into a temporary folder, runs
+// `shot-scraper multi <shots.yml>` from the YAML file's folder, and always
+// deletes the admin and the file. Neither the password nor the token is
+// written anywhere else. Post the images with
+// `gh issue comment <pr> --attach '<file>#<alt>'`.
+import { spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
-import { readFileSync } from 'node:fs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 
 import config from '@payload-config'
 import { getPayload } from 'payload'
-import { chromium } from 'playwright'
 
-type Shot = {
-  name: string
-  alt: string
-  path: string
-  click?: string[]
-  wait?: string
-  element?: string
-}
-
-const [specArg, prArg] = process.argv.slice(2).map(String)
+const [specArg, baseArg] = process.argv.slice(2).map(String)
 if (!specArg) {
-  console.error('Usage: pnpm pr:shots <spec.json> [pr-number]')
+  console.error('Usage: pnpm pr:shots <shots.yml> [base-url]')
   process.exit(1)
 }
-const specPath = resolve(specArg)
-const spec = JSON.parse(readFileSync(specPath, 'utf8')) as { base?: string; shots: Shot[] }
-const base = spec.base ?? 'http://localhost:3000'
-const outDir = dirname(specPath)
+const spec = resolve(specArg)
+const base = new URL(baseArg ?? 'http://localhost:3000')
 
 const payload = await getPayload({ config })
+// A run that was killed could not delete its admin: the next run does, once
+// the admin is an hour old (a younger one may belong to a run still going).
+await payload.delete({
+  collection: 'users',
+  where: {
+    and: [
+      { email: { like: 'pr-shots-' } },
+      { email: { like: '@cilas.test' } },
+      { createdAt: { less_than: new Date(Date.now() - 3_600_000).toISOString() } },
+    ],
+  },
+  overrideAccess: true,
+})
 const email = `pr-shots-${randomBytes(4).toString('hex')}@cilas.test`
 const password = randomBytes(18).toString('hex')
 const admin = await payload.create({
@@ -56,8 +49,15 @@ const admin = await payload.create({
   data: { email, password, roles: ['admin'] } as never,
   overrideAccess: true,
 })
+const authDir = mkdtempSync(join(tmpdir(), 'pr-shots-'))
+const cleanUp = async () => {
+  rmSync(authDir, { recursive: true, force: true })
+  await payload.delete({ collection: 'users', id: admin.id, overrideAccess: true })
+}
+for (const signal of ['SIGINT', 'SIGTERM'] as const)
+  process.on(signal, () => void cleanUp().finally(() => process.exit(1)))
 
-const files: string[] = []
+let status = 1
 try {
   const { token } = await payload.login({ collection: 'users', data: { email, password } })
   if (!token) throw new Error('The throwaway admin could not sign in.')
@@ -68,55 +68,29 @@ try {
     body: JSON.stringify({ value: { open: false } }),
   })
   if (!nav.ok) throw new Error(`Could not close the admin sidebar: ${nav.status}`)
-  const browser = await chromium.launch()
-  try {
-    // Wide enough that the admin sidebar docks instead of covering the page, and
-    // no motion, so no shot catches a transition halfway.
-    const context = await browser.newContext({
-      viewport: { width: 1440, height: 900 },
-      reducedMotion: 'reduce',
-    })
-    const { hostname } = new URL(base)
-    await context.addCookies([
-      { name: 'payload-token', value: token, domain: hostname, path: '/', httpOnly: true },
-    ])
-    const page = await context.newPage()
-    for (const shot of spec.shots) {
-      // Not 'networkidle': the dev server's reload socket never goes quiet.
-      await page.goto(new URL(shot.path, base).href, { waitUntil: 'load', timeout: 180_000 })
-      // The dev server's Next.js badge is not part of the app.
-      await page.addStyleTag({ content: 'nextjs-portal { display: none !important; }' })
-      for (const selector of shot.click ?? []) await page.locator(selector).first().click()
-      if (shot.wait) await page.locator(shot.wait).first().waitFor({ timeout: 60_000 })
-      // Admin cells render "Loading..." (or "Loading…") until their data arrives.
-      await page.waitForFunction(() => !/Loading(\.\.\.|…)/.test(document.body.innerText), null, {
-        timeout: 60_000,
-      })
-      const file = join(outDir, `${shot.name}.png`)
-      const target = shot.element ? page.locator(shot.element).first() : page
-      await target.screenshot({ path: file })
-      files.push(`${file}#${shot.alt}`)
-    }
-  } finally {
-    await browser.close()
-  }
-} finally {
-  await payload.delete({ collection: 'users', id: admin.id, overrideAccess: true })
-}
 
-if (prArg) {
-  const sha = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim()
-  execFileSync(
-    'gh',
-    [
-      'issue',
-      'comment',
-      prArg,
-      '--body',
-      `Screenshots at ${sha}`,
-      ...files.flatMap((f) => ['--attach', f]),
-    ],
-    { stdio: 'inherit' },
+  // A Playwright storage state, the format of `shot-scraper auth`.
+  const auth = join(authDir, 'auth.json')
+  const cookie = { name: 'payload-token', value: token, domain: base.hostname, path: '/' }
+  const expires = Math.floor(Date.now() / 1000) + 3600
+  writeFileSync(
+    auth,
+    JSON.stringify({
+      cookies: [{ ...cookie, expires, httpOnly: true, secure: false, sameSite: 'Lax' }],
+      origins: [],
+    }),
+    { mode: 0o600 },
   )
-} else for (const file of files) console.log(file.split('#')[0])
-process.exit(0)
+  status =
+    spawnSync(
+      'shot-scraper',
+      ['multi', spec, '--auth', auth, '--reduced-motion', '--timeout', '60000'],
+      {
+        cwd: dirname(spec),
+        stdio: 'inherit',
+      },
+    ).status ?? 1
+} finally {
+  await cleanUp()
+}
+process.exit(status)
