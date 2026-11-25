@@ -16,7 +16,7 @@ export type ReviewHistoryRow = {
   actorName: string | null
 }
 
-const readsAVersion = async (
+const readsLatestVersion = async (
   payload: Payload,
   collection: ReviewedCollection,
   id: number,
@@ -25,7 +25,7 @@ const readsAVersion = async (
   try {
     const { docs } = await payload.findVersions({
       collection,
-      where: { parent: { equals: id } },
+      where: { parent: { equals: id }, latest: { equals: true } },
       limit: 1,
       depth: 0,
       user,
@@ -53,9 +53,9 @@ const personNames = async (payload: Payload, accounts: number[]) => {
 }
 
 /**
- * A document's review moves, oldest first, for a user who reads its versions
- * (an owner or an admin); anyone else gets none. A row names the actor and
- * carries no account.
+ * A document's review moves, oldest first, for a user who reads its latest
+ * version (a current owner or an admin); anyone else gets none. A row names
+ * the actor and carries no account.
  */
 export const reviewHistoryFor = async (
   payload: Payload,
@@ -64,7 +64,7 @@ export const reviewHistoryFor = async (
   user: User,
   locale: Locale,
 ): Promise<ReviewHistoryRow[]> => {
-  if (!(await readsAVersion(payload, collection, id, user))) return []
+  if (!(await readsLatestVersion(payload, collection, id, user))) return []
   const { docs: events } = await payload.find({
     collection: 'review-events',
     where: { and: [{ collection: { equals: collection } }, { doc: { equals: id } }] },
