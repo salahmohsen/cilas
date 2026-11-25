@@ -911,19 +911,20 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const settings = await spacesSettings(payload)
   const [{ archived }, threads, votes, rsvps, read, { docs: reactions }, { docs: files }] =
     await Promise.all([
       archiveState(payload, space),
       postThreads(payload, user, [post.id]),
       voteViews(payload, user, [post], locale),
       rsvpViews(payload, user, [post], locale),
-      sessionRead(
-        payload,
-        user,
-        space.kind === 'course' ? relId(space.course) : null,
-        locale,
-        aiButtonsOn(settings, space),
+      spacesSettings(payload).then((settings) =>
+        sessionRead(
+          payload,
+          user,
+          space.kind === 'course' ? relId(space.course) : null,
+          locale,
+          aiButtonsOn(settings, space),
+        ),
       ),
       payload.find({
         collection: 'space-reactions',
