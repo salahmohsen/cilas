@@ -5,6 +5,7 @@ import { type DeleteGroup, group } from '@/lib/delete-summary'
 import { parentOf, parentRef, spaceHref } from '@/lib/space-ref'
 import type { SpaceKind } from '@/lib/spaces'
 import { escapeRegExp } from '@/lib/regexp'
+import { requireRowLock } from '@/lib/row-lock'
 
 /** What deleting a space takes with it, shown in the admin dialog before it runs. */
 export type SpaceContentCounts = {
@@ -214,6 +215,10 @@ const KEEP_REPLIES = 'postDeleteKeepsReplies'
  * (deletePostKeepingReplies) is refused while one exists, before anything goes.
  */
 export const deletePostContent = async (req: PayloadRequest, id: number): Promise<void> => {
+  // A member's delete locks the post first: a reply's insert then waits for
+  // this delete to end, so the check below sees every reply, and no reply
+  // can arrive after attachments have left storage.
+  if (req.context[KEEP_REPLIES]) await requireRowLock(req, 'space-posts', id, 'references')
   const { comments, where } = await postContent(req, id)
   if (comments.length > 0 && req.context[KEEP_REPLIES])
     throw new APIError('This post has replies.', 409)
@@ -231,8 +236,8 @@ export const deletePostContent = async (req: PayloadRequest, id: number): Promis
  * A member's delete (postRemove): the post goes with its files, reactions,
  * votes and RSVPs, unless it has a reply when the delete runs. Then nothing
  * is deleted and the result is false, so the caller keeps the post as a
- * placeholder. A reply that commits between the hook's read and the post's
- * delete makes the database refuse the delete, with the same result.
+ * placeholder. The post's beforeDelete locks the post before it reads the
+ * replies, so a reply cannot arrive between that read and the delete.
  */
 export const deletePostKeepingReplies = async (payload: Payload, id: number): Promise<boolean> => {
   try {

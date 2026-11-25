@@ -1,10 +1,12 @@
-import { getPayload, type Payload } from 'payload'
+import type { PostgresAdapter } from '@payloadcms/db-postgres'
+import { getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 import { deletePostKeepingReplies } from '@/lib/space-delete'
 import { REACTION_KINDS } from '@/lib/space-reactions'
+import { lockRow } from '@/lib/row-lock'
 
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
@@ -157,6 +159,27 @@ describe('an admin deletes a post from the admin panel', () => {
     expect(await deletePostKeepingReplies(payload, id)).toBe(false)
     expect(await count('space-posts', [id])).toBe(1)
     expect(await count('space-comments', [reply])).toBe(1)
+  })
+
+  it('a member’s delete lock holds back a reply until the delete ends', async () => {
+    const id = await post()
+    const transactionID = await payload.db.beginTransaction()
+    const req = { payload, transactionID, context: {} } as unknown as PayloadRequest
+    const client = await (payload.db as unknown as PostgresAdapter).pool.connect()
+    try {
+      await lockRow(req, 'space-posts', id, 'references')
+      await client.query(`SET lock_timeout = '300ms'`)
+      await expect(
+        client.query('INSERT INTO space_comments (space_id, post_id, body) VALUES ($1, $2, $3)', [
+          space,
+          id,
+          'A late reply',
+        ]),
+      ).rejects.toMatchObject({ code: '55P03' })
+    } finally {
+      client.release()
+      await payload.db.rollbackTransaction(transactionID!)
+    }
   })
 
   it('a member’s delete removes a post with no reply', async () => {

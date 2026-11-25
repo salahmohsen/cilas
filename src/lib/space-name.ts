@@ -3,8 +3,12 @@ import type { CollectionAfterChangeHook, PayloadRequest, TypedLocale } from 'pay
 import { relId } from '@/lib/relation'
 import type { Course, Programme } from '@/payload-types'
 
-/** Set on `req.context` while refreshSpaceName writes, so the write does not refresh again. */
-const WRITING = 'spaceNameWriting'
+/**
+ * Set on `req.context` while refreshSpaceName writes one space's name, so
+ * that write does not refresh it again. Keyed by space: a bulk update saves
+ * several spaces on one request, and each must still refresh.
+ */
+const writing = (id: number | string) => `spaceNameWriting:${id}`
 
 type SpaceRow = {
   kind: 'community' | 'course' | 'cohort'
@@ -93,7 +97,7 @@ const refreshEachLocale = async (
     const name = await nameOf(req, space, locale)
     names[locale] = name
     if (name === stored.display_name) continue
-    req.context[WRITING] = true
+    req.context[writing(id)] = true
     try {
       await payload.update({
         collection: 'spaces',
@@ -104,7 +108,7 @@ const refreshEachLocale = async (
         req,
       })
     } finally {
-      delete req.context[WRITING]
+      delete req.context[writing(id)]
     }
   }
   return names
@@ -115,7 +119,7 @@ const refreshEachLocale = async (
  * gets its name, and the save returns it in the request's locale.
  */
 export const refreshOwnName: CollectionAfterChangeHook = async ({ doc, req }) => {
-  if (req.context[WRITING]) return doc
+  if (req.context[writing(doc.id)]) return doc
   const { localization } = req.payload.config
   const locale = (req.locale ??
     (localization ? localization.defaultLocale : undefined)) as TypedLocale

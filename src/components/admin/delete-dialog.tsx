@@ -109,10 +109,15 @@ export function useDeleteDialog(onDeleted: () => void) {
   const inputId = `${modalSlug}-name`
 
   const modal = (
-    <Modal className="confirmation-modal" closeOnBlur={false} slug={modalSlug}>
+    <Modal
+      aria-labelledby={`${modalSlug}-title`}
+      className="confirmation-modal"
+      closeOnBlur={false}
+      slug={modalSlug}
+    >
       <div className="confirmation-modal__wrapper">
         <div className="confirmation-modal__content">
-          <h1>{name ? `Delete “${name}”?` : 'Delete?'}</h1>
+          <h1 id={`${modalSlug}-title`}>{name ? `Delete “${name}”?` : 'Delete?'}</h1>
           {!summary ? (
             <p>Finding what this delete removes…</p>
           ) : summary.error ? (

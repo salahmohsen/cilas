@@ -141,6 +141,27 @@ describe('a space’s stored name', () => {
     expect(arabic.display_name).toBe('غرفة')
   })
 
+  it('refreshes every space of one bulk rename', async () => {
+    const make = async () =>
+      track(
+        'spaces',
+        await payload.create({
+          collection: 'spaces',
+          data: { kind: 'community', name: uniq('Name bulk') } as never,
+          overrideAccess: true,
+        }),
+      ).id
+    const ids = [await make(), await make()]
+    const title = uniq('Name bulk renamed')
+    await payload.update({
+      collection: 'spaces',
+      where: { id: { in: ids } },
+      data: { name: title } as never,
+      overrideAccess: true,
+    })
+    for (const id of ids) expect(await storedTitleReadAlone(id)).toBe(title)
+  })
+
   it('follows a published course rename, and ignores a draft one', async () => {
     const title = uniq('Name course')
     const course = track(
