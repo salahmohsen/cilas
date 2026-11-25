@@ -6,14 +6,14 @@ import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
 import type { User } from '@/payload-types'
 import { PortalPageHeader } from '@/portal/lists/page-header'
-import { latestRows } from '@/portal/needs/latest'
+import { latestPage } from '@/portal/needs/latest'
 import { LatestList } from '@/portal/needs/latest-list'
 import { NeedList } from '@/portal/needs/need-list'
 import { needs } from '@/portal/needs/needs'
 import styles from '@/portal/needs/needs.module.css'
 import { SectionBoundary } from '@/portal/needs/section-boundary'
 
-import { InboxRefresh } from './inbox-refresh'
+import { RefreshOnWork } from '@/portal/needs/refresh-on-work'
 
 async function NeedsSection({ user, locale }: { user: User; locale: Locale }) {
   const result = await needs(user, locale)
@@ -30,7 +30,7 @@ async function LatestSection({
   focus: boolean
 }) {
   const payload = await getPayload({ config })
-  return <LatestList page={await latestRows(payload, user, pages)} focus={focus} />
+  return <LatestList page={await latestPage(payload, user, pages)} focus={focus} />
 }
 
 /** Inbox: the work that waits on the reader, then the newest notifications. Each section loads on its own. */
@@ -48,7 +48,7 @@ export async function InboxPage({
   const t = await getTranslations('Portal')
   return (
     <>
-      <InboxRefresh />
+      <RefreshOnWork />
       <PortalPageHeader title={t('inbox.title')}>
         <a
           href="#latest"

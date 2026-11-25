@@ -27,6 +27,7 @@ import {
 import {
   AXE_TAGS,
   axeOver,
+  gotoLive,
   known,
   navHref,
   navName,
@@ -65,14 +66,6 @@ const accountButton = (page: Page, locale: Locale) =>
   page
     .locator('[data-portal-rail]')
     .getByRole('button', { name: new RegExp(`^${MESSAGES[locale].Portal.account.label}, `) })
-
-const gotoLive = async (page: Page, path: string) => {
-  const stream = page.waitForResponse((response) =>
-    response.url().includes('/api/notifications/stream'),
-  )
-  await page.goto(path)
-  await stream
-}
 
 const toastRegion = (scope: Page | ReturnType<Page['getByRole']>, locale: Locale) =>
   scope.getByRole('region', { name: new RegExp(`^${MESSAGES[locale].Notifications.label}`) })
@@ -1179,19 +1172,21 @@ test.describe('portal shell', () => {
               )
               const toast = toastRegion(page, locale).getByText('E2E comment')
               await expect(toast).toBeVisible()
-              const last = page.locator('section[aria-labelledby="spaces-shortcuts"] a').last()
+              const last = page.locator('main section[data-latest] a').last()
               let focused = false
               for (let i = 0; i < 80 && !focused; i++) {
                 await page.keyboard.press('Tab')
                 focused = await last.evaluate((link) => link === document.activeElement)
               }
               await expect(last).toBeFocused()
-              const measure = () =>
-                page.evaluate(() => {
+              const toastItem = toastRegion(page, locale)
+                .locator('li')
+                .filter({ hasText: 'E2E comment' })
+                .first()
+              const measure = async () => {
+                const toastTop = (await toastItem.boundingBox())!.y
+                return page.evaluate((toastTop) => {
                   const row = document.activeElement!.getBoundingClientRect()
-                  const toastBox = [...document.querySelectorAll('li')]
-                    .find((li) => li.textContent?.includes('E2E comment'))!
-                    .getBoundingClientRect()
                   const bar = document
                     .querySelector('nav [aria-haspopup="dialog"]')!
                     .closest('nav')!
@@ -1199,12 +1194,13 @@ test.describe('portal shell', () => {
                   const root = getComputedStyle(document.documentElement)
                   return {
                     rowBottom: row.bottom,
-                    limit: Math.min(toastBox.top, bar.top),
+                    limit: Math.min(toastTop, bar.top),
                     padding: parseFloat(root.scrollPaddingBlockEnd),
                     needed:
                       bar.height + parseFloat(root.getPropertyValue('--toast-stack-height') || '0'),
                   }
-                })
+                }, toastTop)
+              }
               await expect(toast).toBeVisible()
               await expect
                 .poll(async () => {
@@ -1299,7 +1295,7 @@ test.describe('portal shell', () => {
           test(`a reader with no space sees the empty state (${role} ${locale} ${viewport.width})`, async ({
             browser,
           }) => {
-            const empty = MESSAGES[locale].Portal.empty
+            const home = MESSAGES[locale].Portal.home
             await spaces.set('trial', { trialCommunity: false })
             try {
               await inContextAt(browser, { baseURL, viewport }, async (page) => {
@@ -1309,9 +1305,9 @@ test.describe('portal shell', () => {
                   next: localePath('/en/spaces', locale),
                 })
                 await expect(
-                  page.getByRole('heading', { level: 2, name: empty.spacesTitle }),
+                  page.getByRole('heading', { level: 2, name: home.spaces }),
                 ).toBeVisible()
-                await expect(page.getByText(empty.spacesNext)).toBeVisible()
+                await expect(page.getByText(home.noSpaces)).toBeVisible()
               })
             } finally {
               await spaces.set('on')

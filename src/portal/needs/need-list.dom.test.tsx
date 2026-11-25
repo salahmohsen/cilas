@@ -1,5 +1,7 @@
-import { cleanup, screen, within } from '@testing-library/react'
+import { cleanup, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
+
+import { LiveRegion } from '@/portal/feedback/announce'
 
 import { renderWithIntl } from '../../../testing/intl.test-utils'
 import { NeedList } from './need-list'
@@ -31,7 +33,56 @@ describe('NeedList', () => {
 
   it('an admin row names the owners', () => {
     renderWithIntl(<NeedList result={result([row({ owners: ['Salma', 'Omar'] })])} group={false} />)
-    expect(screen.getByRole('link')).toHaveAccessibleName('Review On water By Salma, Omar')
+    expect(screen.getByRole('link')).toHaveAccessibleName('Review On water By Salma and Omar')
+  })
+
+  it('the second line of a grouped row names two items and two people, then counts the rest', () => {
+    renderWithIntl(
+      <NeedList
+        group
+        result={result(
+          ['On water', 'On salt', 'On sand', 'On stone'].map((label, index) =>
+            row({ label, href: `/a/${index}`, owners: [['Salma', 'Omar', 'Hana'][index % 3]!] }),
+          ),
+        )}
+      />,
+    )
+    expect(screen.getByRole('link')).toHaveAccessibleName(
+      'Review 4 items On water, On salt, and 2 more By Salma, Omar, and 1 more',
+    )
+  })
+
+  it('the applicants row names the courses that wait', () => {
+    renderWithIntl(
+      <NeedList
+        group={false}
+        result={result([
+          row({
+            kind: 'applicants',
+            verbKey: 'needs.applicants',
+            label: null,
+            count: 3,
+            href: '/admin/applicants',
+            collection: null,
+            courses: ['Seeing the Unseen', 'Egypt vs Masr'],
+          }),
+        ])}
+      />,
+    )
+    expect(screen.getByRole('link')).toHaveAccessibleName(
+      'Decide on 3 applicants Seeing the Unseen and Egypt vs Masr',
+    )
+  })
+
+  it('writes the second line in Arabic with the Arabic list words', () => {
+    renderWithIntl(
+      <NeedList
+        group={false}
+        result={result([row({ label: 'عن الماء', owners: ['سلمى', 'عمر'] })])}
+      />,
+      { locale: 'ar' },
+    )
+    expect(screen.getByRole('link')).toHaveAccessibleName('مراجعة عن الماء من سلمى وعمر')
   })
 
   it('shows the total in the heading and one list item per row', () => {
@@ -60,7 +111,10 @@ describe('NeedList', () => {
     )
   })
 
-  it.each([true, false])('keeps the heading on failure (surviving rows: %s)', (survives) => {
+  it.each([true, false])('keeps the heading on failure (surviving rows: %s)', async (survives) => {
+    const shell = renderWithIntl(<LiveRegion />)
+    const region = screen.getByRole('status')
+    expect(region).toBeEmptyDOMElement()
     renderWithIntl(
       <NeedList
         result={result(
@@ -71,7 +125,9 @@ describe('NeedList', () => {
       />,
     )
     expect(screen.getByRole('heading', { name: /^Needs you$/ })).toBeVisible()
-    expect(screen.getByRole('status')).toHaveTextContent('Some tasks could not load.')
+    await waitFor(() => expect(region).toHaveTextContent('Some tasks could not load.'))
+    expect(screen.getAllByRole('status')).toEqual([region])
+    shell.unmount()
     expect(screen.queryByText('Nothing needs you now.')).toBeNull()
     expect(screen.queryAllByRole('link', { name: 'Review On water' })).toHaveLength(
       survives ? 1 : 0,
@@ -97,11 +153,11 @@ describe('NeedList', () => {
         ])}
       />,
     )
-    expect(screen.getByRole('link', { name: 'Review 2 items' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /^Review 2 items / })).toHaveAttribute(
       'href',
       '/admin/reviews',
     )
-    expect(screen.getByRole('link', { name: 'Review 1 set of changes' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /^Review 1 set of changes / })).toHaveAttribute(
       'href',
       '/admin/reviews',
     )
@@ -130,11 +186,11 @@ describe('NeedList', () => {
       />,
     )
     expect(screen.getAllByRole('link')).toHaveLength(2)
-    expect(screen.getByRole('link', { name: 'Read 2 notes and edit Articles' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /^Read 2 notes and edit Articles / })).toHaveAttribute(
       'href',
       '/en/spaces/articles?show=needsYou',
     )
-    expect(screen.getByRole('link', { name: 'Read 1 note and edit Courses' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /^Read 1 note and edit Courses / })).toHaveAttribute(
       'href',
       '/en/spaces/courses?show=needsYou',
     )

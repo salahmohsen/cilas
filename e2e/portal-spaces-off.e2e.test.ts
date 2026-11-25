@@ -168,6 +168,14 @@ test.describe('portal spaces', () => {
   test.describe('spaces off', () => {
     test.beforeAll(async () => {
       await spaces.set('off')
+      for (const role of ROLES) {
+        await payload.delete({
+          collection: 'notifications',
+          where: { recipient: { equals: world.accounts[role].id } },
+          overrideAccess: true,
+        })
+        await notifyOf(payload, world.accounts[role], world.course.postPath)
+      }
     })
 
     test.afterAll(async () => {
@@ -184,12 +192,22 @@ test.describe('portal spaces', () => {
               const response = await page.goto(localePath('/en/spaces', locale))
               expect(response!.status()).toBe(200)
               await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
-              await expect(
-                page.locator('section[aria-labelledby="spaces-shortcuts"]'),
-              ).toBeVisible()
-              await expect(page.locator('section[aria-labelledby^="spaces-"]')).toHaveCount(1)
+              const portal = MESSAGES[locale].Portal
+              await expect(page.locator('main section[data-needs] h2')).toContainText(
+                portal.needs.heading,
+              )
+              await expect(page.getByRole('heading', { name: portal.home.spaces })).toHaveCount(0)
               await expect(page.locator('a[href*="/spaces/course/"]')).toHaveCount(0)
-              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Portal.home.noSpaces)).toHaveCount(0)
+              for (const path of ['/en/spaces', '/en/spaces/inbox']) {
+                if (path !== '/en/spaces') await page.goto(localePath(path, locale))
+                const row = page.locator('main section[data-latest] ol > li')
+                await expect(row).toHaveText(
+                  new RegExp(MESSAGES[locale].Notifications.kinds.comment),
+                )
+                await expect(row.locator('a')).toHaveCount(0)
+              }
+              await expect(page.locator('a[href*="/spaces/course/"]')).toHaveCount(0)
             })
           })
 
@@ -206,7 +224,7 @@ test.describe('portal spaces', () => {
               await expect(
                 links.locator('a[href*="/spaces/course/"], a[href*="/spaces/community/"]'),
               ).toHaveCount(0)
-              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Portal.home.noSpaces)).toHaveCount(0)
             })
           })
 

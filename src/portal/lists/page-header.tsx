@@ -15,7 +15,7 @@ export function PortalPageHeader({
   primary,
   children,
 }: {
-  title: string
+  title: ReactNode
   subtitle?: string
   primary?: { label: string; href: string }
   children?: ReactNode

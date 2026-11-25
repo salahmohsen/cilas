@@ -1066,7 +1066,6 @@
     "writeArticle": "اكتب مقالاً",
     "proposeCourse": "اقترح مقرراً",
     "notFound": "هذه المساحة غير مفتوحة.",
-    "unread": "منشورات جديدة",
     "yesterday": "الأمس",
     "open": "مفتوحة",
     "archived": "أرشيف للقراءة فقط",
@@ -1075,7 +1074,6 @@
     "posting": "مستوى النشر",
     "reopen": "أعد فتح هذا الأرشيف",
     "all": "الكل",
-    "empty": "لا توجد مساحات بعد. تظهر هنا دوراتك ودفعاتك عندما تنضم إليها.",
     "membersLabel": "الأعضاء",
     "tabsLabel": "أقسام المساحة",
     "announcements": "الإعلانات",
@@ -1102,7 +1100,6 @@
     "pages": "منشورات أقدم",
     "communityAbout": "يلتقي هنا كل من في المعهد. اطرح الأسئلة وشارك الأفكار والأخبار عبر الدورات والدفعات.",
     "openSpace": "افتح المساحة",
-    "active": "نشطة {time}",
     "neverVisited": "لم يزر بعد",
     "kpiContext": "في هذه المساحة",
     "loading": "جارٍ تحميل المساحة",
@@ -1147,9 +1144,6 @@
     "introLockTitle": "تُفتح بقية المنشورات بعد أن تعرّف بنفسك",
     "introLockHint": "علّق على منشور التعريف أعلاه لتقرأ بقية هذه المساحة وتشارك فيها.",
     "introLockAction": "اكتب تعريفك",
-    "noActivity": "لا منشورات بعد",
-    "cohortSpaces": "مساحات الدفعات",
-    "courseSpaces": "مساحات المقررات",
     "team": "فريق CILAS",
     "breadcrumb": "مسار التنقل",
     "rulesField": "الخصوصية والقواعد",
@@ -1473,26 +1467,6 @@
     "onlyRead": "قرأوا أو تفاعلوا فقط",
     "tableCaption": "منشورات كل عضو وتعليقاته وتفاعلاته وآخر زيارة"
   },
-  "SpaceShortcuts": {
-    "title": "ما يمكنك فعله",
-    "writeArticle": "اكتب مقالًا",
-    "writeArticleHint": "ابدأ مسودة. يراجعها محرر قبل نشرها.",
-    "myArticles": "مقالاتك",
-    "myArticlesHint": "المسودات والمقالات المرسلة والمنشورة.",
-    "editProfile": "عدّل ملفك الشخصي",
-    "editProfileHint": "اسمك وصورتك ونبذتك وروابطك، كما يراها الأعضاء.",
-    "proposeCourse": "اقترح مقررًا",
-    "proposeCourseHint": "أرسل مخطط مقرر للدورة القادمة.",
-    "myCourses": "مقرراتك",
-    "myCoursesHint": "المقررات التي تدرّسها ومواعيدها.",
-    "applications": "الطلبات",
-    "applicationsHint": "الطلبات الجديدة في الدعوات المفتوحة.",
-    "newsletter": "اكتب نشرة بريدية",
-    "newsletterHint": "اختر مقالات وأرسلها إلى قائمة بريدية.",
-    "siteSettings": "إعدادات الموقع",
-    "siteSettingsHint": "التنقل والمساحات وبيانات الاتصال بالموقع.",
-    "inDashboard": "(تفتح لوحة التحكم)"
-  },
   "SpaceReactions": {
     "label": "التفاعلات",
     "add": "أضف تفاعلًا",
@@ -1796,10 +1770,6 @@
       "collapsed": "اللوحة مصغّرة",
       "height": "اللوحة بارتفاع {percent} بالمئة"
     },
-    "empty": {
-      "spacesTitle": "مساحاتك",
-      "spacesNext": "تُفتح المساحة حين يبدأ مساق أو دفعة انضممت إليها."
-    },
     "fold": {
       "fold": "طي الشريط الجانبي",
       "unfold": "توسيع الشريط الجانبي",
@@ -1927,7 +1897,9 @@
         "removalReview": "{count, plural, zero {لا طلبات حذف} one {البتّ في طلب حذف واحد} two {البتّ في طلبَي حذف} few {البتّ في {count, number, digits} طلبات حذف} many {البتّ في {count, number, digits} طلب حذف} other {البتّ في {count, number, digits} طلب حذف}}",
         "changesRequested": "{count, plural, zero {لا ملاحظات} one {قراءة ملاحظة واحدة والتعديل} two {قراءة ملاحظتين والتعديل} few {قراءة {count, number, digits} ملاحظات والتعديل} many {قراءة {count, number, digits} ملاحظة والتعديل} other {قراءة {count, number, digits} ملاحظة والتعديل}}"
       },
-      "owners": "من {names}",
+      "ownersRich": "من <names></names>",
+      "moreItems": "{count, plural, zero {لا غيرها} one {عنصر آخر} two {عنصرين آخرين} few {{count, number, digits} عناصر أخرى} many {{count, number, digits} عنصرًا آخر} other {{count, number, digits} عنصر آخر}}",
+      "morePeople": "{count, plural, zero {لا غيرهم} one {شخص آخر} two {شخصين آخرين} few {{count, number, digits} أشخاص آخرين} many {{count, number, digits} شخصًا آخر} other {{count, number, digits} شخص آخر}}",
       "untitledArticle": "مقال بلا عنوان",
       "untitledCourse": "مقرر بلا عنوان",
       "untitledPublication": "منشور بلا عنوان",
@@ -1941,6 +1913,31 @@
       "cap": "تُعرض أحدث {count, number, digits} من الإشعارات فقط.",
       "moreRows": "{count, plural, zero {لا إشعارات إضافية.} one {إشعار إضافي واحد.} two {إشعاران إضافيان.} few {{count, number, digits} إشعارات إضافية.} many {{count, number, digits} إشعارًا إضافيًا.} other {{count, number, digits} إشعار إضافي.}}",
       "unread": "غير مقروء"
+    },
+    "home": {
+      "metaTitle": "الرئيسية",
+      "greeting": "مرحبًا.",
+      "greetingName": "مرحبًا، <person>{name}</person>.",
+      "loading": "جارٍ تحميل الصفحة الرئيسية",
+      "nextSession": "الجلسة القادمة",
+      "sessionNumber": "الجلسة {number, number, digits}",
+      "noSession": "لا توجد جلسات بعد",
+      "browseSpaces": "تصفّح المساحات",
+      "openCourses": "افتح مقرراتك",
+      "openCalendar": "افتح التقويم",
+      "seeCourses": "اطّلع على المقررات المفتوحة",
+      "spaces": "مساحاتك",
+      "spacesList": "كل مساحاتك",
+      "spaceKind": {
+        "community": "مجتمع",
+        "cohort": "دفعة",
+        "course": "مقرر",
+        "archived": "مقرر مؤرشف"
+      },
+      "activeAgo": "آخر نشاط {time}",
+      "noPosts": "لا منشورات بعد",
+      "noSpaces": "تظهر مقرراتك ودفعاتك هنا بعد انضمامك إليها.",
+      "openInbox": "افتح الوارد"
     },
     "inbox": {
       "title": "الوارد",

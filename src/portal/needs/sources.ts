@@ -18,6 +18,8 @@ export type NeedRow = {
   label: string | null
   count: number
   owners: string[]
+  /** The titles of the courses with a waiting applicant, on the `applicants` row only. */
+  courses?: string[]
   /** Null on the `applicants` row. */
   collection: ReviewedCollection | null
 }

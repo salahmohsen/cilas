@@ -371,7 +371,7 @@ describe('countWaitingApplicants', () => {
 
   it('a student counts 0 and runs no query', async () => {
     const { payload, calls } = recordingPayload(f.payload)
-    expect(await countWaitingApplicants(payload, member)).toEqual({ total: 0 })
+    expect(await countWaitingApplicants(payload, member)).toEqual({ total: 0, courses: [] })
     expect(calls).toHaveLength(0)
   })
 })

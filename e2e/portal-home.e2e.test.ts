@@ -10,6 +10,7 @@ import { portalNeedsWorld, type PortalNeedsWorld } from '../testing/needs.fixtur
 import { createTracker, uniq } from '../testing/payload.fixture'
 import {
   holdSpacesMode,
+  localePath,
   inContext as inContextAt,
   LOCALES,
   MESSAGES,
@@ -21,7 +22,7 @@ import {
 } from '../testing/portal.fixture'
 import { axeOver, known, mailOff, navName } from '../testing/portal-e2e.test-utils'
 
-type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
+type Viewport = { width: number; height: number }
 
 const DESKTOP = WIDTHS.desktop
 const PHONE = WIDTHS.phone
@@ -56,6 +57,10 @@ const mainNav = (page: Page, locale: Locale) =>
 const inboxLink = (page: Page, locale: Locale) =>
   mainNav(page, locale).getByRole('link', { name: navName(portalOf(locale).nav.inbox) })
 const chipOf = (page: Page, locale: Locale) => inboxLink(page, locale).locator('[data-nav-count]')
+const homePath = (locale: Locale) => `/${locale}/spaces`
+const nextSession = (page: Page) =>
+  page.locator('main section[aria-labelledby="home-next-session"]')
+const yourSpaces = (page: Page) => page.locator('main section[aria-labelledby="home-spaces"]')
 const needsSection = (page: Page) => page.locator('main section[data-needs]')
 const latestSection = (page: Page) => page.locator('main section[data-latest]')
 const latestRows = (page: Page) => latestSection(page).locator('ol > li')
@@ -68,7 +73,7 @@ const totalOf = async (page: Page) => {
 const shownFor = (total: number, locale: Locale) =>
   localDigits(total > SHOWN_CAP ? `${SHOWN_CAP}+` : total, locale)
 
-test.describe('portal home: Inbox', () => {
+test.describe('portal Home and Inbox', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
@@ -99,6 +104,318 @@ test.describe('portal home: Inbox', () => {
       if (payload) await cleanup(payload)
     } finally {
       await spaces?.release()
+    }
+  })
+
+  test.describe('Home', () => {
+    const narrow = { width: 320, height: 800 }
+    for (const role of ROLES)
+      for (const locale of LOCALES)
+        for (const viewport of [DESKTOP, PHONE, narrow]) {
+          test(`Home shows the greeting, work, session, spaces and Latest (${role} ${locale} ${viewport.width})`, async ({
+            browser,
+          }) => {
+            await inContext(browser, { viewport, reader: role }, async (page) => {
+              const portal = portalOf(locale)
+              await page.goto(homePath(locale))
+              const heading = page.getByRole('heading', { level: 1 })
+              const person = fixture.world.accounts[role].person
+              if (person === null) {
+                await expect(heading).toHaveText(portal.home.greeting)
+              } else {
+                const reader = await payload.findByID({
+                  collection: 'people',
+                  id: person,
+                  locale,
+                  depth: 0,
+                  select: { name: true },
+                })
+                const firstName = reader.name.trim().split(/\s+/u, 1)[0]
+                await expect(heading.locator('bdi')).toHaveText(firstName!)
+              }
+              await expect(needsSection(page).getByRole('heading')).toContainText(
+                portal.needs.heading,
+              )
+              await expect(nextSession(page).getByRole('heading')).toHaveText(
+                portal.home.nextSession,
+              )
+              await expect(yourSpaces(page).getByRole('heading')).toHaveText(portal.home.spaces)
+              await expect(latestSection(page).getByRole('heading')).toHaveText(
+                portal.latest.heading,
+              )
+              const rooms = [fixture.world.course.path, fixture.world.otherCourse.path]
+              if (role === 'admin') {
+                await expect(nextSession(page).getByText(portal.home.noSession)).toBeVisible()
+                const fixtureIds = Object.values(fixture.needs.adminWaiting).flat()
+                expect(await totalOf(page)).toBeGreaterThanOrEqual(fixtureIds.length)
+              } else {
+                const upcoming = nextSession(page).getByRole('link', { name: /Portal e2e session/ })
+                await expect(upcoming).toBeVisible()
+                expect(rooms.map((path) => localePath(path, locale))).toContain(
+                  await upcoming.getAttribute('href'),
+                )
+                const own =
+                  role === 'fellow'
+                    ? `courses/${fixture.needs.fellowCourses.changes_requested}`
+                    : `articles/${fixture.needs.lists.articles.changes_requested}`
+                await expect(
+                  needsSection(page).locator(`a[href="/admin/collections/${own}"]`),
+                ).toBeVisible()
+              }
+              await expect(
+                yourSpaces(page).locator(
+                  `a[href="${localePath(fixture.world.community.path, locale)}"]`,
+                ),
+              ).toBeVisible()
+              await expect(latestRows(page)).toHaveCount(role === 'student' ? 5 : 1)
+              await expect(
+                latestSection(page).getByRole('link', { name: portal.home.openInbox }),
+              ).toHaveAttribute('href', inboxPath(locale))
+              const total = await totalOf(page)
+              const count =
+                total > SHOWN_CAP
+                  ? translator(locale, 'Portal')('nav.countMany', {
+                      cap: localDigits(SHOWN_CAP, locale),
+                    })
+                  : translator(locale, 'Portal')('nav.count', {
+                      count: total,
+                      shown: localDigits(total, locale),
+                    })
+              await expect(inboxLink(page, locale)).toHaveAccessibleName(
+                `${portal.nav.inbox}${count}`,
+              )
+              await expect(chipOf(page, locale)).toHaveText(shownFor(total, locale))
+              if (viewport === narrow) {
+                expect(
+                  await page.evaluate(() => {
+                    const root = document.scrollingElement!
+                    return root.scrollWidth <= root.clientWidth
+                  }),
+                ).toBe(true)
+              }
+              expect(await axeOver(page, {})).toEqual({})
+            })
+          })
+        }
+
+    const boxesOf = async (page: Page) => {
+      await expect(latestRows(page).first()).toBeVisible()
+      await expect(yourSpaces(page).locator('li').first()).toBeVisible()
+      await expect(needsSection(page)).toBeVisible()
+      await expect(nextSession(page)).toBeVisible()
+      const box = (slot: string) => page.locator(`main [data-slot="${slot}"]`).boundingBox()
+      return {
+        needs: (await box('needs'))!,
+        next: (await box('next'))!,
+        spaces: (await box('spaces'))!,
+        latest: (await box('latest'))!,
+      }
+    }
+
+    for (const locale of LOCALES) {
+      test(`wide Home puts Next session beside Needs you (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+          await page.goto(homePath(locale))
+          const { needs, next, spaces, latest } = await boxesOf(page)
+          expect(next.y).toBe(needs.y)
+          expect(next.height).toBe(needs.height)
+          expect(next.height).toBeGreaterThanOrEqual(320)
+          const [first, second] = locale === 'ar' ? [needs, next] : [next, needs]
+          expect(first.x + first.width).toBeLessThan(second.x)
+          expect(next.width / needs.width).toBeCloseTo(7 / 5, 1)
+          expect(spaces.width).toBeCloseTo(next.width + needs.width + 12, 0)
+          expect(latest.width).toBeCloseTo(spaces.width, 0)
+          expect(spaces.y).toBeGreaterThan(next.y + next.height)
+          expect(latest.y).toBeGreaterThan(spaces.y + spaces.height)
+        })
+      })
+
+      test(`stacked Home keeps the reading order (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: PHONE, reader: 'student' }, async (page) => {
+          await page.goto(homePath(locale))
+          const { needs, next, spaces, latest } = await boxesOf(page)
+          const column = [needs, next, spaces, latest]
+          expect(column.map((box) => box.y)).toEqual(
+            column.map((box) => box.y).toSorted((a, b) => a - b),
+          )
+          expect(new Set(column.map((box) => Math.round(box.width))).size).toBe(1)
+        })
+      })
+
+      test(`Your spaces is one row from the reading start, by key and by touch (${locale})`, async ({
+        browser,
+      }) => {
+        const context = await browser.newContext({
+          baseURL,
+          storageState: states.admin,
+          viewport: PHONE,
+          hasTouch: true,
+        })
+        try {
+          const page = await context.newPage()
+          await page.goto(homePath(locale))
+          const row = yourSpaces(page).getByRole('region', {
+            name: portalOf(locale).home.spacesList,
+          })
+          const cards = row.getByRole('link')
+          await expect(cards.first()).toBeVisible()
+          const count = await cards.count()
+          expect(count).toBeGreaterThan(2)
+          const tops = await cards.evaluateAll((links) =>
+            links.map((link) => Math.round(link.getBoundingClientRect().top)),
+          )
+          expect(new Set(tops).size).toBe(1)
+
+          const startGap = () =>
+            row.evaluate((viewport) => {
+              const frame = viewport.getBoundingClientRect()
+              const card = viewport.querySelector('li')!.getBoundingClientRect()
+              return Math.round(
+                getComputedStyle(viewport).direction === 'rtl'
+                  ? frame.right - card.right
+                  : card.left - frame.left,
+              )
+            })
+          const scrolled = () => row.evaluate((viewport) => Math.abs(viewport.scrollLeft))
+          expect(await startGap()).toBe(4)
+          expect(await scrolled()).toBe(0)
+
+          const cdp = await context.newCDPSession(page)
+          await row.scrollIntoViewIfNeeded()
+          const seen = (await row.boundingBox())!
+          await cdp.send('Input.synthesizeScrollGesture', {
+            x: Math.round(seen.x + seen.width / 2),
+            y: Math.round(seen.y + seen.height / 3),
+            xDistance: locale === 'ar' ? 250 : -250,
+            yDistance: 0,
+            gestureSourceType: 'touch',
+          })
+          await expect.poll(scrolled).toBeGreaterThan(100)
+
+          await row.focus()
+          await expect(row).toBeFocused()
+          for (let i = 0; i < count; i++) {
+            await page.keyboard.press('Tab')
+            await expect(cards.nth(i)).toBeFocused()
+            await expect(cards.nth(i)).toBeInViewport({ ratio: 0.99 })
+          }
+          expect(
+            await page.evaluate(() => {
+              const root = document.scrollingElement!
+              return root.scrollWidth - root.clientWidth
+            }),
+          ).toBe(0)
+        } finally {
+          await context.close()
+        }
+      })
+    }
+
+    test('more than five rows group by kind and keep the same total', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'admin' }, async (page) => {
+        await page.goto(inboxPath('en'))
+        const waiting = Object.entries(fixture.needs.adminWaiting).flatMap(([collection, ids]) =>
+          ids.map((id) => `/admin/collections/${collection}/${id}`),
+        )
+        expect(waiting.length).toBeGreaterThan(5)
+        for (const href of waiting)
+          await expect(needsSection(page).locator(`a[href="${href}"]`)).toBeVisible()
+        const total = await totalOf(page)
+        await page.goto(homePath('en'))
+        await expect(needsSection(page).locator('h2 > span')).toHaveText(String(total))
+        const review = needsSection(page).locator('a[data-need-kind="review"]')
+        await expect(review).toHaveCount(1)
+        await expect(review).toHaveAttribute('href', '/admin/reviews')
+        await expect(review).toHaveAccessibleName(/^Review [0-9]+ items /)
+      })
+    })
+
+    test('Home uses plain links and Latest opens a full post page', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'fellow' }, async (page) => {
+        await page.goto(homePath('en'))
+        await expect(needsSection(page).getByRole('link').first()).toHaveAttribute(
+          'href',
+          /^\/admin\//,
+        )
+        const post = latestSection(page).locator(`a[href="${fixture.link}"]`)
+        const navigation = page.waitForRequest(
+          (request) =>
+            request.isNavigationRequest() && new URL(request.url()).pathname === fixture.link,
+        )
+        await post.click()
+        await navigation
+        await expect(page).toHaveURL(new RegExp(`${fixture.link}$`))
+        await expect(page.getByRole('dialog')).toHaveCount(0)
+        await expect(page.locator('main article').first()).toBeVisible()
+      })
+    })
+
+    test('a keyboard walk reaches each Home card in order', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(homePath('en'))
+        await expect(latestRows(page)).toHaveCount(5)
+        const targets = [
+          'a[href="#main"]',
+          '[data-needs] li:first-child a',
+          '#home-next-session + a',
+          '#home-spaces + div [role="region"]',
+          '#home-spaces + div li:first-child a',
+          '[data-latest] li:first-child a',
+          '[data-latest] > a[href="/en/spaces/inbox"]',
+        ]
+        for (const target of targets.slice(1)) await expect(page.locator(target)).toBeVisible()
+        const stops: number[] = []
+        for (let i = 0; i < 160 && stops.length < targets.length; i++) {
+          await page.keyboard.press('Tab')
+          const stop = await page.evaluate((selectors) => {
+            const element = document.activeElement
+            return element
+              ? {
+                  index: selectors.findIndex((selector) => element.matches(selector)),
+                  outline: getComputedStyle(element).outlineStyle,
+                }
+              : null
+          }, targets)
+          if (!stop || stop.index === -1) continue
+          expect(stop.outline).not.toBe('none')
+          stops.push(stop.index)
+        }
+        expect(stops).toEqual(targets.map((_, index) => index))
+      })
+    })
+
+    for (const locale of LOCALES) {
+      test(`Home at 200% zoom reflows without losing a card (${locale})`, async ({ browser }) => {
+        const context = await browser.newContext({
+          baseURL,
+          storageState: states.student,
+          viewport: { width: 640, height: 400 },
+          deviceScaleFactor: 2,
+        })
+        try {
+          const page = await context.newPage()
+          await page.goto(homePath(locale))
+          const sections = [
+            needsSection(page),
+            nextSession(page),
+            yourSpaces(page),
+            latestSection(page),
+          ]
+          for (const section of sections) {
+            const heading = section.getByRole('heading', { level: 2 })
+            await heading.scrollIntoViewIfNeeded()
+            await expect(heading).toBeInViewport()
+          }
+          expect(
+            await page.evaluate(() => {
+              const root = document.scrollingElement!
+              return root.scrollWidth <= root.clientWidth
+            }),
+          ).toBe(true)
+        } finally {
+          await context.close()
+        }
+      })
     }
   })
 

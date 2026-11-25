@@ -1066,7 +1066,6 @@
     "writeArticle": "Write an article",
     "proposeCourse": "Propose a course",
     "notFound": "This space is not open.",
-    "unread": "New posts",
     "yesterday": "Yesterday",
     "open": "Open",
     "archived": "Read-only archive",
@@ -1075,7 +1074,6 @@
     "posting": "Posting level",
     "reopen": "Reopen this archive",
     "all": "All",
-    "empty": "No spaces yet. Your courses and cohorts appear here once you join them.",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",
     "announcements": "Announcements",
@@ -1102,7 +1100,6 @@
     "pages": "Older posts",
     "communityAbout": "Everyone at CILAS meets here. Ask questions, share ideas and news across courses and cohorts.",
     "openSpace": "Open space",
-    "active": "Active {time}",
     "neverVisited": "Never visited",
     "kpiContext": "In this space",
     "loading": "Loading the space",
@@ -1147,9 +1144,6 @@
     "introLockTitle": "The other posts open after you introduce yourself",
     "introLockHint": "Comment on the intro post above to read and join the rest of this space.",
     "introLockAction": "Write your introduction",
-    "noActivity": "No posts yet",
-    "cohortSpaces": "Cohort spaces",
-    "courseSpaces": "Course spaces",
     "team": "CILAS team",
     "breadcrumb": "Breadcrumb",
     "rulesField": "Privacy and rules",
@@ -1473,26 +1467,6 @@
     "onlyRead": "Only read or reacted",
     "tableCaption": "Each member's posts, comments, reactions and last visit"
   },
-  "SpaceShortcuts": {
-    "title": "Things you can do",
-    "writeArticle": "Write an article",
-    "writeArticleHint": "Start a draft. An editor reviews it before it goes live.",
-    "myArticles": "Your articles",
-    "myArticlesHint": "Drafts, submissions and published pieces.",
-    "editProfile": "Edit your profile",
-    "editProfileHint": "Your name, photo, bio and links, as members see them.",
-    "proposeCourse": "Propose a course",
-    "proposeCourseHint": "Send a course outline for the next cycle.",
-    "myCourses": "Your courses",
-    "myCoursesHint": "The courses you teach and their schedules.",
-    "applications": "Applications",
-    "applicationsHint": "New submissions to the open calls.",
-    "newsletter": "Write a newsletter",
-    "newsletterHint": "Pick articles and send them to a mailing list.",
-    "siteSettings": "Site settings",
-    "siteSettingsHint": "Navigation, spaces and the site's contact details.",
-    "inDashboard": "(opens the dashboard)"
-  },
   "SpaceReactions": {
     "label": "Reactions",
     "add": "Add reaction",
@@ -1796,10 +1770,6 @@
       "collapsed": "Sheet collapsed",
       "height": "Sheet at {percent} percent height"
     },
-    "empty": {
-      "spacesTitle": "Your spaces",
-      "spacesNext": "A space opens when a course or a cohort you joined starts."
-    },
     "fold": {
       "fold": "Fold sidebar",
       "unfold": "Unfold sidebar",
@@ -1927,7 +1897,9 @@
         "removalReview": "{count, plural, one {Decide on {count, number, digits} removal} other {Decide on {count, number, digits} removals}}",
         "changesRequested": "{count, plural, one {Read {count, number, digits} note and edit} other {Read {count, number, digits} notes and edit}}"
       },
-      "owners": "By {names}",
+      "ownersRich": "By <names></names>",
+      "moreItems": "{count, plural, one {{count, number, digits} more} other {{count, number, digits} more}}",
+      "morePeople": "{count, plural, one {{count, number, digits} more} other {{count, number, digits} more}}",
       "untitledArticle": "Untitled article",
       "untitledCourse": "Untitled course",
       "untitledPublication": "Untitled publication",
@@ -1941,6 +1913,31 @@
       "cap": "Only the newest {count, number, digits} show.",
       "moreRows": "{count, plural, one {{count, number, digits} more row.} other {{count, number, digits} more rows.}}",
       "unread": "Unread"
+    },
+    "home": {
+      "metaTitle": "Home",
+      "greeting": "Hello.",
+      "greetingName": "Hello, <person>{name}</person>.",
+      "loading": "Loading Home",
+      "nextSession": "Next session",
+      "sessionNumber": "Session {number, number, digits}",
+      "noSession": "No sessions yet",
+      "browseSpaces": "Browse spaces",
+      "openCourses": "Open your courses",
+      "openCalendar": "Open the calendar",
+      "seeCourses": "See open courses",
+      "spaces": "Your spaces",
+      "spacesList": "All your spaces",
+      "spaceKind": {
+        "community": "Community",
+        "cohort": "Cohort",
+        "course": "Course",
+        "archived": "Archived course"
+      },
+      "activeAgo": "Active {time}",
+      "noPosts": "No posts yet",
+      "noSpaces": "Your courses and cohorts appear here once you join them.",
+      "openInbox": "Open Inbox"
     },
     "inbox": {
       "title": "Inbox",
