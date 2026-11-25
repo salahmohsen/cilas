@@ -1,6 +1,7 @@
 import { getPayload, type Payload } from 'payload'
 
 import config from '@/payload.config'
+import { pageSiteSettings } from '@/lib/ai-buttons'
 import { CONTACT_FORM_TITLE } from '@/lib/contact'
 
 /** The Contact form, its topics in the page's language, and the address shown beside it. */
@@ -30,7 +31,7 @@ export const getContactForm = async (payload: Payload, locale: 'en' | 'ar') => {
 export const getContactEmail = async (): Promise<string | null> => {
   const payload = await getPayload({ config })
   // Every share bar reads this: a failed read leaves the mail unaddressed, not the page broken.
-  const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 }).catch(() => null)
+  const settings = await pageSiteSettings(payload).catch(() => null)
   const emails = settings?.contact_emails
   return emails?.info ?? emails?.admissions ?? null
 }
