@@ -1,12 +1,11 @@
 import { cache } from 'react'
 import type { Payload } from 'payload'
 
-import { getReaderCalendarItems } from '@/api/calendar.api'
 import type { Locale } from '@/i18n/routing'
 import type { CalendarMeeting } from '@/lib/calendar'
-import { readerCourseIds } from '@/lib/reader-courses'
 import { mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
+import { readerMeetings } from '@/portal/calendar/reader-meetings'
 
 import { sessionHref } from './session-link'
 import { upcoming } from './upcoming'
@@ -35,16 +34,11 @@ export async function nextSession(
   user: User,
   locale: Locale,
 ): Promise<NextSession | null> {
-  const [courseIds, rooms] = await Promise.all([
-    readerCourseIds(payload, user),
+  const [meetings, rooms] = await Promise.all([
+    readerMeetings(payload, user, locale),
     roomsOf(payload, user, locale),
   ])
-  if (!courseIds.length) return null
-
-  const meeting = upcoming(
-    await getReaderCalendarItems(payload, locale, user, courseIds),
-    new Date(),
-  )
+  const meeting = upcoming(meetings, new Date())
   if (!meeting) return null
 
   const { title, session, sessionTitle, date, start, cover } = meeting

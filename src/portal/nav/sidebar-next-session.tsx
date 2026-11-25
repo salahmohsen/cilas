@@ -4,15 +4,14 @@ import { getTranslations } from 'next-intl/server'
 import type { Payload } from 'payload'
 
 import { adminViewOf, type AdminView } from '@/access'
-import { getReaderCalendarItems } from '@/api/calendar.api'
 import type { Locale } from '@/i18n/routing'
 import { cairoDay, cairoNoon, cairoTime, CAIRO } from '@/lib/cairo-day'
 import { localDigits } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
-import { readerCourseIds } from '@/lib/reader-courses'
 import { parentRef } from '@/lib/space-ref'
 import type { SpaceSummary } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
+import { readerMeetings } from '@/portal/calendar/reader-meetings'
 
 import styles from './shell.module.css'
 
@@ -37,12 +36,10 @@ export async function SidebarNextSession({
 }) {
   const [t, meetings] = await Promise.all([
     getTranslations('Portal.nextSession'),
-    readerCourseIds(payload, user)
-      .then((ids) => getReaderCalendarItems(payload, locale, user, ids))
-      .catch((err: unknown) => {
-        payload.logger.error({ err }, 'portal sidebar: next session did not load')
-        return null
-      }),
+    readerMeetings(payload, user, locale).catch((err: unknown) => {
+      payload.logger.error({ err }, 'portal sidebar: next session did not load')
+      return null
+    }),
   ])
   if (!meetings) return null
 
