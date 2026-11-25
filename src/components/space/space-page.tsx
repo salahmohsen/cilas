@@ -466,7 +466,9 @@ export async function SpacePage({
               aboutDefault: defaultAbout,
               rules: rules.custom,
               rulesDefault: rules.fallback,
-              aiButtons: course ? space.ai_buttons !== false : undefined,
+              aiButtons: course
+                ? { space: aiButtonsOn(space), site: aiButtonsOn(feed.settings) }
+                : undefined,
             }
           : null
       }

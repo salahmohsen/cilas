@@ -9,7 +9,7 @@ import messages from '../../../messages/en.json'
 import { IntlProvider } from '../../../testing/intl.test-utils'
 import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 
-const mount = (aiButtons?: boolean, archived = false) => {
+const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) => {
   const changes: boolean[] = []
   const saved: FormData[] = []
   renderWithNavigation(
@@ -67,7 +67,7 @@ describe('SpaceSettings', () => {
     'keeps the last field clear of the Save footer on phones (archived: %s)',
     async (archived) => {
       await page.viewport(390, 844)
-      mount(true, archived)
+      mount({ space: true, site: true }, archived)
       const footer = document.querySelector('[class*="settingsFooter"]')!
       let body = footer.parentElement!
       while (getComputedStyle(body).overflowY !== 'auto') body = body.parentElement!
@@ -103,7 +103,7 @@ describe('SpaceSettings', () => {
   })
 
   it('sends the AI buttons switch as it stands, off and on', async () => {
-    const { saved } = mount(true)
+    const { saved } = mount({ space: true, site: true })
     const box = aiCheckbox()!
     expect(box.getAttribute('aria-checked')).toBe('true')
     const hint = document.getElementById(box.getAttribute('aria-describedby')!)
@@ -114,11 +114,23 @@ describe('SpaceSettings', () => {
     expect(saved[0]!.get('ai_buttons')).toBe('false')
     cleanup()
 
-    const again = mount(false)
+    const again = mount({ space: false, site: true })
     expect(aiCheckbox()!.getAttribute('aria-checked')).toBe('false')
     fireEvent.click(aiCheckbox()!)
     save()
     await waitFor(() => expect(again.saved).toHaveLength(1))
     expect(again.saved[0]!.get('ai_buttons')).toBe('true')
+  })
+
+  it('locks the AI buttons switch, says why, and sends none, while the site switch is off', async () => {
+    const { saved } = mount({ space: true, site: false })
+    const box = aiCheckbox()!
+    expect(box).toBeDisabled()
+    expect(box.getAttribute('aria-checked')).toBe('true')
+    const hint = document.getElementById(box.getAttribute('aria-describedby')!)
+    expect(hint?.textContent).toBe(messages.Spaces.aiButtonsSiteOff)
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(saved[0]!.has('ai_buttons')).toBe(false)
   })
 })

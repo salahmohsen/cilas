@@ -1075,6 +1075,7 @@
     "reopen": "Reopen this archive",
     "aiButtons": "Show the Study with AI buttons",
     "aiButtonsHint": "Off hides them in this space only.",
+    "aiButtonsSiteOff": "An admin turned the Study with AI buttons off for the whole site.",
     "all": "All",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",

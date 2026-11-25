@@ -47,8 +47,11 @@ export function SpaceSettings({
   /** This space's own "Privacy and rules" in this language, empty when the site's text shows. */
   rules: string
   rulesDefault: string
-  /** The space's "Study with AI" switch; left out in a space that has no such buttons. */
-  aiButtons?: boolean
+  /**
+   * The "Study with AI" switches: the space's own, and the site's, which wins when
+   * off. Left out in a space that has no such buttons.
+   */
+  aiButtons?: { space: boolean; site: boolean }
   open: boolean
   onOpenChange: (open: boolean) => void
   /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
@@ -65,7 +68,7 @@ export function SpaceSettings({
   const [text, setText] = useState(about)
   const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
-  const [ai, setAi] = useState(aiButtons)
+  const [ai, setAi] = useState(aiButtons?.space)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -122,10 +125,11 @@ export function SpaceSettings({
           {t('rulesReset')}
         </Button>
       </div>
-      {ai !== undefined && (
+      {aiButtons && (
         <Checkbox
           label={t('aiButtons')}
-          description={t('aiButtonsHint')}
+          description={t(aiButtons.site ? 'aiButtonsHint' : 'aiButtonsSiteOff')}
+          disabled={!aiButtons.site}
           checked={ai}
           onCheckedChange={(v) => setAi(v === true)}
         />
@@ -159,7 +163,7 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          if (ai !== undefined) form.set('ai_buttons', String(ai))
+          if (aiButtons?.site) form.set('ai_buttons', String(ai))
           const result = await save(form)
           if (result.status === 'error') {
             setError(tp(saveErrorKey(result.error)))
