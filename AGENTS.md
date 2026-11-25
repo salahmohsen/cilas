@@ -37,6 +37,10 @@ Apply these to every change, not only to refactors. Before you write code, ask o
 
 Keep a decision log for structural work. List the problems first, then write each fix above the problems it solves. Done means a typical change lands in one place, and no module imports anything more volatile than itself.
 
+## Main is protected
+
+A ruleset (`main`) protects `main`. Every change lands through a pull request, squash-merged, after `commit-quality`, `security` and `production-smoke` pass and CodeQL finds no high alert. Direct pushes, force pushes and deletion are blocked, and nobody can bypass them. Commit on a branch and open a PR, then merge with `gh pr merge <n> --squash --auto`. Never edit or disable the ruleset unless the user asks.
+
 ## Screenshots on pull requests
 
 A pull request that changes UI gets screenshots, posted as a PR comment with `gh issue comment <pr> --attach '<file>#<alt>'`. Follow the `pr-screenshots` skill (`~/.claude/skills/pr-screenshots/`). In this repo, take the shots with `pnpm pr:shots <shots.yml> [base-url]` while `pnpm dev` runs: it signs shot-scraper in as a throwaway admin and deletes the admin after. Keep the YAML file and the images outside the repo.
