@@ -215,10 +215,10 @@ const KEEP_REPLIES = 'postDeleteKeepsReplies'
  * (deletePostKeepingReplies) is refused while one exists, before anything goes.
  */
 export const deletePostContent = async (req: PayloadRequest, id: number): Promise<void> => {
-  // A member's delete locks the post first: a reply's insert then waits for
-  // this delete to end, so the check below sees every reply, and no reply
-  // can arrive after attachments have left storage.
-  if (req.context[KEEP_REPLIES]) await requireRowLock(req, 'space-posts', id, 'references')
+  // Every delete locks the post first: a reply's insert then waits for this
+  // delete to end, so the read below sees every reply, and no reply can
+  // arrive after attachments have left storage.
+  await requireRowLock(req, 'space-posts', id, 'references')
   const { comments, where } = await postContent(req, id)
   if (comments.length > 0 && req.context[KEEP_REPLIES])
     throw new APIError('This post has replies.', 409)

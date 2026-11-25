@@ -1,6 +1,6 @@
 import type { PostgresAdapter } from '@payloadcms/db-postgres'
 import { getPayload, type Payload, type PayloadRequest } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
@@ -138,12 +138,16 @@ describe('an admin deletes a post from the admin panel', () => {
     })
   })
 
-  it('deletes the post with its comments, replies and their reactions', async () => {
+  it('deletes the post with its comments, replies and their reactions, and leaves other posts', async () => {
     const id = await post()
     const first = await comment(id)
     const reply = await comment(id, first)
     const onComment = await react({ comment: reply })
     const onPost = await react({ post: id })
+    const other = await post('Another thread')
+    const otherComment = await comment(other)
+    const otherOnComment = await react({ comment: otherComment })
+    const otherOnPost = await react({ post: other })
     const response = await rest('POST', `space-posts/${id}/delete`, {
       token: await tokenOf(admin, adminPassword),
     })
@@ -151,6 +155,53 @@ describe('an admin deletes a post from the admin panel', () => {
     expect(await count('space-posts', [id])).toBe(0)
     expect(await count('space-comments', [first, reply])).toBe(0)
     expect(await count('space-reactions', [onComment.id, onPost.id])).toBe(0)
+    expect(await count('space-posts', [other])).toBe(1)
+    expect(await count('space-comments', [otherComment])).toBe(1)
+    expect(await count('space-reactions', [otherOnComment.id, otherOnPost.id])).toBe(2)
+  })
+
+  it('an admin delete waits for a reply that is being written, and takes it too', async () => {
+    const id = await post()
+    const { pool } = payload.db as unknown as PostgresAdapter
+    const replier = await pool.connect()
+    let deleting: Promise<Response> | undefined
+    let committed = false
+    let replyId = 0
+    try {
+      await replier.query('BEGIN')
+      const {
+        rows: [{ pid }],
+      } = await replier.query<{ pid: number }>('SELECT pg_backend_pid() AS pid')
+      const { rows } = await replier.query<{ id: number }>(
+        'INSERT INTO space_comments (space_id, post_id, body) VALUES ($1, $2, $3) RETURNING id',
+        [space, id, 'A late reply'],
+      )
+      replyId = rows[0]!.id
+      deleting = rest('POST', `space-posts/${id}/delete`, {
+        token: await tokenOf(admin, adminPassword),
+      })
+      await vi.waitFor(
+        async () => {
+          const { rows: blocked } = await pool.query(
+            'SELECT 1 FROM pg_stat_activity WHERE $1 = ANY(pg_blocking_pids(pid))',
+            [pid],
+          )
+          expect(blocked.length).toBeGreaterThan(0)
+        },
+        { timeout: 4000, interval: 20 },
+      )
+      await replier.query('COMMIT')
+      committed = true
+    } finally {
+      if (!committed) {
+        await replier.query('ROLLBACK')
+        await Promise.allSettled([deleting])
+      }
+      replier.release()
+    }
+    expect((await deleting!).status).toBe(200)
+    expect(await count('space-posts', [id])).toBe(0)
+    expect(await count('space-comments', [replyId])).toBe(0)
   })
 
   it('a member’s delete keeps a post that has a reply, and deletes nothing', async () => {
