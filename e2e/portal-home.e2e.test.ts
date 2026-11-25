@@ -198,6 +198,117 @@ test.describe('portal Home and Inbox', () => {
           })
         }
 
+    const boxesOf = async (page: Page) => {
+      await expect(latestRows(page).first()).toBeVisible()
+      await expect(yourSpaces(page).locator('li').first()).toBeVisible()
+      await expect(needsSection(page)).toBeVisible()
+      await expect(nextSession(page)).toBeVisible()
+      const box = (slot: string) => page.locator(`main [data-slot="${slot}"]`).boundingBox()
+      return {
+        needs: (await box('needs'))!,
+        next: (await box('next'))!,
+        spaces: (await box('spaces'))!,
+        latest: (await box('latest'))!,
+      }
+    }
+
+    for (const locale of LOCALES) {
+      test(`wide Home puts Next session beside Needs you (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+          await page.goto(homePath(locale))
+          const { needs, next, spaces, latest } = await boxesOf(page)
+          expect(next.y).toBe(needs.y)
+          expect(next.height).toBe(needs.height)
+          expect(next.height).toBeGreaterThanOrEqual(320)
+          const [first, second] = locale === 'ar' ? [needs, next] : [next, needs]
+          expect(first.x + first.width).toBeLessThan(second.x)
+          expect(next.width / needs.width).toBeCloseTo(7 / 5, 1)
+          expect(spaces.width).toBeCloseTo(next.width + needs.width + 12, 0)
+          expect(latest.width).toBeCloseTo(spaces.width, 0)
+          expect(spaces.y).toBeGreaterThan(next.y + next.height)
+          expect(latest.y).toBeGreaterThan(spaces.y + spaces.height)
+        })
+      })
+
+      test(`stacked Home keeps the reading order (${locale})`, async ({ browser }) => {
+        await inContext(browser, { viewport: PHONE, reader: 'student' }, async (page) => {
+          await page.goto(homePath(locale))
+          const { needs, next, spaces, latest } = await boxesOf(page)
+          const column = [needs, next, spaces, latest]
+          expect(column.map((box) => box.y)).toEqual(
+            column.map((box) => box.y).toSorted((a, b) => a - b),
+          )
+          expect(new Set(column.map((box) => Math.round(box.width))).size).toBe(1)
+        })
+      })
+
+      test(`Your spaces is one row from the reading start, by key and by touch (${locale})`, async ({
+        browser,
+      }) => {
+        const context = await browser.newContext({
+          baseURL,
+          storageState: states.admin,
+          viewport: PHONE,
+          hasTouch: true,
+        })
+        try {
+          const page = await context.newPage()
+          await page.goto(homePath(locale))
+          const row = yourSpaces(page).getByRole('region', {
+            name: portalOf(locale).home.spacesList,
+          })
+          const cards = row.getByRole('link')
+          await expect(cards.first()).toBeVisible()
+          const count = await cards.count()
+          expect(count).toBeGreaterThan(2)
+          const tops = await cards.evaluateAll((links) =>
+            links.map((link) => Math.round(link.getBoundingClientRect().top)),
+          )
+          expect(new Set(tops).size).toBe(1)
+
+          const startGap = () =>
+            row.evaluate((viewport) => {
+              const frame = viewport.getBoundingClientRect()
+              const card = viewport.querySelector('li')!.getBoundingClientRect()
+              return Math.round(
+                getComputedStyle(viewport).direction === 'rtl'
+                  ? frame.right - card.right
+                  : card.left - frame.left,
+              )
+            })
+          const scrolled = () => row.evaluate((viewport) => Math.abs(viewport.scrollLeft))
+          expect(await startGap()).toBe(4)
+          expect(await scrolled()).toBe(0)
+
+          const cdp = await context.newCDPSession(page)
+          await row.scrollIntoViewIfNeeded()
+          const seen = (await row.boundingBox())!
+          await cdp.send('Input.synthesizeScrollGesture', {
+            x: Math.round(seen.x + seen.width / 2),
+            y: Math.round(seen.y + seen.height / 3),
+            xDistance: locale === 'ar' ? 250 : -250,
+            yDistance: 0,
+            gestureSourceType: 'touch',
+          })
+          await expect.poll(scrolled).toBeGreaterThan(100)
+
+          await row.focus()
+          await expect(row).toBeFocused()
+          for (let i = 0; i < count; i++) await page.keyboard.press('Tab')
+          await expect(cards.nth(count - 1)).toBeFocused()
+          await expect(cards.nth(count - 1)).toBeInViewport({ ratio: 0.99 })
+          expect(
+            await page.evaluate(() => {
+              const root = document.scrollingElement!
+              return root.scrollWidth - root.clientWidth
+            }),
+          ).toBe(0)
+        } finally {
+          await context.close()
+        }
+      })
+    }
+
     test('more than five rows group by kind and keep the same total', async ({ browser }) => {
       await inContext(browser, { viewport: DESKTOP, reader: 'admin' }, async (page) => {
         await page.goto(inboxPath('en'))
