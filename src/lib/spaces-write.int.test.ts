@@ -1661,6 +1661,8 @@ describe('spaces write', () => {
     expect((await row(courseSpace.id)).ai_buttons).toBe(true)
     expect((await set(admin, otherSpace.id, false)).ok).toBe(true)
     expect((await row(otherSpace.id)).ai_buttons).toBe(false)
+    expect((await set(admin, community.id, false)).ok).toBe(true)
+    expect((await row(community.id)).ai_buttons).not.toBe(false)
 
     const linked = track(
       'sessions',

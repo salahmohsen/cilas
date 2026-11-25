@@ -34,7 +34,7 @@ import { profileMessages } from '@/components/profile/load-messages'
 import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { AIInstructions } from '@/components/ai-instructions'
-import { aiButtonsOn } from '@/lib/ai-buttons'
+import { aiButtonsOn, hasAiButtons } from '@/lib/ai-buttons'
 import { cairoDay } from '@/lib/cairo-day'
 import { numberedSessions, upcomingSession } from '@/lib/meetings'
 import {
@@ -466,7 +466,7 @@ export async function SpacePage({
               aboutDefault: defaultAbout,
               rules: rules.custom,
               rulesDefault: rules.fallback,
-              aiButtons: course
+              aiButtons: hasAiButtons(space)
                 ? { space: aiButtonsOn(space), site: aiButtonsOn(feed.settings) }
                 : undefined,
             }

@@ -9,6 +9,7 @@ import { mentionSafelist, spacePeople } from '@/lib/space-members'
 import { actorOf, notify, reactionNote } from '@/lib/notify'
 import { setSpaceEmail } from '@/lib/space-email-prefs'
 import { spacesSettings, mode, spaceOpenOn, membership, introGates } from '@/lib/spaces'
+import { hasAiButtons } from '@/lib/ai-buttons'
 import { FILE_LIMITS, SPACE_FILE_MIME } from '@/lib/space-file-limits'
 import { NOTICE_VERSION, RULES_MAX } from '@/lib/space-consent'
 import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
@@ -1555,7 +1556,7 @@ export const spaceSettingsSet = async (
   if (posting) data.posting = posting
   if (events === 'members' || events === 'moderators') data.events = events
   if (typeof reopened === 'boolean') data.reopened = reopened
-  if (typeof aiButtons === 'boolean') data.ai_buttons = aiButtons
+  if (typeof aiButtons === 'boolean' && hasAiButtons(sp)) data.ai_buttons = aiButtons
   if (typeof about === 'string') {
     const text = about.replace(/\r\n?/g, '\n').trim()
     if (text.length > ABOUT_MAX) return err('about')

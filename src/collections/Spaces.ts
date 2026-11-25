@@ -7,6 +7,7 @@ import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
 import { addIntroPost } from '@/lib/space-hooks'
 import { refreshOwnName } from '@/lib/space-name'
 import { ABOUT_MAX } from '@/lib/space-rules'
+import { hasAiButtons } from '@/lib/ai-buttons'
 import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
@@ -126,7 +127,7 @@ export const Spaces: CollectionConfig = {
       type: 'checkbox',
       defaultValue: true,
       admin: {
-        condition: (data) => (data as { kind?: string }).kind === 'course',
+        condition: hasAiButtons,
         description:
           'Off hides them in this space. While the switch in Site settings (Spaces rollout) is off, they stay hidden whatever this says.',
       },

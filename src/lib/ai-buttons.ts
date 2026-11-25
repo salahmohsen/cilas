@@ -12,6 +12,9 @@ type AiSwitch = { ai_buttons?: boolean | null } | null | undefined
 export const aiButtonsOn = (site: AiSwitch, space?: AiSwitch): boolean =>
   site?.ai_buttons !== false && space?.ai_buttons !== false
 
+/** Only a course space has the buttons, so only it has a switch of its own. */
+export const hasAiButtons = (space: { kind?: string | null }): boolean => space.kind === 'course'
+
 /** The site switch, for pages outside a space. */
 export const siteAiButtons = async (payload: Payload): Promise<boolean> =>
   aiButtonsOn(await pageSiteSettings(payload))
