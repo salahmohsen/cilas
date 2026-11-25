@@ -1,7 +1,6 @@
 import { revalidatePath } from 'next/cache'
 import type { Field, GlobalConfig } from 'payload'
 
-import { routing } from '@/i18n/routing'
 import { HERO_SCENES } from '@/lib/hero-scenes'
 import { PEOPLE_PAGES } from '@/lib/people-pages'
 import { isAdmin } from '@/access'
@@ -16,7 +15,7 @@ export const SiteSettings: GlobalConfig = {
     afterChange: [
       ({ doc }) => {
         try {
-          for (const locale of routing.locales) revalidatePath(`/${locale}`, 'layout')
+          revalidatePath('/', 'layout')
         } catch {
           // Seed and import scripts have no Next cache, and this call throws there.
         }
