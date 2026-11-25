@@ -962,8 +962,12 @@ describe('spaces write', () => {
     const { pool } = payload.db as unknown as PostgresAdapter
     const replier = await pool.connect()
     let removing: ReturnType<typeof postRemove> | undefined
+    let committed = false
     try {
       await replier.query('BEGIN')
+      const {
+        rows: [{ pid }],
+      } = await replier.query<{ pid: number }>('SELECT pg_backend_pid() AS pid')
       const { rows } = await replier.query<{ id: number }>(
         'INSERT INTO space_comments (space_id, post_id, author_id, body) VALUES ($1, $2, $3, $4) RETURNING id',
         [community.id, id, fellowPerson, 'I was first'],
@@ -972,15 +976,21 @@ describe('spaces write', () => {
       removing = postRemove({ payload, user: student, id })
       await vi.waitFor(
         async () => {
-          const { rows: waiting } = await pool.query(
-            `SELECT 1 FROM pg_stat_activity WHERE wait_event_type = 'Lock' AND datname = current_database()`,
+          const { rows: blocked } = await pool.query(
+            'SELECT 1 FROM pg_stat_activity WHERE $1 = ANY(pg_blocking_pids(pid))',
+            [pid],
           )
-          expect(waiting.length).toBeGreaterThan(0)
+          expect(blocked.length).toBeGreaterThan(0)
         },
         { timeout: 4000, interval: 20 },
       )
       await replier.query('COMMIT')
+      committed = true
     } finally {
+      if (!committed) {
+        await replier.query('ROLLBACK')
+        await Promise.allSettled([removing])
+      }
       replier.release()
     }
     expect(await removing).toMatchObject({ ok: true })
