@@ -16,6 +16,9 @@
 }
 
 .shell {
+  /* A public header can leave an inline value on the root after navigation. */
+  --site-header-height: 0px;
+  --portal-sticky-inset: var(--space-4);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   min-block-size: 100dvh;
@@ -32,7 +35,7 @@
   block-size: 100dvh;
   min-inline-size: 0;
   padding: var(--space-3);
-  /* The rail does not scroll: its nav does (.navViewport), so the header keeps its place. */
+  /* The nav scrolls between the fixed brand and footer. */
   overflow: hidden;
   transition: inline-size var(--portal-duration) var(--ease-standard);
 }
@@ -53,21 +56,160 @@
 .brand {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
   min-block-size: 44px;
-  padding-inline: var(--space-2);
+  padding-inline: var(--space-1);
   border-radius: var(--radius-control);
   color: var(--foreground);
 }
 
 .logo {
-  block-size: 1.5rem;
-  inline-size: auto;
+  flex: none;
+}
+
+.wordmark {
+  font-size: var(--text-xs);
+  line-height: 1.15;
+  white-space: pre-line;
+}
+
+.shell:has(.sidebar[data-folded]) .wordmark {
+  display: none;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  flex: none;
+  gap: var(--space-2);
+}
+
+.nextCard {
+  --next-card-padding: var(--space-3);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: end;
+  gap: var(--space-1);
+  min-block-size: 44px;
+  padding: var(--next-card-padding);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+  color: var(--foreground);
+  line-height: 1.3;
+}
+
+.nextCard small {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+
+.nextCard[data-session-cover] {
+  min-block-size: 7rem;
+  overflow: hidden;
+  background: oklch(20% 0 0);
+  color: white;
+}
+
+.nextCard[data-session-cover] small {
+  color: inherit;
+}
+
+.nextCard img,
+.nextCard[data-session-cover]::before {
+  position: absolute;
+  inset: 0;
+}
+
+.nextCard img {
+  z-index: -2;
+  object-fit: cover;
+}
+
+.nextCard[data-session-cover]::before {
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    oklch(0% 0 0 / 0.2) 0%,
+    oklch(0% 0 0 / 0.35) 40%,
+    oklch(0% 0 0 / 0.78) 100%
+  );
+  content: '';
+}
+
+.nextCopy {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+}
+
+/* A long title moves the copy up into the lighter part of the cover. Keep the
+   extra contrast tied to the copy's real height so the rest of the photo stays visible. */
+.nextCard[data-session-cover] .nextCopy::before {
+  position: absolute;
+  inset: calc(-1 * var(--next-card-padding));
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    oklch(0% 0 0 / 0.44) var(--next-card-padding),
+    oklch(0% 0 0 / 0.44) calc(100% - var(--next-card-padding)),
+    transparent
+  );
+  content: '';
+}
+
+@media (prefers-contrast: more) {
+  .nextCard[data-session-cover]::before {
+    background: oklch(0% 0 0 / 0.8);
+  }
+
+  .nextCard[data-session-cover] .nextCopy::before {
+    content: none;
+  }
+}
+
+.nextTitle {
+  overflow-wrap: anywhere;
+  font-weight: 500;
+}
+
+.shell:has(.sidebar[data-folded]) .nextCard {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .nextCard img {
+    display: none;
+  }
 }
 
 .tools {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-1);
+}
+
+.account {
+  min-inline-size: 0;
+}
+
+.account > span,
+.account button[aria-haspopup='menu'] {
+  max-inline-size: 100%;
+}
+
+.account button[aria-haspopup='menu'] {
+  padding-inline: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+}
+
+.shell:has(.sidebar[data-folded]) .account button[aria-haspopup='menu'] {
+  justify-content: center;
+  padding-inline: var(--space-1);
 }
 
 .main {
@@ -81,18 +223,9 @@
   box-shadow: var(--shadow-resting);
 }
 
-/* The skip link's target: focus lands below the header row, and the next Tab starts inside the page. */
+/* The skip link moves focus into the page. */
 .content:focus {
   outline: none;
-}
-
-/* The page header row: the fold button at its inline start; a later phase puts the trail after it. */
-.crumbs {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-block-size: 44px;
-  margin-block-end: var(--space-2);
 }
 
 .sidebar {
@@ -104,7 +237,7 @@
   min-inline-size: 0;
 }
 
-.crumbs .fold {
+.top .fold {
   display: inline-grid;
   place-items: center;
   inline-size: 44px;
@@ -118,7 +251,7 @@
   cursor: pointer;
 }
 
-.crumbs .fold:hover {
+.top .fold:hover {
   background: color-mix(in oklab, var(--foreground) 6%, transparent);
   color: var(--foreground);
 }
@@ -136,7 +269,6 @@
 }
 
 .sidebar[data-folded] .label,
-.sidebar[data-folded] .count,
 .sidebar[data-folded] .heading {
   position: absolute;
   inline-size: 1px;
@@ -155,19 +287,13 @@
   border-radius: var(--radius-pill);
 }
 
-.dot {
-  display: none;
-}
-
-.sidebar[data-folded] .dot {
+.sidebar[data-folded] .count {
   position: absolute;
-  inset-block-start: -2px;
-  inset-inline-end: -2px;
-  display: block;
-  inline-size: 12px;
-  block-size: 12px;
-  border-radius: var(--radius-pill);
-  background: var(--portal-unread);
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  min-inline-size: 1.25rem;
+  block-size: 1.25rem;
+  padding-inline: var(--space-1);
   box-shadow: 0 0 0 2px var(--surface-muted);
 }
 
@@ -184,6 +310,11 @@
   flex: 1 1 auto;
   min-block-size: 0;
   margin-inline: calc(-1 * var(--space-3));
+}
+
+.navScroll:focus-within > [data-axis] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* The viewport's own focus ring sits inside it, because the rail clips; rows inherit the offset. A focused row scrolls clear of the edge and of a showing toast. */
@@ -298,12 +429,34 @@
   object-fit: cover;
 }
 
-/* Names wrap, so two spaces that share a long prefix never look the same. */
 .label {
   flex: 1;
   min-inline-size: 0;
   overflow-wrap: anywhere;
   text-align: start;
+}
+
+.nav .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A space name draws its own ellipsis: <bdi> takes the name's direction, so a long name loses its end
+   in either script. It stays aligned with the page, beside its cover. */
+.nav .label > bdi {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+:global([dir='rtl']) .nav .label > bdi {
+  text-align: right;
+}
+
+.spaceTip {
+  overflow-wrap: anywhere;
 }
 
 .count {
@@ -319,6 +472,12 @@
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
+}
+
+@media (forced-colors: active) {
+  .count {
+    border: 1px solid currentColor;
+  }
 }
 
 .bar {
@@ -407,7 +566,7 @@
   cursor: pointer;
 }
 
-/* Touch: the header's controls and the skip link get 44px hit areas (spec, Targets). */
+/* The compact controls keep 44px touch targets. */
 @media (pointer: coarse) {
   .skip,
   .brand {
@@ -521,6 +680,10 @@
   .rail,
   .shell:has(.sidebar[data-folded]) .rail {
     position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
     inline-size: auto;
     block-size: auto;
     padding: var(--space-2) var(--space-4);
@@ -528,8 +691,10 @@
   }
 
   .rail .sidebar,
+  .wordmark,
+  .nextCard,
   .account,
-  .crumbs {
+  .top .fold {
     display: none;
   }
 

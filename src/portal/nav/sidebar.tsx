@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useId, type ReactElement } from 'react'
+import { useId } from 'react'
 
 import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
@@ -17,9 +17,7 @@ import type { SpaceLink } from './space-links'
 
 /**
  * The portal nav beside the main: the items, then the spaces the account
- * reads. Folded (`useFold`), rows keep their names as hidden text and show
- * them in a tooltip. The fold button and the `[` key live in the main's
- * header row (`FoldButton`, `FoldProvider`).
+ * reads. Space names use the same tooltip in expanded and folded layouts.
  */
 export function Sidebar({ items, spaces }: { items: PortalNavItem[]; spaces: SpaceLink[] }) {
   const t = useTranslations('Portal')
@@ -28,27 +26,26 @@ export function Sidebar({ items, spaces }: { items: PortalNavItem[]; spaces: Spa
   const spacesId = useId()
   const { folded } = useFold()
   const side = isRtl(locale) ? 'left' : 'right'
-  const tip = (label: string, row: ReactElement) =>
-    folded ? (
-      <Tooltip content={label} side={side}>
-        {row}
-      </Tooltip>
-    ) : (
-      row
-    )
   return (
     <div className={styles.sidebar} data-folded={folded || undefined}>
       <nav id={PORTAL_NAV_ID} aria-label={t('nav.label')} className={styles.nav}>
         <ScrollArea
           fade={0}
-          scrollbars="always"
           label={t('nav.scroll')}
           className={styles.navScroll}
           viewportClassName={styles.navViewport}
         >
           <ul className={styles.list}>
             {items.map((item) => (
-              <li key={item.key}>{tip(t(item.labelKey), <NavItemRow item={item} />)}</li>
+              <li key={item.key}>
+                {folded ? (
+                  <Tooltip content={t(item.labelKey)} side={side}>
+                    <NavItemRow item={item} />
+                  </Tooltip>
+                ) : (
+                  <NavItemRow item={item} />
+                )}
+              </li>
             ))}
           </ul>
           {spaces.length > 0 && (
@@ -59,7 +56,14 @@ export function Sidebar({ items, spaces }: { items: PortalNavItem[]; spaces: Spa
               </span>
               <ul className={styles.list} aria-labelledby={spacesId}>
                 {spaces.map((row) => (
-                  <li key={row.id}>{tip(row.label, <SpaceRow row={row} pathname={pathname} />)}</li>
+                  <li key={row.id}>
+                    <Tooltip
+                      content={<bdi className={styles.spaceTip}>{row.label}</bdi>}
+                      side={side}
+                    >
+                      <SpaceRow row={row} pathname={pathname} />
+                    </Tooltip>
+                  </li>
                 ))}
               </ul>
             </>

@@ -18,27 +18,24 @@ import styles from './shell.module.css'
 import { Sidebar } from './sidebar'
 import type { SpaceLink } from './space-links'
 
-/**
- * Every /spaces page: the skip link, the one live region, the rail (its
- * header with the brand, bell and account menu, then the nav) and the one
- * main: a header row with the fold button (a later phase adds the trail
- * there), then the 1200px frame, which the skip link targets. The document scrolls, not the main. Under 700px the rail's top is the
- * phone header and the nav moves to the bottom bar.
- */
+/** The shared signed-in shell. The rail has its own scrollport between its brand and controls. */
 export async function PortalShell({
   nav,
   spaces,
   folded,
   accountId,
+  nextSession,
   children,
 }: {
   nav: PortalNavItem[]
   spaces: SpaceLink[]
   folded: boolean
   accountId: number
+  nextSession: React.ReactNode
   children: React.ReactNode
 }): Promise<React.JSX.Element> {
-  const t = await getTranslations('Portal')
+  const [t, header] = await Promise.all([getTranslations('Portal'), getTranslations('Header')])
+  const wordmark = header('brand')
   return (
     <FoldProvider folded={folded} accountId={accountId}>
       <NavCountsProvider key={accountId}>
@@ -50,24 +47,26 @@ export async function PortalShell({
           <div className={styles.shell} data-page="spaces" data-portal-shell>
             <div className={styles.rail} data-portal-rail>
               <header className={styles.top}>
-                <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
-                  <CilasLogo className={styles.logo} />
+                <Link href="/" className={styles.brand} aria-label={wordmark}>
+                  <CilasLogo className={styles.logo} height={32} width={19} />
+                  <span className={styles.wordmark}>{wordmark}</span>
                 </Link>
+                <FoldButton />
+              </header>
+              <Sidebar items={nav} spaces={spaces} />
+              <footer className={styles.footer}>
+                <Suspense fallback={null}>{nextSession}</Suspense>
                 <div className={styles.tools}>
-                  <SiteNotifications />
                   <div className={styles.account}>
                     <Suspense fallback={null}>
                       <AccountMenu />
                     </Suspense>
                   </div>
+                  <SiteNotifications />
                 </div>
-              </header>
-              <Sidebar items={nav} spaces={spaces} />
+              </footer>
             </div>
             <main className={styles.main}>
-              <div className={styles.crumbs} data-portal-crumbs>
-                <FoldButton />
-              </div>
               <div id="main" tabIndex={-1} className={`${styles.content} mx-auto w-full max-w-300`}>
                 {children}
               </div>

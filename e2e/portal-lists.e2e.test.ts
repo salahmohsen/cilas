@@ -449,10 +449,10 @@ test.describe('portal lists', () => {
                   ? 'skip'
                   : el.closest('[data-portal-rail] nav')
                     ? 'sidebar'
-                    : el.closest('[data-portal-rail]')
-                      ? 'header'
-                      : el.closest('[data-portal-crumbs]')
-                        ? 'fold'
+                    : el.closest('[data-portal-rail] footer') && window.innerWidth >= 700
+                      ? 'footer'
+                      : el.closest('[data-portal-rail]')
+                        ? 'header'
                         : el.closest('main header')
                           ? 'primary'
                           : el.closest('main nav')
@@ -481,7 +481,7 @@ test.describe('portal lists', () => {
             const expected = [
               'skip',
               'header',
-              ...(phone ? [] : ['sidebar', 'fold']),
+              ...(phone ? [] : ['sidebar', 'footer']),
               'primary',
               ...(shownControls ? ['chips', 'search'] : []),
               ...inPageOrder,

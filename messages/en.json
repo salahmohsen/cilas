@@ -1711,6 +1711,13 @@
     "signOutFailed": "You are still signed in. Try again."
   },
   "Portal": {
+    "nextSession": {
+      "next": "Next",
+      "empty": "No sessions yet",
+      "admin": "Open the calendar",
+      "fellow": "Open your courses",
+      "student": "Browse spaces"
+    },
     "nav": {
       "label": "Main",
       "home": "Home",
@@ -1719,9 +1726,7 @@
       "spaces": "Spaces",
       "unread": "{count, plural, one {, {shown} unread post} other {, {shown} unread posts}}",
       "unreadMany": ", more than {cap} unread posts",
-      "sidebar": "Sidebar",
       "more": "More",
-      "brand": "CILAS home",
       "scroll": "Pages and spaces",
       "articles": "Articles",
       "courses": "Courses",
@@ -1766,6 +1771,8 @@
       "height": "Sheet at {percent} percent height"
     },
     "fold": {
+      "fold": "Fold sidebar",
+      "unfold": "Unfold sidebar",
       "folded": "Sidebar folded",
       "unfolded": "Sidebar unfolded",
       "shortcutIsOn": "Sidebar shortcut on",

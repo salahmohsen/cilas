@@ -76,9 +76,7 @@ export function SpaceRow({
       className={styles.row}
       aria-current={isCurrentSpace(pathname, row.href) ? 'page' : undefined}
     >
-      <SpaceCover src={row.cover} sizes="40px" className={styles.cover!}>
-        {count && <span className={styles.dot} />}
-      </SpaceCover>
+      <SpaceCover src={row.cover} sizes="40px" className={styles.cover!} />
       {/* The name keeps the page's alignment; <bdi> only isolates its direction. With a count, the
           hidden text holds the name and the count together, so the link's name has no gap before the comma. */}
       <span className={styles.label}>

@@ -40,6 +40,7 @@ const INBOX: PortalNavItem = {
 const countsOf = (total: number | null) => ({ total, by: {} }) satisfies NeedsCounts
 
 const LONG_ARABIC = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'.repeat(3).slice(0, 60)
+const LONG_ENGLISH = 'Reading photographs as documents of everyday life in Cairo'
 
 let countResponse: () => Promise<Response> = async () => HttpResponse.json(countsOf(null))
 let countRequests = 0
@@ -105,6 +106,31 @@ afterEach(() => {
   document.documentElement.removeAttribute('dir')
 })
 
+const shownName = (row: HTMLElement, name: string) =>
+  [...row.querySelectorAll('bdi')].find((el) => el.textContent === name && !el.closest('.sr-only'))!
+
+const nameGeometry = (el: HTMLElement) => {
+  let box = el
+  while (getComputedStyle(box).textOverflow !== 'ellipsis') box = box.parentElement!
+  const text = el.firstChild as Text
+  const rectOf = (from: number, to: number) => {
+    const range = document.createRange()
+    range.setStart(text, from)
+    range.setEnd(text, to)
+    return range.getBoundingClientRect()
+  }
+  return {
+    box,
+    bounds: box.getBoundingClientRect(),
+    first: rectOf(0, 1),
+    last: rectOf(text.length - 1, text.length),
+    whole: rectOf(0, text.length),
+  }
+}
+
+const inside = (inner: DOMRect, outer: DOMRect) =>
+  inner.left >= outer.left - 1 && inner.right <= outer.right + 1
+
 describe('Sidebar', () => {
   it('folded and unfolded rows have the same accessible names', async () => {
     renderSidebar()
@@ -112,8 +138,8 @@ describe('Sidebar', () => {
     const space = screen.getByRole('link', { name: /^Other course/ })
     const names = [home, space].map((link) => link.textContent)
     expect(space).toHaveAccessibleName('Other course, more than 9 unread posts')
-    await userEvent.click(screen.getByRole('button', { name: 'Sidebar' }))
-    expect(screen.getByRole('button', { name: 'Sidebar' })).toHaveAttribute(
+    await userEvent.click(screen.getByRole('button', { name: /^(Fold|Unfold) sidebar$/ }))
+    expect(screen.getByRole('button', { name: /^(Fold|Unfold) sidebar$/ })).toHaveAttribute(
       'aria-expanded',
       'false',
     )
@@ -164,6 +190,52 @@ describe('Sidebar', () => {
 })
 
 describe('Sidebar rows', () => {
+  it.each([
+    ['ar', LONG_ENGLISH, 0],
+    ['ar', LONG_ENGLISH, 3],
+    ['en', LONG_ARABIC, 0],
+    ['en', LONG_ARABIC, 3],
+  ] as const)(
+    'a long name in the other script is cut at its end, not its start (%s page, %#)',
+    async (locale, name, unread) => {
+      await page.viewport(1440, 800)
+      document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
+      renderSidebar({
+        locale,
+        spaces: [spaceRow({ label: name, unread })],
+        box: { width: 256, height: 600 },
+      })
+      const row = screen.getByRole('link', { name: new RegExp(name) })
+      const { box, bounds, first, last } = nameGeometry(shownName(row, name))
+      expect(box.scrollWidth).toBeGreaterThan(box.clientWidth)
+      expect(inside(first, bounds)).toBe(true)
+      expect(inside(last, bounds)).toBe(false)
+    },
+  )
+
+  it.each([
+    ['ar', 'Course'],
+    ['en', 'مقرر'],
+  ] as const)(
+    'a short name in the other script sits beside its cover (%s page)',
+    async (...args) => {
+      const [locale, name] = args
+      await page.viewport(1440, 800)
+      document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
+      renderSidebar({
+        locale,
+        spaces: [spaceRow({ label: name })],
+        box: { width: 256, height: 600 },
+      })
+      const row = screen.getByRole('link', { name })
+      const cover = row.querySelector('span')!.getBoundingClientRect()
+      const { whole } = nameGeometry(shownName(row, name))
+      const gap = locale === 'ar' ? cover.left - whole.right : whole.left - cover.right
+      expect(gap).toBeGreaterThanOrEqual(0)
+      expect(gap).toBeLessThan(16)
+    },
+  )
+
   it('counts of 1 to 9 use the page digits (ar)', () => {
     renderSidebar({ locale: 'ar', spaces: [spaceRow({ label: 'Course', unread: 3 })] })
     const row = screen.getByRole('link', { name: /^Course/ })
@@ -182,19 +254,25 @@ describe('Sidebar rows', () => {
     ).toBeGreaterThanOrEqual(3)
   })
 
-  it('a long name wraps and shows whole, beside the cover (ar)', async () => {
+  it('an expanded Arabic row truncates visually and reveals its full name on focus and hover', async () => {
     await page.viewport(1440, 800)
     document.documentElement.setAttribute('dir', 'rtl')
     renderSidebar({
       locale: 'ar',
-      spaces: [spaceRow({ label: 'Course on Arabic and Latin, part two' })],
+      spaces: [spaceRow({ label: LONG_ARABIC, unread: 3 })],
+      box: { width: 256, height: 600 },
     })
-    const row = screen.getByRole('link', { name: /^Course on Arabic/ })
-    const label = row.querySelector('bdi')!
-    const cover = row.querySelector('span')!.getBoundingClientRect()
-    const name = label.getBoundingClientRect()
-    expect(label.parentElement!.scrollHeight).toBeLessThanOrEqual(label.parentElement!.clientHeight)
-    expect(cover.left - name.right).toBeLessThan(16)
+    const row = screen.getByRole('link', { name: new RegExp(LONG_ARABIC) })
+    const { box } = nameGeometry(shownName(row, LONG_ARABIC))
+    expect(getComputedStyle(box).whiteSpace).toBe('nowrap')
+    expect(box.scrollWidth).toBeGreaterThan(box.clientWidth)
+    row.focus()
+    await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent(LONG_ARABIC))
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull())
+    expect(row).toHaveFocus()
+    await userEvent.hover(row)
+    await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent(LONG_ARABIC))
   })
 
   it('a cover that fails to load leaves the empty slot', async () => {
