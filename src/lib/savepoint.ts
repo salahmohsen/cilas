@@ -5,6 +5,15 @@ import { sessionDb } from './row-lock'
 
 let nextSavepoint = 0
 
+/**
+ * Runs one operation on `req`'s transaction so that its failure undoes only
+ * itself: Payload rolls the whole transaction back when an operation on `req`
+ * fails, also when the caller catches the error.
+ *
+ * For depth 0 only. A populating operation loads through the request's data
+ * loader, which writes the `transactionID` from its cache key back on the outer
+ * request, and the promise that `scoped` carries serialises to `{}`.
+ */
 export const withSavepoint = async <T>(
   req: PayloadRequest,
   write: (scoped: PayloadRequest) => Promise<T>,

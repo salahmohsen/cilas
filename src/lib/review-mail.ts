@@ -8,6 +8,7 @@ import { absoluteLink, documentHref, type DocumentTarget } from '@/lib/document-
 import { readPreferences, wantsChannel } from '@/lib/notification-preferences'
 import { relId } from '@/lib/relation'
 import type { ReviewState } from '@/lib/review'
+import { withSavepoint } from '@/lib/savepoint'
 
 export type Recipient = { id: number; email: string }
 
@@ -56,16 +57,18 @@ const wantingEmail = async (
 ): Promise<Recipient[]> => {
   if (!people.length) return people
   try {
-    const { docs } = await req.payload.find({
-      collection: 'users',
-      where: { id: { in: people.map((p) => p.id) } },
-      depth: 0,
-      limit: people.length,
-      pagination: false,
-      overrideAccess: true,
-      select: { notification_preferences: true },
-      req,
-    })
+    const { docs } = await withSavepoint(req, (scoped) =>
+      req.payload.find({
+        collection: 'users',
+        where: { id: { in: people.map((p) => p.id) } },
+        depth: 0,
+        limit: people.length,
+        pagination: false,
+        overrideAccess: true,
+        select: { notification_preferences: true },
+        req: scoped,
+      }),
+    )
     const refused = new Set(
       docs
         .filter((u) => !wantsChannel(readPreferences(u.notification_preferences), 'email', kind))
@@ -86,15 +89,17 @@ const withLocale = async (req: PayloadRequest, people: Recipient[]): Promise<Loc
   if (!people.length) return []
   const saved = new Map<unknown, unknown>()
   try {
-    const { docs } = await req.payload.find({
-      collection: 'space-preferences',
-      where: { account: { in: people.map((p) => p.id) } },
-      depth: 0,
-      pagination: false,
-      overrideAccess: true,
-      select: { account: true, locale: true },
-      req,
-    })
+    const { docs } = await withSavepoint(req, (scoped) =>
+      req.payload.find({
+        collection: 'space-preferences',
+        where: { account: { in: people.map((p) => p.id) } },
+        depth: 0,
+        pagination: false,
+        overrideAccess: true,
+        select: { account: true, locale: true },
+        req: scoped,
+      }),
+    )
     for (const row of docs) saved.set(relId(row.account), row.locale)
   } catch (error) {
     req.payload.logger.error({ err: error, msg: 'Email languages not read; using the default' })
@@ -113,7 +118,12 @@ export const emailRecipients = async (
 export const reviewEmailUrl = (recipient: LocalRecipient, target: DocumentTarget): string =>
   absoluteLink(documentHref(target), recipient.locale)
 
-/** One message to one address, so no recipient sees another's. */
+/**
+ * One message to one address, so no recipient sees another's.
+ *
+ * The settings are read without `req`, so a failed read cannot roll back the
+ * request's transaction. `withSavepoint` cannot hold this read: it populates.
+ */
 export const sendReviewEmail = async (
   req: PayloadRequest,
   recipient: Recipient,
@@ -123,13 +133,7 @@ export const sendReviewEmail = async (
   about: { noun: string; url: string },
 ): Promise<void> => {
   try {
-    const mail = await reviewMail(
-      await getEmailSettings(req.payload, req),
-      state,
-      title,
-      note,
-      about,
-    )
+    const mail = await reviewMail(await getEmailSettings(req.payload), state, title, note, about)
     await req.payload.sendEmail({ to: recipient.email, ...mail })
   } catch (error) {
     req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
