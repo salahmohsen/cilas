@@ -30,8 +30,6 @@ export const getContactForm = async (payload: Payload, locale: 'en' | 'ar') => {
 /** The institute's info address, from Site settings (Contact → info, admissions as a fallback). */
 export const getContactEmail = async (): Promise<string | null> => {
   const payload = await getPayload({ config })
-  // Every share bar reads this: a failed read leaves the mail unaddressed, not the page broken.
-  const settings = await pageSiteSettings(payload).catch(() => null)
-  const emails = settings?.contact_emails
+  const { contact_emails: emails } = await pageSiteSettings(payload)
   return emails?.info ?? emails?.admissions ?? null
 }
