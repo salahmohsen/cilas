@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { userEvent } from 'vitest/browser'
 
+import '@/components/arc/foundation.css'
 import { ToggleStrip } from '@/components/sdk/toggle-strip'
 
 import { emulateMedia } from '../../../testing/media.test-utils'
@@ -70,6 +71,7 @@ describe('ToggleStrip', () => {
     day('before').focus()
     await userEvent.keyboard('{Tab}')
     expect(day('Mon')).toHaveFocus()
+    expect(getComputedStyle(day('Mon')).outlineStyle).toBe('solid')
     await userEvent.keyboard('{Tab}')
     expect(day('after')).toHaveFocus()
   })
