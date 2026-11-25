@@ -4,6 +4,8 @@ import { nobody, isAdmin } from '@/access'
 import { POST_KINDS } from '@/lib/space-rules'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
+import { deletePostContent } from '@/lib/space-delete'
+import { postDeleteEndpoints } from '@/forms/post-delete'
 
 /** The posts of the spaces the reader may see (contentWhere, src/lib/spaces.ts). */
 const readablePosts: Access = async ({ req }) =>
@@ -29,15 +31,27 @@ export const SpacePosts: CollectionConfig = {
     readVersions: isAdmin,
     create: isAdmin,
     update: isAdmin,
-    // Deletes (authors included) go through the actions' postRemove, which
-    // leaves the placeholder when replies exist (spec §3) and removes the
-    // row's files. A REST hard-delete would orphan replies, reactions and
-    // files — the rules above already refuse create/update from REST.
-    delete: isAdmin,
+    // Members delete through the actions' postRemove, which leaves the
+    // placeholder when replies exist (spec §3). Admins delete through the
+    // "Delete post" dialog (src/forms/post-delete.ts), which shows the
+    // comments that go with the post first; closed here so the panel's stock
+    // delete never shows.
+    delete: nobody,
   },
+  endpoints: postDeleteEndpoints,
   versions: { drafts: false },
   admin: {
     group: 'Community',
+    components: {
+      edit: {
+        editMenuItems: [
+          {
+            path: '/components/admin/delete-dialog#DeleteMenuItem',
+            clientProps: { collection: 'space-posts' },
+          },
+        ],
+      },
+    },
     defaultColumns: ['space', 'kind', 'author', 'last_activity_at', 'updatedAt'],
   },
   fields: [
@@ -48,6 +62,7 @@ export const SpacePosts: CollectionConfig = {
       required: true,
       index: true,
       access: { update: nobody },
+      admin: { components: { Cell: '/components/admin/space-name-cell#SpaceNameCell' } },
     },
     {
       name: 'author',
@@ -188,6 +203,8 @@ export const SpacePosts: CollectionConfig = {
     { name: 'deleted_at', type: 'date', index: true },
   ],
   hooks: {
+    // Child rows hold post_id NOT NULL, so they go first.
+    beforeDelete: [({ id, req }) => deletePostContent(req, Number(id))],
     afterChange: [searchChanged('post')],
     afterDelete: [searchDeleted('post')],
     beforeChange: [

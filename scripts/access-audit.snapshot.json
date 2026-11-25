@@ -5753,7 +5753,7 @@
       "read": "readablePosts#c8edbabd",
       "readVersions": "isAdmin#b15b4fe4",
       "update": "isAdmin#b15b4fe4",
-      "delete": "isAdmin#b15b4fe4",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },

@@ -584,26 +584,8 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     })
     await removeFile(payload, cover)
   } else {
-    const { docs: files } = await payload.find({
-      collection: 'space-files',
-      where: { post: { equals: id } },
-      overrideAccess: true,
-      pagination: false,
-      limit: 1000,
-    })
-    for (const f of files)
-      await payload.delete({
-        collection: 'space-files',
-        id: (f as { id: number }).id,
-        overrideAccess: true,
-      })
-    // Their post column is NOT NULL under an ON DELETE SET NULL key, so the
-    // post's delete fails while any answer or vote is left (reactions would
-    // stay behind pointing at nothing).
-    for (const collection of ['space-rsvps', 'space-votes', 'space-reactions'] as const)
-      await payload.delete({ collection, where: { post: { equals: id } }, overrideAccess: true })
+    // The collection's beforeDelete takes the files, reactions, votes, RSVPs and cover with it.
     await payload.delete({ collection: 'space-posts', id, overrideAccess: true })
-    await removeFile(payload, cover)
   }
   return { ok: true, data: true }
 }

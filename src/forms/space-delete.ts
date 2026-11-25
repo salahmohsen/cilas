@@ -28,6 +28,7 @@ export const spaceDeleteEndpoints = deleteEndpoints('spaces', {
       // The dialog asks for this name; a space with no name is confirmed by its ID.
       name: (typeof space.name === 'string' && space.name.trim()) || `Space ${id}`,
       noun: 'space',
+      typeToConfirm: true,
       deletes: nonEmpty(spaceContentGroups(await countSpaceContent(req.payload, id, req))),
       unlinks: [],
     }
