@@ -2433,6 +2433,7 @@ export interface Space {
   programme?: (number | null) | Programme;
   posting?: ('open' | 'members_comment' | 'fellows_only') | null;
   events?: ('members' | 'moderators') | null;
+  ai_buttons?: boolean | null;
   about?: string | null;
   /**
    * Empty uses the text from Community › Privacy and rules. One part per paragraph: a title on the first line, the answer under it.
@@ -4415,6 +4416,7 @@ export interface SpacesSelect<T extends boolean = true> {
   programme?: T;
   posting?: T;
   events?: T;
+  ai_buttons?: T;
   about?: T;
   privacy_rules?: T;
   reopened?: T;
@@ -5183,6 +5185,10 @@ export interface SiteSetting {
    * In Trial, only these programmes have a cohort space.
    */
   spaces_trial_cohorts?: (number | Programme)[] | null;
+  /**
+   * Off hides them on every page of the site, in spaces too.
+   */
+  ai_buttons?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -5430,6 +5436,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   spaces_trial_courses?: T;
   spaces_trial_community?: T;
   spaces_trial_cohorts?: T;
+  ai_buttons?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

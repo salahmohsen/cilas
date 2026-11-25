@@ -181,6 +181,15 @@ export const SiteSettings: GlobalConfig = {
                     description: 'In Trial, only these programmes have a cohort space.',
                   },
                 },
+                {
+                  name: 'ai_buttons',
+                  label: 'Show the Study with AI buttons',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: {
+                    description: 'Off hides them on every page of the site, in spaces too.',
+                  },
+                },
               ],
             },
           ],

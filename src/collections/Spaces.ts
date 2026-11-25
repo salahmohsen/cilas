@@ -121,6 +121,13 @@ export const Spaces: CollectionConfig = {
       ] satisfies { label: string; value: EventPosting }[],
     },
     {
+      name: 'ai_buttons',
+      label: 'Show the Study with AI buttons in this space',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'course' },
+    },
+    {
       name: 'about',
       label: 'About this space',
       type: 'textarea',
