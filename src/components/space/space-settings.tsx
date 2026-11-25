@@ -19,6 +19,7 @@ import type { SpacesWriteState } from '@/lib/space-actions'
 import { useNarrow } from '@/lib/use-narrow'
 
 import { saveErrorKey } from '@/lib/space-rules'
+import { AiButtonsField } from './ai-buttons-field'
 import styles from './space.module.css'
 
 /** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, the AI buttons switch, and reopening an archived course space. */
@@ -68,7 +69,7 @@ export function SpaceSettings({
   const [text, setText] = useState(about)
   const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
-  const [ai, setAi] = useState(aiButtons?.space)
+  const [ai, setAi] = useState(aiButtons?.space ?? true)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -125,15 +126,7 @@ export function SpaceSettings({
           {t('rulesReset')}
         </Button>
       </div>
-      {aiButtons && (
-        <Checkbox
-          label={t('aiButtons')}
-          description={t(aiButtons.site ? 'aiButtonsHint' : 'aiButtonsSiteOff')}
-          disabled={!aiButtons.site}
-          checked={ai}
-          onCheckedChange={(v) => setAi(v === true)}
-        />
-      )}
+      {aiButtons && <AiButtonsField checked={ai} onCheckedChange={setAi} siteOn={aiButtons.site} />}
       {archived && (
         <Checkbox
           label={t('reopen')}
@@ -163,7 +156,7 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          if (aiButtons?.site) form.set('ai_buttons', String(ai))
+          if (aiButtons) form.set('ai_buttons', String(ai))
           const result = await save(form)
           if (result.status === 'error') {
             setError(tp(saveErrorKey(result.error)))

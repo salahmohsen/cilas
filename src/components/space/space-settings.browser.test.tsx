@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { page } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import '@/components/arc/foundation.css'
 import { SpaceSettings } from '@/components/space/space-settings'
@@ -37,7 +37,18 @@ const mount = (aiButtons?: { space: boolean; site: boolean }, archived = false) 
   return { changes, saved }
 }
 
-const aiCheckbox = () => screen.queryByRole('checkbox', { name: messages.Spaces.aiButtons })
+const aiSwitch = () => screen.queryByRole('switch', { name: messages.Spaces.aiButtons })
+const aiInfo = () => screen.getByRole('button', { name: messages.Spaces.aiButtonsInfo })
+const tooltip = () => screen.queryByRole('tooltip')
+const describedBy = (el: Element) =>
+  (el.getAttribute('aria-describedby') ?? '')
+    .split(' ')
+    .map((id) => document.getElementById(id)?.textContent ?? '')
+    .join('')
+const middle = (el: Element) => {
+  const box = el.getBoundingClientRect()
+  return box.top + box.height / 2
+}
 const save = () =>
   fireEvent.click(screen.getByRole('button', { name: messages.Spaces.saveSettings }))
 
@@ -83,7 +94,7 @@ describe('SpaceSettings', () => {
           footer.getBoundingClientRect().top,
         )
       })
-      const box = last.querySelector<HTMLElement>('[role="checkbox"]')!
+      const box = last.querySelector<HTMLElement>('[role="checkbox"], [role="switch"]')!
       body.scrollTop = 0
       box.focus()
       await waitFor(() =>
@@ -96,7 +107,8 @@ describe('SpaceSettings', () => {
 
   it('shows no AI buttons switch, and sends none, in a space without them', async () => {
     const { saved } = mount()
-    expect(aiCheckbox()).toBeNull()
+    expect(aiSwitch()).toBeNull()
+    expect(screen.queryByRole('button', { name: messages.Spaces.aiButtonsInfo })).toBeNull()
     save()
     await waitFor(() => expect(saved).toHaveLength(1))
     expect(saved[0]!.has('ai_buttons')).toBe(false)
@@ -104,33 +116,86 @@ describe('SpaceSettings', () => {
 
   it('sends the AI buttons switch as it stands, off and on', async () => {
     const { saved } = mount({ space: true, site: true })
-    const box = aiCheckbox()!
-    expect(box.getAttribute('aria-checked')).toBe('true')
-    const hint = document.getElementById(box.getAttribute('aria-describedby')!)
-    expect(hint?.textContent).toBe(messages.Spaces.aiButtonsHint)
-    fireEvent.click(box)
+    const toggle = aiSwitch()!
+    expect(toggle.getAttribute('aria-checked')).toBe('true')
+    fireEvent.click(toggle)
+    expect(toggle.getAttribute('aria-checked')).toBe('false')
     save()
     await waitFor(() => expect(saved).toHaveLength(1))
     expect(saved[0]!.get('ai_buttons')).toBe('false')
     cleanup()
 
     const again = mount({ space: false, site: true })
-    expect(aiCheckbox()!.getAttribute('aria-checked')).toBe('false')
-    fireEvent.click(aiCheckbox()!)
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(screen.getByText(messages.Spaces.aiButtons))
     save()
     await waitFor(() => expect(again.saved).toHaveLength(1))
     expect(again.saved[0]!.get('ai_buttons')).toBe('true')
   })
 
-  it('locks the AI buttons switch, says why, and sends none, while the site switch is off', async () => {
+  it('turns the AI buttons switch with the Space key', async () => {
+    mount({ space: true, site: true })
+    aiSwitch()!.focus()
+    await userEvent.keyboard(' ')
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+  })
+
+  it('locks the AI buttons switch, says why, and keeps its value, while the site switch is off', async () => {
     const { saved } = mount({ space: true, site: false })
-    const box = aiCheckbox()!
-    expect(box).toBeDisabled()
-    expect(box.getAttribute('aria-checked')).toBe('true')
-    const hint = document.getElementById(box.getAttribute('aria-describedby')!)
-    expect(hint?.textContent).toBe(messages.Spaces.aiButtonsSiteOff)
+    const toggle = aiSwitch()!
+    expect(toggle).toBeDisabled()
+    expect(describedBy(toggle)).toBe(messages.Spaces.aiButtonsSiteOff)
+    fireEvent.click(screen.getByText(messages.Spaces.aiButtons))
+    expect(toggle.getAttribute('aria-checked')).toBe('true')
     save()
     await waitFor(() => expect(saved).toHaveLength(1))
-    expect(saved[0]!.has('ai_buttons')).toBe(false)
+    expect(saved[0]!.get('ai_buttons')).toBe('true')
   })
+
+  it('keeps the AI switch help in a tooltip, which keyboard focus opens and Escape closes', async () => {
+    const { changes } = mount({ space: true, site: true })
+    expect(screen.queryByText(messages.Spaces.aiButtonsHint)).toBeNull()
+    aiSwitch()!.focus()
+    await userEvent.tab()
+    expect(document.activeElement).toBe(aiInfo())
+    await waitFor(() => expect(tooltip()?.textContent).toContain(messages.Spaces.aiButtonsHint))
+    await waitFor(() => expect(describedBy(aiInfo())).toContain(messages.Spaces.aiButtonsHint))
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(tooltip()).toBeNull())
+    expect(changes).toEqual([])
+  })
+
+  it('opens the AI switch tooltip on hover, and leaves the switch as it was', async () => {
+    mount({ space: true, site: true })
+    await userEvent.hover(aiInfo())
+    await waitFor(() => expect(tooltip()?.textContent).toContain(messages.Spaces.aiButtonsHint))
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('true')
+  })
+
+  it('opens the AI switch tooltip on a press, and a second press leaves it open', async () => {
+    mount({ space: true, site: false })
+    await userEvent.click(aiInfo())
+    await waitFor(() => expect(tooltip()?.textContent).toContain(messages.Spaces.aiButtonsHint))
+    await userEvent.click(aiInfo())
+    expect(aiInfo().getAttribute('data-state')).not.toBe('closed')
+  })
+
+  it.each([
+    [1280, 800],
+    [390, 844],
+  ])(
+    'centres the AI switch on its label, with the info button after it (%i px wide)',
+    async (width, height) => {
+      await page.viewport(width, height)
+      mount({ space: true, site: true })
+      const label = screen.getByText(messages.Spaces.aiButtons)
+      await waitFor(() => {
+        expect(Math.abs(middle(aiSwitch()!) - middle(label))).toBeLessThanOrEqual(1)
+        expect(Math.abs(middle(aiInfo()) - middle(label))).toBeLessThanOrEqual(1)
+        expect(aiInfo().getBoundingClientRect().left).toBeGreaterThanOrEqual(
+          label.getBoundingClientRect().right,
+        )
+      })
+    },
+  )
 })
