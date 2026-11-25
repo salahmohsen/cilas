@@ -104,7 +104,7 @@
 }
 
 .slot[data-slot='week'] > .skeleton {
-  min-block-size: 14rem;
+  min-block-size: 11.375rem;
 }
 
 /* Needs you is first in the column, so its placeholder decides how far the rest moves: two rows for most readers, an admin's four grouped rows. */
