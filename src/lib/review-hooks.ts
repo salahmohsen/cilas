@@ -260,7 +260,13 @@ const applyReview =
     // copy keeps only the stored one, so an owner save cannot change it. Approval
     // and a move to draft clear it.
     const request = nextRequest({ live, from, to, sent: sentRequest, originalDoc })
-    const review = { ...data.review, status: to, request }
+    const review = {
+      ...data.review,
+      status: to,
+      request,
+      // WARNING: the admin form sends the stored note back, so a kept one lands on the next decision.
+      ...(to === 'submitted' && from !== 'submitted' ? { review_note: null } : {}),
+    }
     if (to !== 'approved') return { ...data, review, _status: 'draft' }
     if (from === 'approved') return { ...data, review }
     return {
