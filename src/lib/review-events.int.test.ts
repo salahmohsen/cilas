@@ -443,6 +443,42 @@ describe('review-events: history', () => {
     expect(rows[0]!.version).toBe((await latestVersionOf(id)).id)
   })
 
+  it('an owner submit with ?unpublishAllLocales=true keeps the version of the earlier row', async () => {
+    const id = await draftArticle('review-event-unpublish-flag')
+    await moveArticle(id, owner, 'submitted')
+    const [returned] = await rowsAddedBy(id, () =>
+      moveArticle(id, admin, 'changes_requested', 'Edit this.'),
+    )
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, ownerToken, 'unpublishAllLocales=true', {
+        title: uniq('resubmitted'),
+        review: { status: 'submitted' },
+      }),
+    )
+    expect(rows).toMatchObject([{ from: 'changes_requested', to: 'submitted' }])
+    expect(rows[0]!.version).not.toBe(returned!.version)
+    expect(rows[0]!.version).toBe((await latestVersionOf(id)).id)
+  })
+
+  it('an admin removal with ?unpublishAllLocales=true unpublishes and keeps the submitted version', async () => {
+    const id = await liveCopyAt('approved')
+    const [submitted] = await rowsAddedBy(id, asOwner(id, 'requestRemoval'))
+
+    const rows = await rowsAddedBy(id, () =>
+      patchArticle(id, adminToken, 'unpublishAllLocales=true', {
+        _status: 'draft',
+        review: { status: 'draft', review_note: 'Taken down as asked.' },
+      }),
+    )
+    expect(rows).toMatchObject([{ from: 'submitted', to: 'draft', request: 'removal' }])
+    expect(rows[0]!.version).not.toBe(submitted!.version)
+    expect(rows[0]!.version).toBe((await latestVersionOf(id)).id)
+    expect(await payload.findByID({ collection: 'articles', id, depth: 0 })).toMatchObject({
+      _status: 'draft',
+    })
+  })
+
   it('a new submission clears the old note, so no later row repeats it', async () => {
     const id = await draftArticle('review-event-old-note')
     await moveArticle(id, owner, 'submitted')

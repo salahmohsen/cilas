@@ -101,8 +101,12 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   if (operation !== 'create' && operation !== 'update' && operation !== 'restoreVersion') {
     return args
   }
+  const flags = args as { select?: unknown; unpublishAllLocales?: unknown }
   // WARNING: the review hooks read `review` from the written doc, so a write returns the whole doc.
-  delete (args as { select?: unknown }).select
+  delete flags.select
+  // WARNING: this flag makes Payload overwrite the latest version, which a history row may name.
+  // With no `localizeStatus` it does nothing else: `_status: 'draft'` still unpublishes.
+  delete flags.unpublishAllLocales
   const trusted = !req.user || isAdminUser(req.user)
   // Access refuses a write with no user and no override, so it queues on no row lock.
   const locks = Boolean(req.user) || Boolean((args as { overrideAccess?: boolean }).overrideAccess)
