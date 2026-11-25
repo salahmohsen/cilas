@@ -1706,16 +1706,16 @@ describe('spaces write', () => {
 
     const siteBefore = (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true }))
       .ai_buttons
-    await siteSwitch(true)
-    await allSay(true)
-    expect((await set(fellow, courseSpace.id, false)).ok).toBe(true)
-    expect((await row(courseSpace.id)).ai_buttons).toBe(false)
-    await allSay(false)
-    await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
-    expect((await row(courseSpace.id)).ai_buttons).toBe(false)
-    expect((await set(fellow, courseSpace.id, true)).ok).toBe(true)
-    await allSay(true)
     try {
+      await siteSwitch(true)
+      await allSay(true)
+      expect((await set(fellow, courseSpace.id, false)).ok).toBe(true)
+      expect((await row(courseSpace.id)).ai_buttons).toBe(false)
+      await allSay(false)
+      await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
+      expect((await row(courseSpace.id)).ai_buttons).toBe(false)
+      expect((await set(fellow, courseSpace.id, true)).ok).toBe(true)
+      await allSay(true)
       await siteSwitch(false)
       await allSay(false)
     } finally {
