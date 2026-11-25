@@ -2,13 +2,14 @@ import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 
+import '@/components/arc/foundation.css'
 import { SpaceSettings } from '@/components/space/space-settings'
 
 import messages from '../../../messages/en.json'
 import { IntlProvider } from '../../../testing/intl.test-utils'
 import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 
-const mount = (aiButtons?: boolean) => {
+const mount = (aiButtons?: boolean, archived = false) => {
   const changes: boolean[] = []
   const saved: FormData[] = []
   renderWithNavigation(
@@ -17,7 +18,7 @@ const mount = (aiButtons?: boolean) => {
         space={1}
         posting="open"
         events="members"
-        archived={false}
+        archived={archived}
         about=""
         aboutDefault="Default about"
         rules=""
@@ -61,6 +62,37 @@ describe('SpaceSettings', () => {
     expect(screen.getByText(messages.Spaces.posting)).toBeTruthy()
     expect(screen.getByText(messages.Spaces.saveSettings)).toBeTruthy()
   })
+
+  it.each([false, true])(
+    'keeps the last field clear of the Save footer on phones (archived: %s)',
+    async (archived) => {
+      await page.viewport(390, 844)
+      mount(true, archived)
+      const footer = document.querySelector('[class*="settingsFooter"]')!
+      let body = footer.parentElement!
+      while (getComputedStyle(body).overflowY !== 'auto') body = body.parentElement!
+      const last = footer.previousElementSibling!.lastElementChild!
+      await waitFor(() => {
+        body.scrollTop = body.scrollHeight
+        expect(body.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight + 1)
+        expect(footer.getBoundingClientRect().bottom).toBeCloseTo(
+          body.getBoundingClientRect().bottom,
+          0,
+        )
+        expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+          footer.getBoundingClientRect().top,
+        )
+      })
+      const box = last.querySelector<HTMLElement>('[role="checkbox"]')!
+      body.scrollTop = 0
+      box.focus()
+      await waitFor(() =>
+        expect(box.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+          footer.getBoundingClientRect().top,
+        ),
+      )
+    },
+  )
 
   it('shows no AI buttons switch, and sends none, in a space without them', async () => {
     const { saved } = mount()

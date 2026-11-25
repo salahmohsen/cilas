@@ -707,9 +707,17 @@
   gap: var(--space-4);
 }
 
+/* The footer reaches over the body's end padding. Its sticky offset must reach over it too:
+   sticky stops at the padding edge, which lifted the footer over the last field. */
 .settingsSheet .settingsFooter {
+  bottom: calc(-1 * var(--space-6));
   margin-inline: calc(-1 * var(--space-5));
   margin-block-end: calc(-1 * var(--space-6));
+}
+
+/* A control that takes focus scrolls clear of the footer: its two paddings and its button. */
+.settingsSheet .settings :is(button, input, textarea) {
+  scroll-margin-block-end: calc(var(--control-height-md) + 2 * var(--space-4) + var(--space-2));
 }
 
 .aboutField {
