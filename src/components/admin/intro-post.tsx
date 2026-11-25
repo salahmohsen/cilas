@@ -1,4 +1,4 @@
-import { DefaultCell } from '@payloadcms/ui'
+import { RenderDefaultCell } from '@payloadcms/ui'
 import type {
   BeforeListTableServerProps,
   DefaultServerCellComponentProps,
@@ -36,10 +36,15 @@ const LABEL = 'Introduction'
 const LIST = '/admin/collections/space-posts'
 const FILTER = 'where[id][in]'
 
-/** The Posts list's "Kind" column: an intro post shows as "Introduction". */
+/**
+ * The Posts list's "Kind" column: an intro post shows as "Introduction".
+ * Payload's own cell draws it, so the column keeps the row's link, and its
+ * selection when the list opens in a relationship drawer.
+ */
 export async function IntroKindCell({
   cellData,
   collectionSlug,
+  columnIndex,
   link,
   linkURL,
   payload,
@@ -48,14 +53,18 @@ export async function IntroKindCell({
 }: DefaultServerCellComponentProps) {
   const intro = (await introPostIds(payload)).has(Number(rowData.id))
   return (
-    <DefaultCell
-      cellData={intro ? LABEL : cellData}
-      collectionSlug={collectionSlug}
-      field={{ name: 'kind', type: 'text' } as never}
-      link={link}
-      linkURL={linkURL}
-      rowData={{ id: rowData.id }}
-      viewType={viewType}
+    <RenderDefaultCell
+      clientProps={{
+        cellData: intro ? LABEL : cellData,
+        collectionSlug,
+        field: { name: 'kind', type: 'text' } as never,
+        link,
+        linkURL,
+        rowData,
+        viewType,
+      }}
+      columnIndex={columnIndex ?? 0}
+      isLinkedColumn={Boolean(link)}
     />
   )
 }

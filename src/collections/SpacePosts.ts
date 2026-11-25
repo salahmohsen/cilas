@@ -68,7 +68,6 @@ export const SpacePosts: CollectionConfig = {
       required: true,
       index: true,
       access: { update: nobody },
-      admin: { components: { Cell: '/components/admin/space-name-cell#SpaceNameCell' } },
     },
     {
       name: 'author',
@@ -131,11 +130,14 @@ export const SpacePosts: CollectionConfig = {
     {
       // A space file with no post or comment of its own, so it is neither one
       // of the post's attachments nor counted against them; postRemove and
-      // eventEdit delete it with the post or when it is replaced.
+      // eventEdit delete it with the post or when it is replaced. Only their
+      // server writes set it: a post's delete deletes its cover, so a cover an
+      // admin pointed at another post's file would take that file with it.
       name: 'event_cover',
       label: 'Cover',
       type: 'relationship',
       relationTo: 'space-files',
+      access: { create: nobody, update: nobody },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
     },
     {

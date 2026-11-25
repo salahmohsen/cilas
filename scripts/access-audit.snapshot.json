@@ -5722,9 +5722,9 @@
     "entity": "collection:spaces",
     "field": "display_name",
     "rules": {
-      "create": "open",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5842,9 +5842,9 @@
     "entity": "collection:space-posts",
     "field": "event_cover",
     "rules": {
-      "create": "open",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {

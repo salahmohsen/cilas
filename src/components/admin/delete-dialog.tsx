@@ -46,15 +46,22 @@ export function useDeleteDialog(onDeleted: () => void) {
   // One slug per dialog: the list's dialog (a provider) stays mounted on the
   // document page beside the menu's, and a shared slug opened both.
   const modalSlug = `delete-dialog-${useId()}`
-  const [target, setTarget] = useState<{ collection: DialogDeleteSlug; id: string } | null>(null)
-  const [summary, setSummary] = useState<Loaded | null>(null)
+  // The document and its summary in one value, tagged with the request that
+  // opened it: a slow answer to an earlier open cannot fill a later one, so
+  // Delete always acts on the document whose summary the dialog shows.
+  const [shown, setShown] = useState<{
+    collection: DialogDeleteSlug
+    id: string
+    request: object
+    summary: Loaded | null
+  } | null>(null)
   const [typed, setTyped] = useState('')
   const [busy, setBusy] = useState(false)
 
   const open = useCallback(
     async (collection: DialogDeleteSlug, id: number | string) => {
-      setTarget({ collection, id: String(id) })
-      setSummary(null)
+      const request = {}
+      setShown({ collection, id: String(id), request, summary: null })
       setTyped('')
       openModal(modalSlug)
       const res = await fetch(`/api/${collection}/${id}/delete-summary`, {
@@ -65,15 +72,16 @@ export function useDeleteDialog(onDeleted: () => void) {
             error?: string
           })
         | null
-      setSummary(
+      const summary: Loaded =
         res?.ok && body && !body.error
           ? body
-          : { error: body?.error ?? 'Could not list what this delete removes.' },
-      )
+          : { error: body?.error ?? 'Could not list what this delete removes.' }
+      setShown((now) => (now?.request === request ? { ...now, summary } : now))
     },
     [openModal, modalSlug],
   )
 
+  const summary = shown?.summary ?? null
   const loaded = summary && !summary.error ? (summary as DeleteSummary) : null
   const name = loaded?.name ?? ''
   const noun = loaded?.noun ?? 'item'
@@ -82,10 +90,10 @@ export function useDeleteDialog(onDeleted: () => void) {
   }
 
   const confirm = async () => {
-    if (!target) return
+    if (!shown || !loaded) return
     setBusy(true)
     const { ok } = await postAction(
-      `/api/${target.collection}/${target.id}/delete`,
+      `/api/${shown.collection}/${shown.id}/delete`,
       'The delete failed. Try again.',
     )
     setBusy(false)

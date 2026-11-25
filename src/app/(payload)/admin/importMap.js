@@ -45,7 +45,6 @@ import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 }
 import { VisualEditorController as VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed } from 'payload-inline-visual-editor/client'
 import { DeleteMenuItem as DeleteMenuItem_cc7ced45580b96a7bafbf456f075acd8 } from '../../../components/admin/delete-dialog'
 import { IntroPostNote as IntroPostNote_83fca25b3b802f5168b7118d804edb93 } from '../../../components/admin/intro-post'
-import { SpaceNameCell as SpaceNameCell_e6909800bac39d03ca16c5bd11cd4bbf } from '../../../components/admin/space-name-cell'
 import { IntroKindCell as IntroKindCell_83fca25b3b802f5168b7118d804edb93 } from '../../../components/admin/intro-post'
 import { IntroPostsFilter as IntroPostsFilter_83fca25b3b802f5168b7118d804edb93 } from '../../../components/admin/intro-post'
 import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e } from '../../../components/admin/newsletter-actions'
@@ -150,7 +149,6 @@ export const importMap = {
   "payload-inline-visual-editor/client#VisualEditorController": VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed,
   "/components/admin/delete-dialog#DeleteMenuItem": DeleteMenuItem_cc7ced45580b96a7bafbf456f075acd8,
   "/components/admin/intro-post#IntroPostNote": IntroPostNote_83fca25b3b802f5168b7118d804edb93,
-  "/components/admin/space-name-cell#SpaceNameCell": SpaceNameCell_e6909800bac39d03ca16c5bd11cd4bbf,
   "/components/admin/intro-post#IntroKindCell": IntroKindCell_83fca25b3b802f5168b7118d804edb93,
   "/components/admin/intro-post#IntroPostsFilter": IntroPostsFilter_83fca25b3b802f5168b7118d804edb93,
   "/components/admin/newsletter-actions#NewsletterActions": NewsletterActions_b0970b01e42603472424e6e40dd0fd9e,
