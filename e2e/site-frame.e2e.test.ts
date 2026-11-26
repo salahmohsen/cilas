@@ -191,4 +191,37 @@ test.describe('site frame', () => {
           )
         })
       })
+
+  for (const locale of LOCALES)
+    for (const viewport of Object.values(WIDTHS))
+      test(`the article reader wraps an unbroken title (${locale} ${viewport.width})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport }, async (page) => {
+          await page.goto(articles[locale])
+          const title = page.getByRole('heading', { level: 1 })
+          await expect(title).toBeVisible()
+          const word = locale === 'ar' ? 'العربية' : 'Unbroken'
+          const metrics = await title.evaluate(async (heading, longTitle) => {
+            await document.fonts.ready
+            const page = document.documentElement
+            const originalOverflow = page.scrollWidth - page.clientWidth
+            heading.textContent = longTitle
+            const range = document.createRange()
+            range.selectNodeContents(heading)
+            const lines = Array.from(range.getClientRects())
+            const bounds = heading.getBoundingClientRect()
+            return {
+              wrapped: lines.length > 1,
+              headingFits: lines.every(
+                (line) => line.left >= bounds.left - 1 && line.right <= bounds.right + 1,
+              ),
+              pageOverflowDelta: page.scrollWidth - page.clientWidth - originalOverflow,
+            }
+          }, word.repeat(40))
+          expect(metrics.wrapped).toBe(true)
+          expect(metrics.headingFits).toBe(true)
+          expect(metrics.pageOverflowDelta).toBeLessThanOrEqual(1)
+        })
+      })
 })

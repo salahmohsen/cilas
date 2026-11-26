@@ -246,12 +246,12 @@ function Eye({
               // Cyber circuit pattern
               <>
                 <div
-                  className="absolute rounded-full border border-dashed opacity-40"
-                  style={{ inset: '15%', borderColor: irisColor }}
+                  className="absolute inset-3/20 rounded-full border border-dashed opacity-40"
+                  style={{ borderColor: irisColor }}
                 />
                 <div
-                  className="absolute rounded-full border opacity-30"
-                  style={{ inset: '30%', borderColor: irisColorSecondary }}
+                  className="absolute inset-3/10 rounded-full border opacity-30"
+                  style={{ borderColor: irisColorSecondary }}
                 />
                 {[...Array(8)].map((_, i) => (
                   <div
@@ -283,9 +283,8 @@ function Eye({
                   />
                 ))}
                 <div
-                  className="absolute rounded-full"
+                  className="absolute inset-1/5 rounded-full"
                   style={{
-                    inset: '20%',
                     border: `1px solid ${irisColor}33`,
                   }}
                 />
@@ -377,9 +376,8 @@ function Eye({
       {/* Cyber scan line */}
       {variant === 'cyber' && (
         <motion.div
-          className="pointer-events-none absolute inset-x-0"
+          className="pointer-events-none absolute inset-x-0 h-0.5"
           style={{
-            height: 2,
             background: `linear-gradient(to right, transparent, ${irisColor}44, transparent)`,
           }}
           animate={{
