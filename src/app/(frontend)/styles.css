@@ -370,6 +370,9 @@
   line-height: 1.5;
   text-wrap: pretty;
 }
+h1.article-title {
+  overflow-wrap: anywhere;
+}
 /* h1, to outweigh the reader module's tracking. */
 h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   letter-spacing: 0;
