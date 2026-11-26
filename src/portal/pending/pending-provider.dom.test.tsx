@@ -1,4 +1,4 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { createBrowserRouter } from '../../../testing/browser-navigation.test-utils'
 import {
@@ -63,7 +63,14 @@ function setup(children?: ReactNode, reply = async () => Response.json({ emailed
 }
 
 beforeEach(() => vi.useFakeTimers())
-afterEach(() => vi.useRealTimers())
+afterEach(async () => {
+  try {
+    cleanup()
+    await vi.runAllTimersAsync()
+  } finally {
+    vi.useRealTimers()
+  }
+})
 
 describe('pending: provider', () => {
   it('Strict Mode remount does not flush', () => {
@@ -281,9 +288,7 @@ describe('pending: sign out', () => {
   })
 })
 
-it('dropping the oldest toast leaves its item undoable and updating its id has no effect', async () => {
-  vi.useRealTimers()
-
+it('dropping the oldest toast leaves its item undoable and updating its id has no effect', () => {
   function Decisions() {
     const pending = usePending()
     const { scope } = usePendingStore()
@@ -428,7 +433,6 @@ it('a remounted provider never touches a toast of the earlier store', async () =
 })
 
 it('a toast that drops its focused button with no focusout lets the next decision run', async () => {
-  vi.useRealTimers()
   const { ui } = setup()
   render(ui)
   fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
@@ -451,4 +455,20 @@ it('shows the leave hint only on the first pending toast of the tab session', ()
   fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
   expect(screen.queryByText(hint)).toBeNull()
   sessionStorage.clear()
+})
+
+it('finishes the unmount flush during test cleanup', ({ onTestFinished }) => {
+  let store: PendingApi | undefined
+  function Capture() {
+    store = usePending()
+    return <Probe />
+  }
+  const { ui, fetcher } = setup(<Capture />)
+  render(ui)
+  fireEvent.click(screen.getByRole('button', { name: 'Decide' }))
+  expect(fetcher).not.toHaveBeenCalled()
+  onTestFinished(() => {
+    expect(store?.items).toHaveLength(0)
+    expect(fetcher).toHaveBeenCalledOnce()
+  })
 })
