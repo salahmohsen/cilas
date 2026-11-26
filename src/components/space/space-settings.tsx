@@ -74,6 +74,8 @@ export function SpaceSettings({
   // when it is saved, when the sheet closes, or once the stored value is the same.
   const [aiChange, setAiChange] = useState<boolean | null>(null)
   if (aiChange !== null && (!open || aiChange === aiButtons?.space)) setAiChange(null)
+  // While a change is on its way the stored value is out of date, so the switch holds still.
+  const [aiSaving, setAiSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -135,6 +137,7 @@ export function SpaceSettings({
           checked={aiChange ?? aiButtons.space}
           onCheckedChange={setAiChange}
           siteOn={aiButtons.site}
+          saving={aiSaving}
         />
       )}
       {archived && (
@@ -166,16 +169,25 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          if (aiChange !== null) form.set('ai_buttons', String(aiChange))
-          const result = await save(form)
-          if (result.status === 'error') {
-            setError(tp(saveErrorKey(result.error)))
-            throw new Error(result.error)
+          if (aiChange !== null) {
+            form.set('ai_buttons', String(aiChange))
+            setAiSaving(true)
+          }
+          try {
+            const result = await save(form)
+            if (result.status === 'error') {
+              setError(tp(saveErrorKey(result.error)))
+              throw new Error(result.error)
+            }
+          } catch (failure) {
+            setAiSaving(false)
+            throw failure
           }
           // One transition, so the switch moves to the refreshed value without showing the old one.
           startTransition(() => {
             router.refresh()
             setAiChange((now) => (now === aiChange ? null : now))
+            setAiSaving(false)
           })
         }}
       />

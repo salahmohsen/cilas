@@ -13,6 +13,7 @@ const mount = (
   aiButtons?: { space: boolean; site: boolean },
   archived = false,
   outcome: 'ok' | 'error' = 'ok',
+  arrives: Promise<void> = Promise.resolve(),
 ) => {
   const changes: boolean[] = []
   const saved: FormData[] = []
@@ -33,6 +34,7 @@ const mount = (
         anchor={<span>anchor</span>}
         save={async (form) => {
           saved.push(form)
+          await arrives
           return outcome === 'ok' ? { status: 'ok' } : { status: 'error', error: 'failed' }
         }}
       />
@@ -54,6 +56,15 @@ const describedBy = (el: Element) =>
 const middle = (el: Element) => {
   const box = el.getBoundingClientRect()
   return box.top + box.height / 2
+}
+const heldReply = () => {
+  let resolve = () => {}
+  let reject: (reason: Error) => void = () => {}
+  const promise = new Promise<void>((yes, no) => {
+    resolve = yes
+    reject = no
+  })
+  return { promise, resolve, reject }
 }
 const nextFrames = () =>
   new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())))
@@ -200,9 +211,47 @@ describe('SpaceSettings', () => {
     save()
     await screen.findByRole('alert')
     expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+    expect(aiSwitch()).toBeEnabled()
     fireEvent.click(screen.getByRole('button', { name: new RegExp(messages.Spaces.saveSettings) }))
     await waitFor(() => expect(saved).toHaveLength(2))
     expect(saved[1]!.get('ai_buttons')).toBe('false')
+  })
+
+  it('holds the AI switch while its change is being saved, so no later choice is lost', async () => {
+    const reply = heldReply()
+    const { saved } = mount({ space: true, site: true }, false, 'ok', reply.promise)
+    fireEvent.click(aiSwitch()!)
+    save()
+    await waitFor(() => expect(aiSwitch()).toBeDisabled())
+    fireEvent.click(aiSwitch()!)
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+    reply.resolve()
+    await waitFor(() => expect(aiSwitch()).toBeEnabled())
+    expect(saved[0]!.get('ai_buttons')).toBe('false')
+  })
+
+  it('frees the AI switch, and keeps its change, when the save never gets an answer', async () => {
+    const reply = heldReply()
+    mount({ space: true, site: true }, false, 'ok', reply.promise)
+    fireEvent.click(aiSwitch()!)
+    save()
+    await waitFor(() => expect(aiSwitch()).toBeDisabled())
+    reply.reject(new Error('offline'))
+    await waitFor(() => expect(aiSwitch()).toBeEnabled())
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
+  })
+
+  it('leaves the AI switch free during a save without it, and keeps a choice made then', async () => {
+    const reply = heldReply()
+    const { saved } = mount({ space: true, site: true }, false, 'ok', reply.promise)
+    save()
+    await waitFor(() => expect(saved).toHaveLength(1))
+    expect(aiSwitch()).toBeEnabled()
+    fireEvent.click(aiSwitch()!)
+    reply.resolve()
+    await screen.findByText(messages.Spaces.saved, { selector: '[role="status"]' })
+    await nextFrames()
+    expect(aiSwitch()!.getAttribute('aria-checked')).toBe('false')
   })
 
   it('drops an unsaved AI buttons change when the sheet closes', async () => {

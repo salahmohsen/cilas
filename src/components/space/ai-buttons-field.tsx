@@ -47,10 +47,12 @@ export function AiButtonsField({
   checked,
   onCheckedChange,
   siteOn,
+  saving,
 }: {
   checked: boolean
   onCheckedChange: (checked: boolean) => void
   siteOn: boolean
+  saving: boolean
 }) {
   const t = useTranslations('Spaces')
   const id = useId()
@@ -62,7 +64,7 @@ export function AiButtonsField({
           id={id}
           checked={checked}
           onCheckedChange={onCheckedChange}
-          disabled={!siteOn}
+          disabled={!siteOn || saving}
           aria-describedby={siteOn ? undefined : reasonId}
         />
         <label htmlFor={id} className={styles.switchLabel} data-disabled={!siteOn || undefined}>
