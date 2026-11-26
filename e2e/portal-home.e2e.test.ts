@@ -825,11 +825,20 @@ test.describe('portal Home and Inbox', () => {
     })
 
     test.afterAll(async () => {
+      const failures: Error[] = []
       try {
-        for (const path of made) expect((await asAdmin(path, 'DELETE')).ok, path).toBe(true)
+        for (const path of made) {
+          try {
+            const response = await asAdmin(path, 'DELETE')
+            expect(response.ok, `${path} returned ${response.status}`).toBe(true)
+          } catch (cause) {
+            failures.push(new Error(`DELETE ${path} failed`, { cause }))
+          }
+        }
       } finally {
         await cleanupWeek(payload)
       }
+      if (failures.length) throw new AggregateError(failures, 'Home week fixture cleanup failed')
     })
 
     const open = async (page: Page, locale: Locale) => {

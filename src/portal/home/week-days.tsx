@@ -64,8 +64,7 @@ export function WeekDays({ days, today }: { days: DayView[]; today: string }) {
   const now = useSyncExternalStore(onReturn, cairoToday, () => today)
   const [chosen, setChosen] = useState<string | null>(null)
   const dayOn = (date: string | null) => days.find((day) => day.date === date)
-  const current = dayOn(now) ? now : today
-  const shown = dayOn(chosen) ?? dayOn(current)!
+  const shown = dayOn(chosen) ?? dayOn(now) ?? dayOn(today)!
 
   const choose = (date: string) => {
     setChosen(date)
@@ -82,7 +81,7 @@ export function WeekDays({ days, today }: { days: DayView[]; today: string }) {
         onValueChange={choose}
         items={days.map((day) => ({
           value: day.date,
-          current: day.date === current ? ('date' as const) : undefined,
+          current: day.date === now ? ('date' as const) : undefined,
           content: <DayCell day={day} />,
         }))}
       />

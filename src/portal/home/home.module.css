@@ -3,7 +3,7 @@
   padding-block-end: var(--space-6);
 }
 
-/* One column in reading order: Needs you, Next session, Your spaces, Latest. */
+/* One column in reading order: Needs you, Next session, Your spaces, Latest, This week. */
 .bento {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

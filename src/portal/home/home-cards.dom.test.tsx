@@ -400,10 +400,10 @@ describe('This week', () => {
     expect(currentDay()).toEqual([dayButtons()[5]])
   })
 
-  it('after Friday midnight with the old week on screen, a day of that week stays pressed', () => {
+  it('keeps a day pressed without marking it as today after the week ends', () => {
     renderWithIntl(card())
     wake('2034-10-14T09:00:00Z')
     expect(pressedDay()).toEqual([dayButtons()[4]])
-    expect(currentDay()).toEqual([dayButtons()[4]])
+    expect(currentDay()).toEqual([])
   })
 })
