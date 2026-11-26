@@ -4,6 +4,7 @@ import { relId } from '@/lib/relation'
 import type { CollectionAfterChangeHook, PayloadRequest } from 'payload'
 
 import { applicantOf } from '@/forms/applicant'
+import { applicantsHref } from '@/lib/document-href'
 import { notify } from '@/lib/notify'
 import { toPersonIds } from '@/lib/fellow-role'
 import { adminRecipients, ownerRecipients } from '@/lib/review-mail'
@@ -39,7 +40,7 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
       description: applicantName
         ? `${applicantName} applied to “${title}”`
         : `An application to “${title}”`,
-      link: `/admin/applicants?application=${doc.id}`,
+      link: applicantsHref({ application: doc.id }),
     },
   )
 
@@ -61,7 +62,7 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
       description: applicantName
         ? `${applicantName} applied to “${course.title}”`
         : `An application to “${course.title}”`,
-      link: `/admin/applicants?course=${course.id}`,
+      link: applicantsHref({ course: course.id }),
     })
   }
   return doc

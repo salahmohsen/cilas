@@ -1,8 +1,10 @@
-import { useFormatter, useTranslations } from 'next-intl'
+import { useFormatter, useLocale, useTranslations } from 'next-intl'
 
 import { NOTIFICATION_GLYPHS } from '@/components/notification-glyphs'
 import { clientEnv } from '@/env.client'
 import { Link } from '@/i18n/navigation'
+import type { Locale } from '@/i18n/routing'
+import { localizedLink } from '@/lib/document-href'
 import { isNotificationKind, NOTIFICATION_KINDS } from '@/lib/notification-kinds'
 import { noteText } from '@/lib/notifications-client'
 import type { StoredNotification } from '@/lib/realtime/events'
@@ -63,12 +65,13 @@ const notificationHref = (link: string | null | undefined) => {
 }
 
 /**
- * The newest notification rows (information, never work), as the bell shows them. A row with a valid link uses
- * its stored URL, as a plain `<a>` (a soft navigation to a post from outside
- * the rooms shows the dialog over an empty page). An unread row marks itself read when opened.
+ * The newest notification rows (information, never work), as the bell shows them. A row with a valid link
+ * opens it, a `/spaces` path in the reader's locale, as a plain `<a>` (a soft navigation to a post from
+ * outside the rooms shows the dialog over an empty page). An unread row marks itself read when opened.
  */
 export function LatestList({ page, focus }: { page: LatestPage; focus: boolean }) {
   const t = useTranslations('Portal')
+  const locale = useLocale() as Locale
   const { rows, pages, more } = page
   const firstNewIndex = LATEST_PAGE * (pages - 1)
   return (
@@ -78,7 +81,8 @@ export function LatestList({ page, focus }: { page: LatestPage; focus: boolean }
       ) : (
         <ol className={styles.rows}>
           {rows.map((note) => {
-            const href = notificationHref(note.link)
+            const stored = notificationHref(note.link)
+            const href = stored && localizedLink(stored, locale)
             const className = `${styles.note} ${note.read_at ? '' : styles.unread}`
             return (
               <li key={note.id}>

@@ -6,7 +6,7 @@ import { getPayload, type Payload } from 'payload'
 import { isAdminUser } from '@/access'
 import { countWaitingApplicants } from '@/forms/applicants'
 import { otherLocale, type Locale } from '@/i18n/routing'
-import { documentHref } from '@/lib/document-href'
+import { documentHref, localizedLink } from '@/lib/document-href'
 import { adminQueue, adminReviewRows, type AdminSets } from '@/lib/review-queue'
 import type { StatusKey } from '@/lib/review-status'
 import { titleOf } from '@/lib/title-of'
@@ -145,13 +145,15 @@ export const rowsOf = async (
             return {
               kind,
               verbKey: VERB_OF[kind],
-              href: documentHref({
-                collection: row.collection,
-                id: row.id,
-                viewer: 'admin',
-                waiting: true,
+              href: localizedLink(
+                documentHref({
+                  collection: row.collection,
+                  id: row.id,
+                  viewer: 'admin',
+                  waiting: true,
+                }),
                 locale,
-              }),
+              ),
               label: titleOf(row.title, locale),
               count: 1,
               owners: row.owners,
