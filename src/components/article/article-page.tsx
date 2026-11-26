@@ -337,7 +337,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       {/* The article itself, as data a search engine reads. */}
       <Schema data={[schema, crumbs]} />
       <div className={grid.inner}>
-        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,1fr)] xl:gap-16">
+        <div className="xl:grid xl:grid-cols-article-reader xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
             <ArticleSidebar>{sideCard(false)}</ArticleSidebar>
@@ -542,7 +542,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               aria-labelledby="article-share"
               className="mt-2 grid gap-3 border-t border-border pt-6 xl:hidden"
             >
-              <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-share">
+              <h2 className="font-sans text-sm text-(--text-muted)" id="article-share">
                 {tShare('heading')}
               </h2>
               <ShareBar
@@ -561,7 +561,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                 className="mt-6 grid gap-3 border-t border-border pt-6 xl:hidden"
               >
                 <h2
-                  className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+                  className="flex items-center justify-between gap-2 font-sans text-sm text-(--text-muted)"
                   id="article-ai"
                 >
                   {tShare('aiHeading')}
@@ -653,8 +653,8 @@ function OriginalCard({
 }) {
   const external = { rel: 'noopener', target: '_blank' } as const
   return (
-    <aside className="relative overflow-hidden rounded-[26px] border border-border bg-[var(--surface-muted)] p-6 sm:p-8">
-      <p className="flex items-center gap-2 text-xs font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
+    <aside className="relative overflow-hidden rounded-(--radius-panel) border border-border bg-(--surface-muted) p-6 sm:p-8">
+      <p className="flex items-center gap-2 text-xs font-medium tracking-normal text-(--text-muted) uppercase rtl:tracking-normal">
         <Languages aria-hidden size={14} />
         {labels.from}
       </p>
@@ -679,8 +679,8 @@ function OriginalCard({
         </p>
       )}
       {(hasAuthors || source) && (
-        <p className="mt-2 text-sm text-[var(--text-secondary)]">
-          {hasAuthors && <span className="text-[var(--foreground)]">{authors}</span>}
+        <p className="mt-2 text-sm text-(--text-secondary)">
+          {hasAuthors && <span className="text-foreground">{authors}</span>}
           {hasAuthors && source && <span aria-hidden> · </span>}
           {source && (
             <span dir="auto" lang={language}>
@@ -691,7 +691,7 @@ function OriginalCard({
       )}
       {url && (
         <a
-          className="mt-6 inline-flex h-9 items-center gap-2 rounded-full bg-[var(--foreground)] px-4 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-85"
+          className="mt-6 inline-flex h-9 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-85"
           href={url}
           {...external}
         >

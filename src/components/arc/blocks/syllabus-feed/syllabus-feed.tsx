@@ -94,6 +94,8 @@ export interface SyllabusFeedProps {
   containerAttrs?: Attrs
   /** The `Intl` numbering system counts are written in, such as `arab` for Arabic-Indic digits. */
   numberingSystem?: string
+  /** The bordered feed can sit directly on its parent surface. */
+  variant?: 'surface' | 'transparent'
   className?: string
 }
 
@@ -439,6 +441,7 @@ export function SyllabusFeed({
   openAll = false,
   containerAttrs,
   numberingSystem = 'latn',
+  variant = 'surface',
   className,
 }: SyllabusFeedProps) {
   const t = useTranslations('Course')
@@ -639,7 +642,9 @@ export function SyllabusFeed({
 
   return (
     <section
-      className={[styles.feed, className].filter(Boolean).join(' ')}
+      className={[styles.feed, variant === 'transparent' && styles.transparent, className]
+        .filter(Boolean)
+        .join(' ')}
       aria-labelledby={title ? `${uid}-title` : undefined}
     >
       {title && (

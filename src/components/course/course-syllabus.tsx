@@ -20,6 +20,7 @@ import {
   SyllabusSession,
   type SyllabusEntry,
   type SyllabusGroup,
+  type SyllabusFeedProps,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
 import { formatTime, formatTimeRange, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { SessionMarkdown } from '@/components/course/session-markdown'
@@ -29,6 +30,7 @@ import { editableIn, type Editable } from '@/lib/editable'
 import { numberedSessions, type NumberedSession } from '@/lib/meetings'
 import { sessionAnchor, sessionTitleOf } from '@/lib/session-label'
 import type { Course, Session } from '@/payload-types'
+import styles from './course-syllabus.module.css'
 
 export type Material = NonNullable<Course['bibliography']>[number]
 type MaterialType = Material['type']
@@ -183,12 +185,14 @@ export function CourseSyllabus({
   sessions,
   editable = false,
   decorate,
+  variant,
   className,
 }: {
   course: SyllabusCourse
   sessions: readonly NumberedSession<SyllabusSession>[]
   editable?: boolean
   decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry
+  variant?: SyllabusFeedProps['variant']
   className?: string
 }) {
   const pe = editableIn(editable)
@@ -225,6 +229,7 @@ export function CourseSyllabus({
       defaultOpen={firstBodyId ? [firstBodyId] : []}
       openAll={editable}
       numberingSystem={numberingSystemOf(locale)}
+      variant={variant}
       className={className}
     />
   )
@@ -296,7 +301,7 @@ function SessionBody({
               const Icon = ACTIVITY_ICONS[a.kind] ?? Shapes
               return (
                 <li
-                  className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
+                  className={`${styles.detailRow} grid gap-x-3 text-sm leading-snug`}
                   dir="auto"
                   key={a.id ?? j}
                 >
@@ -344,7 +349,7 @@ export function MaterialList({
         const Icon = MATERIAL_ICONS[m.type] ?? Link2
         return (
           <li
-            className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
+            className={`${styles.detailRow} grid gap-x-3 text-sm leading-snug`}
             dir={directionOf(`${m.title} ${m.note ?? ''}`)}
             key={m.id ?? i}
             {...pe(`${path}.${i}`, { row: { id: m.id } })}

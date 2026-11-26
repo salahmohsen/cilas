@@ -11,6 +11,10 @@
   letter-spacing: var(--tracking-body);
   overflow: hidden;
 }
+.feed.transparent {
+  width: 100%;
+  background: transparent;
+}
 .feed *,
 .feed *::before,
 .feed *::after {

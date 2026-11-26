@@ -43,7 +43,7 @@ export async function SiteFrame({ children }: { children: React.ReactNode }) {
       {/* Open deadlines, across the whole width, above the header. */}
       <SiteDeadlines locale={locale as 'en' | 'ar'} />
       <CILASSiteHeader peoplePages={peoplePages} />
-      <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
+      <main className="mx-auto min-h-site-frame max-w-page">{children}</main>
       {/* The same width as the page content. */}
       <div className="mx-auto max-w-page">
         <SiteFooter

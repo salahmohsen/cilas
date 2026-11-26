@@ -103,3 +103,10 @@
     transition: none;
   }
 }
+
+@media (pointer: coarse) {
+  .root[data-touch-targets] .button {
+    min-height: var(--control-height-md);
+    min-width: var(--control-height-md);
+  }
+}

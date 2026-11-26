@@ -21,6 +21,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import styles from './wheel-carousel.module.css'
 
 interface WheelCarouselItem {
   label: string
@@ -320,7 +321,8 @@ export function WheelCarousel({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        'flex h-full min-h-[420px] w-full items-center justify-center overflow-hidden',
+        styles.wheel,
+        'flex h-full w-full items-center justify-center overflow-hidden',
         className,
       )}
       style={{ backgroundColor: palette.background }}
@@ -390,7 +392,7 @@ export function WheelCarousel({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: reduceMotion ? 0 : crossfadeDuration }}
-                  className="absolute inset-0 grid place-items-center font-heading text-6xl text-[var(--text-muted)]"
+                  className="absolute inset-0 grid place-items-center font-heading text-6xl text-(--text-muted)"
                 >
                   {/\p{Script=Arabic}/u.test(selectedItem.label)
                     ? selectedItem.label.at(0) // Arabic has no initials; the first letter stands for the name.
@@ -443,7 +445,8 @@ export function WheelCarousel({
                 role="option"
                 aria-selected={selected}
                 className={cn(
-                  'pointer-events-none absolute top-1/2 origin-left whitespace-nowrap rtl:origin-right text-[clamp(1rem,2.4vw,1.625rem)] font-medium leading-none tracking-[-0.01em]',
+                  styles.item,
+                  'pointer-events-none absolute top-1/2 origin-left whitespace-nowrap font-medium leading-none rtl:origin-right',
                   itemClassName,
                 )}
                 style={{

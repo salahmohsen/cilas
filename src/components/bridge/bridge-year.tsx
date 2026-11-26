@@ -263,7 +263,7 @@ export async function BridgeYearView({
           />
         </div>
       ) : null}
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
+      <div className="lg:grid lg:grid-cols-programme-rail lg:gap-14">
         <article aria-labelledby="bridge-title" className="min-w-0">
           <header>
             <h1 className="course-title" id="bridge-title">

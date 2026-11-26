@@ -60,3 +60,7 @@
     animation: none;
   }
 }
+
+.wrap.inheritColor {
+  color: inherit;
+}

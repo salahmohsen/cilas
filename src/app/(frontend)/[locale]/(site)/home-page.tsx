@@ -222,7 +222,6 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
 
         {faq.length ? (
           <FaqSection
-            className="home-faq"
             contact={{
               label: t('faqContact'),
               description: t('faqContactText'),

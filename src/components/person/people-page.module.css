@@ -1,0 +1,10 @@
+.heading {
+  font-size: clamp(var(--text-3xl), 4.2vw, var(--text-4xl));
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.heading:dir(rtl) {
+  line-height: 1.35;
+  letter-spacing: normal;
+}

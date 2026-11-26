@@ -39,7 +39,7 @@ export default async function ForgotPage({ params }: Props) {
   ) as ForgotMessages
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <div className="flex min-h-centered-page items-center justify-center px-4 py-16">
       <ForgotForm messages={messages} />
     </div>
   )

@@ -202,7 +202,7 @@ export function PublicCalendar({
       {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
 
       {nearest && !editing ? (
-        <p className="text-sm text-[var(--text-secondary)]">
+        <p className="text-sm text-(--text-secondary)">
           {t('empty')}{' '}
           <Link
             className="underline underline-offset-4"

@@ -18,6 +18,7 @@ import { CilasLogo } from '@/components/cilas-logo'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { focalPointStyle, type FocalPoint } from '@/lib/media-image'
+import styles from './orbit-card-stack.module.css'
 
 export interface OrbitStackItem {
   /** The card's heading. */
@@ -50,7 +51,9 @@ const inRange = (index: number, length: number) =>
 
 function Portrait({ item }: { item: OrbitStackItem }) {
   return (
-    <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.15rem] bg-[var(--surface-muted,var(--muted))] outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
+    <div
+      className={`${styles.portrait} relative flex w-full overflow-hidden outline -outline-offset-1 outline-border`}
+    >
       {item.image ? (
         <Image
           fill
@@ -126,7 +129,7 @@ export function OrbitCardStack({
     <div className={cn('relative isolate flex w-full items-center justify-center p-8', className)}>
       <div
         aria-label={label}
-        className="relative h-[540px] w-full max-w-[980px]"
+        className={`${styles.stage} relative w-full`}
         onBlur={leaveFocus}
         onMouseLeave={close}
         ref={stageRef}
@@ -148,9 +151,10 @@ export function OrbitCardStack({
               <Link
                 aria-current={active ? 'true' : undefined}
                 className={cn(
-                  'absolute top-1/2 left-1/2 block w-[min(78vw,21rem)] origin-bottom rounded-[1.6rem] bg-[var(--card)] p-4 text-[var(--foreground)] outline-none',
-                  'shadow-[0_0_0_1px_oklch(0_0_0/0.08),0_8px_24px_oklch(0_0_0/0.08)] dark:shadow-[0_0_0_1px_oklch(1_0_0/0.1),0_8px_24px_oklch(0_0_0/0.4)]',
-                  'transition-[transform] ease-[cubic-bezier(.2,.8,.2,1)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]',
+                  styles.card,
+                  'absolute top-1/2 left-1/2 block origin-bottom rounded-(--radius-panel) border border-border bg-card text-foreground outline-none',
+                  'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  active && 'shadow-(--shadow-floating)',
                   cardClassName,
                 )}
                 data-orbit-card
@@ -181,20 +185,20 @@ export function OrbitCardStack({
               >
                 <div className="relative">
                   <Portrait item={item} />
-                  <span className="absolute end-3 top-3 grid size-10 place-items-center rounded-full bg-[var(--primary)] text-[var(--primary-foreground)]">
+                  <span className="absolute end-3 top-3 grid size-10 place-items-center rounded-full bg-primary text-primary-foreground">
                     <ArrowUpRight aria-hidden className="size-4 rtl:-scale-x-100" />
                   </span>
                 </div>
                 <div className="px-2 pt-5 pb-2">
-                  <p className="text-xs text-[var(--text-muted)]">{item.role}</p>
-                  <h3 className="mt-2 text-[1.45rem] leading-[1.15] font-semibold tracking-[-0.02em] text-balance rtl:tracking-normal">
+                  <p className="text-xs text-(--text-muted)">{item.role}</p>
+                  <h3 className="mt-2 text-xl leading-(--leading-body) font-semibold tracking-(--tracking-body) text-balance">
                     {item.name}
                   </h3>
-                  <p className="mt-3 line-clamp-3 text-[0.92rem] leading-[1.5] text-[var(--text-secondary)]">
+                  <p className="mt-3 line-clamp-3 text-sm leading-(--leading-body) text-(--text-secondary)">
                     {item.description}
                   </p>
                   {item.stat ? (
-                    <div className="mt-4 border-t border-[var(--border)] pt-3 text-xs text-[var(--text-muted)]">
+                    <div className="mt-4 border-t border-border pt-3 text-xs text-(--text-muted)">
                       {item.stat}
                     </div>
                   ) : null}

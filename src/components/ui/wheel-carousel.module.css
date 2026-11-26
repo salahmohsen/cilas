@@ -1,0 +1,8 @@
+.wheel {
+  min-height: 420px;
+}
+
+.item {
+  font-size: clamp(var(--text-base), 2.4vw, var(--text-2xl));
+  letter-spacing: var(--tracking-body);
+}

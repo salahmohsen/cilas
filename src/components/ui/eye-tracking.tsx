@@ -195,7 +195,7 @@ function Eye({
     >
       {/* Blood vessel details for realistic variant */}
       {variant === 'realistic' && (
-        <div className="absolute inset-0 overflow-hidden rounded-full opacity-[0.07]">
+        <div className="absolute inset-0 overflow-hidden rounded-full opacity-7">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
@@ -246,12 +246,12 @@ function Eye({
               // Cyber circuit pattern
               <>
                 <div
-                  className="absolute inset-[15%] rounded-full border border-dashed opacity-40"
-                  style={{ borderColor: irisColor }}
+                  className="absolute rounded-full border border-dashed opacity-40"
+                  style={{ inset: '15%', borderColor: irisColor }}
                 />
                 <div
-                  className="absolute inset-[30%] rounded-full border opacity-30"
-                  style={{ borderColor: irisColorSecondary }}
+                  className="absolute rounded-full border opacity-30"
+                  style={{ inset: '30%', borderColor: irisColorSecondary }}
                 />
                 {[...Array(8)].map((_, i) => (
                   <div
@@ -283,8 +283,9 @@ function Eye({
                   />
                 ))}
                 <div
-                  className="absolute inset-[20%] rounded-full"
+                  className="absolute rounded-full"
                   style={{
+                    inset: '20%',
                     border: `1px solid ${irisColor}33`,
                   }}
                 />
@@ -376,8 +377,9 @@ function Eye({
       {/* Cyber scan line */}
       {variant === 'cyber' && (
         <motion.div
-          className="pointer-events-none absolute inset-x-0 h-[2px]"
+          className="pointer-events-none absolute inset-x-0"
           style={{
+            height: 2,
             background: `linear-gradient(to right, transparent, ${irisColor}44, transparent)`,
           }}
           animate={{

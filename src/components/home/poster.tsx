@@ -147,13 +147,7 @@ export function Poster({
       <div className="poster-title" dir="auto">
         {/* The whole poster is the link's target; the title names it. */}
         <a className="poster-link" href={href} aria-label={title}>
-          <InViewTitle
-            as="h3"
-            className="poster-title-reveal"
-            text={title}
-            variant="line"
-            once={false}
-          />
+          <InViewTitle as="h3" inheritColor text={title} variant="line" once={false} />
         </a>
       </div>
       {labelOnTop && credit ? (

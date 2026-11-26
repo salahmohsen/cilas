@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function WelcomePage({ params }: Props) {
   const { locale, token } = await params
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <div className="flex min-h-centered-page items-center justify-center px-4 py-16">
       <ResetForm locale={locale} messages={await resetMessages('Welcome')} token={token} />
     </div>
   )

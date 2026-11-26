@@ -37,7 +37,7 @@ export function ReadingProgress({ target }: { target: string }) {
       role="progressbar"
     >
       <div
-        className="h-full origin-[0_50%] bg-foreground transition-transform duration-150 ease-out rtl:origin-[100%_50%]"
+        className="h-full origin-left bg-foreground transition-transform duration-150 ease-out rtl:origin-right"
         style={{ transform: `scaleX(${progress})` }}
       />
     </div>
@@ -109,13 +109,13 @@ export function ArticleContents({
   return (
     <nav aria-label={t('contents')}>
       <details className="border-y border-border py-3 lg:hidden">
-        <summary className="cursor-pointer font-mono text-[0.7rem] tracking-[0.14em] uppercase">
+        <summary className="cursor-pointer font-mono text-xs tracking-normal uppercase">
           {t('contents')}
         </summary>
         <div className="pt-3">{list}</div>
       </details>
       <div className="hidden lg:block">
-        <p className="mb-3 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60">
+        <p className="mb-3 font-mono text-xs tracking-normal uppercase opacity-60">
           {t('onThisPage')}
         </p>
         {list}
@@ -185,7 +185,7 @@ export function TextSize({ target, cells = false }: { target: string; cells?: bo
       </div>
     )
   const button =
-    'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-30'
+    'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-(--surface-muted) disabled:opacity-30'
   return (
     <div aria-label={t('textSize')} className="inline-flex items-center gap-1" role="group">
       <button

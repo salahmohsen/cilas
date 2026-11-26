@@ -313,7 +313,7 @@ export const CourseView: React.FC<{
                             <div className="fellow-card-name" dir={textDirection(person.name)}>
                               <InViewTitle
                                 as="h3"
-                                className="fellow-card-name-reveal"
+                                inheritColor
                                 id={`fellow-${person.id}`}
                                 once={false}
                                 text={person.name}
@@ -460,7 +460,7 @@ export const CourseView: React.FC<{
           />
         </div>
       ) : null}
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
+      <div className="lg:grid lg:grid-cols-programme-rail lg:gap-14">
         <article aria-labelledby="course-title" className="prose-frame min-w-0">
           {editable ? (
             <EditorFields
@@ -590,7 +590,7 @@ export const CourseView: React.FC<{
           {syllabus.length ? (
             <div className="mt-12">
               <CourseSyllabus
-                className="course-flow"
+                variant="transparent"
                 course={course}
                 editable={editable}
                 sessions={syllabus}
@@ -612,7 +612,7 @@ export const CourseView: React.FC<{
             aria-labelledby="course-share"
             className="mt-12 grid gap-3 border-t border-border pt-6 lg:hidden"
           >
-            <h2 className="font-sans text-sm text-[var(--text-muted)]" id="course-share">
+            <h2 className="font-sans text-sm text-(--text-muted)" id="course-share">
               {ts('heading')}
             </h2>
             <ShareBar label={ts('course')} path={coursePath} title={course.title} email={email} />
@@ -623,7 +623,7 @@ export const CourseView: React.FC<{
               className="mt-6 grid gap-3 border-t border-border pt-6 lg:hidden"
             >
               <h2
-                className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+                className="flex items-center justify-between gap-2 font-sans text-sm text-(--text-muted)"
                 id="course-ai"
               >
                 {ts('aiHeading')}
@@ -708,7 +708,7 @@ export const CourseView: React.FC<{
           </ul>
           {related.length > RELATED_SHOWN && cycle && season ? (
             <Link
-              className="mt-8 inline-flex h-9 items-center rounded-full px-4 text-sm shadow-[0_0_0_1px_var(--border)] hover:bg-[var(--surface-muted)]"
+              className="mt-8 inline-flex h-9 items-center rounded-full px-4 text-sm ring-1 ring-border hover:bg-(--surface-muted)"
               href={`/study?season=${season}&year=${cycle.start_year}`}
             >
               {t('allInCycle', { count: related.length + 1 })}

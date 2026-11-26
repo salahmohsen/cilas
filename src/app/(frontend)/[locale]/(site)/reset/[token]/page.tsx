@@ -21,7 +21,7 @@ export default async function ResetPage({ params }: Props) {
   const messages = await resetMessages('Reset')
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <div className="flex min-h-centered-page items-center justify-center px-4 py-16">
       <ResetForm locale={locale} messages={messages} token={token} />
     </div>
   )

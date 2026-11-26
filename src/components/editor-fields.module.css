@@ -1,0 +1,5 @@
+@media (min-width: 40rem) {
+  .fields {
+    grid-template-columns: 10rem 1fr;
+  }
+}

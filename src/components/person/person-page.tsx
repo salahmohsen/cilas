@@ -90,7 +90,7 @@ export async function PersonPage({
 
           {/* Who they are. */}
           <header className="flex flex-col gap-6 sm:flex-row sm:items-end">
-            <div className="relative size-36 shrink-0 overflow-hidden rounded-[26px] bg-[var(--surface-muted)] sm:size-44">
+            <div className="relative size-36 shrink-0 overflow-hidden rounded-(--radius-panel) bg-(--surface-muted) sm:size-44">
               <AvatarImage
                 src={photo?.url}
                 fallbackSeed={personAvatarSeed(person.id)}
@@ -104,7 +104,7 @@ export async function PersonPage({
               <h1 className={grid.readerTitle}>{person.name}</h1>
               {otherName && otherName !== person.name && (
                 <p
-                  className="text-lg text-[var(--text-secondary)]"
+                  className="text-lg text-(--text-secondary)"
                   dir={isRtl(other) ? 'rtl' : 'ltr'}
                   lang={other}
                 >
@@ -119,7 +119,7 @@ export async function PersonPage({
             <RichTextField className="article-prose article-prose--bio" data={person.bio} />
           ) : null}
 
-          {nothing && <p className="text-[var(--text-muted)]">{t('nothing')}</p>}
+          {nothing && <p className="text-(--text-muted)">{t('nothing')}</p>}
         </div>
       </div>
 

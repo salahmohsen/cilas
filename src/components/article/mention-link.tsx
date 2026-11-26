@@ -37,14 +37,14 @@ export function MentionLink({
         role={kindLabel}
       />
     ) : (
-      <div className="grid max-w-[20rem] gap-2 text-sm leading-relaxed">
+      <div className="grid max-w-80 gap-2 text-sm leading-relaxed">
         {preview.image ? (
-          <span className="relative aspect-[4/3] w-full overflow-hidden rounded-md">
+          <span className="relative aspect-4/3 w-full overflow-hidden rounded-md">
             <Image
               fill
               sizes="auto, 20rem"
               alt=""
-              className="aspect-[4/3] w-full rounded-md object-cover"
+              className="aspect-4/3 w-full rounded-md object-cover"
               decoding="async"
               src={preview.image}
             />
@@ -53,7 +53,7 @@ export function MentionLink({
         <p className="text-xs text-(--text-secondary)">
           {[kindLabel, preview.meta].filter(Boolean).join(' · ')}
         </p>
-        <p className="font-medium text-(--foreground)" dir="auto">
+        <p className="font-medium text-foreground" dir="auto">
           {preview.title}
         </p>
         {preview.text ? (

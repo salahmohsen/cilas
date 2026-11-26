@@ -15,6 +15,8 @@ export interface InViewTitleProps {
   variant?: InViewTitleVariant
   as?: 'h1' | 'h2' | 'h3'
   lines?: string[]
+  /** Use the parent’s ink when the title is part of a colored surface. */
+  inheritColor?: boolean
   className?: string
   id?: string
   once?: boolean
@@ -49,6 +51,7 @@ export function InViewTitle({
   variant = 'blur',
   as = 'h2',
   lines,
+  inheritColor,
   className,
   id,
   once = true,
@@ -73,7 +76,12 @@ export function InViewTitle({
   const visible = reduced || late || inView || (once && passed)
   const instant = Boolean(reduced || late)
   const Tag = as
-  const wrapperClass = [styles.wrap, hydrated ? '' : styles.pending, className]
+  const wrapperClass = [
+    styles.wrap,
+    hydrated ? '' : styles.pending,
+    inheritColor && styles.inheritColor,
+    className,
+  ]
     .filter(Boolean)
     .join(' ')
   const words = text.split(' ').filter(Boolean)

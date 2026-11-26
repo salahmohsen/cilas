@@ -156,6 +156,19 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Page layout shared by the auth routes and 404. */
+@utility min-h-centered-page {
+  min-height: 70vh;
+}
+@utility min-h-site-frame {
+  min-height: 60vh;
+}
+
+/* Course and bridge programme layouts share the same side rail. */
+@utility grid-cols-programme-rail {
+  grid-template-columns: minmax(0, 1fr) 20rem;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -428,6 +441,9 @@ h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   }
 }
 
+.footnote-card {
+  max-width: 22rem;
+}
 /* A note takes the direction of its own words: Latin citations on an Arabic
    page read left to right, with their punctuation where it belongs. */
 .footnote-card p,
@@ -726,9 +742,6 @@ h1.article-title {
 .fellow-card-name h3 {
   margin: 0;
   font: inherit;
-}
-.fellow-card .fellow-card-name-reveal {
-  color: inherit;
 }
 .fellow-card-name[dir='rtl'] {
   line-height: 1.35;
@@ -1355,7 +1368,7 @@ h1.article-title {
 /* The dialog: the card is its only surface. */
 .collection-dialog[role='dialog'] {
   width: min(calc(100vw - var(--space-8)), 40rem);
-  border-radius: 1rem;
+  border-radius: 0;
 }
 /* On phones, the bottom sheet: printed paper like the card, which runs edge
    to edge. The articles scroll between the head and the strip. */
@@ -1642,17 +1655,10 @@ h1.article-title {
 
 /* ===================================================== course list */
 
-/* The view switch sits at the list's end, over its first row. On a touch
-   screen its buttons grow to the 44px a finger needs. */
+/* The view switch sits at the list's end, over its first row. */
 .study-view-bar {
   display: flex;
   justify-content: flex-end;
-}
-@media (pointer: coarse) {
-  .study-view-toggle button {
-    min-height: 44px;
-    min-width: 44px;
-  }
 }
 
 .course-rows {
@@ -2079,13 +2085,6 @@ h1.article-title {
   margin-inline: auto;
 }
 
-/* The course flow keeps its own border, on the page with no surface fill. */
-.course-page .course-flow {
-  /* The column's full width, so its edges line up with the fellow cards. */
-  width: 100%;
-  background: transparent;
-}
-
 /* ===================================================== side cards */
 
 /* The article's and the event's side column as one poster card
@@ -2224,6 +2223,11 @@ details:not([open]) > summary.side-card-label {
     border-radius: 0;
   }
 }
+/* The sidebar column belongs to the reader. */
+@utility grid-cols-article-reader {
+  grid-template-columns: 17rem minmax(0, 1fr);
+}
+
 /* A card that fits its column's height: this section alone shrinks, and
    its content scrolls. The others keep their full size. */
 .article-sidebar-viewport {
@@ -3147,9 +3151,6 @@ h3 {
 .poster-title:dir(rtl) {
   line-height: 1.35;
   letter-spacing: 0;
-}
-.poster .poster-title-reveal {
-  color: inherit;
 }
 .poster-title h3 {
   font: inherit;

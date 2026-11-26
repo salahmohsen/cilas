@@ -49,8 +49,10 @@ export function CollectionDialog({
         <CollectionCard
           {...card}
           close={
-            <BottomSheetClose aria-label={closeLabel} className="collection-card-close">
-              {closeIcon}
+            <BottomSheetClose asChild>
+              <button aria-label={closeLabel} className="collection-card-close" type="button">
+                {closeIcon}
+              </button>
             </BottomSheetClose>
           }
         />
@@ -59,15 +61,19 @@ export function CollectionDialog({
 
   return (
     <Dialog>
-      <DialogTrigger className="side-card-collection" type="button">
-        {row}
+      <DialogTrigger asChild>
+        <button className="side-card-collection" type="button">
+          {row}
+        </button>
       </DialogTrigger>
       <DialogContent chrome={false} className="collection-dialog" title={card.title}>
         <CollectionCard
           {...card}
           close={
-            <DialogClose aria-label={closeLabel} className="collection-card-close">
-              {closeIcon}
+            <DialogClose asChild>
+              <button aria-label={closeLabel} className="collection-card-close" type="button">
+                {closeIcon}
+              </button>
             </DialogClose>
           }
         />

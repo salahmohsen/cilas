@@ -25,34 +25,35 @@ export function NewsletterSignupSection({
   // The site writes numbers in the page's own digits.
   const digits = (n: number) => localDigits(n, locale)
   return (
-    <NewsletterSignup
-      buttonLabel={f('subscribe')}
-      className="not-prose mt-16"
-      description={t('description')}
-      onSubscribe={subscribeToNewsletter}
-      placeholder={f('placeholder')}
-      privacyLink={null}
-      privacyNote={t('privacy')}
-      publication={publication}
-      readers={null}
-      text={{
-        empty: f('empty'),
-        format: f('invalid'),
-        failed: f('failed'),
-        done: f('done'),
-        subscribed: f('subscribed'),
-        emailLabel: t('emailLabel'),
-        retry: t('retry'),
-        sending: t('sending'),
-        again: t('again'),
-        sentTo: (email) => t('sentTo', { email }),
-        issue: (number) => t('issue', { number: digits(number) }),
-        issueLabel: (name, number) => t('issueLabel', { name, number: digits(number) }),
-        to: t('to'),
-        minutes: (minutes) => t('minutes', { minutes: digits(minutes) }),
-      }}
-      title={t('title')}
-      variant="panel"
-    />
+    <div className="not-prose mt-16">
+      <NewsletterSignup
+        buttonLabel={f('subscribe')}
+        description={t('description')}
+        onSubscribe={subscribeToNewsletter}
+        placeholder={f('placeholder')}
+        privacyLink={null}
+        privacyNote={t('privacy')}
+        publication={publication}
+        readers={null}
+        text={{
+          empty: f('empty'),
+          format: f('invalid'),
+          failed: f('failed'),
+          done: f('done'),
+          subscribed: f('subscribed'),
+          emailLabel: t('emailLabel'),
+          retry: t('retry'),
+          sending: t('sending'),
+          again: t('again'),
+          sentTo: (email) => t('sentTo', { email }),
+          issue: (number) => t('issue', { number: digits(number) }),
+          issueLabel: (name, number) => t('issueLabel', { name, number: digits(number) }),
+          to: t('to'),
+          minutes: (minutes) => t('minutes', { minutes: digits(minutes) }),
+        }}
+        title={t('title')}
+        variant="panel"
+      />
+    </div>
   )
 }

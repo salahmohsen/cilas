@@ -1,4 +1,5 @@
 import type { Editable } from '@/lib/editable'
+import styles from './editor-fields.module.css'
 
 type EditorField = { label: string; path: string; value: React.ReactNode }
 
@@ -20,7 +21,7 @@ export function EditorFields({ pe, fields }: { pe: Editable; fields: EditorField
       <p className="mb-2 text-xs font-medium text-(--text-muted)">
         Page settings · only editors see this
       </p>
-      <dl className="grid gap-1.5 sm:grid-cols-[10rem_1fr]">
+      <dl className={`${styles.fields} grid gap-1.5`}>
         {fields.map(({ label, path, value }) => (
           <div className="contents" key={path}>
             <dt className="text-(--text-muted)">{label}</dt>

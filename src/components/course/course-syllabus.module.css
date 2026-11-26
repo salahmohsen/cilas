@@ -1,0 +1,4 @@
+/* Keep the icons aligned with the activity and material text. */
+.detailRow {
+  grid-template-columns: 1.25rem 1fr;
+}

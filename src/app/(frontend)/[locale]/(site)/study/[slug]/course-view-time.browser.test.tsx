@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { render, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { describe, expect, it } from 'vitest'
 
@@ -83,6 +83,6 @@ describe('what the course page says about time', () => {
     const { rows, container } = facts(course(), [])
     expect(rows).toEqual([])
     expect(container.querySelector('p.side-card-muted')).toBeNull()
-    expect(container.querySelector('.course-flow')).toBeNull()
+    expect(within(container).queryByRole('region', { name: en.Course.flow })).toBeNull()
   })
 })

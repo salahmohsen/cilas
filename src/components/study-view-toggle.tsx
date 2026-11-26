@@ -17,7 +17,7 @@ export function StudyViewToggle({
   const t = useTranslations('Study.filters')
   return (
     <SegmentedControl
-      className="study-view-toggle"
+      touchTargets
       label={t('view')}
       onValueChange={(value) => onChange(value as StudyView)}
       options={[

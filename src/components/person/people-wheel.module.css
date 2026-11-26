@@ -1,0 +1,19 @@
+.wheel {
+  height: 440px;
+}
+
+.detailRow {
+  grid-template-columns: 1rem 1fr;
+}
+
+@media (min-width: 40rem) {
+  .wheel {
+    height: 540px;
+  }
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,18 @@
+.stage {
+  height: 540px;
+  max-width: 980px;
+}
+
+.card {
+  width: min(78vw, 21rem);
+  /* Keep the portrait one space-4 inset from the outer edge, including the border. */
+  padding: calc(var(--space-4) - 1px);
+  transition-property: transform;
+  transition-timing-function: var(--ease-standard);
+}
+
+.portrait {
+  aspect-ratio: 1.36;
+  border-radius: calc(var(--radius-panel) - var(--space-4));
+  background: var(--surface-muted, var(--muted));
+}

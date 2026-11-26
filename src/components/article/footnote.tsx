@@ -28,8 +28,8 @@ export function FootnoteMark({
   return (
     <HoverCard
       content={
-        <div className="footnote-card max-w-[22rem] text-sm leading-relaxed">
-          <p className="mb-1 font-mono text-[0.68rem] tracking-[0.14em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
+        <div className="footnote-card text-sm leading-relaxed">
+          <p className="mb-1 font-mono text-xs tracking-normal text-(--text-muted) uppercase rtl:tracking-normal">
             {label} {shown}
           </p>
           <RichText

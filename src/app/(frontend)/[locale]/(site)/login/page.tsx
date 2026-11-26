@@ -46,7 +46,7 @@ export default async function LoginPage({ params, searchParams }: Props) {
   const messages = Object.fromEntries(keys.map((k) => [k, t(k)])) as LoginMessages
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <div className="flex min-h-centered-page items-center justify-center px-4 py-16">
       <LoginForm
         googleEnabled={Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET)}
         googleError={query.error === 'google'}

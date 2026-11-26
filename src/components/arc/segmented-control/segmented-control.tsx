@@ -26,6 +26,8 @@ export interface SegmentedControlProps {
   label?: string
   /** Called when the pointer or focus reaches an option, before it is chosen. Use it to start loading what that option shows. */
   onOptionIntent?: (value: string) => void
+  /** Use the standard control height as the minimum target size on coarse pointers. */
+  touchTargets?: boolean
   className?: string
 }
 
@@ -35,6 +37,7 @@ export default function SegmentedControl({
   onValueChange,
   label,
   onOptionIntent,
+  touchTargets,
   className,
 }: SegmentedControlProps) {
   const id = useId()
@@ -111,7 +114,12 @@ export default function SegmentedControl({
   }
 
   return (
-    <div className={`${styles.root} ${className ?? ''}`} role="group" aria-label={label}>
+    <div
+      className={`${styles.root} ${className ?? ''}`}
+      data-touch-targets={touchTargets || undefined}
+      role="group"
+      aria-label={label}
+    >
       <LayoutGroup id={id}>
         <motion.div ref={track} layoutScroll className={styles.track}>
           {options.map((option, index) => (
