@@ -25863,6 +25863,13 @@
           "notNull": false,
           "default": "'members'"
         },
+        "ai_buttons": {
+          "name": "ai_buttons",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
         "reopened": {
           "name": "reopened",
           "type": "boolean",
@@ -38610,6 +38617,13 @@
           "notNull": false,
           "default": false
         },
+        "ai_buttons": {
+          "name": "ai_buttons",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -41363,6 +41377,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "dfdbd7a2-d3a8-43a1-a67e-5423e1469b7e",
+  "id": "68e5902e-c9f5-4807-9fa8-49e1c64261da",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
