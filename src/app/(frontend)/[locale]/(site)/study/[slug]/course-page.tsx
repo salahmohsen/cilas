@@ -13,6 +13,7 @@ import { getPayload } from 'payload'
 import type { Reader } from '@/lib/reader'
 import { getContactEmail } from '@/api/contact.api'
 import { getCourseSessions } from '@/api/sessions.api'
+import { siteAiButtons } from '@/lib/ai-buttons'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
@@ -112,8 +113,8 @@ export async function CoursePage({
     </OutsideAdminFrame>
   )
 
-  // The institute's email, the share bar's mail recipient.
-  const email = await getContactEmail()
+  // The institute's email (the share bar's mail recipient) and the AI buttons switch.
+  const [email, showAi] = await Promise.all([getContactEmail(), siteAiButtons(payload)])
 
   if (!previewCourse) {
     // The course as data a search engine reads; the admin's preview skips it.
@@ -140,6 +141,7 @@ export async function CoursePage({
             email={email}
             related={related}
             sessions={sessions}
+            showAi={showAi}
           />
         </RichTextScope>
       </>
@@ -156,6 +158,7 @@ export async function CoursePage({
           initialData={previewCourse ?? course}
           related={related}
           sessions={sessions}
+          showAi={showAi}
         />
       </RichTextScope>
     </>

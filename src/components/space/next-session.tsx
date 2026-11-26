@@ -13,12 +13,15 @@ export function NextSession({
   course,
   session,
   tentative,
+  ai,
   titled = true,
 }: {
   course: SessionCourse
   /** The id of the session's row in the course */
   session: string
   tentative: boolean
+  /** Whether the card offers the "Study with AI" buttons */
+  ai: boolean
   /** False inside the rail's tab, whose label already names it */
   titled?: boolean
 }) {
@@ -34,7 +37,11 @@ export function NextSession({
           {t('nextSession')}
         </h2>
       )}
-      <PostSession session={{ state: 'shown', course, session }} kind="announcement" postHref="" />
+      <PostSession
+        session={{ state: 'shown', course, session, ai }}
+        kind="announcement"
+        postHref=""
+      />
       {tentative && <p className={styles.meta}>{tc('tentative')}</p>}
     </section>
   )

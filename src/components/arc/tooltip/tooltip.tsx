@@ -11,6 +11,9 @@ export interface TooltipProps {
   content: ReactNode
   children: ReactElement
   side?: 'top' | 'bottom' | 'left' | 'right'
+  /** Pass both to open and close it yourself, as a trigger that also opens on a press must. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 const DELAY = 250
@@ -116,10 +119,17 @@ function TooltipText({ text }: { text: string }) {
   )
 }
 
-export function Tooltip({ content, children, side = 'top' }: TooltipProps) {
+export function Tooltip({
+  content,
+  children,
+  side = 'top',
+  open: controlled,
+  onOpenChange,
+}: TooltipProps) {
   const isWarm = useSyncExternalStore(warmth.subscribe, warmth.get, () => false)
   // Controlled so the instant flag lands in the same render that mounts the content (Radix reports uncontrolled changes a frame late).
-  const [open, setOpen] = useState(false)
+  const [internal, setOpen] = useState(false)
+  const open = controlled ?? internal
   const [instant, setInstant] = useState(false)
   useEffect(() => {
     if (!open) return
@@ -134,6 +144,7 @@ export function Tooltip({ content, children, side = 'top' }: TooltipProps) {
         onOpenChange={(next) => {
           if (next) setInstant(warmth.get())
           setOpen(next)
+          onOpenChange?.(next)
         }}
       >
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>

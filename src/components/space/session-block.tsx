@@ -9,7 +9,7 @@ export function SessionBlock({ id, read }: { id: string; read: SessionRead | nul
   const view =
     read?.state === 'shown'
       ? read.course.sessions.some((s) => String(s.id) === id)
-        ? ({ state: 'shown', course: read.course, session: id } as const)
+        ? { ...read, session: id }
         : ({ state: 'gone' } as const)
       : (read ?? ({ state: 'gone' } as const))
   return (

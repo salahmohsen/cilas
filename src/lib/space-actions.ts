@@ -524,6 +524,7 @@ export async function spaceSettingsSetAction(
     posting: posting ? (posting as 'open' | 'members_comment' | 'fellows_only') : undefined,
     events: events === 'members' || events === 'moderators' ? events : undefined,
     reopened: parseBool(reopen),
+    aiButtons: parseBool(form.get('ai_buttons')),
     about,
     rules,
     locale,

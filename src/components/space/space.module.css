@@ -707,9 +707,17 @@
   gap: var(--space-4);
 }
 
+/* The footer reaches over the body's end padding. Its sticky offset must reach over it too:
+   sticky stops at the padding edge, which lifted the footer over the last field. */
 .settingsSheet .settingsFooter {
+  bottom: calc(-1 * var(--space-6));
   margin-inline: calc(-1 * var(--space-5));
   margin-block-end: calc(-1 * var(--space-6));
+}
+
+/* A control that takes focus scrolls clear of the footer: its two paddings and its button. */
+.settingsSheet .settings :is(button, input, textarea) {
+  scroll-margin-block-end: calc(var(--control-height-md) + 2 * var(--space-4) + var(--space-2));
 }
 
 .aboutField {
@@ -719,6 +727,61 @@
 }
 .aboutField > :first-child {
   justify-self: stretch;
+}
+
+/* A switch, its label and a help button after it. A long label wraps between the two. */
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.switchLabel {
+  min-width: 0;
+  padding-block: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  cursor: pointer;
+}
+
+.switchLabel[data-disabled] {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.infoTip {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.infoTip:hover {
+  color: var(--foreground);
+}
+
+/* A finger gets 44px, inside the row's gap, so it never covers the label. */
+@media (pointer: coarse) {
+  .infoTip::after {
+    content: '';
+    position: absolute;
+    inset: -0.625rem;
+  }
+}
+
+.switchReason {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
 }
 
 .footerLinks {

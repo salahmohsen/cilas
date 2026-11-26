@@ -5684,6 +5684,15 @@
   },
   {
     "entity": "collection:spaces",
+    "field": "ai_buttons",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "collection:spaces",
     "field": "about",
     "rules": {
       "create": "open",
@@ -10256,6 +10265,15 @@
   {
     "entity": "global:site-settings",
     "field": "spaces_trial_cohorts",
+    "rules": {
+      "create": "open",
+      "read": "open",
+      "update": "open"
+    }
+  },
+  {
+    "entity": "global:site-settings",
+    "field": "ai_buttons",
     "rules": {
       "create": "open",
       "read": "open",

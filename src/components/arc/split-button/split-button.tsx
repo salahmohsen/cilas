@@ -7,6 +7,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } fr
 import type { TargetAndTransition } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { textUnits } from '../lib/text-units'
 import styles from './split-button.module.css'
 
 export interface SplitButtonAction {
@@ -115,10 +116,10 @@ const toGlyphs = (chars: string[], seq: number): Glyph[] =>
 
 /** Shared leading and trailing characters keep their identity, so "Copy page" to "Copied" only replaces the changed letters. */
 function useGlyphs(text: string) {
-  const [state, setState] = useState(() => ({ text, seq: 0, glyphs: toGlyphs([...text], 0) }))
+  const [state, setState] = useState(() => ({ text, seq: 0, glyphs: toGlyphs(textUnits(text), 0) }))
   if (state.text === text) return state.glyphs
-  const prev = [...state.text],
-    next = [...text]
+  const prev = textUnits(state.text),
+    next = textUnits(text)
   let start = 0,
     end = 0
   while (start < prev.length && start < next.length && prev[start] === next[start]) start++

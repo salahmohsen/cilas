@@ -28,7 +28,8 @@ export const CourseLivePreview: React.FC<{
   related?: RelatedCourse[]
   after?: React.ReactNode
   email?: string | null
-}> = ({ initialData, sessions, related, after, email }) => {
+  showAi: boolean
+}> = ({ initialData, sessions, related, after, email, showAi }) => {
   const { data } = useLivePreview<Course>({
     initialData,
     // Read from env, not `window.location.origin`: these pages are statically
@@ -51,6 +52,7 @@ export const CourseLivePreview: React.FC<{
         email={email}
         related={related}
         sessions={sessions}
+        showAi={showAi}
       />
     </>
   )
