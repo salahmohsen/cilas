@@ -232,12 +232,16 @@ describe('the cache', () => {
       meetings
         .filter((meeting) => meeting.courseId === world.other.id)
         .map((meeting) => meeting.sessionTitle)
+    // WARNING: SQL runs no hook, so no cache tag is revalidated.
+    const retitle = (title: string) =>
+      payload.db.pool.query(
+        `UPDATE sessions_locales SET title = $1
+         WHERE _locale = 'en' AND _parent_id IN (SELECT id FROM sessions WHERE course_id = $2)`,
+        [title, world.other.id],
+      )
     const title = `${world.other.session} edited`
-    await payload.db.pool.query(
-      `UPDATE sessions_locales SET title = $1
-       WHERE _locale = 'en' AND _parent_id IN (SELECT id FROM sessions WHERE course_id = $2)`,
-      [title, world.other.id],
-    )
+    onTestFinished(async () => void (await retitle(world.other.session)))
+    await retitle(title)
     expect(ownSessionTitles(await getCalendarItems(payload, 'en'))).toEqual([title])
 
     const { result: second } = await runInRequest(() => getCachedCalendarItems('en'), {

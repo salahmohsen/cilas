@@ -84,6 +84,13 @@ export const createTracker = () => {
     const failed: string[] = []
     const refused: { collection: string; id: number; message: string }[] = []
     const accounts = tracked.get('users') ?? []
+    // WARNING: a bulk delete resolves with the rows it could not delete in `errors`.
+    const deleteWhere = (collection: CollectionSlug, where: Where) =>
+      payload.delete({ collection, where, overrideAccess: true }).then(
+        ({ errors }) =>
+          void failed.push(...errors.map((e) => `${collection} ${e.id}: ${e.message}`)),
+        (error: Error) => void failed.push(`${collection}: ${error.message}`),
+      )
     if (accounts.length) {
       const { docs } = await payload.find({
         collection: 'users',
@@ -97,24 +104,14 @@ export const createTracker = () => {
     }
     if (accounts.length)
       for (const [collection, field] of ACCOUNT_ROWS)
-        await payload
-          .delete({
-            collection,
-            where: { [field]: { in: accounts } },
-            overrideAccess: true,
-          })
-          .catch((error: Error) => void failed.push(`${collection}: ${error.message}`))
+        await deleteWhere(collection, { [field]: { in: accounts } })
     // WARNING: a history row stays when its document is deleted, so the tracker removes it.
     for (const { collection } of REVIEWED) {
       const docs = tracked.get(collection)
       if (!docs) continue
-      await payload
-        .delete({
-          collection: 'review-events',
-          where: { and: [{ collection: { equals: collection } }, { doc: { in: docs } }] },
-          overrideAccess: true,
-        })
-        .catch((error: Error) => void failed.push(`review-events: ${error.message}`))
+      await deleteWhere('review-events', {
+        and: [{ collection: { equals: collection } }, { doc: { in: docs } }],
+      })
     }
     for (const collection of [...DELETE_ORDER, ...rest]) {
       for (const id of [...(tracked.get(collection) ?? [])].reverse()) {
