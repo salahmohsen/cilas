@@ -1,6 +1,7 @@
 import pg from 'pg'
 import type { Payload } from 'payload'
 
+import { REVIEWED } from '../src/lib/reviewed-collections'
 import type { User } from '../src/payload-types'
 
 export const RUN = crypto.randomUUID().slice(0, 8)
@@ -92,6 +93,18 @@ export const createTracker = () => {
             overrideAccess: true,
           })
           .catch((error: Error) => void failed.push(`${collection}: ${error.message}`))
+    // WARNING: a history row stays when its document is deleted, so the tracker removes it.
+    for (const { collection } of REVIEWED) {
+      const docs = tracked.get(collection)
+      if (!docs) continue
+      await payload
+        .delete({
+          collection: 'review-events',
+          where: { and: [{ collection: { equals: collection } }, { doc: { in: docs } }] },
+          overrideAccess: true,
+        })
+        .catch((error: Error) => void failed.push(`review-events: ${error.message}`))
+    }
     for (const collection of [...DELETE_ORDER, ...rest]) {
       for (const id of [...(tracked.get(collection) ?? [])].reverse()) {
         await payload

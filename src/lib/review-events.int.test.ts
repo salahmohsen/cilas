@@ -541,6 +541,27 @@ describe('review-events: history', () => {
     expect(snapshots).not.toContain(rows[0]!.version)
   })
 
+  it('a spec cleanup removes the history rows of the documents it deletes', async () => {
+    const spec = createTracker()
+    const id = await trustedWrites(payload, spec.track).create('articles', {
+      title: uniq('review-event-cleanup'),
+      slug: uniq('review-event-cleanup'),
+      authors: [owner.person],
+      tier: 'owner',
+      review: { status: 'draft' },
+    })
+    await moveArticle(id, owner, 'submitted')
+    const rows = () =>
+      payload.count({
+        collection: 'review-events',
+        where: { collection: { equals: 'articles' }, doc: { equals: id } },
+      })
+    expect(await rows()).toEqual({ totalDocs: 1 })
+
+    await spec.cleanup(payload)
+    expect(await rows()).toEqual({ totalDocs: 0 })
+  })
+
   it('an admin cannot create, change or delete a row through REST', async () => {
     const id = await draftArticle('review-event-rest-writes')
     await moveArticle(id, owner, 'submitted')
