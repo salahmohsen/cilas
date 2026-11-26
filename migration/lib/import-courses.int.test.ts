@@ -3,9 +3,10 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { importCourses, type ArchiveCourse, type ArchiveCycle } from './import-courses'
-import { RUN, uniq } from '../../testing/payload.fixture'
+import { createTracker, RUN, uniq } from '../../testing/payload.fixture'
 
 let payload: Payload
+const { trackMatching, cleanup } = createTracker()
 
 const P = `/probe-${RUN}`
 const CYCLE_URL = `${P}-fall-2031.html`
@@ -41,14 +42,14 @@ const course = (over: Partial<ArchiveCourse> = {}) =>
     ...over,
   }) satisfies ArchiveCourse
 
-const cleanup = async () => {
+const trackImportedFixtures = async () => {
   for (const [collection, where] of [
     ['courses', { legacy_url: { like: P } }],
     ['cycles', { legacy_url: { like: P } }],
     ['people', { name: { equals: FELLOW } }],
     ['places', { name: { equals: PLACE } }],
   ] as const) {
-    await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
+    await trackMatching(payload, collection, where)
   }
 }
 
@@ -57,7 +58,8 @@ describe('archive course import', () => {
     payload = await getPayload({ config: await config })
   })
   afterAll(async () => {
-    await cleanup()
+    await trackImportedFixtures()
+    await cleanup(payload)
     await payload.destroy()
   })
 

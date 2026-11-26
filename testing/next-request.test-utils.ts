@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import { workAsyncStorage } from 'next/dist/server/app-render/work-async-storage.external'
 import { workUnitAsyncStorage } from 'next/dist/server/app-render/work-unit-async-storage.external'
 import { createRequestStoreForAPI } from 'next/dist/server/async-storage/request-store'
@@ -5,6 +6,7 @@ import { createWorkStore } from 'next/dist/server/async-storage/work-store'
 import { defaultConfig } from 'next/dist/server/config-shared'
 import { IncrementalCache } from 'next/dist/server/lib/incremental-cache'
 import { getImplicitTags } from 'next/dist/server/lib/implicit-tags'
+import { nodeFs } from 'next/dist/server/lib/node-fs-methods'
 import { NextRequest } from 'next/server'
 
 const previewProps = {
@@ -22,6 +24,7 @@ const cacheLifeProfiles = {
 }
 
 type RequestOptions = {
+  cacheDirectory?: string
   headers?: HeadersInit
   page?: string
   url?: string
@@ -37,10 +40,20 @@ type RequestOptions = {
  */
 export const runInRequest = async <Result>(
   work: () => Promise<Result>,
-  { headers, page = '/[locale]/page', url = 'http://localhost:3000/' }: RequestOptions = {},
+  {
+    cacheDirectory,
+    headers,
+    page = '/[locale]/page',
+    url = 'http://localhost:3000/',
+  }: RequestOptions = {},
 ) => {
   const incrementalCache = new IncrementalCache({
     dev: true,
+    ...(cacheDirectory && {
+      fs: nodeFs,
+      flushToDisk: true,
+      serverDistDir: join(cacheDirectory, 'server'),
+    }),
     requestHeaders: {},
     previewProps,
     prerenderManifest: {
@@ -92,6 +105,7 @@ export const runInRequest = async <Result>(
   )
   for (const close of onClose) close()
   await Promise.all(pending)
+  await Promise.all(Object.values(workStore.pendingRevalidates ?? {}))
   return {
     result,
     revalidated: (workStore.pendingRevalidatedTags ?? []).map(({ tag }) => tag),

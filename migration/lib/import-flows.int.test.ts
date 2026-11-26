@@ -6,9 +6,10 @@ import type { Course } from '@/payload-types'
 import { importCourses, type ArchiveCourse, type ArchiveCycle } from './import-courses'
 import { importFlows, NOTES_HEADING, NOTES_HEADING_AR } from './import-flows'
 import type { Syllabus } from './syllabus-schema'
-import { RUN } from '../../testing/payload.fixture'
+import { createTracker, RUN } from '../../testing/payload.fixture'
 
 let payload: Payload
+const { trackMatching, cleanup } = createTracker()
 
 const P = `/probeflows-${RUN}`
 const CYCLE_URL = `${P}-fall-2033.html`
@@ -133,13 +134,13 @@ const headings = (c: Course) => {
   return text.split(NOTES_HEADING).length - 1 + text.split(NOTES_HEADING_AR).length - 1
 }
 
-const cleanup = async () => {
+const trackImportedFixtures = async () => {
   for (const [collection, where] of [
     ['courses', { legacy_url: { like: P } }],
     ['cycles', { legacy_url: { like: P } }],
     ['places', { name: { equals: PLACE } }],
   ] as const) {
-    await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
+    await trackMatching(payload, collection, where)
   }
 }
 
@@ -149,7 +150,8 @@ describe('course flow import', () => {
     await importCourses(payload, { cycles, courses: archived })
   })
   afterAll(async () => {
-    await cleanup()
+    await trackImportedFixtures()
+    await cleanup(payload)
     await payload.destroy()
   })
 

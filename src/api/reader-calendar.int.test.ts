@@ -1,5 +1,8 @@
+import { mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, onTestFinished, vi } from 'vitest'
 
 import {
   getCachedCalendarItems,
@@ -199,13 +202,48 @@ describe('the gated read', () => {
 
 describe('the cache', () => {
   it('holds no Community-tier or draft session after a reader read', async () => {
+    const cacheDirectory = await mkdtemp(join(tmpdir(), 'reader-calendar-'))
+    onTestFinished(() => rm(cacheDirectory, { recursive: true, force: true }))
     const student = await userOf(world.accounts.student.id)
-    const [first, second] = await runInRequest(async () => {
-      await getReaderCalendarItems(payload, 'en', student, await readerCourseIds(payload, student))
-      return [await getCachedCalendarItems('en'), await getCachedCalendarItems('en')]
-    }).then(({ result }) => result as [CalendarMeeting[], CalendarMeeting[]])
+    const fellow = await userOf(world.accounts.fellow.id)
+    const { result: first } = await runInRequest(
+      async () => {
+        const studentMeetings = await getReaderCalendarItems(
+          payload,
+          'en',
+          student,
+          await readerCourseIds(payload, student),
+        )
+        expect(ours(studentMeetings)).toContain(world.communityCourse.id)
+        const fellowMeetings = await getReaderCalendarItems(
+          payload,
+          'en',
+          fellow,
+          await readerCourseIds(payload, fellow),
+        )
+        expect(ours(fellowMeetings)).toContain(world.draft.id)
+        return getCachedCalendarItems('en')
+      },
+      { cacheDirectory },
+    )
     expect(ours(first)).toEqual(publicIds())
+
+    const ownSessionTitles = (meetings: CalendarMeeting[]) =>
+      meetings
+        .filter((meeting) => meeting.courseId === world.other.id)
+        .map((meeting) => meeting.sessionTitle)
+    const title = `${world.other.session} edited`
+    await payload.db.pool.query(
+      `UPDATE sessions_locales SET title = $1
+       WHERE _locale = 'en' AND _parent_id IN (SELECT id FROM sessions WHERE course_id = $2)`,
+      [title, world.other.id],
+    )
+    expect(ownSessionTitles(await getCalendarItems(payload, 'en'))).toEqual([title])
+
+    const { result: second } = await runInRequest(() => getCachedCalendarItems('en'), {
+      cacheDirectory,
+    })
     expect(ours(second)).toEqual(publicIds())
-    expect(second).toEqual(first)
+    expect(ownSessionTitles(second)).toEqual([world.other.session])
   })
 })

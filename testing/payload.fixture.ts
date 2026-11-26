@@ -1,5 +1,5 @@
 import pg from 'pg'
-import type { Payload } from 'payload'
+import type { CollectionSlug, Payload, Where } from 'payload'
 
 import { REVIEWED } from '../src/lib/reviewed-collections'
 import type { User } from '../src/payload-types'
@@ -68,6 +68,17 @@ export const createTracker = () => {
     if (person != null) track('people', typeof person === 'object' ? person.id : person)
     return row
   }
+  const trackMatching = async (payload: Payload, collection: CollectionSlug, where: Where) => {
+    const { docs } = await payload.find({
+      collection,
+      where,
+      depth: 0,
+      pagination: false,
+      select: {},
+      overrideAccess: true,
+    })
+    for (const { id } of docs) track(collection, id)
+  }
   const cleanup = async (payload: Payload) => {
     const rest = [...tracked.keys()].filter((c) => !DELETE_ORDER.includes(c)).reverse()
     const failed: string[] = []
@@ -122,7 +133,7 @@ export const createTracker = () => {
     }
     if (failed.length) throw new Error(`Cleanup left rows behind:\n${failed.join('\n')}`)
   }
-  return { track, cleanup }
+  return { track, trackMatching, cleanup }
 }
 
 const holdLock = async (key: number, mode: 'shared' | 'alone') => {
