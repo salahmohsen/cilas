@@ -38,6 +38,8 @@ type ReviewWrite = {
   live: boolean
   draftSave: boolean
   autosave: boolean
+  /** The write sent `unpublishAllLocales`, as the admin's Unpublish does. */
+  overwritesLatest: boolean
   /** The `review.request` the write sent, if it is an allowed value. */
   sentRequest: ReviewRequest | null
   sentNote: string | null
@@ -50,6 +52,7 @@ const reviewContext = (req: PayloadRequest): ReviewWrite =>
     live: false,
     draftSave: false,
     autosave: false,
+    overwritesLatest: false,
     sentRequest: null,
     sentNote: null,
   }) as ReviewWrite
@@ -102,12 +105,8 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   if (operation !== 'create' && operation !== 'update' && operation !== 'restoreVersion') {
     return args
   }
-  const flags = args as { select?: unknown; unpublishAllLocales?: unknown }
   // WARNING: the review hooks read `review` from the written doc, so a write returns the whole doc.
-  delete flags.select
-  // WARNING: this flag makes Payload overwrite the latest version, which a history row may name.
-  // With no `localizeStatus` it does nothing else: `_status: 'draft'` still unpublishes.
-  delete flags.unpublishAllLocales
+  delete (args as { select?: unknown }).select
   const trusted = !req.user || isAdminUser(req.user)
   // Access refuses a write with no user and no override, so it queues on no row lock.
   const locks = Boolean(req.user) || Boolean((args as { overrideAccess?: boolean }).overrideAccess)
@@ -117,7 +116,10 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     draft?: boolean
     duplicateFromID?: number | string
     id?: number | string
+    unpublishAllLocales?: boolean
   }
+  // WARNING: only an admin unpublishes; for an owner the flag would just skip validating unsent fields.
+  if (!trusted) delete write.unpublishAllLocales
   if (operation === 'create' && write.duplicateFromID != null) {
     write.draft = true
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
@@ -143,6 +145,7 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   // write sent it. The operation args can.
   context.sentRequest = allowedRequest(write.data?.review?.request)
   context.sentNote = write.data?.review?.review_note ?? null
+  context.overwritesLatest = operation === 'update' && Boolean(write.unpublishAllLocales)
 
   if (operation === 'restoreVersion') {
     if (!trusted) write.draft = true
@@ -280,6 +283,42 @@ const applyReview =
       _status: 'published',
       ...onApprove?.({ data, originalDoc, now: new Date() }),
     }
+  }
+
+/**
+ * With `unpublishAllLocales`, Payload overwrites the latest version, which a
+ * history row may name, so it gets a copy to overwrite. The flag stays: it
+ * also limits validation to the sent fields, and so Unpublish works while an
+ * unfinished draft is incomplete.
+ */
+const keepLatestVersion =
+  ({ collection }: ReviewOptions): CollectionBeforeChangeHook =>
+  async ({ data, originalDoc, req }) => {
+    if (!reviewContext(req).overwritesLatest) return data
+    const {
+      docs: [latest],
+    } = await req.payload.db.findVersions({
+      collection,
+      where: { parent: { equals: originalDoc.id } },
+      // WARNING: Payload picks the version to overwrite in this order (`updateLatestVersion`).
+      sort: '-updatedAt',
+      limit: 1,
+      pagination: false,
+      locale: 'all',
+      req,
+    })
+    if (!latest) return data
+    const now = new Date().toISOString()
+    await req.payload.db.createVersion({
+      collectionSlug: collection,
+      parent: originalDoc.id,
+      versionData: latest.version,
+      autosave: false,
+      createdAt: now,
+      updatedAt: now,
+      req,
+    })
+    return data
   }
 
 const recordReviewEvent =
@@ -463,7 +502,7 @@ export const reviewHooks = (
   }
   return {
     beforeOperation: [recordDraftSave],
-    beforeChange: [applyReview(options)],
+    beforeChange: [applyReview(options), keepLatestVersion(options)],
     afterChange: [publishOwners(options), recordReviewEvent(options), notifyReview(options)],
   }
 }

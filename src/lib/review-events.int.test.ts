@@ -479,6 +479,44 @@ describe('review-events: history', () => {
     })
   })
 
+  it('an admin Unpublish takes a live article down while its unfinished draft has no title', async () => {
+    const id = await liveCopyAt('approved')
+    await autosave(id, '')
+    const unfinished = await latestVersionOf(id)
+
+    await patchArticle(id, adminToken, 'unpublishAllLocales=true', { _status: 'draft' })
+    expect(await payload.findByID({ collection: 'articles', id, depth: 0 })).toMatchObject({
+      _status: 'draft',
+    })
+    const kept = await payload.findVersionByID({
+      collection: 'articles',
+      id: unfinished.id,
+      depth: 0,
+    })
+    expect(kept.version).toEqual(unfinished.version)
+    const { docs: latest } = await payload.findVersions({
+      collection: 'articles',
+      where: { parent: { equals: id }, latest: { equals: true } },
+      depth: 0,
+    })
+    expect(latest).toHaveLength(1)
+    expect(latest[0]!.id).not.toBe(unfinished.id)
+  })
+
+  it('an owner cannot submit an unfinished draft with ?unpublishAllLocales=true', async () => {
+    const id = await draftArticle('review-event-unfinished-submit')
+    await autosave(id, '')
+
+    const body = new FormData()
+    body.set('_payload', JSON.stringify({ review: { status: 'submitted' } }))
+    const response = await rest('PATCH', `articles/${id}?unpublishAllLocales=true`, {
+      token: ownerToken,
+      body,
+    })
+    expect(response.status).toBe(400)
+    expect(await eventsOf(id)).toEqual([])
+  })
+
   it('a new submission clears the old note, so no later row repeats it', async () => {
     const id = await draftArticle('review-event-old-note')
     await moveArticle(id, owner, 'submitted')
