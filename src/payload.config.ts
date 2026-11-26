@@ -40,7 +40,7 @@ import { SpaceReactions } from './collections/SpaceReactions'
 import { SpaceRsvps } from './collections/SpaceRsvps'
 import { SpaceVotes } from './collections/SpaceVotes'
 import { SpaceConsents } from './collections/SpaceConsents'
-import { SpaceVisits } from './collections/SpaceVisits'
+import { cascadeSpaceVisits, SpaceVisits } from './collections/SpaceVisits'
 import { SpacePreferences } from './collections/SpacePreferences'
 import { Publications } from './collections/Publications'
 import { RegistrationDefaults } from './globals/RegistrationDefaults'
@@ -312,6 +312,7 @@ export const sourceConfig: Config = {
     // non-interactively (CI, vitest, any `getPayload` in a script) — and it
     // leaves no record of what changed.
     push: false,
+    beforeSchemaInit: [cascadeSpaceVisits],
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
