@@ -1,0 +1,55 @@
+/* No specificity, so the caller's class can lay the row out. */
+:where(.strip) {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* The pressed toggle inverts. Its border is also wider, which stays when forced colours drop the fills. */
+.toggle {
+  --toggle-border: 1px;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  min-block-size: 2.75rem;
+  margin: 0;
+  padding: calc(var(--space-2) - var(--toggle-border)) 0;
+  border: var(--toggle-border) solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle[aria-pressed='true'] {
+  --toggle-border: 3px;
+
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+@media (hover: hover) {
+  .toggle[aria-pressed='false']:hover {
+    background: var(--surface-muted);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .toggle {
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      scale var(--duration-instant) var(--ease-standard);
+  }
+
+  .toggle:active {
+    scale: 0.96;
+  }
+}

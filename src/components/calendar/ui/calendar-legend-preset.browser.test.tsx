@@ -277,7 +277,7 @@ describe('the edge bar', () => {
         expect(style.borderInlineStartColor).not.toBe('rgba(0, 0, 0, 0)')
         return [style.inlineSize, style.borderInlineStartWidth, style.borderInlineEndWidth]
       }
-      const view = show({ items: [mine, other, talk], details: true })
+      show({ items: [mine, other, talk], details: true })
       openPanel()
       const solid = ['6px', '3px', '3px']
       const hollow = ['6px', '2px', '2px']
@@ -288,7 +288,9 @@ describe('the edge bar', () => {
       expect(bar(document.querySelector('[data-row-id][data-edge]'))).toEqual(solid)
       fireEvent.click(block('Other')!)
       expect(bar(document.querySelector('[class*="detailsMark"]'))).toEqual(hollow)
-      view.rerender({ items: [mine, other, talk], view: 'month', details: true })
+      cleanup()
+      show({ items: [mine, other, talk], view: 'month', details: true })
+      expect(screen.getByRole('button', { name: 'Month' })).toHaveAttribute('aria-pressed', 'true')
       expect(bar(block('Mine'))).toEqual(solid)
       expect(bar(block('Other'))).toEqual(hollow)
     },

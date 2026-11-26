@@ -2,14 +2,13 @@ import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getCachedCalendarItems, getReaderCalendarItems } from '@/api/calendar.api'
+import { getCachedCalendarItems } from '@/api/calendar.api'
 import { loadedRange, readCalendarUrl } from '@/components/calendar/calendar-url'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
 import { publicItems, publicKinds } from '@/components/calendar/public-items'
 import { ConnectedScheduleActions } from '@/components/space/connected-schedule-actions'
 import { localeOf } from '@/i18n/routing'
 import { cairoDay } from '@/lib/cairo-day'
-import { readerCourseIds } from '@/lib/reader-courses'
 import type { User } from '@/payload-types'
 
 import {
@@ -20,6 +19,7 @@ import {
   portalItems,
   presetHidden,
 } from './portal-items'
+import { readerMeetings } from './reader-meetings'
 
 type Props = {
   user: User
@@ -43,7 +43,7 @@ export async function PortalCalendarPage({ user, locale, query }: Props) {
     getTranslations('Calendar'),
     getTranslations('Portal.calendar'),
     getCachedCalendarItems(lang),
-    readerCourseIds(payload, user).then((ids) => getReaderCalendarItems(payload, lang, user, ids)),
+    readerMeetings(payload, user, lang),
   ])
   const all = mergeMeetings(publicList, own)
   const meetings = all.filter((m) => m.date >= range.from && m.date <= range.to)

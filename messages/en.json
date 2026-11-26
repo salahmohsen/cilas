@@ -1941,7 +1941,22 @@
       "activeAgo": "Active {time}",
       "noPosts": "No posts yet",
       "noSpaces": "Your courses and cohorts appear here once you join them.",
-      "openInbox": "Open Inbox"
+      "openInbox": "Open Inbox",
+      "week": {
+        "weekdays": {
+          "sat": "Sat",
+          "sun": "Sun",
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri"
+        },
+        "title": "This week",
+        "count": "{count, plural, =0 {, no sessions or events} one {, {shown} session or event} other {, {shown} sessions or events}}",
+        "emptyDay": "No sessions or events on this day.",
+        "emptyWeek": "No sessions or events this week."
+      }
     },
     "inbox": {
       "title": "Inbox",

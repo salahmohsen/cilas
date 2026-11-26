@@ -1,10 +1,10 @@
 # Portal phase 1d: calendar and account. Implementation plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** use only pstack/poteto skills and playbooks, task by task; never superpowers or caveman (ledger, SKILLS RULE). Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Give every signed-in reader a Calendar tab in the portal that starts on their own courses and the public events, and one account page in the portal for their profile, sign-in and notifications. The old `/settings` and `/profile` addresses keep working as redirects.
 
-**Architecture:** Three PRs, and a fourth only when phase 1c's Home is not on `main` when 1d-3's T5 starts. PR 1d-1 moves the account page into the portal shell at `/spaces/account`, turns `/settings` and `/profile` into redirects, points the account menu row at the new page, and adds the Sign-in group. PR 1d-2 adds the data of the Calendar tab with no screen: `readerCourseIds`, one gated read of the reader's own course meetings beside the cached public query (one shared builder, two sources), and the pure merge that gives the portal its legend kinds. PR 1d-3 adds the screen: one preset prop, the hidden-kinds rule and the edge bar on the generic calendar, a path prop and a read-only prop on `PublicCalendar`, the `/spaces/calendar` page, the Calendar nav item, the `portal-calendar` e2e, and Home's **Open the calendar** when 1c-3 is on `main`. Else PR 1d-4 adds that link after 1c-3 merges.
+**Architecture:** Four PRs. PR 1d-1 moves the account page into the portal shell at `/spaces/account`, turns `/settings` and `/profile` into redirects, points the account menu row at the new page, and adds the Sign-in group. PR 1d-2 adds the data of the Calendar tab with no screen: `readerCourseIds`, one gated read of the reader's own course meetings beside the cached public query (one shared builder, two sources), and the pure merge that gives the portal its legend kinds. PR 1d-3 adds the screen: one preset prop, the hidden-kinds rule and the edge bar on the generic calendar, a path prop and a read-only prop on `PublicCalendar`, the `/spaces/calendar` page, the Calendar nav item, the `portal-calendar` e2e, and Home's **Open the calendar** when 1c-3 is on `main`. PR 1d-4 adds the Home card **This week** (operator, 2026-11-24, Deviation 11), the click test of **Open the calendar** (1c-3 built the link) and one calendar test fix.
 
 **Tech stack:** Next.js 16.4.6 App Router, React 19.2.6, next-intl 4, Payload 3.91.0 (Postgres), Arc UI (`src/components/arc`), ui-sdk `0.1.0-beta.1` (only in `src/components/calendar/ui/`), Vitest 4, Playwright 1.58.2, `@axe-core/playwright`.
 
@@ -21,7 +21,7 @@
 | ui-sdk skill           | `/home/salah/cilas/node_modules/@ui-sdk/core/skills/ui-sdk/SKILL.md` (`.agents/skills/ui-sdk` links to it), `@ui-sdk/react/docs/components/toggle.md` | `0.1.0-beta.1`                                                                                                                                                                                                                                                                                                                                                                                             |
 | Next.js docs           | `/home/salah/cilas/node_modules/next/dist/docs/` (16.4.6): `04-functions/redirect.md`, `04-functions/unstable_cache.md`                               | n/a                                                                                                                                                                                                                                                                                                                                                                                                        |
 
-**Status.** Nothing is built. Every "Expected" line is a prediction. The section "Premises to re-check before build" lists each assumption about code that is not on `main` or that can move.
+**Status.** At the first writing nothing was built. 1d-1, 1d-2 and 1d-3 have since merged (#63, #65, #68), so their sections are history. PR 1d-4 has its own status line. Every "Expected" line is a prediction. The section "Premises to re-check before build" lists each assumption about code that is not on `main` or that can move.
 
 **Who decided.** "Plan call" marks a call of this plan writer. "Orchestrator decision" marks a call of the 1d orchestrator (2026-11-21, after plan review round 1, and 2026-11-22, after round 2). "Operator rule" marks a rule in the ledger (`/home/salah/cilas-portal-run/LEDGER.md`, "Rules for the run"). Each PR merges under the MERGE RULE when READY, so no call waits for an answer: the defaults ship, and the Open questions go under "For the morning" in the ledger for the operator to read after the merge.
 
@@ -37,34 +37,34 @@
 
 ## PRs
 
-| PR                                                  | Branch                          | Base                                                                                                                                    | Tasks    | Screen              | Ends when                                                                                                                                                             |
-| --------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1d-1. Account page                                  | `portal/phase-1d-account`       | `origin/main`                                                                                                                           | A1 to A6 | yes                 | `portal-account` e2e (`e2e/portal-account.e2e.test.ts`), the 1d account-row assertions in `portal-shell`                                                              |
-| 1d-2. Calendar data                                 | `portal/phase-1d-calendar-data` | `origin/main`                                                                                                                           | C1 to C5 | none                | `src/api/reader-calendar.int.test.ts` (the reader table), `src/portal/calendar/portal-items.unit.test.ts`                                                             |
-| 1d-3. Calendar tab                                  | `portal/phase-1d-calendar`      | `origin/main` after 1d-2 merges. Until then it branches from `portal/phase-1d-calendar-data`, and the PR targets `main` once 1d-2 is in | T1 to T7 | yes                 | `portal-calendar` e2e (`e2e/portal-calendar.e2e.test.ts`), the 1d Calendar assertions in `portal-shell`, the calendar browser tests, and T5's Home test when P6 holds |
-| 1d-4. Home link (only when P6 fails when T5 starts) | `portal/phase-1d-home-link`     | `origin/main` after 1c-3 merges                                                                                                         | E1, E2   | yes, Home card only | the `portal-home` assertion "an admin with no session gets Open the calendar, and it opens /spaces/calendar" and the dom test of `NextSessionCard`                    |
+| PR                                          | Branch                          | Base                                                                                                                                    | Tasks    | Screen    | Ends when                                                                                                                                                             |
+| ------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1d-1. Account page                          | `portal/phase-1d-account`       | `origin/main`                                                                                                                           | A1 to A6 | yes       | `portal-account` e2e (`e2e/portal-account.e2e.test.ts`), the 1d account-row assertions in `portal-shell`                                                              |
+| 1d-2. Calendar data                         | `portal/phase-1d-calendar-data` | `origin/main`                                                                                                                           | C1 to C5 | none      | `src/api/reader-calendar.int.test.ts` (the reader table), `src/portal/calendar/portal-items.unit.test.ts`                                                             |
+| 1d-3. Calendar tab                          | `portal/phase-1d-calendar`      | `origin/main` after 1d-2 merges. Until then it branches from `portal/phase-1d-calendar-data`, and the PR targets `main` once 1d-2 is in | T1 to T7 | yes       | `portal-calendar` e2e (`e2e/portal-calendar.e2e.test.ts`), the 1d Calendar assertions in `portal-shell`, the calendar browser tests, and T5's Home test when P6 holds |
+| 1d-4. Home: Open the calendar and This week | `portal/phase-1d-home-link`     | `origin/portal/base-open-prs` `138db95c`, then `origin/main` once #83 and #87 are on it (merged, never rebased)                         | E1 to E8 | yes, Home | the `portal-home` tests of E6 and the BLOCKING Home TTFB box (E7)                                                                                                     |
 
 **Dependency graph.**
 
 ```
 main ──┬── 1d-1 (independent)
-       └── 1d-2 ── 1d-3 ──┬── (P6 holds: T5 in 1d-3, no 1d-4)
-1c-3 (Home) ──────────────┴── 1d-4 (P6 fails: after 1c-3 and 1d-3 merge)
+       └── 1d-2 ── 1d-3 ──┐
+1c-3 (Home) ──────────────┴── 1d-4 (merges after #83 and #87 are on main)
 1c-2 (Inbox) ┄┄ 1d-1, 1d-3 (soft: nav order and shared nav files; see Shared files)
 ```
 
 - 1d-1 and 1d-2 need nothing of each other. Each branches from `origin/main`.
 - 1d-3 needs 1d-2 (`getReaderCalendarItems`, `readerCourseIds`, `portalItems`, `mergeMeetings`).
-- 1d-4 exists only when P6 prints nothing when 1d-3's T5 starts. It needs 1c-3 (`NextSessionCard`) and 1d-3 (`/spaces/calendar`) on `main`. Phase 1d owns it (orchestrator decision). Phase 1d is done when 1d-1, 1d-2 and 1d-3 are merged and 1d-4 is merged or parked: a ledger line "1d-4 waits on 1c-3; owner: 1d orchestrator, then the master after hand-off" (orchestrator decision, 2026-11-22; Ends when).
-- **Merge (MERGE RULE, ledger Rules).** Each PR squash-merges as soon as it is READY, with no operator review hold. READY is the ledger's definition (not draft, base `main`, MERGEABLE, every CI check green at the head, the ledger pipeline done at that head (for 1d-4 the small pipeline of PR 1d-4, which still meets the definition: one combined code-review and security-review pass, one ux-auditor pass on the Home card, the full suite on the Mac), no open review thread), and for 1d also every verification box of the PR ticked (Global Constraints, Verification boxes: a REPORT-ONLY perf box counts when its numbers or its "not run" line are in the PR). The orchestrator merges under `merge.lock` and waits for the deploy run (Global Constraints, Execution rules).
-- **Landing order:** 1d-1 and 1d-2 in any order, then 1d-3, then 1d-4 when it exists. Rebase each PR on `origin/main` before it opens and again before it merges (Shared files).
+- 1d-4 needs 1c-3 (Home) and 1d-3 (`/spaces/calendar`); both are on `main`. Its branch also holds #83 and #87 (ledger, BASE BRANCH). Phase 1d is done when all four PRs are merged.
+- **Merge (MERGE RULE, ledger Rules).** Each PR squash-merges as soon as it is READY, with no operator review hold (1d-4 is a layout PR and has one: PR 1d-4, Merge). READY is the ledger's definition (not draft, base `main`, MERGEABLE, every CI check green at the head, the ledger pipeline done at that head (for 1d-4 the pipeline of PR 1d-4, plus its two merge conditions), no open review thread), and for 1d also every verification box of the PR ticked (Global Constraints, Verification boxes: a REPORT-ONLY perf box counts when its numbers or its "not run" line are in the PR). The orchestrator merges under `merge.lock` and waits for the deploy run (Global Constraints, Execution rules).
+- **Landing order:** 1d-1 and 1d-2 in any order, then 1d-3, then 1d-4. Rebase each PR on `origin/main` before it opens and again before it merges (Shared files). PR 1d-4 is the exception: it merges and never rebases (PR 1d-4, Base).
 
 **Files each PR may touch.** A builder who needs a file outside its list stops and reports.
 
 - **1d-1:** `src/portal/account/*` (new: `account-page.tsx`, `account-page.module.css`, `sign-in-section.tsx`, their tests), `src/lib/account-path.ts` and its unit test (new), `src/app/(frontend)/[locale]/(portal)/spaces/account/page.tsx` (new), `src/app/(frontend)/[locale]/(site)/settings/page.tsx` (becomes a redirect), `src/app/(frontend)/[locale]/(site)/profile/page.tsx` (new target), `src/app/(frontend)/[locale]/(site)/forgot/page.tsx` (one line), `src/portal/nav/profile.ts` (one href), `src/components/site-header.tsx` (one line), `src/components/space/space-page.tsx` (one line), `src/lib/analytics/analytics.unit.test.ts` (one row), `src/components/use-session.ts` (export `refreshSession`), `src/components/profile/profile-form.tsx` (call `refreshSession`, three lines), `src/components/settings/settings-shell.module.css` (the save bar reads `--settings-bar-offset`), `messages/{en,ar}.json` (`Portal.account.*`), `testing/portal-e2e.test-utils.ts` (route shape row), `e2e/portal-axe-known.json` (only by the axe rule in Global Constraints), `e2e/portal-account.e2e.test.ts` (new), `e2e/portal-shell.e2e.test.ts` (three `waitForURL` lines and the account-row target), and a 64 x 64 photo fixture `testing/files/avatar.png` only when A3 Step 1 finds that the cropper refuses `testing/files/pixel.png`.
 - **1d-2:** `src/lib/reader-courses.ts` and `src/lib/reader-courses.int.test.ts` (new, only when P1 prints nothing; C1 is the PR's first commit), `src/lib/calendar-items.ts` (one optional field, `edge`), `src/api/calendar.api.ts`, `src/api/reader-calendar.int.test.ts` (new), `src/portal/calendar/portal-items.ts` and `portal-items.unit.test.ts` (new), `testing/portal-calendar.fixture.ts` (new).
 - **1d-3:** `src/components/calendar/ui/calendar.tsx` (one prop and the legend's hidden-kinds rule), `src/components/calendar/ui/calendar-model.ts` (`legendOf` carries `edge`) and `calendar-model.unit.test.ts`, `src/components/calendar/ui/calendar.module.css` (the edge bar), `week-grid.tsx`, `month-grid.tsx`, `agenda-list.tsx`, `calendar-panel.tsx`, `item-details.tsx` (each writes `data-edge` beside `data-tone`), `block-names.ts` (the kind in the name of an item with an edge) and `block-names.unit.test.ts` (new), `calendar-styles.unit.test.ts` (one row), `src/components/calendar/ui/calendar-legend-preset.browser.test.tsx` (new), `src/components/calendar/public-calendar.tsx` (two props), `src/components/calendar/public-calendar.browser.test.tsx` (new cases; the existing render gets `path="/calendar"`), `src/components/calendar/public-items.ts` (`publicKinds`), `src/components/calendar/public-items.unit.test.ts`, `src/app/(frontend)/[locale]/(site)/calendar/page.tsx` (calls `publicKinds` and passes `path`), `src/portal/calendar/calendar-page.tsx` (new), `src/app/(frontend)/[locale]/(portal)/spaces/calendar/page.tsx` (new), `src/portal/nav/portal-nav.ts`, `portal-nav.unit.test.ts`, `nav-icons.ts`, `messages/{en,ar}.json` (`CalendarUi.blockName` takes `kind`; `Portal.nav.calendar`, `Portal.calendar.*`, and `Portal.home.openCalendar` with T5), `testing/portal-e2e.test-utils.ts` (`NAV_BY_ROLE` row, route shape row), `e2e/portal-axe-known.json` (only by the axe rule in Global Constraints), `e2e/portal-calendar.e2e.test.ts` (new), `e2e/portal-shell.e2e.test.ts` (Calendar assertions), and, only when P6 prints a line when T5 starts, `src/portal/home/next-session-card.tsx`, its dom test and `e2e/portal-home.e2e.test.ts` (one assertion).
-- **1d-4:** `src/portal/home/next-session-card.tsx` (one action), its dom test, `e2e/portal-home.e2e.test.ts` (one assertion), `messages/{en,ar}.json` (`Portal.home.openCalendar`, when 1c-3 did not add it).
+- **1d-4:** the list in PR 1d-4, Files (1d-4).
 
 ## Shared files
 
@@ -82,14 +82,11 @@ Phases 1b (1b-2a list data, 1b-2b list screens with L0 ScrollArea and L0b fold t
 | `e2e/portal-shell.e2e.test.ts`                                                       | 1b-2b, 1c-2, 1c-3          | 1d-1: the three `waitForURL('**/${locale}/settings')` lines (`:323`, `:551`, `:580` at `c2f84e8c`) wait for `/spaces/account`. 1d-3: the Calendar item lands on its page at 1440 and 390. The nav-per-role tests read `NAV_BY_ROLE`, so they need no other edit.                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `src/app/(frontend)/[locale]/(portal)/spaces/(home)/page.tsx`                        | 1c-3 rewrites it           | No change. Its `editProfile` shortcut (`:53`) keeps `/settings`, which now redirects. 1c-3 deletes the shortcuts.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `src/lib/reader-courses.ts`                                                          | 1c-3 (H1) creates it       | Created once, by the first PR to start: 1d-2 when P1 prints nothing at its base (C1, the PR's first commit, file and int test only). The orchestrator tells the 1c orchestrator when that commit is on `main`, so 1c-3 H1 imports it (1c plan, Deviation 9 already says phase 1d reuses one function). Add/add rule: if 1c-3 merged its own copy while 1d-2 is open, 1d-2 rebases, takes `main`'s `src/lib/reader-courses.ts` as it is, and moves its own int rows into `main`'s test file (the four C1 rows that `main`'s file lacks). The 1c side has no such check yet (its H1 only says "Create", 1c plan `:689-698`): Carry-overs asks for it (code review L-2). |
-| `src/portal/home/next-session-card.tsx`, `e2e/portal-home.e2e.test.ts`               | 1c-3 (H2, H4) creates them | Phase 1d adds the admin's **Open the calendar** action: in 1d-3 T5 when P6 holds when T5 starts, else in PR 1d-4 after 1c-3 merges (orchestrator decision).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `src/portal/home/next-session-card.tsx`, `e2e/portal-home.e2e.test.ts`               | 1c-3 (H2, H4) creates them | 1c-3 built the admin's **Open the calendar** action (#82). 1d-4 adds its click test and the This week card (PR 1d-4, Files).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
-**Conflict rule.** Before each PR opens and before it merges: `git fetch origin && git rebase origin/main`. On a conflict in a shared file, keep both sides: the other phase's rows stay, and 1d adds its own row in nav order (Home, Inbox, Calendar, then the rest). Run the premise checks P1 to P5 again after each rebase, because the answer can change. P6 is not run again once T5 started (its answer is fixed, P6). P12 is checked when the perf box is due.
+**Conflict rule.** Before each PR opens and before it merges: `git fetch origin && git rebase origin/main`. On a conflict in a shared file, keep both sides: the other phase's rows stay, and 1d adds its own row in nav order (Home, Inbox, Calendar, then the rest). Run the premise checks P1 to P5 again after each rebase, because the answer can change. P6 is not run again once T5 started (its answer is fixed, P6). P12 is checked when the perf box is due. PR 1d-4 is the exception to this rule: it merges and never rebases (PR 1d-4, Base).
 
-**Home's Open the calendar** (spec target table and Home, phase 1d; orchestrator decision). Phase 1d owns it, in one of two places:
-
-- **P6 holds when T5 starts** (1c-3 is on `main`). 1d-3 Task T5 adds the action to 1c-3's `NextSessionCard`: for an admin with no session, one link **Open the calendar** to `/{locale}/spaces/calendar`, with the Arc button classes, as 1c-3's other actions. No 1d-4.
-- **P6 fails when T5 starts** (likely: 1c-3 waits on 1c-1 and 1c-2). 1d-3 adds nothing to Home. PR 1d-4 (tasks E1, E2) adds the same action after 1c-3 merges, on a branch from `origin/main`. The 1c plan's H2 already says "admin no button (until 1d)" (1c plan on `main`, `:713`), so 1c-3 builds no action and 1d-4 adds it.
+**Home's Open the calendar** (spec target table and Home, phase 1d). The action is on `main`: 1c-3 (#82) built it, although its plan said "until 1d". So T5 and the old link task have nothing to build. PR 1d-4 proves the click (Task E1).
 
 ## Premises to re-check before build
 
@@ -105,7 +102,7 @@ Each premise names what the plan assumes, the ref where it was read, the check t
   - Check: `git grep -nE "^export const [A-Z_]+_SHAPES" origin/main -- testing/portal-e2e.test-utils.ts`. If only `ROUTE_SHAPES` and `LIST_SHAPES` print, add a third table `PAGE_SHAPES` (1d-1 creates it with `/spaces/account`; 1d-3 adds `/spaces/calendar`), add it to `shapeOf` and `RouteShape`. If 1c-2 already added a table for its Inbox route, add the 1d rows to that table instead.
 - **P5. `NAV_BY_ROLE`.** On `main` it holds `home` for every role and `openDashboard` for admin (`testing/portal-e2e.test-utils.ts:82-93`), and the shell tests read it (`e2e/portal-shell.e2e.test.ts:203`, `:313`). Used by 1d-3 T6.
   - Check: `git grep -n "NAV_BY_ROLE" origin/main -- e2e/portal-shell.e2e.test.ts testing/portal-e2e.test-utils.ts`. Fallback when a later phase replaced it: add the Calendar row to whatever one table the shell nav tests read.
-- **P6. Home's next session card.** 1c-3 H2 creates `src/portal/home/next-session-card.tsx` with "admin no button (until 1d)" (1c plan on `main`, `:713`). Not on `main` at `92fce974`. Used by 1d-3 T5 and PR 1d-4.
+- **P6. Home's next session card** (history; PR 1d-4 has its own premises, PW1 to PW12). 1c-3 H2 creates `src/portal/home/next-session-card.tsx` with "admin no button (until 1d)" (1c plan on `main`, `:713`). Not on `main` at `92fce974`. Used by 1d-3 T5 and PR 1d-4.
   - Check, when 1d-3's T5 starts: `git ls-tree origin/main src/portal/home/next-session-card.tsx`. Prints a line: T5 adds the action in 1d-3, and there is no 1d-4. Prints nothing: T5 does nothing in 1d-3, and the orchestrator opens PR 1d-4 after 1c-3 merges (Shared files, "Home's Open the calendar"). The check runs once, when T5 starts, and its answer is fixed: write the output and the SHA of `origin/main` in the PR body. A later rebase onto a `main` that holds 1c-3 does not run P6 again and does not move the action into 1d-3; PR 1d-4 adds it.
 - **P7. Avatar refresh in the shell.** The portal account menu reads the session from `useSession()`, which fetches `/api/users/me?depth=2` again only on `AUTH_CHANGED` (`src/components/use-session.ts:28-46`). `ProfileForm` calls only `router.refresh()` after a save or a photo change (`profile-form.tsx:150`, `:229`). So the plan predicts that the spec check "a photo change shows in the account menu avatar" fails today inside the shell. `AUTH_CHANGED` also closes the site search and refreshes the private space search (`site-search.tsx:56-61`, `private-space-search.tsx:40`), so 1d does not reuse it. Used by 1d-1 A3.
   - Check: A3 Step 1 writes the e2e first and expects FAIL. If it passes with no code change, drop A3 Step 2 and say so in the commit.
@@ -136,14 +133,14 @@ It writes `~/cilas-verify/runs/<sha>/RESULT.md`. Push the branch first. **[verif
 
 - **Machine balance.** For each new builder or fixer: when `/home/salah/cilas-portal-run/server-ok.sh` exits 0 and the Mac already runs 2 or more delegates, run its edit phase on the server. The edit phase is code edits, typecheck, oxlint and targeted unit tests, each under `flock /home/salah/cilas-portal-run/heavy.lock nice -n 19 ionice -c3 <cmd>`. Then push, and send builds, e2e, int tests, the full suite and the screen reviews to the Mac through `verify.sh`, and the perf sessions to the Mac under its lock (Perf runs). Never run `next build`, `next dev`, `pnpm start`, e2e or the full int suite on the server. Otherwise the whole builder runs on the Mac. Do not move a delegate that already runs.
 - **Quota.** Run `/home/salah/cilas-portal-run/quota.sh` before each new delegate or step (builder, fixer, review step, perf session). Exit code 1 or 2 means finish mode: start no new PR build; finish the PRs whose builder already started (their reviews, fixers, full suite, PR open and merge).
-- **Merge.** Each 1d PR squash-merges when READY (ledger MERGE RULE; READY as defined in "PRs" above), one at a time: `flock /home/salah/cilas-portal-run/merge.lock` around `gh pr merge <n> --squash`, then, still under the lock, wait for the main deploy run to finish. A failed deploy stops all merges and goes under "For the morning". There is no operator review hold and no veto before merge. After a merge, tell the dependent branch (1d-3 after 1d-2; 1d-4 after 1d-3) to rebase on `origin/main`.
+- **Merge.** Each 1d PR squash-merges when READY (ledger MERGE RULE; READY as defined in "PRs" above), one at a time: `flock /home/salah/cilas-portal-run/merge.lock` around `gh pr merge <n> --squash`, then, still under the lock, wait for the main deploy run to finish. A failed deploy stops all merges and goes under "For the morning". There is no operator review hold and no veto before merge. After a merge, tell the dependent branch (1d-3 after 1d-2) to rebase on `origin/main`. 1d-4 takes `main` by a merge (PR 1d-4, Base).
 - **Hooks.** Never commit or push with `LEFTHOOK=0` or `--no-verify`. The commit hook formats the staged files in every worktree (#56). In a worktree with no `node_modules`, run `/home/salah/cilas/node_modules/.bin/oxfmt --write <changed files>` before each commit and `oxfmt --check <changed files>` before each push.
 
 **From the 1b plan, still in force** (read these there; they are not copied): "New in 1b": **Access rules**, **One role table**, **Data access** (every read names `depth`, `select`, `pagination: false` or a `limit`), **Not found for a role**, **English**, **Int test setup** (`mockNetwork(resendInbox().handler, ...localServices)`; read by your own ids, never by table counts), **Arabic digits**. From the phase 1a plan (by section name): Spec values; Code and tests (Libraries first, Tests, Matrix, Describes, Locators, `spaces_mode`, Copy, Components, Lazy UI); Commits and PRs; "No streaming boundary above the check". From the 1c plan (on `main` at `92fce974`): **Review predicate** (no Critical or High finding stays open), **Mail off (M)** (key lists `OFF`, `R2_DEV`, `PROBE`; the script guard; the server guard), and for the perf boxes **Perf gate (G)**, **Prod clone restore (R)**, P17, P39 and T2 Step 3 (Perf runs below).
 
 **New in 1d.**
 
-- **Mail off (M) on every 1d run that can send mail (orchestrator decision, 2026-11-22; round-3 review M-3).** 1c P32 says the server that `verify.sh` runs and the Playwright runner write on `cilas_dev` (a prod clone with real admin addresses) with the Mac's `.env`, and 1c proves mail off for each PR that runs write tests through `verify.sh` ("a proof from an earlier PR does not count"). So at its own head, every `verify.sh` e2e or live run of 1d-1, and every `portal-home` run (T5 Step 3, E1, E2), repeats the P32 server guard: the server log holds "No email adapter provided" and `--check-off` exits 0, as 1c-2 I6 does. Where a test presses **Change password** (A5, A6's live scenario when it does), the e2e also routes the request, so no mail leaves whatever the server env is and the test still proves the sent line: `page.route('**/api/users/forgot-password', (route) => route.fulfill({ status: 200, json: {} }))`. The profile save and the photo change run People hooks (search sync) from the same server, so the guard also covers them. Perf boxes keep their own Mail off rule (Perf runs).
+- **Mail off (M) on every 1d run that can send mail (orchestrator decision, 2026-11-22; round-3 review M-3).** 1c P32 says the server that `verify.sh` runs and the Playwright runner write on `cilas_dev` (a prod clone with real admin addresses) with the Mac's `.env`, and 1c proves mail off for each PR that runs write tests through `verify.sh` ("a proof from an earlier PR does not count"). So at its own head, every `verify.sh` e2e or live run of 1d-1, and every `portal-home` run (T5 Step 3; 1d-4 E6 and E8), repeats the P32 server guard: the server log holds "No email adapter provided" and `--check-off` exits 0, as 1c-2 I6 does. Where a test presses **Change password** (A5, A6's live scenario when it does), the e2e also routes the request, so no mail leaves whatever the server env is and the test still proves the sent line: `page.route('**/api/users/forgot-password', (route) => route.fulfill({ status: 200, json: {} }))`. The profile save and the photo change run People hooks (search sync) from the same server, so the guard also covers them. Perf boxes keep their own Mail off rule (Perf runs).
 - **No schema change.** The spec says "No new fields" (Profile and settings) and the Migrations section lists nothing for 1d. No task runs `payload migrate:create`. A task that finds it needs a field stops and reports.
 - **Gated read only.** Every read that 1d adds is a gated read: the Local API with `user` and `overrideAccess: false` (spec, Data access rule). 1d adds no projection. The public cached query stays as it is: no `user`, `overrideAccess: false` (`src/api/calendar.api.ts:44`, `:79`, `:89`).
 - **No user data in the cache.** `getCachedCalendarItems` keeps one argument, `locale`, and its key `['calendar-items-v10']` (`calendar.api.ts:149-153`). Next forbids request data inside a cache scope and makes each argument part of the key (`04-functions/unstable_cache.md:32-37`). So the reader's read runs outside it, after it, and its result never goes into it. C2 makes this hold by construction: the builder's source is a discriminated union, `{ kind: 'public' }` (no user field) or `{ kind: 'reader'; reader; courseIds }`, and the cached function passes only the constant `PUBLIC_SOURCE`. The type alone does not forbid a user on the public arm (TypeScript has no excess-property check for a non-literal); the guard is that `getCachedCalendarItems` takes only `locale` and builds the constant itself. C4 tests the cached function itself through `runInRequest` (row 9), and T6 checks a signed-out `/calendar` after a reader loaded the portal page. Bump the key to `v11` only when the shape or the meaning of `CalendarMeeting` changes. 1d changes neither.
@@ -163,9 +160,9 @@ It writes `~/cilas-verify/runs/<sha>/RESULT.md`. Push the branch first. **[verif
   - **Record** per role: baseline p75, `L`, head p75 per route (and the rerun), control p75, verdict, mode. Raw samples go in a PR comment.
   - Open source check: the 1c plan compared k6, autocannon, hey and a curl loop for this measure ("Check open source first", TTFB probe row) and built `scripts/ttfb-probe.mjs` on curl's `time_starttransfer`. 1d reuses that probe and builds no tool.
 - **Scratch world script (live boxes and screen reviews; round-3 review M-4, orchestrator decision).** A live box or a screen review that needs `portalWorld` or `calendarWorld` on the kept app (`verify.sh --keep --no-tests`) makes it with a scratch tsx script (not committed) under `env "${OFF[@]}" "${R2_DEV[@]}"` (Mail off (M)). The script writes to the kept app's `cilas_dev` (the ledger's residue lines name it) and prints that name at start. After `getPayload` and before its first write it runs the three checks of (M)'s script guard itself (`payload.email.name === 'console'`, `pushConfig() === null`, a local `R2_ENDPOINT` by `isLocalUrl`, `testing/local-env.ts`) and exits 1 on a failed check. `createTracker().cleanup` (`testing/payload.fixture.ts:70-111`) works from a private in-memory map, which a second process cannot read. So the script wraps `track` to append each `[collection, id]` pair to `<scratch>/world-<sha>.json` (the scratch folder is inside the PR's worktree scratch directory, never committed), and `--remove <file>` rebuilds a tracker, calls `track(collection, id)` for each pair and then `cleanup`, which keeps the foreign-key delete order (a hand-written delete would break on enrollments, sessions and spaces). The script times nothing.
-  - **When the rows go.** Agent-driven boxes (live box, ux-auditor, better-interface, break-ui) are many separate tool calls, so one shell block cannot wrap them. (a) The last step of each PR task list before "open the PR" (A6, C5, T7, E2) runs `--remove` for every file in the scratch folder. It then prints the residue counts of (R) step 4 for `cilas_dev`; they must not grow against the count printed at the first write. (b) The fixer step (Step 4 of A6 and T7, Step 3 of C5, Step 2 of E2) runs `--remove` again before the fixer's own run makes a new world, so a fixed head never keeps rows of an older head. (c) A failed or abandoned run is cleaned by the next run's start: `--remove` of every older file first. The zsh `{ ... } always { <script> --remove <file> }` block stays only for a scripted step with no agent in it.
+  - **When the rows go.** Agent-driven boxes (live box, ux-auditor, better-interface, break-ui) are many separate tool calls, so one shell block cannot wrap them. (a) The last step of each PR task list before "open the PR" (A6, C5, T7; 1d-4 E8) runs `--remove` for every file in the scratch folder. It then prints the residue counts of (R) step 4 for `cilas_dev`; they must not grow against the count printed at the first write. (b) The fixer step (Step 4 of A6 and T7, Step 3 of C5, Step 3 of 1d-4's E8) runs `--remove` again before the fixer's own run makes a new world, so a fixed head never keeps rows of an older head. (c) A failed or abandoned run is cleaned by the next run's start: `--remove` of every older file first. The zsh `{ ... } always { <script> --remove <file> }` block stays only for a scripted step with no agent in it.
 - **Axe on new pages (orchestrator decision, as phase 1a Deviation 14).** `e2e/portal-axe-known.json` holds base problems per route shape, role, locale and width, read by `known()` (`testing/portal-e2e.test-utils.ts:40-41`). Neither the ui-sdk calendar nor `SettingsShell` has had an axe scan before (`git grep -i axe e2e/public-calendar*` prints nothing). When a 1d axe test finds a problem: fix it in the PR when the fix is in a file the PR owns and is small (one element or one attribute). Else, when the same problem shows on `main` (the same scan of `/en/calendar` or `/en/settings` on the `main` build), add it to `e2e/portal-axe-known.json` under the new route shape, with the node count, and list it in the PR body as a base problem with one line of reason. A problem that `main` does not have is a 1d bug: fix it.
-- **Verification boxes (playbook).** Each PR section ends with three boxes: **unit**, **live** (a scenario on the real surface, run on the Mac against `verify.sh --keep --no-tests <branch> <sha>`, driven headless with the `agent-browser` CLI, with a pass predicate; `agent-browser close` after), **perf** (Perf runs above). A PR is verified only when all three are checked, and READY needs all three (MERGE RULE), with two exceptions: a REPORT-ONLY perf box counts as checked when its numbers or its "not run" line are in the PR (Perf runs); 1d-2 has no route, so its perf box is a query-count row in its int test (C4 row 10), and 1d-4 adds no read, so it has no perf box, and its live box is the `portal-home` assertion of T5 Step 3 on the `verify.sh` server, not an agent-browser run (small pipeline, E2, Deviation 10). It has no perf box because it adds no route: `/spaces` is the baseline route itself and the link is one anchor.
+- **Verification boxes (playbook).** Each PR section ends with three boxes: **unit**, **live** (a scenario on the real surface, run on the Mac against `verify.sh --keep --no-tests <branch> <sha>`, driven headless with the `agent-browser` CLI, with a pass predicate; `agent-browser close` after), **perf** (Perf runs above). A PR is verified only when all three are checked, and READY needs all three (MERGE RULE), with two exceptions: a REPORT-ONLY perf box counts as checked when its numbers or its "not run" line are in the PR (Perf runs); 1d-2 has no route, so its perf box is a query-count row in its int test (C4 row 10), and 1d-4 has its own boxes (PR 1d-4): its live box is the `portal-home` run of E6 on the `verify.sh` server plus the screen reviews, and its perf box is BLOCKING by gate (G) (E7).
 
 ## Check open source first
 
@@ -192,8 +189,8 @@ The user's rule: before a new module, compare what exists. 1d builds no new tool
 | Profile form, notifications (1d-1)                   | 1, 5 | Existing components, unchanged (`ProfileForm`, `NotificationsSection`).                                                                                                        |
 | Sign-in group: email line, button (1d-1)             | 1    | Arc `Button` (`variant="secondary"`). The email is static text in a `<dl>`.                                                                                                    |
 | Sign-in result line (1d-1)                           | 1    | Arc `Alert` (`tone="success"` or `tone="danger"`), as the public calendar uses it (`public-calendar.tsx:7`).                                                                   |
-| Home **Open the calendar** (1d-3 T5, or 1d-4)        | 1    | A link with the Arc button classes, as 1c-3's other card actions.                                                                                                              |
 | Nav item (1d-3)                                      | 1    | The shell's existing row (phase 1a), one registry row; icon from `lucide-react`.                                                                                               |
+| Home This week card (1d-4)                           | 3    | ui-sdk `ToggleGroup` in `src/components/sdk/toggle-strip.tsx` for the day choice; the higher ranks and the reasons are in PR 1d-4, W9.                                         |
 | Course kind cue (1d-2 type, 1d-3 render)             | 5    | One optional `edge` field on `CalendarItem` and one CSS rule in the calendar's own stylesheet. No library draws a calendar block's edge.                                       |
 
 ## Legend preset
@@ -226,7 +223,8 @@ The defaults below ship with each PR (MERGE RULE). The ledger lists them under "
 7. **Signed out, a portal page may return to `/spaces` after login.** The portal layout sends every signed-out reader to `login?next=/{locale}/spaces` (`(portal)/spaces/layout.tsx:25`), and a layout cannot read the path. The `/settings` and `/profile` redirect pages check the reader themselves and send a signed-out reader to `login?next=/{locale}/spaces/account`, so the two email links, the space unsubscribe page (`api/space-email/unsubscribe/route.ts:45`) and the space mail (`src/lib/space-email.ts:91`, `settingsUrl`), both `/settings#notifications`, end on the account page after login. The two new pages (`/spaces/account`, `/spaces/calendar`) also guard themselves, as `(home)/page.tsx:93` and `community/page.tsx:25` do: `if (!user) redirect(login?next=<their own path>)`. The layout and the page render in parallel, so which `next` wins is not known from the code; A5 Step 2 pins it with one e2e per page, and the result becomes the written behaviour. The email links stay on `/settings`, because that path keeps the account target through login in either result (code review L-1's "point them at `/spaces/account`" is not taken for this reason). Carry-over below.
 8. **The preset reads the courses that returned meetings (spec review L-2).** Spec: "The reader's course ids set the preset." A student whose only accepted course is owner-tier (the gated read refuses it, C4 row 4), or whose course has no session yet, has a non-empty `readerCourseIds` but nothing of their own to show: the spec-literal preset would hide Other courses and show a blank grid. Plan: the preset and the Your courses kind read the ids of the courses the gated read returned (Legend preset). For every course with at least one meeting the result is the same as the spec's.
 9. **A portal feature folder `src/portal/calendar/` (spec review L-6).** The spec's "Feature folders" table (`spec.md:217-236`) has no calendar row, and it says "The calendar stays in `src/components/calendar/`. Neither knows about the portal." Plan: `src/portal/calendar/` holds only the portal's merge, kinds and page (C3, T3); the calendar component gets only generic props (`path`, `readOnly`, `defaultHiddenKinds`, `edge`), so it still knows nothing of the portal.
-10. **Perf boxes reuse the 1c gate and block only when its tooling is on `main` (orchestrator decision, 2026-11-22).** The spec's Phase 1d "Ends when" has no perf clause ("`portal-calendar` and `portal-account` pass", spec Phases). The round-1 plan made its own perf protocol (a curl loop on `cilas_dev`, baselines on the site pages `/en/settings` and `/en/calendar`) and made every perf box part of READY. Two reviews showed that the baselines measured another shell (code review H-1) and that the protocol leaned on unchecked Mac tooling (spec review H-1). Plan: the route boxes reuse the 1c plan's Perf gate (G), Prod clone restore (R) and Mail off (M) by reference, with `/en/spaces` on `main` as the baseline (the same shell) and `L = baseline p75 x 1.25 + 50 ms` as the pass line. They block READY only when 1c-0's probe and accounts scripts are on `main` and the Mac holds a clean `cilas_ttfb` when the box is due (P12); else they are REPORT-ONLY, so an unmerged 1c PR or a missing prod dump cannot stall a 1d merge. A head route is judged against `/en/spaces` on `main`, or against the head's own `/en/spaces` when that control is itself above the line (Perf runs, Control row). 1d-2 (no route) checks the read's shape in its int test (C4 row 10). 1d-4 (one link, no read) has no perf box. This supersedes spec review H-1's proposed P13 (a check that `verify.sh --keep` serves a production build): no perf step uses `verify.sh --keep` any more.
+10. **Perf boxes reuse the 1c gate and block only when its tooling is on `main` (orchestrator decision, 2026-11-22).** The spec's Phase 1d "Ends when" has no perf clause ("`portal-calendar` and `portal-account` pass", spec Phases). The round-1 plan made its own perf protocol (a curl loop on `cilas_dev`, baselines on the site pages `/en/settings` and `/en/calendar`) and made every perf box part of READY. Two reviews showed that the baselines measured another shell (code review H-1) and that the protocol leaned on unchecked Mac tooling (spec review H-1). Plan: the route boxes reuse the 1c plan's Perf gate (G), Prod clone restore (R) and Mail off (M) by reference, with `/en/spaces` on `main` as the baseline (the same shell) and `L = baseline p75 x 1.25 + 50 ms` as the pass line. They block READY only when 1c-0's probe and accounts scripts are on `main` and the Mac holds a clean `cilas_ttfb` when the box is due (P12); else they are REPORT-ONLY, so an unmerged 1c PR or a missing prod dump cannot stall a 1d merge. A head route is judged against `/en/spaces` on `main`, or against the head's own `/en/spaces` when that control is itself above the line (Perf runs, Control row). 1d-2 (no route) checks the read's shape in its int test (C4 row 10). 1d-4 does not use this rule: its Home box is BLOCKING and uses gate (G) as the 1c plan writes it (operator brief, 2026-11-25; PR 1d-4, E7). This supersedes spec review H-1's proposed P13 (a check that `verify.sh --keep` serves a production build): no perf step uses `verify.sh --keep` any more.
+11. **Home has a This week card (operator, 2026-11-24, ledger HOME LAYOUT).** The spec's Home board has no week card, and it puts Latest on its own row. 1d-4 adds the card from the prototype: Latest span 7 and This week span 5 when wide, and This week after Latest when stacked. It differs from the prototype in four points: the week starts on Saturday in both languages (W2), a day shows three dots at most (W3), the card lists public events beside the reader's own sessions and its count says so (W1, W12), and cancelled meetings are left out (W3).
 
 ## Ends when
 
@@ -236,9 +234,10 @@ The spec's Phase 1d line, by clause.
 2. `portal-account` passes: A5 (`e2e/portal-account.e2e.test.ts`).
 3. `portal-shell` holds the 1d assertions: the account row opens `/spaces/account` (A5) and the Calendar item shows and lands on its page, per role, at 1440 and 390 (T6).
 4. The audit snapshot does not change (no access rule changes).
-5. On `main`, the admin's empty Next session card on Home links to `/{locale}/spaces/calendar`: the `portal-home` assertion "an admin with no session gets Open the calendar, and it opens /spaces/calendar" passes, from T5 (in 1d-3) or E2 (in 1d-4). When P6 fails, this clause waits for 1c-3, and phase 1d does not wait with it (orchestrator decision, 2026-11-22; spec review L-1): phase 1d is done when 1d-1, 1d-2 and 1d-3 are merged and 1d-4 is merged or parked. Parked means the ledger line "1d-4 waits on 1c-3; owner: 1d orchestrator, then the master after hand-off". The 1d orchestrator thread may end after it hands that line to the master.
+5. On `main`, the admin's empty Next session card on Home links to `/{locale}/spaces/calendar` (built in 1c-3): the `portal-home` test "an admin with no session gets Open the calendar, and it opens /spaces/calendar" passes (1d-4, E1).
+6. Operator scope (2026-11-24): Home shows This week, and its TTFB box passes (1d-4, E6 and E7).
 
-Scope check, from the spec's Phase 1d Scope line: the Calendar tab (T3), its nav item (T4), the gated read of the reader's own sessions (C1, C2), `/spaces/account` (A1, A4), the redirects (A2), the account menu row (A2), the ui-sdk skill read before the preset (Legend preset, T1), Home's **Open the calendar** (T5 or 1d-4).
+Scope check, from the spec's Phase 1d Scope line: the Calendar tab (T3), its nav item (T4), the gated read of the reader's own sessions (C1, C2), `/spaces/account` (A1, A4), the redirects (A2), the account menu row (A2), the ui-sdk skill read before the preset (Legend preset, T1), Home's **Open the calendar** (built in 1c-3; proven in 1d-4 E1).
 
 ## Review Focus
 
@@ -277,7 +276,7 @@ Done means: a fix to how a course becomes calendar meetings lands in `courseMeet
 
 - **To phase 1c (1c-3 H1), now (code review L-2):** add a premise to 1c-3 H1: "if `git grep -n "export const readerCourseIds" origin/main -- src/lib/reader-courses.ts` prints a line, import it and add rows to its int test only; do not create the file". The 1d orchestrator sends this to the 1c orchestrator and writes one ledger line. The 1d plan does not edit the 1c plan.
 - **To phase 1c (1c-3 H1), when 1d-2's C1 is on `main` first:** `src/lib/reader-courses.ts` exists. H1 imports `readerCourseIds` and keeps only `nextSession`; its int test file exists with the 1d rows, and H1 adds its own rows there. The orchestrator sends this when C1 merges (Shared files).
-- **No carry-over for Home's Open the calendar.** Phase 1d owns it (T5 or PR 1d-4). 1c-3 H2 keeps "admin no button (until 1d)" as its plan says.
+- **No carry-over for Home's Open the calendar.** 1c-3 (#82) built the action. 1d-4 E1 proves the click.
 - **To a later phase:** if A5 Step 2 shows that the layout's `next=/{locale}/spaces` wins over a page's own guard, a signed-out reader at any portal page returns to `/spaces` after login (Deviation 7). The fix belongs to the shell (the proxy can pass the path to the layout), not to 1d.
 
 ## Open questions (product calls)
@@ -609,28 +608,496 @@ Base `origin/main` after 1d-2 merges (see PRs).
 - [ ] **live:** Scenario: on the kept app with `calendarWorld`, as the student, click Calendar in the sidebar, then open the legend and press "Other courses", then open the `community` block. Pass: the first view shows the `community` and `event` blocks and not `other`; after the press `other` shows; the popover shows the session title, number and time and a **View course** link; the URL path is `/en/spaces/calendar` with `view` and `date`. Repeat at 390 in Arabic: Calendar is in the bottom bar, and the first day of the three-day run is the rightmost column (Deviation 5). At 1440 in Arabic, the week's rightmost column is Saturday.
 - [ ] **perf:** Metric: TTFB p75 per role (the three accounts of 1c T2 on `cilas_ttfb`: real courses, real enrollments), by Perf runs (Global Constraints): production builds, `cilas_ttfb`, Mail off (M) with `PROBE`, inside the lock, no query (today's month). Baseline: `main` at the PR's base, `/en/spaces` (the same shell; the public `/en/calendar` reads no reader and skips the portal layout, code review H-1). Head: `/en/spaces/calendar`, and `/en/spaces` as the control row. Pass, for every role: head p75 <= baseline p75 x 1.25 + 50 ms, with the near-miss rerun and the control rule of Perf runs. BLOCKING or REPORT-ONLY by P12, decided when the box is due.
 
-## PR 1d-4. Home link (`portal/phase-1d-home-link`; only when P6 failed when T5 started)
+## PR 1d-4. Home: Open the calendar and This week (`portal/phase-1d-home-link`)
 
-Base `origin/main` after 1c-3 and 1d-3 have merged. One small PR, owned by the 1d orchestrator (orchestrator decision). The ledger's 1d row says "1d-4 waits on 1c-3" until it opens; phase 1d can end with 1d-4 parked on that line (Ends when). It runs a small pipeline that still meets the ledger's READY definition (orchestrator decision, 2026-11-22; round-3 review M-2): the dom test and the `portal-home` assertion, one combined code-review and security-review pass, one ux-auditor pass on the Home card only (the screen), the full suite on the Mac, and no perf box (no new route: the card is on `/spaces`, the route the baseline measures, and the link adds no read).
+**Status of this section.** An addendum of 2026-11-25. It replaces the old "Home link" section. The operator added the This week card on 2026-11-24 (ledger, HOME LAYOUT). It has the fixes of one review (2026-11-25, Claude: 0 Critical, 2 High, 3 Medium, 6 Low) and the orchestrator decisions on them. It was written by reading only, on the server, at `138db95c` (`origin/portal/base-open-prs` = `main` `965dc13d` + #83 + #87). The greps of PW1 to PW7c and PW9 to PW12 ran there. The review fix added PW13 to PW15 and changed PW8; their commands ran on the same code (only this file differs). No test, build, server or probe ran. Every "Expected" test result is a prediction. Line numbers are at `138db95c`.
 
-### Task E1: The link
+**Base.** The branch starts at `138db95c`, and this addendum is in its first commits. The PR targets `main`. **Branch policy: merge, never rebase.** While #83 and #87 are open, run `git fetch origin && git merge origin/portal/base-open-prs` before the PR opens and before it merges, and `<base>` is `git merge-base origin/portal/base-open-prs HEAD` (`138db95c` at this writing). After both are on `main`, merge `origin/main` into the branch (ledger, BASE BRANCH). Then `<base>` is `git merge-base origin/main HEAD`. This replaces the rebase of the Conflict rule for this PR. Push with `git push -u origin portal/phase-1d-home-link`, because the first checkout tracked the base branch.
 
-**Skills:** tdd, modern-web-guidance (first), arc, better-writing then humanizer.
+**Skills rule.** Use only pstack/poteto skills and playbooks; never superpowers or caveman (ledger, SKILLS RULE). The UI skills that a task names stay in use.
 
-**Files:** as the 1d-4 file list.
+**Scope** (operator decision):
 
-- [ ] **Step 1:** `git ls-tree origin/main src/portal/home/next-session-card.tsx` prints a line and `git ls-tree origin/main 'src/app/(frontend)/[locale]/(portal)/spaces/calendar/page.tsx'` prints a line. Else stop: the PR is not due yet. Then `git grep -n "spaces/calendar" origin/main -- src/portal/home/next-session-card.tsx` prints nothing (spec review M-3): a line means the action is already on `main`, so stop and report.
-- [ ] **Step 2:** T5 Steps 2 and 3, as written there (the dom test, then the `portal-home` assertion). Commit.
+1. The admin's **Open the calendar** on the next session card. The link is already on `main`: 1c-3 (#82) built it with its dom row and its empty-seed assertion (PW2). So only the click test is new (E1).
+2. A new **This week** card on Home: span 5 beside Latest, and Latest becomes span 7. It has seven day buttons with dots, the list of the chosen day, and a link to Calendar. Below the 900px container width it comes after Latest.
+3. The month-view marker test in `calendar-legend-preset.browser.test.tsx:291` (E2). `Calendar` reads `view` once unless it has `onNavigate` (`calendar.tsx:199-207`), and the test passes none (PW7). So the rerender stays in the week view, and the "month" asserts read the week.
 
-### Task E2: Review, full suite, open PR 1d-4
+### Decisions
 
-**Skills:** code-review.
+Each line is a plan call, unless it names the operator.
 
-- [ ] **Step 1: one combined code-review and security-review pass** (spec Home, Phases target table as the issue): the link's target is built from `locale` and a constant; no read and no write is added. Then **one ux-auditor pass on the Home card only**, on the Mac against `verify.sh --keep --no-tests <branch> <sha>` (as the fixture admin with no session, `/spaces`, 1440 and 390, English and Arabic, light and dark): the card shows the link, and the link reads as an action next to the card's text. No better-interface run and no break-ui run (one link; 1c-3's reviews cover the rest of the card). Reports in a PR comment. The Mail off (M) server guard and the scratch-world `--remove` step run as in Global Constraints.
-- [ ] **Step 2:** Fix. **[verify]** the full suite on the Mac. Per-PR step 5. Run the scratch-world `--remove` step (Global Constraints, Scratch world script). Open `feat(portal): Open the calendar on Home for an admin with no session (portal phase 1d, PR 4)`.
+**W1. Items: the reader's own course meetings and the public events.** Own meetings come from the gated read (fellow courses, drafts included, and enrolled courses). Events are the `kind === 'event'` rows of `getCachedCalendarItems(locale)` (the E7 fallback reads them another way). Another person's public course never shows. A reader with no own course, most admins among them, sees public events only (operator brief). The Calendar page differs for that reader: it also shows Other courses (Deviation 3, Q6). No role gets a branch. Reason: the card answers "what is on my week", and the preset hides Other courses for the same reason. No dedupe step is needed: the own list holds only courses, and the public part holds only events.
+
+**W2. Window: today's Cairo week, Saturday to Friday, in both languages.** `today = cairoDay(new Date())!`. The first day is `weekStart(today)` (`src/lib/calendar.ts:95`), and the card shows it and the six days after it. Reason: the brief allows "the existing helper's rule" for English, and every week rule in the repo starts on Saturday (`weekStart`, `weekStartOf` in `calendar-time.ts:16`; ADR 0002 gives Cairo time). A Monday week on Home would differ from the week that the Calendar shows. No new helper. The prototype's fixed row starts on Sunday; that is mock data (its own `wkStart` starts on Saturday).
+
+**W3. Counts and times.** A day holds its meetings that are not cancelled, in `byTime` order. The count is the number of meetings, so two meetings of one session on one day count as two. A cancelled meeting is not shown, as on the next session card (`upcoming.ts:12`) and the sidebar card (Q5). A past day of the week keeps its meetings. A meeting with no start shows the existing `CalendarUi.allDay`. A day shows at most three dots; the name of the button gives the exact count (Q7). Reason: ten dots are wider than one of seven columns on a phone.
+
+**W4. One row of the list.** Time (`timeStyle: 'short'`, `Africa/Cairo`, the reader's digits); title by the rule of the next session card (session title, else "Session N", else the course or event title); a second line with the course title when it differs from the title; the place when there is one (an event row never has a place: the public events read selects none, `calendar.api.ts:132-141`, and `eventItems` adds none, so do not change that query to get one); and one link for the whole row. The link is `sessionHref(meeting, rooms, locale)` (the room, else the public page), else `/{locale}/spaces/calendar?view=day&date=<day>` (`calendarQuery`, `calendar-url.ts:34`). Reason: one rule already gives a session its page, and it keeps zero room links with spaces off. A fellow's draft has no page, and the Calendar shows it. The header link reads `Portal.nav.calendar` and goes to `/{locale}/spaces/calendar`.
+
+**W5. One reader read per request.** New `src/portal/calendar/reader-meetings.ts`:
+
+```ts
+/** The reader's own course meetings, in date order. One read for each request: the shell and Home share it. */
+export const readerMeetings = cache(
+  async (payload: Payload, user: User, locale: Locale): Promise<CalendarMeeting[]> =>
+    getReaderCalendarItems(payload, locale, user, await readerCourseIds(payload, user)),
+)
+```
+
+`cache` is React's, as for `currentReader` and `roomsOf`. It lives for one request, so no user data crosses requests. Nothing goes into `unstable_cache`, and `getCachedCalendarItems` keeps its one argument (Global Constraints, No user data in the cache). All callers move to it: `nextSession`, `SidebarNextSession`, the week card, and `PortalCalendarPage`. Only the raw list is shared; each caller keeps its own filter, and the sidebar keeps its `catch`. The sidebar also drops its own copy of the "next meeting" rule (`sidebar-next-session.tsx:49-56`) and calls `upcoming(meetings, new Date())` (`home/upcoming.ts`), as the next session card does (D16). The two rules differ at the start time: for the rest of that minute the sidebar still shows the meeting, and the card does not. After this PR, neither shows it once its start instant has passed. Reason: today one Home request runs this read twice (the layout's sidebar card and `nextSession`). A third copy would add a third gated depth-2 read. The three keys are the same values in the layout and the page: the `getPayload` instance, the `currentReader()` user object and the locale string.
+
+**W6. TTFB and streaming.** The card sits in its own `CardBoundary slot="week"`, so it has its own Suspense and error line, below the route's `loading.tsx`. Its loader reads `readerMeetings`, `getCachedCalendarItems` and `roomsOf` together. `HOME_SLOTS` gets `'week'` after `'latest'`, so `HomeLoading` shows its skeleton with no edit, and `SKELETON_LINES.week` is 4. No timer, no `connection()` delay, no client fetch, and no new cache. A stream does not make the CPU free: the 1c-2 gate showed that a read started below Suspense can still cost time before the first byte (1c plan, Deviation 14). The plan expects, but has not measured, this result: a fellow and a student save one gated read (W5) and pay for one cached-list parse and the day formats. An admin with no person saves no read and pays only the cost. The admin had the smallest margin in 1c-3 (48 ms against 48.2, PR #82). The perf box decides (E7). It runs early too (E6 Step 2), with a pre-agreed fallback.
+
+**W7. Server first, one small client part.** `WeekCard` (a view with no `'use client'`) formats every string on the server. It sends `WeekDays` (client) display fields only, never a `CalendarMeeting`. The HTML holds the seven days and today's list. `WeekDays` holds one state, `chosen: string | null`, which starts as `null`; only a press sets it. It shows `chosen` when that date is one of the seven, else today. So the selection is always a day that is on screen. With no press, the pressed day follows today. Today is read again on each render and on each `visibilitychange`: `useSyncExternalStore` with `cairoDay(new Date())!` as the client value and the `today` prop as the server value, so hydration has no mismatch. When the client's day is not one of the seven (after Friday midnight, until a refresh brings the new week), today means the `today` prop. `aria-current="date"` is on that same day. A change that no press made is not announced. Limit: a device with a wrong date marks that date. No `preloadable`: this is first-render content. Reason: server formats cannot differ between Node and the browser at hydration.
+
+```ts
+export type RowView = {
+  key: string
+  href: string
+  time: string
+  dateTime: string
+  title: string
+  context: string | null
+  place: string | null
+}
+export type DayView = {
+  date: string
+  weekday: string // "Sun", from the messages (W12)
+  number: string // "15", in the reader's digits
+  count: number
+  countLabel: string // ", 2 sessions or events"
+  listLabel: string // "Sunday, 15 November"
+  empty: string // the line when `rows` is empty
+  rows: RowView[]
+}
+```
+
+**W8. The control: ui-sdk `ToggleGroup`, single choice, through a new wrapper `src/components/sdk/toggle-strip.tsx`.** Read in ui-sdk's `toggle.md` at `0.1.0-beta.1`: without `multiple`, one press releases the others; `deselectable={false}` keeps one pressed; each toggle is a native button with `aria-pressed`; the arrow keys move focus and do not choose, and Enter or Space chooses; the group has one tab stop. The ui-sdk skill says that its behaviours support right to left; the wrapper's browser test proves it. The card's heading names the group. Today's button has `aria-current="date"` and a cue that is not colour. The accessible name is the visible text plus a screen-reader-only count ("Sun 15, 2 sessions or events"), so the name starts with the label (WCAG 2.5.3) and needs no `aria-label`. A change of day calls `announce(listLabel + countLabel)` (the shell's one live region); the pressed day calls nothing. The list is a `<ul aria-label={listLabel}>`. Reason: the brief and the prototype use `aria-pressed`, the calendar legend already uses this primitive, and one primitive family does one job (AGENTS.md). A radio group would choose on each arrow press; here focus moves first.
+
+```ts
+/** A row of toggles with exactly one pressed. */
+export function ToggleStrip(props: {
+  labelledBy: string
+  value: string
+  onValueChange: (value: string) => void
+  items: readonly { value: string; current?: 'date'; content: ReactNode }[]
+  className?: string
+}): React.JSX.Element
+```
+
+The wrapper owns the "exactly one" rule (`value={[value]}`, `deselectable={false}`, the first value of `onValueChange`), the pressed look, the radius, the focus ring and the motion. The week card owns the seven columns and the content of a cell. It is the first wrapper in the folder, so it follows the README's contract, with `toggle-strip.module.css` and `toggle-strip.browser.test.tsx` (keyboard, focus, right to left, reduced motion).
+
+**W9. UI parts, in the order of choice.**
+
+| Rank | Candidate                                    | Verdict       | Reason (read at `138db95c`; the registry on 2026-11-25)                                                                                                                                                                                                                                                       |
+| ---- | -------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Arc `SegmentedControl` (`aria-pressed`)      | no            | Its keys always send ArrowRight to the next index (`segmented-control.tsx`, `onKeyDown`), so in Arabic they move against the screen. It is a one-line pill track that scrolls and fades. A cell of three lines in seven equal columns needs portal CSS on its inner track and buttons.                        |
+| 1    | Arc `calendar`, Arc `tabs`                   | no            | `calendar` is a month date picker. `tabs` brings tab semantics, scroll arrows and a height morph for the panel.                                                                                                                                                                                               |
+| 1    | Arc `radio-cards`                            | no            | It takes a `ReactNode` label, and its arrows follow right to left (`radio-cards.tsx:176-200`). But it is a radio group: an arrow press moves and chooses (W8 needs focus first).                                                                                                                              |
+| 1    | Arc `chip-group`                             | no            | Its chips have `aria-pressed`. But `label` is a `string` (a cell has three parts), and in single mode a press on the chosen chip clears it (`chip-group.tsx`, `multiple`).                                                                                                                                    |
+| 2    | Free Arc `toggle-group` (`uiarc.dev/r`)      | no            | Not installed. Single mode is a `radiogroup`, not `aria-pressed`. It has the same arrow map with no right-to-left case, and it is a compact toolbar pill. So free Arc has no part that does this job in Arabic.                                                                                               |
+| 3    | ui-sdk `SegmentedControl`                    | no            | It works as a radio group with a sliding indicator (`segmented-control.md`, `0.1.0-beta.1`), so an arrow press chooses.                                                                                                                                                                                       |
+| 3    | ui-sdk `ToggleGroup` in a wrapper (ADR 0012) | **yes**       | The behaviour above, already in the repo for the calendar legend (`calendar.tsx:823-837`). No new dependency.                                                                                                                                                                                                 |
+| 4    | Radix toggle group                           | no            | `@radix-ui/react-toggle-group` is not a dependency.                                                                                                                                                                                                                                                           |
+| 5    | Own code                                     | the rest only | The seven-column layout, the cell and the day list (the prototype's `.week`). The header link and the rows are `next/link`. The skeleton is Arc `Skeleton`. No inner scroll: Home scrolls with the document, so no Arc `ScrollArea`. A day with many rows makes the card taller. Open source: no new library. |
+
+**W10. Layout.** The new slot has the same card frame as `needs` and `latest`. In `@container (width > 900px)`: `latest` is `grid-column: 1 / span 7` and `week` is `8 / span 5`, in one row. At 900px and below, one column with `week` last. The seven days are `grid-template-columns: repeat(7, minmax(0, 1fr))`. Each button is 44px high or more. At a 390px viewport each is 44px wide or more, and at 320px 24px or more (WCAG 2.5.8). The builder measures; when 390 fails, the builder first makes the gap 2px, then makes the card's inline padding smaller under 400px. The pressed day inverts (`--foreground` and `--background`) and also has a border that stays in forced colours. A dot is made with a border, so forced colours keep it, and it has 3:1 or more against its button in both themes (WCAG 1.4.11). The colour change and the press scale run only under `prefers-reduced-motion: no-preference`. The list has no animation. **Day labels.** The visible weekday comes from seven message keys, not from `Intl`: in Arabic, `weekday: 'short'` gives the full names with the article ("الثلاثاء", measured with Node's `Intl` on the server), which do not fit a narrow column. The list's `listLabel` keeps the `Intl` long date. A label stays on one line at 11px or more, with no ellipsis and no clip at 390 and 320 in both languages. If it does not fit at 320, make the gap and the card padding smaller first; then report. The skeleton has `min-block-size: 14rem`; set it to the measured height of a card with one row. Below 900px nothing is under the card. When wide, it shares the last row with Latest.
+
+**W11. Empty states.** No meeting in the whole week: the seven buttons stay, and every day shows `week.emptyWeek`. Else a day with none shows `week.emptyDay`. A reader with no own course and an admin follow the same two rules. Both lines differ from `portal.home.noSession`, which the empty-seed test finds by exact text. A failed read shows the boundary's "This could not load." with **Retry**; the other cards stay. When the shared read fails, the next session card and this card both show it.
+
+**W12. Messages** (`messages/{en,ar}.json`, under `Portal.home.week`). The builder runs better-writing, then humanizer. `shown` is `localDigits(count, locale)`, as `Portal.nav.count`. Reused with no copy: `Portal.nav.calendar` (header link), `CalendarUi.allDay`, `Portal.home.sessionNumber`.
+
+| Key                                                         | English                                                                                                               | Arabic                                                                                                                                     |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `weekdays.sat` to `weekdays.fri` (keys by `weekdayOf(day)`) | Sat, Sun, Mon, Tue, Wed, Thu, Fri                                                                                     | سبت، أحد، إثنين، ثلاثاء، أربعاء، خميس، جمعة                                                                                                 |
+| `title`                                                     | This week                                                                                                             | هذا الأسبوع                                                                                                                                 |
+| `count`                                                     | `{count, plural, =0 {, no sessions or events} one {, {shown} session or event} other {, {shown} sessions or events}}` | `{count, plural, zero {، لا مواعيد} one {، موعد واحد} two {، موعدان} few {، {shown} مواعيد} many {، {shown} موعدًا} other {، {shown} موعد}}` |
+| `emptyDay`                                                  | No sessions or events on this day.                                                                                    | لا جلسات ولا فعاليات في هذا اليوم.                                                                                                           |
+| `emptyWeek`                                                 | No sessions or events this week.                                                                                      | لا جلسات ولا فعاليات هذا الأسبوع.                                                                                                             |
+
+**W13. Home now warms the public calendar list.** No portal Home page reads `getCachedCalendarItems` today. After this PR every Home load does (with the E7 fallback, Home does not). In production, each write in the app runs in the server and drops the tag. A script write (a seed, an import, a Local API script) drops no tag (`src/lib/revalidate.ts:26-28`), so the list can keep the old rows until its 3600 s end. This is not new: `/calendar`, the `.ics` feed and the portal Calendar already read the same list. In e2e, the Playwright process writes the fixtures with the Local API, so those writes drop nothing. Home is not the first reader there: the `/calendar` specs and the feed also fill this list. The calendar page reads uncached only in edit mode (`(site)/calendar/page.tsx:48-50`), and `playwright.config.ts` and `next.config.ts` set no cache option. The merged `portal-calendar` run and P9 passed with no Home reader. This is read from the code, not run. **Fix, in the tests only, with no new helper** (orchestrator decision): use the method that `e2e/public-calendar-panel.e2e.test.ts:183-205` already has. (a) After the Local API rows exist, the admin saves one of them through the app (`PATCH /api/{collection}/{id}` with the same title, expect OK). The collection's hook drops `PUBLIC_LISTS_TAG` (`Events.ts:55`, `Sessions.ts:169`). Then the test polls `/en/calendar` and `/ar/calendar` at that week until the HTML holds the new row. (b) Before cleanup, `afterAll` deletes the rows that this block must not leave in the list **through the app** (`DELETE /api/{collection}/{id}` as the admin, expect OK), the event last. Its `afterDelete` hook (`Events.ts:56`) drops the tag after those rows are gone, so no deleted event stays cached. The tracker still tracks each row, so a failed app delete leaves nothing: cleanup accepts a row that is already gone (`testing/payload.fixture.ts`, the `count` after a refused delete).
+
+### Decision log (structural, 1d-4)
+
+- D13. "The reader's own meetings" is written three times (`next-session.ts:38-46`, `sidebar-next-session.tsx:40-41`, `calendar-page.tsx:46`), and one Home request runs it twice. The week card would be the fourth copy. Fix: `readerMeetings` (W5). Done when `git grep -n "getReaderCalendarItems(" -- src/portal` prints one line.
+- D14. The next session card holds two rules that the week card also needs: the Cairo format with the reader's digits (`next-session-card.tsx:42-47`) and the title rule (`:37-41`). Fix: `src/portal/home/meeting-words.ts` with `cairoFormat(locale, options, at)` and `meetingHeading(meeting, sessionNumber)`. Both cards import it.
+- D15. The days of the week and their meetings are a rule, not markup. Fix: pure `weekAgenda` in `src/portal/home/week.ts`; the card formats, and the client part only chooses a day.
+- D16. The "next meeting" rule is written twice (`home/upcoming.ts`, `sidebar-next-session.tsx:49-56`), and PR #81 did not make one import the other. Fix: the sidebar calls `upcoming` (W5, Task E3). Done when `git grep -n "meeting.date > day" -- src/portal` prints nothing.
+
+### Files (1d-4)
+
+- **Create:** `src/portal/calendar/reader-meetings.ts`; `src/portal/home/week.ts`, `week.unit.test.ts`, `week-card.tsx`, `week-days.tsx`, `meeting-words.ts`; `src/components/sdk/toggle-strip.tsx`, `toggle-strip.module.css`, `toggle-strip.browser.test.tsx`.
+- **Modify:** `src/portal/home/home-page.tsx`, `card-boundary.tsx`, `home.module.css`, `home-cards.dom.test.tsx`, `next-session.ts`, `next-session-card.tsx` (imports `meeting-words` only; same output); `src/portal/nav/sidebar-next-session.tsx` (the read and the next rule only, D13 and D16); `src/portal/calendar/calendar-page.tsx` (the read only); `messages/{en,ar}.json` (`Portal.home.week.*`); `e2e/portal-home.e2e.test.ts`; `e2e/portal-home.empty.e2e.test.ts` (one line); `e2e/portal-shell.e2e.test.ts` (one locator); `e2e/portal-calendar.e2e.test.ts` (W13); `src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`; `e2e/portal-axe-known.json` (only by the axe rule).
+- **Only with the E7 fallback:** `src/api/calendar.api.ts`; `src/api/public-events-window.int.test.ts` (new).
+- **No change:** `home-loading.tsx` (it maps `HOME_SLOTS`), `session-link.ts`, `calendar.api.ts` (except with the fallback), `reader-courses.ts`, `e2e/public-calendar-panel.e2e.test.ts`, any collection or access rule, any migration.
+- **Shared files** (phase 2 and the AI buttons work run at the same time): `home-page.tsx`, `home.module.css`, `messages/{en,ar}.json`, `portal-home.e2e.test.ts`, and the shell file `src/portal/nav/sidebar-next-session.tsx` (change its read and its next rule only). Add one loader and one slot, new CSS rules and the two column rules, new keys only, and new tests. On a conflict, keep both sides.
+
+### Premises to check first (1d-4)
+
+Run at `<base>` after `git fetch origin`, with `HEAD` before the first code commit. A premise that fails stops the builder, who reports, unless the line says another action.
+
+| Name | Command                                                                                                                                                                                           | Expected at `138db95c`                                                                                     |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| PW1  | `git merge-base --is-ancestor 138db95c HEAD; echo $?`                                                                                                                                             | `0`                                                                                                        |
+| PW2  | `git grep -n "admin: { href: '/spaces/calendar', label: 'openCalendar' }" HEAD -- src/portal/home/next-session-card.tsx`                                                                          | one line. No line: stop. The link left the base.                                                           |
+| PW2b | `git grep -n "'Open the calendar', '/en/spaces/calendar'" HEAD -- src/portal/home/home-cards.dom.test.tsx`                                                                                        | one line (the dom proof exists; add no second one)                                                         |
+| PW2c | `git grep -n "and it opens /spaces/calendar" HEAD -- e2e`                                                                                                                                         | nothing. A line: E1 is done; skip it.                                                                      |
+| PW3  | `git grep -n "export const HOME_SLOTS = \['needs', 'next', 'spaces', 'latest'\] as const" HEAD -- src/portal/home/card-boundary.tsx`                                                              | one line                                                                                                   |
+| PW4  | `git grep -n "getReaderCalendarItems(" HEAD -- src/portal`                                                                                                                                        | three lines: `calendar-page.tsx`, `next-session.ts`, `sidebar-next-session.tsx`. Another caller moves too. |
+| PW5  | `git grep -nE "export const (currentReader\|roomsOf) = cache\(" HEAD -- src/lib/reader.ts src/portal/home/next-session.ts`                                                                        | two lines                                                                                                  |
+| PW6  | `git grep -n "export const weekStart = " HEAD -- src/lib/calendar.ts`                                                                                                                             | one line                                                                                                   |
+| PW7  | `git grep -n "view.rerender({ items: \[mine, other, talk\], view: 'month', details: true })" HEAD -- src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`                          | one line                                                                                                   |
+| PW7b | `git grep -n "if (onNavigate && (followed.day" HEAD -- src/components/calendar/ui/calendar.tsx`                                                                                                   | one line                                                                                                   |
+| PW7c | `git grep -n "onNavigate" HEAD -- src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`                                                                                             | nothing                                                                                                    |
+| PW8  | `git ls-tree --name-only HEAD scripts/ttfb-probe.mjs scripts/ttfb-accounts.ts`; `git diff --name-only <base> HEAD -- src/migrations`                                                              | two lines; nothing (this PR adds no migration, so one schema serves the base and the head, E7)             |
+| PW9  | `git grep -n -e "expect(latest.width).toBeCloseTo(spaces.width, 0)" -e "const column = \[needs, next, spaces, latest\]" HEAD -- e2e/portal-home.e2e.test.ts`                                      | two lines (E6 changes both)                                                                                |
+| PW10 | `git grep -n "main section\[data-latest\] a').last()" HEAD -- e2e/portal-shell.e2e.test.ts`                                                                                                       | one line (E6 changes it)                                                                                   |
+| PW11 | `git grep -n "loners: {" HEAD -- testing/portal.fixture.ts`                                                                                                                                       | one line (the student with no course)                                                                      |
+| PW12 | `git grep -n ": getCachedCalendarItems(lang)," HEAD -- "src/app/(frontend)/[locale]/(site)/calendar/page.tsx"`; `git grep -n "getCachedCalendarItems" HEAD -- src/portal/home`                    | one line; nothing (W13: Home does not read the list yet)                                                   |
+| PW13 | `git grep -n "afterDelete: \[revalidateAfterDelete('events')\]" HEAD -- src/collections/Events.ts`; `git grep -n "afterDelete: \[refreshCourseAfterDelete\]" HEAD -- src/collections/Sessions.ts` | one line each (W13: an app delete drops the tag)                                                           |
+| PW14 | `git grep -n "meeting.date > day \|\|" HEAD -- src/portal/nav/sidebar-next-session.tsx`                                                                                                           | one line (D16)                                                                                             |
+| PW15 | `git grep -n "const touched = await fetch" HEAD -- e2e/public-calendar-panel.e2e.test.ts`                                                                                                         | one line (the method that W13 uses again)                                                                  |
+
+In PW5 the `\|` inside the table cell is a plain `|` in the shell. In PW14 each `\|` is a plain `|` too, and `git grep` reads it as that character.
+
+**Edit commands** (server or Mac; on the server only when `server-ok.sh` exits 0, each under `flock /home/salah/cilas-portal-run/heavy.lock nice -n 19 ionice -c3`): `pnpm exec vitest run --project node <file>`, `pnpm exec vitest run --project dom <file>`, `pnpm exec tsgo --noEmit`, oxlint. **[verify]** steps run on the Mac.
+
+### Task E1: The admin link's click test
+
+**Skills:** tdd.
+
+**Files:** `e2e/portal-home.e2e.test.ts`.
+
+- [ ] **Step 1:** Run PW2, PW2b and PW2c.
+- [ ] **Step 2:** Add, for locale x 1440/390: "an admin with no session gets Open the calendar, and it opens /spaces/calendar". As the fixture admin (no person, so no session) on `/{locale}/spaces`, inside `nextSession(page)` (the sidebar card has a link with the same words), click the link `portal.home.openCalendar`. Expected: the path is `/{locale}/spaces/calendar`, and the H1 is `Calendar.title`. It is expected to pass at its first run, because the link is on the base. It has no red step. Its [verify] run is E6's. Commit.
+
+### Task E2: The month-view marker test
+
+**Skills:** ui-sdk (read first: the file is in `calendar/ui/`), tdd.
+
+**Files:** `src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`.
+
+- [ ] **Step 1:** **[verify]** Show the gap. After the `view.rerender(...)` line at `:291`, add `expect(screen.getByRole('button', { name: 'Month' })).toHaveAttribute('aria-pressed', 'true')`. Commit, push, and run `~/cilas-verify/verify.sh --tests-only <branch> <sha> src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`. Expected: FAIL, both rows of "draws a filled or hollow start-edge bar with forced colours %s" (Month is not pressed).
+- [ ] **Step 2:** **[verify]** Replace the rerender with `cleanup()` and `show({ items: [mine, other, talk], view: 'month', details: true })`. Keep the new assert before the two `bar(...)` asserts. Same command. Expected: PASS. If Month is pressed and a bar assert fails, the month chip has a real style defect: stop and report; do not weaken the assert. Commit.
+
+### Task E3: One reader read and one next rule (D13, D16)
+
+**Skills:** tdd.
+
+**Files:** `reader-meetings.ts` (new), `next-session.ts`, `sidebar-next-session.tsx`, `calendar-page.tsx`.
+
+- [ ] **Step 1:** `git grep -n "getReaderCalendarItems(" -- src/portal` prints three lines (the red state).
+- [ ] **Step 2:** Create `readerMeetings` (W5) and move the three callers. `nextSession` awaits `Promise.all([readerMeetings(...), roomsOf(...)])` and returns `null` when `upcoming` finds no meeting. An empty course list still runs no calendar query (`gateOf`, `calendar.api.ts:41-58`). The grep prints one line, in `reader-meetings.ts`. `pnpm exec tsgo --noEmit` passes. This step changes no behaviour, so `next-session.int.test.ts` and `reader-calendar.int.test.ts` must stay green (E8's full suite). Commit.
+- [ ] **Step 3 (D16):** In `sidebar-next-session.tsx`, replace the `meetings.find(...)` rule with `upcoming(meetings, new Date())`, and remove the `day` and `time` values and the `cairoDay` and `cairoTime` imports. `git grep -n "meeting.date > day" -- src/portal` prints nothing. `pnpm exec tsgo --noEmit` and oxlint pass. One behaviour changes: after the start instant, the sidebar card moves to the next meeting, as the Home card does (W5). `upcoming.ts` and its tests do not change. Commit.
+
+Vitest does not run React's server cache, so no test counts the reads. The grep proves that there is one call site; the shared result in one request is React's contract.
+
+### Task E4: The week's days (D15)
+
+**Skills:** tdd.
+
+**Files:** `week.ts`, `week.unit.test.ts`.
+
+**Interfaces:**
+
+```ts
+export type WeekDay = { date: string; meetings: CalendarMeeting[] }
+/** The seven Cairo days of the week of `today`, from Saturday, each with the reader's own meetings and the public events that are not cancelled. */
+export const weekAgenda = (
+  own: readonly CalendarMeeting[],
+  publicList: readonly CalendarMeeting[],
+  today: string,
+): WeekDay[]
+```
+
+- [ ] **Step 1: Failing unit test.** `pnpm exec vitest run --project node src/portal/home/week.unit.test.ts`: "the week runs from Saturday to Friday around today %s" (`2034-10-07`, a Saturday; `2034-10-11`, a Wednesday; `2034-10-13`, a Friday: each gives `2034-10-07` to `2034-10-13`); "the next Saturday starts the next week"; "own meetings and public events share a day, by start time, and a meeting with no start comes first"; "a public course in the public list never shows"; "a cancelled meeting is not counted"; "a meeting on the day before or after the week is left out"; "two meetings of one session on one day count as two"; "with no own meeting, only the events show". Expected: FAIL (no module).
+- [ ] **Step 2:** Implement with `weekStart`, `addDays` and `byTime`. Same command: PASS. Commit.
+
+### Task E5: The card
+
+**Skills:** ui-sdk (read first, AGENTS.md: the task changes `src/components/sdk/`), modern-web-guidance (first for the client code), tdd, arc, better-layout, better-typography, better-colors, better-accessibility, better-writing then humanizer.
+
+**Files:** `src/components/sdk/toggle-strip.tsx`, its CSS and browser test, `meeting-words.ts`, `week-card.tsx`, `week-days.tsx`, `next-session-card.tsx`, `home-cards.dom.test.tsx`, `home.module.css`, `messages/{en,ar}.json`.
+
+**Interfaces:**
+
+- `cairoFormat(locale: Locale, options: Intl.DateTimeFormatOptions, at: Date): string` and `meetingHeading(meeting: Pick<CalendarMeeting, 'title' | 'session' | 'sessionTitle'>, sessionNumber: (number: number) => string): string` (D14).
+- `WeekCard({ week, today, rooms, locale }: { week: WeekDay[]; today: string; rooms: Parameters<typeof sessionHref>[1]; locale: Locale })`: `<section aria-labelledby="home-week" data-week>`, an `<h2 id="home-week">`, the Calendar link, then `<WeekDays days={…} />`. It builds `DayView[]` (W7).
+- `WeekDays({ days, today }: { days: DayView[]; today: string })`, `'use client'` (W7, W8). Each day button's content has `data-week-count={count}` (E7 reads it).
+
+- [ ] **Step 0: The wrapper** **[verify]**. Failing browser test `toggle-strip.browser.test.tsx` (`globalThis.__UI_SDK_STRICT__ = true`, as the legend test): "exactly one toggle is pressed, and a press on it keeps it"; "one Tab enters the strip and the next Tab leaves it"; "the arrow keys move focus and choose nothing; Enter and Space choose"; "in right to left, ArrowLeft goes to the next item on screen" (`dir="rtl"`); "no transition with reduced motion" (`emulateMedia`). `~/cilas-verify/verify.sh --tests-only <branch> <sha> src/components/sdk/toggle-strip.browser.test.tsx`: FAIL (no module), implement, PASS. Record which button Tab enters. If the right-to-left row fails on ui-sdk's own behaviour, stop and report. Commit.
+- [ ] **Step 1: Failing dom tests** in `home-cards.dom.test.tsx` (if ui-sdk cannot run in jsdom, move the press and focus rows to a `week-days.browser.test.tsx` and say so) (`today="2034-10-11"`): "This week shows seven day buttons from Saturday, with today pressed and current"; "a day button's name is its visible day and its count" (exact names for 0, 1 and 2); "choosing a day moves aria-pressed and shows only that day's rows"; "choosing the pressed day keeps it"; "a change of day is read once in the shell's region" (render `LiveRegion`; `waitFor`); "a day with nothing says so" and "an empty week says so on every day"; "a row with no start says All day"; "a day with five meetings shows three dots and counts five"; "a row opens the room, else the public page, else the Calendar day" (three rows, `href` exact); "an event never takes a course room's link"; "in Arabic the numbers and times use Arabic digits"; "a chosen date that left the week falls back to today" (`rerender` with the next week). The midnight rows use a fixed clock for the whole `describe` (`vi.useFakeTimers({ toFake: ['Date'] })` and `vi.setSystemTime(new Date('2034-10-11T09:00:00Z'))`), then set a later time and dispatch `visibilitychange` on `document`: "with no choice, the pressed day follows today after midnight"; "a chosen day stays pressed after midnight"; "after Friday midnight with the old week on screen, a day of that week stays pressed". `pnpm exec vitest run --project dom src/portal/home/home-cards.dom.test.tsx`: FAIL.
+- [ ] **Step 2:** Implement (D14 first; the old next session tests must stay green), the CSS of W10 and the messages of W12. Same command: PASS. `pnpm exec tsgo --noEmit` passes. Commit.
+
+jsdom has no layout. So the right-to-left order on screen, the target sizes and forced colours are proven in E6 and the reviews.
+
+### Task E6: Home shows the card
+
+**Skills:** modern-web-guidance (first), tdd, better-layout, better-accessibility.
+
+**Files:** `home-page.tsx`, `card-boundary.tsx`, `home.module.css` (the slot frame, the columns, the skeleton), and the `portal-home`, `portal-home.empty`, `portal-shell` and `portal-calendar` e2e files.
+
+- [ ] **Step 1: The wiring.** Add `'week'` to `HOME_SLOTS` and `SKELETON_LINES`. In `home-page.tsx`, one loader after `Latest`:
+
+```tsx
+async function ThisWeek({ payload, user, locale }: CardProps) {
+  const today = cairoDay(new Date())!
+  const [own, publicList, rooms] = await Promise.all([
+    readerMeetings(payload, user, locale),
+    getCachedCalendarItems(locale),
+    roomsOf(payload, user, locale),
+  ])
+  return (
+    <WeekCard
+      week={weekAgenda(own, publicList, today)}
+      today={today}
+      rooms={rooms}
+      locale={locale}
+    />
+  )
+}
+```
+
+`<CardBoundary slot="week"><ThisWeek {...props} /></CardBoundary>` comes after the `latest` boundary. `pnpm exec tsgo --noEmit` passes. Commit.
+
+- [ ] **Step 2: The early TTFB probe (BLOCKING for the next steps).** The card now renders on Home. Before the other tests and before each review, push this head and run one E7 session on it, with the cache size check. A pass: go on to Step 3. A fail: follow E7 Step 5, and the E7 fallback if it says so, before Step 3. Write each session's result in the PR.
+
+- [ ] **Step 3: Old assertions that change** (`portal-home.e2e.test.ts`). `boxesOf` reads the `week` slot. "wide Home puts Next session beside Needs you": `latest.y` equals `week.y`; `latest.width / week.width` is 7 / 5; `spaces.width` equals `latest.width + week.width + 12`; Latest comes first from the reading start (Arabic: on the right). "stacked Home keeps the reading order": the column ends `…, latest, week`, so at 390 This week is after Latest. "a keyboard walk reaches each Home card in order": after the Open Inbox target, add `[data-week] a[href="/en/spaces/calendar"]` and `[data-week] button[aria-pressed]` (the strip's one tab stop). The 200% zoom test adds the week section. In `portal-home.empty.e2e.test.ts`, add `portal.home.week.emptyWeek` to the list of empty lines. In `portal-shell.e2e.test.ts:1175`, the focus target near the bottom is now in This week: the strip's tab stop, or the last row link of the day list when there is one (`main section[data-week] :is(button[tabindex="0"], ul a)` `.last()`; confirm the stop against the wrapper test's record). Raise the 80 Tab presses only if they run out.
+- [ ] **Step 4: New tests,** in a `test.describe('This week')` that is the **last** block of the serial describe, with its own `createTracker`, `beforeAll` and `afterAll`. A session in this week can become the student's next session, so its rows must not exist while the older tests run.
+  - Dates come from the real clock, because the server reads its own: `today = cairoDay(new Date())!`; `second = today === weekStart(today) ? addDays(today, 1) : weekStart(today)`. `portalWorld`'s 2034 sessions are outside the week.
+  - Rows: on `world.course`, one session with the title `uniq('Week today')` on `today` and one `uniq('Week second')` on `second`, each 19:00 to 21:00; one published public event `uniq('Week event')` on `today` (the event data of `calendarWorld`, `testing/portal-calendar.fixture.ts`).
+  - After all rows exist, refresh the cached list with the W13 method (a): sign in as the admin, `PATCH /api/events/{id}?locale=en` with the same title, expect OK, and poll `/en/calendar?view=week&date=<today>` and the `/ar` page until each holds the event's slug. The older Home tests have already warmed the list (`revalidate: 3600`). The sessions need no such step for Home: the gated read has no cache.
+  - `afterAll` of this block, in `try`: delete the two week sessions and then `Week event` through the app (W13 method (b): `DELETE /api/sessions/{id}` and `DELETE /api/events/{id}` as the admin, expect OK, the event last). In `finally`: `cleanup(payload)` of the block's tracker. So no later test and no other worker sees a deleted event on Home or `/calendar`.
+  - In `portal-calendar.e2e.test.ts`, use the same method: in `beforeAll`, after `calendarWorld` and the logins, save `world.event` through the app as the admin and poll `/en/calendar?view=week&date=2034-10-08` and the `/ar` page for its slug. In `afterAll`, delete `world.event` through the app before `cleanup(payload)`.
+  - **Find each such spec before the first full suite.** `git grep -nE "calendar\.ics|/calendar" -- 'e2e/*.e2e.test.ts'`, then read each file that also makes rows in the test process. A spec needs the method when it asserts on its own rows in the cached list. At `138db95c` (read, not run): `portal-calendar` needs it; `public-calendar-panel` has it; `public-calendar-edit` and `public-calendar-drawer` assert their rows only in edit mode, which reads uncached; `calendar-feed` makes no row; `portal-shell` asserts no row of the list. A spec that the command finds and this line does not name gets the same check; one that needs the method joins the Files list.
+  - Assert by these titles, never by an exact count: other tests and a database with real rows can add events to the week. Exact counts are in E4 and E5.
+  - **Fixed clock, no rerun.** Each test of this block calls `await page.clock.setFixedTime(new Date(cairoInstant(today, '12:00')!))` before its first `goto`. The card takes today from the browser clock (W7), so a run that crosses Cairo midnight keeps the same pressed day. The clock does not move the server. So one case is left: Friday midnight, when the server's week changes. Do not start this [verify] run in the 30 minutes before Saturday 00:00 Cairo.
+  - "a student sees this week's sessions and switches days" (locale x 1440/390): today's button is pressed and the list holds `Week today`, and not `Week second`; press the button of `second` (its place in the row: the number of days from `weekStart(today)`); it is pressed, the list holds `Week second` and not `Week today`, `[data-portal-live]` holds the list label, and the `Week second` row's `href` is the course room.
+  - "a student with no course sees this week's public event and no course session" (`world.loners.student`, with its own login; en, 1440).
+  - "the week's day buttons are big enough to press": at 390 each box is 44 by 44 or more; at 320 each is 24 wide or more, and the page has no horizontal scroll.
+  - "in Arabic Saturday is the rightmost day": the first button in the DOM is `weekStart(today)`, and its box is the rightmost.
+  - "the keyboard chooses a day" (en and ar): Tab into the strip, press the arrow that moves toward another day on screen, then Space; that day is pressed and keeps focus, and one more Tab leaves the strip.
+  - "This week has no axe violation with rows" (1440 and 390, en and ar, light and dark): `axeOver(page, {})` equals `{}` (the axe rule of Global Constraints).
+- [ ] **Step 5:** **[verify]** First the Mail off (M) server guard at this head (Global Constraints). Then `~/cilas-verify/verify.sh --db migrated --e2e-only <branch> <sha> e2e/portal-home.e2e.test.ts e2e/portal-shell.e2e.test.ts e2e/portal-spaces-off.e2e.test.ts` and `~/cilas-verify/verify.sh --db empty --e2e-only <branch> <sha> e2e/portal-home.empty.e2e.test.ts`. Expected: PASS, with E1's test among them. `portal-spaces-off` keeps its zero course-room links (W4). Also run `portal-calendar.e2e.test.ts` in the same `--db migrated` command. Fix, then commit.
+
+### Task E7: The Home TTFB gate (BLOCKING)
+
+**Skills:** none beyond the probe (benchmark-checklist applies).
+
+This task is one protocol, used two times: the early probe (E6 Step 2) and the final run at the code-ready head (E8 Step 3). The operator's brief makes this box BLOCKING. It replaces Perf runs, P12 and Deviation 10 for 1d-4. It never turns into report-only. With no dump, the box stays open, and the builder reports to the orchestrator.
+
+It uses **Perf gate (G)**, **Prod clone restore (R)** and **Mail off (M)** of the 1c plan (its Global Constraints) on one route, `/en/spaces`. The commands below come from there, with these adaptations: the lock lines follow the two lanes of the runner, the script runs in `bash`, and the build has `CI=1`. One expression is **reconstructed, not copied**: `-e '/SET (pg_attver=/d'`. 1c-0 recorded only that one more `sed` expression drops the `SET (pg_attver=...)` lines, and its review found no exact text. Print how many lines it drops (`pg_restore ... -f - | grep -c 'SET (pg_attver='`) and write the count in the PR. Orchestrator decisions of 2026-11-25 change two things:
+
+- **The reference is the base, measured first in each session**, not `main` at `92fce974`. The base is `<base>` (PR 1d-4, Base): `origin/portal/base-open-prs`, or later `origin/main`, at the PR's merge-base. Base and head use the same database copy, the same production build mode and the same three accounts. Reason: the base holds the sidebar read of PR #81 on every portal page, and no TTFB run measured it. A line from the older `main` would charge that cost to this PR.
+- **The dump is named:** `prod-2026-11-18-before-session-restore.dump`, the dump of the 1c baseline. Never the newest dump.
+
+- [ ] **Step 1: Mac checks and worktrees** (before the lock). `<run>` is `<scratch>/ttfb-<first 8 characters of the head SHA>`; `<head>` is the pushed SHA under test.
+  - Read `~/cilas-verify/h5-gate.sh` and `~/cilas-verify/lanes.sh` (not readable from the server). Then `grep -nE 'lockf|lane-[ab]\.lock|\.lock' ~/cilas-verify/lanes.sh ~/cilas-verify/verify.sh ~/cilas-verify/h5-gate.sh`. Expected, from the Mac runner notes of 2026-11-24: `lockf` locks on `lane-a.lock` and `lane-b.lock`, lane a also holds the old `.lock` directory, and a timing run holds both lanes. Also read how they set the build and server env (the runner builds with `CI=1`: without it, one build opened 85 of Postgres's 100 connections, measured 2026-11-24). When `h5-gate.sh` or `verify.sh --perf` can build and probe the base first, then the head, on this copy with this env, use it in place of the script of Step 2, and keep the checks, the pass line and the records of this task. Else use the script. When the scripts take a lock or set the build env another way, use their way in place of the lines below. Write what you used in the PR.
+  - `ls -l ~/Backups/cilas/prod-2026-11-18-before-session-restore.dump` prints the file. No file: stop and report. No other dump takes its place.
+  - Worktrees and install:
+
+    ```sh
+    mkdir -p <run>
+    git worktree add --detach <run>/base <base>
+    git worktree add --detach <run>/head <head>
+    (cd <run>/base && pnpm install --frozen-lockfile)
+    (cd <run>/head && pnpm install --frozen-lockfile)
+    ```
+
+  - Env files: put `.env`, `.env.local` and `.env.development.local` into each worktree the way `verify.sh` fills its run tree (read it). Never print their content.
+  - `git diff --stat <base> <head> -- src/migrations` prints nothing, so one schema serves both. A line: stop and report.
+  - P39 of the 1c plan, at both refs: `git grep -n "Production storage must use" <ref> -- src/env.ts` prints one line, and `git grep -lE "@aws-sdk/client-s3|S3Client|@payloadcms/storage-s3" <ref> -- src ':!*.test.*'` prints exactly `src/payload.config.ts`, `src/app/(payload)/admin/importMap.js` and `src/components/admin/dashboard/widgets/storage.tsx`.
+  - Mac env check of Mail off (M), in each worktree: `grep -oE '^(DATABASE_LISTEN_URL|R2_[A-Z_]+|NEXT_PUBLIC_POSTHOG_KEY|POSTHOG_[A-Z_]+)=' .env .env.local .env.development.local 2>/dev/null | sort`. It prints file and key names only. Each key that it lists for `.env` or `.env.local` has an entry in `OFF` or `PROBE`, and each `R2_*` key also in `R2_DEV`; add a missing one (empty or local) to the script. Write the names in the PR.
+
+- [ ] **Step 2: The session.** Write this as `<run>/session.sh`, and run it with `bash`, not `zsh`: on the server's zsh 5.9, an `EXIT` trap did not run when a command failed inside a function (tried 2026-11-25), so the lock and the server would stay. The macOS `bash` is 3.2, where a failed `[[ ]]` does not stop a `set -e` script, so each guard has its own `|| exit 1`. Fill `<run>` and each `<local>` (the RustFS values of the Mac's `.env.development.local`; never print them or commit the file).
+
+  ```sh
+  set -eu -o pipefail
+  R=<run>
+  PORT=3100
+  COPY=postgres://cilas:dev@localhost:5433/cilas_ttfb
+  DUMP=~/Backups/cilas/prod-2026-11-18-before-session-restore.dump
+
+  # The old lock that lane a also holds. It fails when held: report, never delete it.
+  mkdir ~/cilas-verify/.lock
+  SERVER= LISTENER=
+  # `pnpm start` is a wrapper: the process that listens can be its child, so stop both.
+  kill_server() { [[ -z $SERVER ]] || kill $SERVER $LISTENER 2>/dev/null || true; }
+  trap 'kill_server; rmdir ~/cilas-verify/.lock' EXIT
+
+  # Mail off (M)
+  OFF=(RESEND_API_KEY= VAPID_PUBLIC_KEY= VAPID_PRIVATE_KEY= TYPESENSE_API_KEY= TYPESENSE_PRIVATE_WRITE_KEY= TYPESENSE_PRIVATE_SEARCH_KEY=)
+  R2_DEV=(R2_ENDPOINT=<local> R2_PUBLIC_URL=<local> R2_BUCKET=<local> R2_ACCESS_KEY_ID=<local> R2_SECRET_ACCESS_KEY=<local> R2_REGION=<local>)
+  PEPPER=$(openssl rand -hex 16)
+  PROBE=(DATABASE_URL=$COPY DATABASE_LISTEN_URL= NEXT_PUBLIC_POSTHOG_KEY= PMOAUTH_TOKEN_PEPPER=$PEPPER R2_ENDPOINT=https://00000000000000000000000000000000.r2.cloudflarestorage.com R2_BUCKET=off R2_ACCESS_KEY_ID=off R2_SECRET_ACCESS_KEY=off R2_REGION=auto R2_PUBLIC_URL=<local>)
+
+  sql() { docker exec cilas-db-1 psql -U cilas -d cilas_ttfb -tAc "$1"; }
+
+  # Prod clone restore (R): a new copy in each session
+  docker exec cilas-db-1 dropdb -U cilas --if-exists cilas_ttfb
+  docker exec cilas-db-1 createdb -U cilas cilas_ttfb
+  docker run --rm -i postgres:17 pg_restore --no-owner --no-privileges -f - < $DUMP |
+    sed -e '/^SET transaction_timeout/d' -e '/^\\restrict /d' -e '/^\\unrestrict /d' -e '/SET (pg_attver=/d' |
+    docker exec -i cilas-db-1 psql -U cilas -d cilas_ttfb -v ON_ERROR_STOP=1 -q
+  # The copy holds no migration that the base does not have
+  sql 'select name from payload_migrations' | while read -r name; do
+    [[ -f $R/base/src/migrations/$name.ts ]] || { echo "the dump is newer than the base: $name"; exit 1; }
+  done || exit 1
+  cd $R/base
+  env "${OFF[@]}" "${R2_DEV[@]}" DATABASE_URL=$COPY pnpm payload migrate:status
+  env "${OFF[@]}" "${R2_DEV[@]}" DATABASE_URL=$COPY pnpm db:migrate
+  # Residue check: each line must be 0
+  for table in articles courses cycles events newsletters people places programmes publications; do
+    n=$(sql "select count(*) from $table where slug ~ '^(probe-|scratch-|review-course-|portal-e2e-)' or slug ~ '^list-.*-[0-9a-f]{8}$'")
+    echo "residue $table $n"; [[ $n == 0 ]] || exit 1
+  done
+  n=$(sql "select count(*) from users where email ~ '-[0-9a-f]{8}@cilas\.test$' or email like '%.invalid'")
+  echo "residue users $n"; [[ $n == 0 ]] || exit 1
+  echo "sessions in the copy: $(sql 'select count(*) from sessions')"
+
+  accounts() {
+    (cd $R/head && env "${OFF[@]}" "${R2_DEV[@]}" DATABASE_URL=$COPY pnpm exec tsx scripts/ttfb-accounts.ts --out $R/ttfb-cookies.json)
+  }
+  port_free() { [[ -z $(lsof -nP -tiTCP:$PORT -sTCP:LISTEN) ]]; }
+  serve() { # $1 = base | head
+    port_free || { echo "port $PORT is busy: report, stop no process that you did not start"; exit 3; }
+    cd $R/$1
+    # CI=1 as the runner builds: 2 workers, so fewer Postgres connections
+    env CI=1 "${OFF[@]}" "${PROBE[@]}" pnpm build > $R/build-$1.log 2>&1
+    env "${OFF[@]}" "${PROBE[@]}" NODE_ENV=production pnpm start -p $PORT > $R/server-$1.log 2>&1 &
+    SERVER=$!
+    curl -s -o /dev/null --retry 60 --retry-delay 1 --retry-connrefused http://localhost:$PORT/en/spaces
+    # The port was free before this start, so what listens now is this server
+    LISTENER=$(lsof -nP -tiTCP:$PORT -sTCP:LISTEN || true)
+    # Server guard of Mail off (M)
+    [[ $(grep -c "No email adapter provided" $R/server-$1.log) -ge 1 ]] || exit 1
+    env "${OFF[@]}" "${PROBE[@]}" NODE_ENV=production pnpm exec tsx scripts/ttfb-accounts.ts --check-off
+  }
+  stop_server() {
+    kill_server; wait $SERVER || true; SERVER= LISTENER=
+    for i in {1..30}; do port_free && return 0; sleep 1; done
+    echo "port $PORT is still busy"; return 1
+  }
+  probe() { # $1 = run label. The probe script is the head's, for both builds
+    node $R/head/scripts/ttfb-probe.mjs --base http://localhost:$PORT --path /en/spaces \
+      --cookies $R/ttfb-cookies.json --warmup 5 --samples 30 --scratch $R/body-$1 > $R/ttfb-$1.jsonl
+    cat $R/ttfb-$1.jsonl
+  }
+  verdict() { # $1 = head run label; $2 = the first head run, when $1 is C2. Exit 0 pass, 10 near miss, 1 fail, 2 not valid
+    node -e '
+      const fs = require("fs")
+      const [dir, run, first] = process.argv.slice(1)
+      const read = (label) => Object.fromEntries(
+        fs.readFileSync(`${dir}/ttfb-${label}.jsonl`, "utf8").trim().split("\n")
+          .map((line) => JSON.parse(line)).map((r) => [r.role, r.p75]))
+      const [a, b, head] = ["base-a", "base-b", run].map(read)
+      const before = first ? read(first) : null
+      const ceiling = { admin: 51.7, fellow: 85.8, student: 78.1 }
+      const order = [0, 10, 1, 2]
+      let worst = 0
+      for (const role of Object.keys(ceiling)) {
+        const H = Math.max(a[role], b[role])
+        const m = H / Math.min(a[role], b[role]) - 1
+        const f = Math.max(m, 0.05)
+        const P = H * (1 + f), N = H * (1 + 2 * f), C = head[role]
+        const judge = (c) => (m > 0.2 ? 2 : c >= 800 ? 1 : c <= P ? 0 : c <= N ? 10 : 1)
+        let code = judge(C)
+        // On C2, a role keeps its verdict from C, and C2 decides a near miss against P
+        if (before) code = judge(before[role]) !== 10 ? judge(before[role]) : C < 800 && C <= P ? 0 : 1
+        if (order.indexOf(code) > order.indexOf(worst)) worst = code
+        console.log(JSON.stringify({ run, role, A: a[role], B: b[role], H, m, f, P, N, C, cost: C - H,
+          baseDrift: H > ceiling[role], code }))
+      }
+      process.exitCode = worst
+    ' $R "$@"
+  }
+
+  # 1. The base, first: runs A and B, back to back
+  accounts; serve base; probe base-a; probe base-b; stop_server
+  # 2. The head: run C, and C2 in the same session on a near miss
+  accounts; serve head; probe head-c
+  code=0; verdict head-c || code=$?
+  if [[ $code == 10 ]]; then probe head-c2; code=0; verdict head-c2 head-c || code=$?; fi
+  echo "verdict exit $code"
+  # 3. The size of each cached public list entry (Next keeps none above 2 MB)
+  for l in en ar; do curl -sf -o /dev/null http://localhost:$PORT/$l/calendar.ics; done
+  find $R/head/.next/cache/fetch-cache -type f | while read -r file; do
+    node -e 'const s = require("fs").readFileSync(process.argv[1], "utf8"); console.log("cache entry", s.length, s.includes("session-meeting-") ? "has-sessions" : "-", process.argv[1])' $file
+  done
+  echo "over-2MB lines: $(grep -c 'items over 2MB' $R/server-head.log || true)"
+  stop_server
+  ```
+
+  Run it inside both lanes. `-k` keeps the lock files, and `-t 3600` waits up to one hour for a lane (exit 75: still busy, report):
+
+  ```sh
+  lockf -k -t 3600 ~/cilas-verify/lane-a.lock lockf -k -t 3600 ~/cilas-verify/lane-b.lock bash <run>/session.sh 2>&1 | tee <run>/session.log
+  ```
+
+  **Port rule:** 3100 is the port of lane a, which no runner uses while both lanes are held. When a process listens on it, the script exits 3. Report it, and stop no process that the script did not start. The script was run only with stand-in commands, under `bash` 5 on the server, on 2026-11-25 (a pass, a residue fail, a mail-guard fail and a newer dump: each removed the lock and left no server). It has not run on the Mac.
+
+  The script makes fresh cookies before each of the two builds, and C2 follows C at once, so no cookie is older than the 2 h life. A probe that gets the login redirect stops the script: run the session again, one time. Outputs: `<run>/ttfb-<label>.jsonl` (one line for each role), `<run>/body-<label>/` (the saved pages), `<run>/server-<base|head>.log`, `<run>/session.log`.
+
+- [ ] **Step 3: Pass line, for each role** (admin, fellow, student). `H` is the base p75: the slower of runs A and B. `m` is `(H - lower) / lower`, and `f = max(m, 0.05)`. **Pass: head p75 <= `P = H x (1 + f)`**, and under 800 ms. Near miss, up to `N = H x (1 + 2f)`: one more head run (C2) in the same session, and C2 decides against `P` for each role that was a near miss (a role that passed on C stays passed, and `verdict` applies this). Above `N`, 800 ms or more, or a C2 above `P`: the session fails. These are `m` and the near-miss rerun of (G).
+  - **Base drift.** The 1c absolute line is `T x 1.10`, with `T` the 1c table's `main` p75 (47, 78 and 71 ms): 51.7, 85.8 and 78.1 ms. When the base's `H` is above it for a role, that is drift on the base (PR #81 sidebar read, not measured before). Record it in the PR and in the ledger under "For the morning". It does not block 1d-4 when the head passes against the same-session base.
+  - **Valid session** (plan call; it replaces the validity rule of (G), which compared with the older `main`): `m` is 0.2 or less for each role. (G) let two runs lie 10% on each side of one number, which is about this spread. A session that is not valid gives no verdict: run it again later, at most two more times, then report the PR as blocked on the Mac.
+  - **Cache size.** The size step prints each entry of the head's data cache. The pass: at least one entry, each under 2,097,152, and `over-2MB lines: 0` (`next/dist/server/lib/incremental-cache/index.js`, Next 16.4.6: it measures `JSON.stringify(data).length`; the file also holds the tags, so it is a little larger). The public list entries are the ones marked `has-sessions`. When the copy has no course session, no entry has the mark: then they are the entries that the two `calendar.ics` requests filled; name them by their content. No entry and no warning: the check did not find the cache; report it.
+
+- [ ] **Step 4: Record**, for each session, in the PR: the dump name, the base and head SHAs, the residue lines, and for each role A, B, `H`, `m`, `f`, `P`, `N`, C (and C2), `C - H` (the cost of this PR), base drift yes or no, and the verdict. Record the full-response p75 too (above 2x the base's is a finding, not a fail). Print the cache entry sizes and the copy's session count. Write that the size and the parse cost are those of the list in the 2026-11-18 dump, not of the list in production today. Raw samples go in a PR comment. Record the week card's rows: `grep -o 'data-week-count="[0-9]*"' <run>/body-head-c/ttfb-<role>-en-spaces.html` for each role. The dump is from 2026-11-18, so the week of the run can be empty. When each count is 0, write "the gate measured no row cost". Also not measured: the first Home load after a content save, because the warm-up requests fill the cache.
+
+- [ ] **Step 5: A fail.** A cache size that fails (an entry of 2,097,152 or more, or a warning line) goes to the fallback at once. For TTFB, as (G): run the whole session one more time, later, with no code change; the PR passes only when that session passes. **Two failed sessions: apply the fallback** below, and run a new session. When the fallback is already in and two sessions fail, stop and report to the orchestrator: the PR is blocked. At the final run, a fallback that was not applied before gets one review of its diff (E8 Step 1) and a new full suite. Allowed with no new decision: the fallback, and less work in the card. Not allowed without the operator's yes: a new cache. Never allowed: a timer or a delay.
+
+- [ ] **Step 6: Clean up** after the last run: `docker exec cilas-db-1 dropdb -U cilas cilas_ttfb`, then `git worktree remove --force <run>/base` and `<run>/head` (they hold copies of the env files), and delete `<run>/session.sh` and `<run>/ttfb-cookies.json`.
+
+#### Fallback: the 7-day-window read (pre-agreed, orchestrator decision 2026-11-25)
+
+Apply it only when Step 5 says so. After it, a Home load parses no full public list.
+
+- **The reader's sessions: no change.** They come from `readerMeetings`, the gated read of this reader, which the sidebar and the next session card already pay for in the same request. `weekAgenda` keeps only the 7 days. A second session read with a date filter is not made: it adds a query, and "Session N" needs all sessions of a course (`numberedSessions`, `lib/calendar.ts`).
+- **The public events: a small read of the window.** In `src/api/calendar.api.ts`, move the events query and its mapping out of `getCalendarItems` into one function, which `getCalendarItems` then calls with no window, so the rule is written one time:
+
+```ts
+/** The public events as calendar items. With `window`, only the meetings from `from` to `to`, both Cairo days. Read with no user and `overrideAccess: false`. Never cached here, and never joined with a reader's data before a cache. */
+export const getPublicEventItems = async (
+  payload: Payload,
+  locale: Locale,
+  window?: { from: string; to: string },
+): Promise<CalendarMeeting[]>
+```
+
+With a window, the query also narrows the rows: `schedule.start_date` before `addDays(to, 2)`, and `schedule.end_date` at or after `addDays(from, -1)` or not set (an event with no times has no `end_date`). The exact rule is a filter on each meeting's `date` after `eventItems`. The output of `getCalendarItems` does not change, so the cache key stays `calendar-items-v10`.
+
+- **The loader:** `ThisWeek` calls `getPublicEventItems(payload, locale, { from: weekStart(today), to: addDays(weekStart(today), 6) })` in place of `getCachedCalendarItems(locale)`. `weekAgenda` and the card do not change.
+- **Test first:** `src/api/public-events-window.int.test.ts` (new), "the window read gives the full list's events of those days": a one-date event inside and one outside the window; a repeating event that starts before the window and meets inside it; an event with a day and no times; a draft event and a not-public event never come back. Run it with `verify.sh --int-only` (Int runs). Then commit, and run E7 again.
+- The W13 test steps stay: `/calendar` and the feed still read the cached list.
+
+### Task E8: Reviews, full suite, open PR 1d-4
+
+**Skills:** code-review, then security-review; ux-auditor, better-interface, then break-ui; pr-screenshots.
+
+- [ ] **Step 1: One combined code-review and security-review pass** (reviewer as Pipeline says; the spec's Home, Calendar, Accessibility baseline and Data access rule, with this section as the issue). Security points: the card reads only through `readerMeetings` (gated, one request), `getCachedCalendarItems` (public, one argument; with the E7 fallback, `getPublicEventItems`: no user, `overrideAccess: false`, no cache) and `roomsOf`; the client gets `DayView` fields only; every `href` comes from `sessionHref` or from a constant path with a Cairo day.
+- [ ] **Step 2: Screen reviews on Home** (reviewer as Pipeline says, on the Mac, against `verify.sh --keep --no-tests <branch> <sha>`; the scratch world script also adds the week sessions of E6; after the public event, save it once in the app as an admin, and its `--remove` step deletes that event through the app, W13): ux-auditor and better-interface, each role, 1440, 390 and 320, English and Arabic, light and dark. Then break-ui with `agent-browser` (headless): a 120-character Arabic course title and a long place name in a row, 12 meetings on one day, an empty week, a week with only events, a reader with no person, forced colours. Review predicate. Reports in a PR comment.
+- [ ] **Step 3:** One fixer with all reports. **[verify]** the full suite on the Mac: `~/cilas-verify/verify.sh --db migrated <branch> <sha>`, after the spec search of E6 Step 4. A failure that the base also has is one line in the PR. Then E7 at the code-ready head. A later commit that changes the render path of `/en/spaces` runs E7 again. Then Per-PR order step 5, and the scratch world `--remove` step.
+- [ ] **Step 4:** Open `feat(portal): This week card on Home (portal phase 1d, PR 4)`, ready for review, with the body of `worker.md` (40 lines at most). Its first line: "HOLD: do not merge until the operator approves the screenshots (layout PR)." The body says **"Depends on #83 and #87."** Post the screenshots (skill pr-screenshots): Home at 1440 and 390, English and Arabic, light and dark; commit no image.
+
+**Pipeline** (ledger): the review of this addendum is done (Claude, 2026-11-25, because Codex was at its limit), and its fixes are in this text. **Builder and fixer: Claude Sonnet, high, while Codex is at its limit (ledger, CODEX LIMIT); else Codex gpt-6.2-sol, high.** The edit phase runs on the server when `server-ok.sh` exits 0 and the Mac runs 2 or more delegates, else on the Mac. Reviews (E8 Steps 1 and 2): the vendor that did not build, when it is available (ledger, Models); while Codex is at its limit, Claude Sonnet, written in the ledger. One fixer. The two-failed-checks rule of the ledger applies. `quota.sh` runs before each new step.
+
+**Merge.** READY (MERGE RULE) plus two conditions: #83 and #87 are on `main` and `origin/main` is merged into the branch, then the checks are green at that head (ledger, BASE BRANCH); and the operator approved the screenshots (ledger, HOME LAYOUT: "Layout PRs need the operator's screenshot approval before merge"). When a merge (of `origin/portal/base-open-prs` or of `origin/main`) changes a file on the render path of `/en/spaces`, E7 runs again.
 
 **Verification boxes (1d-4).**
 
-- [ ] **unit:** the `NextSessionCard` dom test; e2e `portal-home` (the new assertion and the existing ones).
-- [ ] **live:** the `portal-home` assertion of T5 Step 3 is the live check: it presses the real link on the `verify.sh` server (Mail off (M) server guard repeated at this head, Global Constraints), as the fixture admin, at 1440 and 390, in English and Arabic. Pass: it lands on `/{locale}/spaces/calendar` with the H1 `Calendar.title`. No separate agent-browser run.
-- [ ] **perf:** none. One link adds no read (Verification boxes, Deviation 10).
+- [ ] **unit:** `week.unit.test.ts`; `home-cards.dom.test.tsx`; `toggle-strip.browser.test.tsx`; `calendar-legend-preset.browser.test.tsx`; `next-session.int.test.ts` and `reader-calendar.int.test.ts` in the full suite.
+- [ ] **live:** E6 Step 5 on the `verify.sh` server. Pass: the admin's link lands on `/{locale}/spaces/calendar` with the H1 `Calendar.title`; the student sees this week's two sessions and changes the day; at 390 This week is after Latest, and at 1440 it is beside Latest.
+- [ ] **perf (BLOCKING):** E7, two times: early (E6 Step 2) and at the code-ready head. Metric: TTFB p75 for each role on `/en/spaces`, production build, `cilas_ttfb`. Probe: `scripts/ttfb-probe.mjs --warmup 5 --samples 30`. Baseline, measured first in the same session: `<base>`, runs A and B. Fails above `P` = base p75 x (1 + max(`m`, 5%)) (E7 Step 3).
+- [ ] **cache size:** in each E7 session, each cached public list entry is under 2,097,152 characters, and the head's server log has no `items over 2MB` line. The PR prints the sizes.
+
+### Open questions (1d-4)
+
+None blocks the build. Each default ships, unless the operator says another thing at the screenshot approval.
+
+- **Q5. Cancelled meetings.** Default: not shown and not counted. Option: show them with a "Cancelled" word, so a reader learns about a cancelled session on Home.
+- **Q6. A reader with no own course.** Default: public events only (operator brief). The Calendar shows that reader every public course too (Deviation 3).
+- **Q7. Dots.** Default: three at most; the prototype draws one for each session.
+- **Q8. The control.** Default: ui-sdk `ToggleGroup` in the new wrapper (W8, W9). Options: own `aria-pressed` buttons (seven Tab stops, no wrapper), or Arc `SegmentedControl` with a right-to-left key fix. Base problem, not fixed in this PR: the arrow keys of `SegmentedControl` ignore right to left, also in the Arabic calendar's view switch (read in the code, not run).
+- **Q9. Week start in English.** Default: Saturday, as the Calendar.
+- **Q10. The count's words.** Default: "sessions or events", because the card counts both. The prototype says "sessions".
