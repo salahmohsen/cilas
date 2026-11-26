@@ -86,7 +86,9 @@ export const CourseView: React.FC<{
   after?: React.ReactNode
   /** The institute's info address (Site settings), the share bar's mail recipient. */
   email?: string | null
-}> = ({ course, sessions, related = [], editable = false, after, email }) => {
+  /** The site's "Study with AI" switch. */
+  showAi: boolean
+}> = ({ course, sessions, related = [], editable = false, after, email, showAi }) => {
   const pe = editableIn(editable)
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
@@ -429,11 +431,13 @@ export const CourseView: React.FC<{
               <ShareBar label={ts('course')} path={coursePath} title={course.title} email={email} />
             </div>
           </SideCardSection>
-          <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
-            <div className="side-card-body side-card-flush">
-              <StudyWithAI kind="course" path={coursePath} />
-            </div>
-          </SideCardSection>
+          {showAi ? (
+            <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
+              <div className="side-card-body side-card-flush">
+                <StudyWithAI kind="course" path={coursePath} />
+              </div>
+            </SideCardSection>
+          ) : null}
         </>
       ) : null}
     </SideCard>
@@ -613,19 +617,21 @@ export const CourseView: React.FC<{
             </h2>
             <ShareBar label={ts('course')} path={coursePath} title={course.title} email={email} />
           </section>
-          <section
-            aria-labelledby="course-ai"
-            className="mt-6 grid gap-3 border-t border-border pt-6 lg:hidden"
-          >
-            <h2
-              className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
-              id="course-ai"
+          {showAi ? (
+            <section
+              aria-labelledby="course-ai"
+              className="mt-6 grid gap-3 border-t border-border pt-6 lg:hidden"
             >
-              {ts('aiHeading')}
-              <AIInstructions />
-            </h2>
-            <StudyWithAI kind="course" path={coursePath} />
-          </section>
+              <h2
+                className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+                id="course-ai"
+              >
+                {ts('aiHeading')}
+                <AIInstructions />
+              </h2>
+              <StudyWithAI kind="course" path={coursePath} />
+            </section>
+          ) : null}
           {after}
         </article>
 

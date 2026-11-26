@@ -10,6 +10,7 @@ import {
 } from 'motion/react'
 import { CircleAlert, Copy } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { JOINING } from '../lib/text-units'
 import { useCopyFeedback } from '../lib/use-copy-feedback'
 import styles from './copy-button.module.css'
 
@@ -81,7 +82,6 @@ function DrawnCheck({ reduced }: { reduced: boolean }) {
 }
 
 type Glyph = { id: string; char: string; order: number }
-const JOINING = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/
 const toGlyphs = (chars: string[], seq: number): Glyph[] =>
   chars.map((char, order) => ({ id: `${seq}:${order}`, char, order }))
 

@@ -78,6 +78,10 @@
 .arrow {
   flex: none;
 }
+/* The arrow points the way the action goes, which is leftward in right to left. Mirroring the phase mirrors its slide too. */
+.arrowPhase:dir(rtl) {
+  scale: -1 1;
+}
 .statusIcon {
   color: currentColor;
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { startTransition, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -19,9 +19,10 @@ import type { SpacesWriteState } from '@/lib/space-actions'
 import { useNarrow } from '@/lib/use-narrow'
 
 import { saveErrorKey } from '@/lib/space-rules'
+import { AiButtonsField } from './ai-buttons-field'
 import styles from './space.module.css'
 
-/** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, and reopening an archived course space. */
+/** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, the AI buttons switch, and reopening an archived course space. */
 export function SpaceSettings({
   space,
   posting,
@@ -31,6 +32,7 @@ export function SpaceSettings({
   aboutDefault,
   rules,
   rulesDefault,
+  aiButtons,
   open,
   onOpenChange,
   anchor,
@@ -46,6 +48,11 @@ export function SpaceSettings({
   /** This space's own "Privacy and rules" in this language, empty when the site's text shows. */
   rules: string
   rulesDefault: string
+  /**
+   * The "Study with AI" switches: the space's own, and the site's, which wins when
+   * off. Left out in a space that has no such buttons.
+   */
+  aiButtons?: { space: boolean; site: boolean }
   open: boolean
   onOpenChange: (open: boolean) => void
   /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
@@ -62,6 +69,13 @@ export function SpaceSettings({
   const [text, setText] = useState(about)
   const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
+  // The moderator's own change to the AI switch. Without one the switch shows the stored value
+  // and a save leaves it alone, so an old sheet never writes over a newer value. The change ends
+  // when it is saved, when the sheet closes, or once the stored value is the same.
+  const [aiChange, setAiChange] = useState<boolean | null>(null)
+  if (aiChange !== null && (!open || aiChange === aiButtons?.space)) setAiChange(null)
+  // While a change is on its way the stored value is out of date, so the switch holds still.
+  const [aiSaving, setAiSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const narrow = useNarrow()
   const fields = (
@@ -118,6 +132,14 @@ export function SpaceSettings({
           {t('rulesReset')}
         </Button>
       </div>
+      {aiButtons && (
+        <AiButtonsField
+          checked={aiChange ?? aiButtons.space}
+          onCheckedChange={setAiChange}
+          siteOn={aiButtons.site}
+          saving={aiSaving}
+        />
+      )}
       {archived && (
         <Checkbox
           label={t('reopen')}
@@ -147,12 +169,26 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          const result = await save(form)
-          if (result.status === 'error') {
-            setError(tp(saveErrorKey(result.error)))
-            throw new Error(result.error)
+          if (aiChange !== null) {
+            form.set('ai_buttons', String(aiChange))
+            setAiSaving(true)
           }
-          router.refresh()
+          try {
+            const result = await save(form)
+            if (result.status === 'error') {
+              setError(tp(saveErrorKey(result.error)))
+              throw new Error(result.error)
+            }
+          } catch (failure) {
+            setAiSaving(false)
+            throw failure
+          }
+          // One transition, so the switch moves to the refreshed value without showing the old one.
+          startTransition(() => {
+            router.refresh()
+            setAiChange((now) => (now === aiChange ? null : now))
+            setAiSaving(false)
+          })
         }}
       />
     </div>

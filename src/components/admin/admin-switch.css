@@ -1,0 +1,17 @@
+/*
+ * payload-theme 0.11.0 draws every boolean field as a switch, and three of its
+ * rules are wrong. The thumb starts at a logical side but travels along a
+ * physical one, so a checked thumb leaves the track in right to left. It travels
+ * 16px where the 34px track leaves room for 14px, so it ends against the edge.
+ * And the switch sits level with the first line of a label that wraps.
+ * Unlayered, so these win over the theme's `payload` layer.
+ */
+.field-type.checkbox .checkbox-input {
+  align-items: center;
+}
+.field-type.checkbox .checkbox-input--checked .checkbox-input__icon {
+  transform: translate(14px, -50%);
+}
+.field-type.checkbox .checkbox-input--checked .checkbox-input__icon:dir(rtl) {
+  transform: translate(-14px, -50%);
+}
