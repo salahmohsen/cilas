@@ -902,40 +902,48 @@ test.describe('portal Home and Inbox', () => {
             browser,
             { viewport: { width, height: 800 }, reader: 'student' },
             async (page) => {
+              await page.emulateMedia({ reducedMotion: 'reduce' })
               await open(page, locale)
-              const cells = await weekDays(page).evaluateAll((buttons) =>
-                buttons.map((button) => {
-                  const box = button.getBoundingClientRect()
-                  const labels = [...button.querySelectorAll(':scope > span[aria-hidden]')].slice(
-                    0,
-                    2,
-                  )
-                  return {
-                    width: box.width,
-                    height: box.height,
-                    labelSize: parseFloat(getComputedStyle(labels[0]!).fontSize),
-                    labelsFit: labels.every((label) => {
-                      const text = label.getBoundingClientRect()
-                      const oneLine = text.height < 2 * parseFloat(getComputedStyle(label).fontSize)
-                      return (
-                        oneLine &&
-                        label.scrollWidth <= Math.ceil(text.width) &&
-                        text.left >= box.left + button.clientLeft &&
-                        text.right <= box.right - button.clientLeft
-                      )
-                    }),
-                  }
-                }),
-              )
-              test.info().annotations.push({
-                type: `day cells ${locale} ${width}`,
-                description: JSON.stringify(cells),
-              })
-              for (const cell of cells) {
-                expect(cell.width, `width at ${width}`).toBeGreaterThanOrEqual(minimum)
-                expect(cell.height, `height at ${width}`).toBeGreaterThanOrEqual(44)
-                expect(cell.labelSize).toBeGreaterThanOrEqual(11)
-                expect(cell.labelsFit, `labels at ${width}`).toBe(true)
+              await page.evaluate(() => document.fonts.ready)
+              for (let pressed = 0; pressed < 7; pressed++) {
+                await weekDays(page).nth(pressed).click()
+                await expect(weekDays(page).nth(pressed)).toHaveAttribute('aria-pressed', 'true')
+                const cells = await weekDays(page).evaluateAll((buttons) =>
+                  buttons.map((button) => {
+                    const box = button.getBoundingClientRect()
+                    const labels = [...button.querySelectorAll(':scope > span[aria-hidden]')].slice(
+                      0,
+                      2,
+                    )
+                    return {
+                      width: box.width,
+                      height: box.height,
+                      labelSize: parseFloat(getComputedStyle(labels[0]!).fontSize),
+                      labelsFit: labels.every((label) => {
+                        const text = label.getBoundingClientRect()
+                        const oneLine =
+                          text.height < 2 * parseFloat(getComputedStyle(label).fontSize)
+                        return (
+                          oneLine &&
+                          label.scrollWidth <= Math.ceil(text.width) &&
+                          text.left >= box.left + button.clientLeft &&
+                          text.right <= box.right - button.clientLeft
+                        )
+                      }),
+                    }
+                  }),
+                )
+                test.info().annotations.push({
+                  type: `day cells ${locale} ${width}, day ${pressed} pressed`,
+                  description: JSON.stringify(cells),
+                })
+                for (const [day, cell] of cells.entries()) {
+                  const at = `day ${day} at ${width} with day ${pressed} pressed`
+                  expect(cell.width, `width of ${at}`).toBeGreaterThanOrEqual(minimum)
+                  expect(cell.height, `height of ${at}`).toBeGreaterThanOrEqual(44)
+                  expect(cell.labelSize).toBeGreaterThanOrEqual(11)
+                  expect(cell.labelsFit, `labels of ${at}`).toBe(true)
+                }
               }
               expect(await fits(page)).toBe(true)
             },
