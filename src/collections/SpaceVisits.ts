@@ -1,6 +1,26 @@
+import type { PostgresAdapterArgs } from '@payloadcms/db-postgres'
 import type { CollectionConfig } from 'payload'
 
 import { nobody, ownAccountRows, signedInOwnAccountRows } from '@/access'
+
+const visitOwners = [
+  { name: 'account', relationTo: 'users' },
+  { name: 'space', relationTo: 'spaces' },
+] as const
+
+/** A last visit and its checklist belong to both the account and the space. */
+export const cascadeSpaceVisits: NonNullable<PostgresAdapterArgs['beforeSchemaInit']>[number] = ({
+  adapter,
+  schema,
+}) => {
+  const columns = adapter.rawTables.space_visits.columns
+  for (const { name } of visitOwners) {
+    const reference = columns[name]?.reference
+    if (!reference) throw new Error(`Missing space_visits foreign key for ${name}`)
+    reference.onDelete = 'cascade'
+  }
+  return schema
+}
 
 /**
  * Per account and space (spec §2 first steps, spec's "new posts since the
@@ -22,22 +42,13 @@ export const SpaceVisits: CollectionConfig = {
   },
   admin: { hidden: true },
   fields: [
-    {
-      name: 'account',
-      type: 'relationship',
-      relationTo: 'users',
+    ...visitOwners.map((owner) => ({
+      ...owner,
+      type: 'relationship' as const,
       required: true,
       index: true,
       access: { update: nobody },
-    },
-    {
-      name: 'space',
-      type: 'relationship',
-      relationTo: 'spaces',
-      required: true,
-      index: true,
-      access: { update: nobody },
-    },
+    })),
     { name: 'last_visited_at', type: 'date', required: true },
     { name: 'saw_privacy', type: 'checkbox', defaultValue: false },
     { name: 'introduced', type: 'checkbox', defaultValue: false },

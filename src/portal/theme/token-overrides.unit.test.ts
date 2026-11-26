@@ -104,8 +104,7 @@ describe('local token overrides', () => {
   })
 
   it('has an arc-scope.css that matches foundation.css', () => {
-    const squash = (css: string) => css.replace(/\s+/g, '')
     const foundation = readFileSync(join(SRC, 'components/arc/foundation.css'), 'utf8')
-    expect(squash(readFileSync(join(ROOT, ARC_SCOPE), 'utf8'))).toBe(squash(buildScope(foundation)))
+    expect(readFileSync(join(ROOT, ARC_SCOPE), 'utf8')).toBe(buildScope(foundation))
   })
 })

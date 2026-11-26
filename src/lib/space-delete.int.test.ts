@@ -28,6 +28,15 @@ const community = async () => {
   return space.id
 }
 
+const visit = async (accountId: number, space: number) => {
+  const row = await payload.create({
+    collection: 'space-visits',
+    data: { account: accountId, space, last_visited_at: new Date().toISOString() },
+    overrideAccess: true,
+  })
+  return track('space-visits', row.id)
+}
+
 const fill = async (space: number) => {
   const post = await payload.create({
     collection: 'space-posts',
@@ -53,12 +62,7 @@ const fill = async (space: number) => {
     overrideAccess: true,
   })
   track('space-reactions', reaction.id)
-  const visit = await payload.create({
-    collection: 'space-visits',
-    data: { account, space, last_visited_at: new Date().toISOString() },
-    overrideAccess: true,
-  })
-  track('space-visits', visit.id)
+  const visitId = await visit(account, space)
   const bell = await payload.create({
     collection: 'notifications',
     data: {
@@ -75,7 +79,7 @@ const fill = async (space: number) => {
     comment: comment.id,
     reply: reply.id,
     reaction: reaction.id,
-    visit: visit.id,
+    visit: visitId,
     bell: bell.id,
   }
 }
@@ -109,6 +113,43 @@ describe('space delete', () => {
     await cleanup(payload)
     await payload.destroy()
     await unlock()
+  })
+
+  it('removes visits when their account is deleted', async () => {
+    const visitor = track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: { email: uniqEmail('delete-visitor'), password: 'probe-probe', roles: ['member'] },
+      }),
+    )
+    const space = await community()
+    const removed = await visit(visitor.id, space)
+    const kept = await visit(account, space)
+
+    await payload.delete({ collection: 'users', id: visitor.id, overrideAccess: true })
+
+    const { docs } = await payload.find({
+      collection: 'space-visits',
+      where: { id: { in: [removed, kept] } },
+      depth: 0,
+    })
+    expect(docs.map(({ id }) => id)).toEqual([kept])
+  })
+
+  it('removes visits when their space is deleted at the database layer', async () => {
+    const space = await community()
+    const removed = await visit(account, space)
+    const kept = await visit(account, await community())
+
+    await payload.db.deleteOne({ collection: 'spaces', where: { id: { equals: space } } })
+
+    const { docs } = await payload.find({
+      collection: 'space-visits',
+      where: { id: { in: [removed, kept] } },
+      depth: 0,
+    })
+    expect(docs.map(({ id }) => id)).toEqual([kept])
   })
 
   it('deletes a community space with everything in it, and leaves other spaces alone', async () => {
