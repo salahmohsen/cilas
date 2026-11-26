@@ -5,7 +5,7 @@ import { Badge } from '@/components/arc/badge/badge'
 import { courseTypeKey } from '@/fields/course-type'
 import type { Locale } from '@/i18n/routing'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
-import { documentHref } from '@/lib/document-href'
+import { documentHref, localizedLink } from '@/lib/document-href'
 import { nextAction, statusBadge, waitsOn } from '@/lib/review-status'
 
 import styles from './lists.module.css'
@@ -74,7 +74,6 @@ export function ListRowBody({
     id: row.id,
     viewer,
     waiting: waitsOn(row.key) === 'admin',
-    locale,
   })
   const meta = row.course ? courseMeta(row.course, intl) : articleMeta(row, viewer, intl)
   const next = nextAction(row.key, viewer)
@@ -84,7 +83,7 @@ export function ListRowBody({
         {row.cover && <Image src={row.cover} alt="" fill sizes="40px" />}
       </span>
       <div className={styles.body}>
-        <a href={href} className={styles.title}>
+        <a href={localizedLink(href, locale)} className={styles.title}>
           <span className={styles.titleText}>
             <bdi>{title}</bdi>
           </span>

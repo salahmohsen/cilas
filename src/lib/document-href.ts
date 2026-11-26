@@ -1,22 +1,28 @@
+import { clientEnv } from '@/env.client'
 import type { Locale } from '@/i18n/routing'
 
 import type { ReviewedCollection } from './reviewed-fields'
 
-/**
- * Where a reviewed document opens for a viewer. In 1b every viewer gets the
- * admin URL, a locale-free path. Callers pass every input now so that phase 2
- * adds the portal branches with no caller change.
- */
-export const documentHref = ({
-  collection,
-  id,
-}: {
-  collection: ReviewedCollection
+export type DocumentTarget = {
+  collection: ReviewedCollection | 'users'
   id: number
-  viewer: 'owner' | 'admin' | 'fellow'
+  viewer: 'owner' | 'admin'
   waiting: boolean
-  locale: Locale
-}): string => `/admin/collections/${collection}/${id}`
+}
+
+/** The locale-free path to a document for this viewer. */
+export const documentHref = ({ collection, id }: DocumentTarget): string =>
+  `/admin/collections/${collection}/${id}`
+
+export const applicantsHref = (target: { application: number } | { course: number }): string =>
+  '/admin/applicants?' +
+  ('application' in target ? `application=${target.application}` : `course=${target.course}`)
+
+export const localizedLink = (path: string, locale: Locale): string =>
+  /^\/spaces(?:[/?#]|$)/.test(path) ? `/${locale}${path}` : path
+
+export const absoluteLink = (path: string, locale: Locale): string =>
+  `${clientEnv.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${localizedLink(path, locale)}`
 
 /** The admin page that creates a document. */
 export const adminCreateHref = (collection: ReviewedCollection): string =>

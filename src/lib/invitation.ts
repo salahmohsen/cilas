@@ -15,6 +15,7 @@ import { invitationMail } from '@/emails/transactional'
 import { env } from '@/env'
 import type { Locale } from '@/i18n/routing'
 import { createPerson } from '@/lib/create-person'
+import { documentHref } from '@/lib/document-href'
 import { actorOf, notify } from '@/lib/notify'
 import { isEmail } from '@/lib/password-reset'
 import { adminRecipients } from '@/lib/review-mail'
@@ -80,7 +81,7 @@ export const announceAcceptance: CollectionAfterChangeHook<User> = async ({
   await notify(req.payload, admins, {
     kind: 'joined',
     description: `${actor?.name || doc.email} accepted the invitation`,
-    link: `/admin/collections/users/${doc.id}`,
+    link: documentHref({ collection: 'users', id: doc.id, viewer: 'admin', waiting: false }),
     actor,
   })
   return doc

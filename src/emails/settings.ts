@@ -2,6 +2,7 @@ import type { Payload, PayloadRequest } from 'payload'
 
 import { env } from '@/env'
 import type { Locale } from '@/i18n/routing'
+import { relId } from '@/lib/relation'
 
 import { defaultTexts, EMAIL_IDS, EMAILS, type EmailId, type Texts } from './catalog'
 
@@ -130,25 +131,33 @@ export const withDefaults = (
 /**
  * The stored global in `locale` (past access) and the site's social links:
  * what `withDefaults` builds the settings from.
+ * Read at depth 0 so every query can use a savepoint-scoped request without
+ * passing its promised transaction ID through Payload's population loader.
  */
 export const readEmailSettings = async (
   payload: Payload,
   req?: PayloadRequest,
   locale: Locale = 'en',
 ) => {
-  const [stored, site] = await Promise.all([
-    payload.findGlobal({
-      slug: 'email-settings',
-      depth: 1,
-      overrideAccess: true,
-      req,
-      locale,
-      // No Payload fallback: an empty text reads as this language's default.
-      fallbackLocale: false,
-    }) as Promise<StoredEmailSettings>,
-    payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
-  ])
-  return { stored, social: site.social_links as StoredSocial, locale }
+  const read = { depth: 0, overrideAccess: true, req }
+  // No Payload fallback: an empty text reads as this language's default.
+  const localized = { ...read, locale, fallbackLocale: false as const }
+  const stored = await payload.findGlobal({ ...localized, slug: 'email-settings' })
+  const site = await payload.findGlobal({ ...read, slug: 'site-settings' })
+  const logoId = relId(stored.logo)
+  const placeId = relId(stored.address_place)
+  const related = { ...localized, disableErrors: true as const }
+  const logo =
+    logoId == null ? null : await payload.findByID({ ...related, collection: 'media', id: logoId })
+  const addressPlace =
+    placeId == null
+      ? null
+      : await payload.findByID({ ...related, collection: 'places', id: placeId })
+  return {
+    stored: { ...stored, logo, address_place: addressPlace },
+    social: site.social_links,
+    locale,
+  }
 }
 
 /**

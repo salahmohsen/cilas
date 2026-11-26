@@ -6,8 +6,7 @@ import type {
   PayloadRequest,
 } from 'payload'
 
-import { routing } from '@/i18n/routing'
-import { documentHref } from '@/lib/document-href'
+import { documentHref, type DocumentTarget } from '@/lib/document-href'
 import { requireRowLock, rowIdOf } from '@/lib/row-lock'
 import { relId } from '@/lib/relation'
 import { REVIEWED } from '@/lib/reviewed-collections'
@@ -26,7 +25,7 @@ import {
   adminRecipients,
   emailRecipients,
   ownerRecipients,
-  sendReviewEmail,
+  sendReviewEmails,
 } from '@/lib/review-mail'
 
 /**
@@ -76,6 +75,8 @@ export type ReviewOptions = {
   collection: (typeof REVIEWED)[number]['collection']
   ownersOf: (doc: Doc) => number[]
   onApprove?: (args: { data: Doc; originalDoc?: Doc; now: Date }) => Record<string, unknown>
+  /** What the owners' bell says happened to an approved document, if not the default. */
+  approvalOutcome?: (doc: Doc) => string | undefined
 }
 
 /**
@@ -325,9 +326,12 @@ const recordReviewEvent =
   }
 
 /** The line under the bell for each move. */
-const NOTES: Partial<Record<ReviewState, (noun: string, title: string) => string>> = {
+const NOTES: Partial<
+  Record<ReviewState, (noun: string, title: string, outcome?: string) => string>
+> = {
   submitted: (noun, title) => `A ${noun} waits for review: “${title}”`,
-  approved: (noun, title) => `Your ${noun} “${title}” was approved and published`,
+  approved: (noun, title, outcome = 'was approved and published') =>
+    `Your ${noun} “${title}” ${outcome}`,
   changes_requested: (noun, title) => `Changes were asked for on your ${noun} “${title}”`,
   rejected: (noun, title) => `Your ${noun} “${title}” was not accepted`,
 }
@@ -349,7 +353,7 @@ const withdrawnNote = (title: string, removal: boolean) =>
  * published document is all draft saves, and is announced like any other.
  */
 const notifyReview =
-  ({ noun, collection, ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
+  ({ noun, collection, ownersOf, approvalOutcome }: ReviewOptions): CollectionAfterChangeHook =>
   async ({ doc, previousDoc, req }) => {
     if (!req.user) return doc
     const { draftSave, live } = reviewContext(req)
@@ -374,7 +378,6 @@ const notifyReview =
             id: doc.id,
             viewer: 'admin',
             waiting: false,
-            locale: routing.defaultLocale,
           }),
           actor: await actorOf(req.payload, personOf(req.user)),
         },
@@ -387,28 +390,28 @@ const notifyReview =
     if (!audience) return doc
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
-    const path = documentHref({
+    const target: DocumentTarget = {
       collection,
       id: doc.id,
       viewer: audience === 'admins' ? 'admin' : 'owner',
       waiting: audience === 'admins',
-      locale: routing.defaultLocale,
-    })
+    }
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
     if (!removed) {
-      await sendReviewEmail(
+      await sendReviewEmails(
         req,
-        (await emailRecipients(req, people, state)).map((p) => p.email),
+        await emailRecipients(req, people, state),
         state,
         removal ? `${title} (removal from the site)` : title,
         doc.review?.review_note,
-        { noun, path },
+        { noun, target },
       )
     }
     // The bell (src/components/admin/notification-bell.tsx) takes the short
     // name by kind, and `line` is the detail under it.
-    const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title) ?? title
+    const line =
+      (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title, approvalOutcome?.(doc)) ?? title
     // The bell's avatar is the submitter's for admins, the decider's for owners.
     const actingPerson = audience === 'admins' ? ownersOf(doc)[0] : personOf(req.user)
     await notify(
@@ -417,7 +420,7 @@ const notifyReview =
       {
         kind: (removed ? 'removed' : state) as NotificationKind,
         description: line,
-        link: path,
+        link: documentHref(target),
         actor: await actorOf(req.payload, actingPerson),
       },
       req,
@@ -449,7 +452,7 @@ const publishOwners =
 /** The review path's hooks, to spread into a collection's `hooks`. */
 export const reviewHooks = (
   kind: ReviewOptions['noun'],
-  extra: Pick<ReviewOptions, 'onApprove'> = {},
+  extra: Pick<ReviewOptions, 'onApprove' | 'approvalOutcome'> = {},
 ) => {
   const entry = REVIEWED.find((item) => item.kind === kind)!
   const options: ReviewOptions = {
