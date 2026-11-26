@@ -64,8 +64,11 @@ describe('portalNeedsWorld', () => {
   })
 
   it('gives the admin and the fellow one post link each', async () => {
-    for (const role of ['admin', 'fellow'] as const)
-      expect(await notesOf(world.world.accounts[role])).toHaveLength(1)
+    for (const role of ['admin', 'fellow'] as const) {
+      // WARNING: another file's application sends a bell row to every admin, this one included.
+      const notes = await notesOf(world.world.accounts[role])
+      expect(notes.filter((note) => note.link === world.link)).toHaveLength(1)
+    }
   })
 
   it('takes the newest IDs first when notification timestamps tie across the page limit', async () => {

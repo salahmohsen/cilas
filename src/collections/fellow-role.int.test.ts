@@ -10,7 +10,6 @@ type Role = User['roles'][number]
 let f: Awaited<ReturnType<typeof applicationFixture>>
 const people: number[] = []
 const users: number[] = []
-const spare: number[] = []
 
 const accountFor = async (roles: Role[], withAccount = true) => {
   const person = await f.payload.create({
@@ -66,8 +65,7 @@ const courseListing = async (fellows: number[]) => {
       fellows,
     },
   })
-  spare.push(course.id)
-  return course.id
+  return f.track('courses', course).id
 }
 
 beforeAll(async () => {
@@ -76,7 +74,6 @@ beforeAll(async () => {
 afterAll(async () => {
   if (!f) return
   for (const course of f.courses) await list(course.id, [])
-  for (const id of spare) await f.payload.delete({ collection: 'courses', id }).catch(() => null)
   for (const id of users) await f.payload.delete({ collection: 'users', id })
   for (const id of people) await f.payload.delete({ collection: 'people', id })
   await removeApplicationFixture(f)
@@ -213,7 +210,7 @@ describe('propagateFellowRole', () => {
         fellows: [person],
       },
     })
-    spare.push(draft.id)
+    f.track('courses', draft)
     await list(course, [], 'draft')
     await f.payload.db.deleteVersions({
       collection: 'courses',

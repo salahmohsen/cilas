@@ -278,6 +278,17 @@ const discardThenRestore = async (who: User, collection: 'articles' | 'courses',
   return { afterDiscard, afterRestore: (await latestOf(collection, id)).version }
 }
 
+const historyOf = async (id: number) => {
+  const { docs } = await payload.find({
+    collection: 'review-events',
+    where: { collection: { equals: 'articles' }, doc: { equals: id } },
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+  })
+  return docs.map((event) => track('review-events', event))
+}
+
 describe('review-events: owner moves', () => {
   it('withdraw a new submission', async () => {
     const title = uniq('Withdraw new')
@@ -296,6 +307,9 @@ describe('review-events: owner moves', () => {
     expect(
       await getReviewQueue(payload).then((q) => q.some((i) => i.kind === 'article' && i.id === id)),
     ).toBe(false)
+    expect((await historyOf(id)).filter((event) => event.actor === owner.id)).toMatchObject([
+      { from: 'submitted', to: 'draft', request: null, note: null },
+    ])
   })
 
   it('withdraw changes on a live article', async () => {
@@ -336,6 +350,9 @@ describe('review-events: owner moves', () => {
     expect(owned.docs).toEqual([])
     expect(await withdrawnNotes(title)).toHaveLength(1)
     expect(inbox.sent.filter((m) => m.html.includes(title))).toEqual([])
+    expect((await historyOf(id)).filter((event) => event.actor === owner.id)).toMatchObject([
+      { from: 'submitted', to: 'draft', request: 'removal', note: null },
+    ])
   })
 
   it('discard from each copy state', async () => {
@@ -360,6 +377,14 @@ describe('review-events: owner moves', () => {
       expect(await publicTitle(id), state).toBe(title)
       expect(await keyOf(id), state).toBe('published')
       expect(inbox.sent.length, state).toBe(before)
+      expect(
+        (await historyOf(id)).filter((event) => event.actor === owner.id),
+        state,
+      ).toMatchObject(
+        state === 'changes_requested' || state === 'rejected'
+          ? [{ from: state, to: 'draft', request: 'changes', note: null }]
+          : [],
+      )
     }
   })
 

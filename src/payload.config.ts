@@ -88,6 +88,7 @@ import { adminMcp } from './plugins/mcp'
 import { AI_ACCESS_VIEW } from './plugins/mcp/paths'
 import { typesenseSearch } from './plugins/typesense'
 import { revalidateAfterChange, revalidateAfterDelete } from './lib/revalidate'
+import { ReviewEvents } from './collections/ReviewEvents'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -243,6 +244,7 @@ export const sourceConfig: Config = {
     MailingLists,
     SubmissionFiles,
     Notifications,
+    ReviewEvents,
     PushSubscriptions,
     Places,
     Spaces,

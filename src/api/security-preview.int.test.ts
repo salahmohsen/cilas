@@ -10,7 +10,7 @@ import { GET } from '@/app/(frontend)/api/preview/route'
 import FormPreviewPage from '@/app/(frontend)/[locale]/(site)/forms/preview/page'
 
 import { runInRequest } from '../../testing/next-request.test-utils'
-import { uniq, uniqEmail } from '../../testing/payload.fixture'
+import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
 import { navigationOutcome } from '../../testing/redirect.test-utils'
 import { signedInHeaders } from '../../testing/reader.test-utils'
 
@@ -36,6 +36,7 @@ describe('draft preview authorization', () => {
   let admin: Account
   const userIds: number[] = []
   const peopleIds: number[] = []
+  const { track, cleanup } = createTracker()
 
   type Account = { user: User; email: string; password: string }
 
@@ -131,6 +132,7 @@ describe('draft preview authorization', () => {
         },
       })
     ).id
+    track('articles', article)
     publicArticle = (
       await payload.create({
         collection: 'articles',
@@ -144,6 +146,7 @@ describe('draft preview authorization', () => {
         },
       })
     ).id
+    track('articles', publicArticle)
     programme = (
       await payload.create({
         collection: 'programmes',
@@ -168,14 +171,13 @@ describe('draft preview authorization', () => {
         },
       })
     ).id
+    track('courses', course)
   })
 
   afterAll(async () => {
     if (form) await payload.delete({ collection: 'forms', id: form })
-    if (course) await payload.delete({ collection: 'courses', id: course })
     if (programme) await payload.delete({ collection: 'programmes', id: programme })
-    if (article) await payload.delete({ collection: 'articles', id: article })
-    if (publicArticle) await payload.delete({ collection: 'articles', id: publicArticle })
+    if (payload) await cleanup(payload)
     for (const id of userIds) await payload.delete({ collection: 'users', id })
     for (const id of peopleIds) await payload.delete({ collection: 'people', id })
     if (person) await payload.delete({ collection: 'people', id: person })

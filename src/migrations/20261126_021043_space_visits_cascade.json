@@ -32674,6 +32674,149 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.review_events": {
+      "name": "review_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "collection": {
+          "name": "collection",
+          "type": "enum_review_events_collection",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doc": {
+          "name": "doc",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "from": {
+          "name": "from",
+          "type": "enum_review_events_from",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to": {
+          "name": "to",
+          "type": "enum_review_events_to",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "request": {
+          "name": "request",
+          "type": "enum_review_events_request",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actor_id": {
+          "name": "actor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "at": {
+          "name": "at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "review_events_doc_idx": {
+          "name": "review_events_doc_idx",
+          "columns": [
+            {
+              "expression": "doc",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "review_events_actor_idx": {
+          "name": "review_events_actor_idx",
+          "columns": [
+            {
+              "expression": "actor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "collection_doc_idx": {
+          "name": "collection_doc_idx",
+          "columns": [
+            {
+              "expression": "collection",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "doc",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "review_events_actor_id_users_id_fk": {
+          "name": "review_events_actor_id_users_id_fk",
+          "tableFrom": "review_events",
+          "tableTo": "users",
+          "columnsFrom": [
+            "actor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.push_subscriptions": {
       "name": "push_subscriptions",
       "schema": "",
@@ -36427,6 +36570,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "review_events_id": {
+          "name": "review_events_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "push_subscriptions_id": {
           "name": "push_subscriptions_id",
           "type": "integer",
@@ -36899,6 +37048,21 @@
           "columns": [
             {
               "expression": "notifications_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_review_events_id_idx": {
+          "name": "payload_locked_documents_rels_review_events_id_idx",
+          "columns": [
+            {
+              "expression": "review_events_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -37392,6 +37556,19 @@
           "tableTo": "notifications",
           "columnsFrom": [
             "notifications_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_review_events_fk": {
+          "name": "payload_locked_documents_rels_review_events_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "review_events",
+          "columnsFrom": [
+            "review_events_id"
           ],
           "columnsTo": [
             "id"
@@ -40961,6 +41138,45 @@
         "withdrawn"
       ]
     },
+    "public.enum_review_events_collection": {
+      "name": "enum_review_events_collection",
+      "schema": "public",
+      "values": [
+        "articles",
+        "courses",
+        "publications"
+      ]
+    },
+    "public.enum_review_events_from": {
+      "name": "enum_review_events_from",
+      "schema": "public",
+      "values": [
+        "draft",
+        "submitted",
+        "changes_requested",
+        "approved",
+        "rejected"
+      ]
+    },
+    "public.enum_review_events_to": {
+      "name": "enum_review_events_to",
+      "schema": "public",
+      "values": [
+        "draft",
+        "submitted",
+        "changes_requested",
+        "approved",
+        "rejected"
+      ]
+    },
+    "public.enum_review_events_request": {
+      "name": "enum_review_events_request",
+      "schema": "public",
+      "values": [
+        "changes",
+        "removal"
+      ]
+    },
     "public.enum_push_subscriptions_locale": {
       "name": "enum_push_subscriptions_locale",
       "schema": "public",
@@ -41161,6 +41377,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "c7cf0c3e-e0bb-4912-9937-b42865e07dfb",
+  "id": "98a7275a-44f3-4f26-a7b7-ff47fb98a498",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

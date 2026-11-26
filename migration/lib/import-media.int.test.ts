@@ -7,9 +7,10 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { importMedia } from './import-media'
 import type { MediaJob } from './media-plan'
-import { RUN, uniq } from '../../testing/payload.fixture'
+import { createTracker, RUN, uniq } from '../../testing/payload.fixture'
 
 let payload: Payload
+const { trackMatching, cleanup } = createTracker()
 
 const P = `/probemedia-${RUN}-`
 const UPLOAD_DIR = `uploads/probemedia-${RUN}`
@@ -90,21 +91,17 @@ const jobs: MediaJob[] = [
   },
 ]
 
-const cleanup = async () => {
-  const del = (collection: CollectionSlug, where: object) =>
-    payload
-      .delete({ collection, where, overrideAccess: true } as Parameters<Payload['delete']>[0])
-      .catch(() => undefined)
+const trackImportedFixtures = async () => {
   for (const [collection, field] of [
     ['people', 'legacy_url'],
     ['courses', 'legacy_url'],
     ['publications', 'legacy_url'],
     ['newsletters', 'legacy_url'],
   ] as const) {
-    await del(collection, { [field]: { like: `${P}` } })
+    await trackMatching(payload, collection, { [field]: { like: P } })
   }
-  await del('press', { title: { equals: PRESS } })
-  await del('media', { legacy_url: { like: `${UPLOAD_DIR}/` } })
+  await trackMatching(payload, 'press', { title: { equals: PRESS } })
+  await trackMatching(payload, 'media', { legacy_url: { like: `${UPLOAD_DIR}/` } })
 }
 
 describe('importMedia', () => {
@@ -216,7 +213,8 @@ describe('importMedia', () => {
   }, 300_000)
 
   afterAll(async () => {
-    await cleanup()
+    await trackImportedFixtures()
+    await cleanup(payload)
     rmSync(TMP, { recursive: true, force: true })
   }, 300_000)
 

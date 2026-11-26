@@ -5,9 +5,10 @@ import config from '@/payload.config'
 import type { Article } from '@/payload-types'
 import { blocksToLexical } from './blocks'
 import { importContent, type ArchiveContent } from './import-content'
-import { RUN, uniq } from '../../testing/payload.fixture'
+import { createTracker, RUN, uniq } from '../../testing/payload.fixture'
 
 let payload: Payload
+const { trackMatching, cleanup } = createTracker()
 
 const P = `/probecontent-${RUN}-`
 const L = {
@@ -163,7 +164,7 @@ const content = (reviewedBody = 'Imported over a reviewed article') =>
     ],
   }) satisfies ArchiveContent
 
-const cleanup = async () => {
+const trackImportedFixtures = async () => {
   const like = { legacy_url: { like: P } }
   const targets: Array<[CollectionSlug, Where]> = [
     ['publications', like],
@@ -174,7 +175,7 @@ const cleanup = async () => {
     ['people', { name: { like: RUN } }],
   ]
   for (const [collection, where] of targets) {
-    await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
+    await trackMatching(payload, collection, where)
   }
 }
 
@@ -231,7 +232,8 @@ describe('publishing content import', () => {
     } as Parameters<Payload['create']>[0])
   }, 120_000)
   afterAll(async () => {
-    await cleanup()
+    await trackImportedFixtures()
+    await cleanup(payload)
     await payload.destroy()
   }, 120_000)
 

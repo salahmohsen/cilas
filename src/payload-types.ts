@@ -93,6 +93,7 @@ export interface Config {
     sessions: Session;
     'submission-files': SubmissionFile;
     notifications: Notification;
+    'review-events': ReviewEvent;
     'push-subscriptions': PushSubscription;
     'space-files': SpaceFile;
     'space-reactions': SpaceReaction;
@@ -159,6 +160,7 @@ export interface Config {
     sessions: SessionsSelect<false> | SessionsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
+    'review-events': ReviewEventsSelect<false> | ReviewEventsSelect<true>;
     'push-subscriptions': PushSubscriptionsSelect<false> | PushSubscriptionsSelect<true>;
     'space-files': SpaceFilesSelect<false> | SpaceFilesSelect<true>;
     'space-reactions': SpaceReactionsSelect<false> | SpaceReactionsSelect<true>;
@@ -2761,6 +2763,22 @@ export interface Notification {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "review-events".
+ */
+export interface ReviewEvent {
+  id: number;
+  collection: 'articles' | 'courses' | 'publications';
+  doc: number;
+  version?: number | null;
+  from: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
+  to: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
+  request?: ('changes' | 'removal') | null;
+  note?: string | null;
+  actor?: (number | null) | User;
+  at: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "push-subscriptions".
  */
 export interface PushSubscription {
@@ -3360,6 +3378,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'notifications';
         value: number | Notification;
+      } | null)
+    | ({
+        relationTo: 'review-events';
+        value: number | ReviewEvent;
       } | null)
     | ({
         relationTo: 'push-subscriptions';
@@ -4742,6 +4764,21 @@ export interface NotificationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "review-events_select".
+ */
+export interface ReviewEventsSelect<T extends boolean = true> {
+  collection?: T;
+  doc?: T;
+  version?: T;
+  from?: T;
+  to?: T;
+  request?: T;
+  note?: T;
+  actor?: T;
+  at?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "push-subscriptions_select".
  */
 export interface PushSubscriptionsSelect<T extends boolean = true> {
@@ -5957,6 +5994,7 @@ export interface TaskCreateCollectionExport {
       | 'mailing-lists'
       | 'submission-files'
       | 'notifications'
+      | 'review-events'
       | 'push-subscriptions'
       | 'places'
       | 'spaces'

@@ -1,8 +1,13 @@
-import { REST_GET, REST_PATCH, REST_POST } from '@payloadcms/next/routes'
+import { REST_DELETE, REST_GET, REST_PATCH, REST_POST } from '@payloadcms/next/routes'
 
 import config from '../src/payload.config'
 
-const handlers = { GET: REST_GET(config), PATCH: REST_PATCH(config), POST: REST_POST(config) }
+const handlers = {
+  DELETE: REST_DELETE(config),
+  GET: REST_GET(config),
+  PATCH: REST_PATCH(config),
+  POST: REST_POST(config),
+}
 
 /**
  * Calls Payload's REST handler in process, as the app's `/api/[...slug]` route

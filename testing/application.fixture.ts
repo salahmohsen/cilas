@@ -1,9 +1,11 @@
 import { getPayload } from 'payload'
 import config from '../src/payload.config.js'
 import type { Course } from '../src/payload-types.js'
+import { createTracker } from './payload.fixture'
 
 export async function applicationFixture() {
   const payload = await getPayload({ config })
+  const { track, cleanup } = createTracker()
   const suffix = crypto.randomUUID().slice(0, 8)
   const form = await payload.create({
     collection: 'forms',
@@ -63,7 +65,7 @@ export async function applicationFixture() {
         ],
       },
     })
-    courses.push(course)
+    courses.push(track('courses', course))
     await payload.update({
       collection: 'courses',
       id: course.id,
@@ -79,11 +81,11 @@ export async function applicationFixture() {
       },
     })
   }
-  return { payload, form, place, cycle, courses, suffix }
+  return { payload, form, place, cycle, courses, suffix, track, cleanup }
 }
 
 export async function removeApplicationFixture(f: Awaited<ReturnType<typeof applicationFixture>>) {
-  const { payload, form, courses, cycle, place } = f
+  const { payload, form, cycle, place } = f
   const submissions = await payload.find({
     collection: 'form-submissions',
     where: { form: { equals: form.id } },
@@ -96,7 +98,7 @@ export async function removeApplicationFixture(f: Awaited<ReturnType<typeof appl
     })
     await payload.delete({ collection: 'form-submissions', id: submission.id })
   }
-  for (const c of courses) await payload.delete({ collection: 'courses', id: c.id })
+  await f.cleanup(payload)
   await payload.delete({ collection: 'cycles', id: cycle.id })
   await payload.delete({ collection: 'places', id: place.id })
   await payload.delete({ collection: 'forms', id: form.id })
