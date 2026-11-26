@@ -6,6 +6,9 @@
   white-space: nowrap;
   vertical-align: bottom;
 }
+.root.muted {
+  color: var(--muted-foreground);
+}
 .reels {
   display: inline-flex;
   height: 1.15em;

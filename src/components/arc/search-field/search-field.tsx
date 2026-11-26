@@ -22,6 +22,8 @@ export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElem
    * no border or background until the md breakpoint returns it.
    */
   bare?: boolean
+  /** Large input type for full-screen search. */
+  inputSize?: 'sm' | 'lg'
 }
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(function SearchField(
   {
@@ -32,6 +34,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
     labelHidden,
     hint,
     bare,
+    inputSize = 'sm',
     id,
     className,
     ...props
@@ -69,7 +72,9 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
           type="search"
           value={value}
           onChange={(event) => onValueChange(event.target.value)}
-          className={[styles.input, className].filter(Boolean).join(' ')}
+          className={[styles.input, inputSize === 'lg' && styles.large, className]
+            .filter(Boolean)
+            .join(' ')}
         />
         {/* The hint lives as a shell child only when the field is empty;
             the clear control keeps its own reserved slot afterwards, and

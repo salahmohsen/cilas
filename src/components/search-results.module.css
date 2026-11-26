@@ -1,0 +1,9 @@
+.selection {
+  transition-property: transform, height, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selection {
+    transition-property: none;
+  }
+}

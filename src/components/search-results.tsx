@@ -39,6 +39,7 @@ import {
   type SearchHit,
   type SearchRow,
 } from '@/lib/search-rows'
+import styles from './search-results.module.css'
 
 /** One checkbox in the Type filter: a course kind or a collection. */
 export type SearchFacet = {
@@ -118,7 +119,7 @@ function SearchFilterRow({
 }) {
   const disabled = found === 0 && checked
   return (
-    <div className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}>
+    <div className={`flex items-center rounded-lg pe-1 text-sm ${disabled ? 'opacity-40' : ''}`}>
       <Checkbox
         checked={checked}
         disabled={disabled}
@@ -127,7 +128,7 @@ function SearchFilterRow({
         className="-ms-3.25"
       />
       <span
-        className={`min-w-0 flex-1 break-words text-sm font-medium ${disabled ? '' : 'cursor-pointer'}`}
+        className={`min-w-0 flex-1 break-words font-medium ${disabled ? '' : 'cursor-pointer'}`}
         aria-hidden="true"
         onClick={() => {
           if (!disabled) onToggle()
@@ -136,13 +137,7 @@ function SearchFilterRow({
         {label}
       </span>
       {found != null ? (
-        <SlotText
-          value={found}
-          format={formatCount}
-          spins={0}
-          duration={0.6}
-          className="text-sm tabular-nums text-muted-foreground"
-        />
+        <SlotText value={found} format={formatCount} spins={0} duration={0.6} tone="muted" />
       ) : null}
     </div>
   )
@@ -327,7 +322,7 @@ export function SearchEmptyState({
           <Search width={20} height={20} />
         )}
       </span>
-      <strong className="text-[15px] font-medium" dir="auto">
+      <strong className="text-base font-medium" dir="auto">
         {title}
       </strong>
       {hint ? <small className="max-w-sm text-sm text-muted-foreground">{hint}</small> : null}
@@ -401,10 +396,10 @@ function SearchRowItem({
           ) : undefined
         }
       >
-        <p className="text-[16px] leading-[1.4] font-medium" lang={titleLocale}>
+        <p className="text-base leading-(--leading-body) font-medium" lang={titleLocale}>
           <Highlight attribute={titleField} hit={hit as never} />
         </p>
-        <p className="mt-1 text-[13px] text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           {otherLanguage ? (
             <>
               <span lang={locale}>{t(titleLocale === 'ar' ? 'tagArabic' : 'tagEnglish')}</span>
@@ -421,7 +416,7 @@ function SearchRowItem({
             moreLabel={t('readMore')}
             lessLabel={t('showLess')}
             className="mt-2.5"
-            style={{ fontSize: '15px', lineHeight: 1.45, color: 'inherit' }}
+            style={{ color: 'inherit' }}
             onClick={(event) => {
               if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
             }}
@@ -432,7 +427,7 @@ function SearchRowItem({
         {owner ? (
           // A div: several contributors stack avatars, whose group is a
           // div itself. The names truncate rather than wrap.
-          <div className="mt-2.5 flex items-center gap-2.5 text-[13px] text-muted-foreground">
+          <div className="mt-2.5 flex items-center gap-2.5 text-sm text-muted-foreground">
             <span className="shrink-0">
               {contributors.length > 1 ? (
                 <AvatarGroup members={contributors} max={3} size="sm" label={owner} />
@@ -451,7 +446,7 @@ function SearchRowItem({
           </div>
         ) : null}
         {updated ? (
-          <p className="mt-1.5 text-[13px] text-muted-foreground">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             {owner ? t('editedSuffix', { when: updated }) : t('updated', { when: updated })}
           </p>
         ) : null}
@@ -477,7 +472,7 @@ export function ResultsFooter({
   const t = useTranslations('Search')
   return (
     <div className="flex flex-col items-center gap-3 px-7 pt-2 pb-10">
-      <p className="text-[13px] text-muted-foreground tabular-nums">
+      <p className="text-xs text-muted-foreground tabular-nums">
         {total == null ? t('showingLoaded', { count: shown }) : t('showing', { shown, total })}
       </p>
       {hasMore ? (
@@ -554,7 +549,7 @@ function SearchQueryBar({
           aria-controls={hasRows ? `${inputId}-rows` : undefined}
           aria-activedescendant={activeId}
           ref={inputRef}
-          className="text-[17px]"
+          inputSize="lg"
         />
       </div>
       {/* Mobile has no sidebar: the same facets open in a bottom sheet. */}
@@ -849,7 +844,7 @@ export function SearchResults({
     <div
       tabIndex={-1}
       onKeyDown={onKeyDown}
-      className="flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground outline-none [&_mark]:rounded-[5px] [&_mark]:bg-muted [&_mark]:px-0.75 [&_mark]:py-0.5 [&_mark]:font-semibold [&_mark]:text-foreground"
+      className="flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground outline-none [&_mark]:rounded-(--radius-inner) [&_mark]:bg-muted [&_mark]:px-0.75 [&_mark]:py-0.5 [&_mark]:font-semibold [&_mark]:text-foreground"
     >
       <SearchQueryBar
         {...filters}
@@ -898,7 +893,7 @@ export function SearchResults({
                     <div
                       ref={fillRef}
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition-[transform,height,opacity] duration-150 motion-reduce:transition-none"
+                      className={`${styles.selection} pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition duration-150`}
                     />
                     {rows.map((row, index) => (
                       <SearchRowItem

@@ -50,6 +50,9 @@
   letter-spacing: var(--tracking-body);
   outline: 0;
 }
+.input.large {
+  font-size: var(--text-lg);
+}
 .input:focus-visible {
   outline: 0;
 }

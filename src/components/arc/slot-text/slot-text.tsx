@@ -34,6 +34,8 @@ export interface SlotTextProps {
   align?: 'start' | 'end'
   /** Announce new values politely to screen readers. */
   announce?: boolean
+  /** Use the muted foreground for secondary counts. */
+  tone?: 'muted'
   className?: string
   style?: CSSProperties
 }
@@ -220,6 +222,7 @@ export function SlotText({
   spins = 1,
   align,
   announce = false,
+  tone,
   className,
   style,
 }: SlotTextProps) {
@@ -245,7 +248,12 @@ export function SlotText({
   }
 
   return (
-    <span className={[styles.root, className].filter(Boolean).join(' ')} style={style}>
+    <span
+      className={[styles.root, tone === 'muted' && styles.muted, className]
+        .filter(Boolean)
+        .join(' ')}
+      style={style}
+    >
       <span className={styles.srOnly} aria-live={announce ? 'polite' : undefined}>
         {text}
       </span>

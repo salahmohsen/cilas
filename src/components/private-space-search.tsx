@@ -202,10 +202,10 @@ export function PrivateSpaceSearch({
               }
             >
               <button type="button" data-search-result className="w-full text-start">
-                <p className="text-[16px] leading-[1.4] font-medium" dir="auto">
+                <p className="text-base leading-(--leading-body) font-medium" dir="auto">
                   {row.title}
                 </p>
-                <p className="mt-1 text-[13px] text-muted-foreground" dir="auto">
+                <p className="mt-1 text-sm text-muted-foreground" dir="auto">
                   {row.space} · {t(row.kind === 'post' ? 'privatePost' : 'privateComment')}
                 </p>
               </button>
