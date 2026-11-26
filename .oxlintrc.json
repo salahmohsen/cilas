@@ -12,6 +12,7 @@
   },
   "jsPlugins": [
     "./scripts/oxlint-plugin-cilas.mjs",
+    "@shadcn/lint",
     {
       "name": "landmines-testing",
       "specifier": "@interfere/landmines/testing"
@@ -29,6 +30,12 @@
       "specifier": "@interfere/landmines/types"
     }
   ],
+  "settings": {
+    "shadcn": {
+      "ui": "@/components/arc",
+      "ignoreImports": ["^@/components/ui(/|$)"]
+    }
+  },
   "ignorePatterns": [
     ".next/**",
     "video/**",
@@ -146,7 +153,50 @@
     "landmines-testing/strict-msw": "error",
     "landmines-structure/colocated-tests": "error",
     "landmines-structure/package-exports": "error",
-    "landmines-structure/test-file-names": "error"
+    "landmines-structure/test-file-names": "error",
+    "shadcn/no-restyle": [
+      "error",
+      {
+        "allow": ["layout"],
+        "message": "Arc owns {{category}} on <{{component}}>. Use its public props for appearance and a parent for layout that needs its own padding or gap. Remove {{className}}.",
+        "contracts": [
+          {
+            "pattern": "^Button$",
+            "message": "Remove {{className}}. Use the Arc Button variant or size prop for appearance."
+          },
+          {
+            "pattern": "^Badge$",
+            "message": "Remove {{className}}. Use the Arc Badge tone prop for appearance."
+          },
+          {
+            // Portal and admin mounts need the Arc token scope on the actual surface or trigger.
+            "pattern": "^(DrawerContent|HoverCard|Timeline|SplitButton)$",
+            "allow": ["layout", "arc-scope"]
+          },
+          {
+            // The printed card defines the sheet’s ink and paper treatment.
+            "pattern": "^BottomSheet$",
+            "allow": ["layout", "arc-scope", "collection-sheet"]
+          },
+          {
+            // The collection frame keeps its original width and the child supplies the corners.
+            "pattern": "^DialogContent$",
+            "allow": ["layout", "arc-scope", "collection-dialog"]
+          },
+          {
+            // The article sidebar needs the flex column on the scrolling viewport itself.
+            "pattern": "^ScrollArea$",
+            "allow": ["layout", "article-sidebar-viewport"]
+          },
+          {
+            // The home hero controls when the site header brand appears.
+            "pattern": "^SiteHeader$",
+            "allow": ["layout", "site-header"]
+          }
+        ]
+      }
+    ],
+    "shadcn/no-arbitrary-values": "error"
   },
   "overrides": [
     {
