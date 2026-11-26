@@ -22,6 +22,7 @@ import {
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import { ToastLayer, fromToast } from '../toast-stack/toast-stack'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import styles from './bottom-sheet.module.css'
 
 /**
@@ -687,9 +688,17 @@ function Sheet({
               </div>
             )}
           </div>
-          <div ref={bodyRef} className={styles.body} onWheel={bodyWheel} onFocus={bodyFocus}>
+          <ScrollArea
+            className={styles.scrollArea}
+            fade={0}
+            viewportClassName={styles.body}
+            viewportRef={bodyRef}
+            viewportTabIndex={-1}
+            onWheel={bodyWheel}
+            onFocus={bodyFocus}
+          >
             {children}
-          </div>
+          </ScrollArea>
           <span className={styles.srOnly} role="status" aria-live="polite">
             {announcement}
           </span>

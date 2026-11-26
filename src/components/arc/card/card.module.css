@@ -169,8 +169,9 @@
   height: fit-content;
   max-height: calc(100dvh - var(--space-8));
   margin: auto;
-  overflow: hidden auto;
-  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface-raised);
@@ -179,6 +180,13 @@
   transition:
     background-color var(--duration-standard) var(--ease-standard),
     box-shadow var(--duration-standard) var(--ease-standard);
+}
+.panelScroll {
+  flex: 1 1 auto;
+  border-radius: inherit;
+}
+.panelViewport {
+  overscroll-behavior: contain;
 }
 .panel:focus {
   outline: none;

@@ -7,6 +7,7 @@ import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/r
 import type { HTMLMotionProps, MotionProps, Transition, Variants } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import styles from './card.module.css'
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
@@ -368,64 +369,71 @@ export function Card({
                         transition: fade,
                       })}
                 >
-                  {media ? (
-                    <motion.div className={styles.media} {...shared('media', 'panel')}>
-                      <motion.div
-                        className={styles.zoom}
-                        initial={{ scale: hovered && !reduced ? ZOOM : 1 }}
-                        animate={{ scale: 1 }}
-                        transition={grow}
-                      >
-                        {media}
-                      </motion.div>
-                    </motion.div>
-                  ) : null}
-                  <motion.span
-                    className={styles.closeSlot}
-                    initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={returning ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 }}
-                    transition={returning ? fade : reduced ? fade : closeIn}
+                  <ScrollArea
+                    className={styles.panelScroll}
+                    fade={0}
+                    viewportClassName={styles.panelViewport}
+                    viewportTabIndex={-1}
                   >
-                    <Dialog.Close asChild>
-                      <motion.button
-                        type="button"
-                        className={styles.close}
-                        aria-label={closeLabel}
-                        whileTap={reduced ? undefined : { scale: 0.94 }}
-                        transition={spring.snappy}
-                      >
-                        <X width={16} height={16} strokeWidth={1.75} aria-hidden="true" />
-                      </motion.button>
-                    </Dialog.Close>
-                  </motion.span>
-                  <div className={styles.content}>
-                    <Dialog.Title asChild>
-                      <motion.h2 className={styles.title} {...shared('title', 'panel')}>
-                        {panelTitle ?? title}
-                      </motion.h2>
-                    </Dialog.Title>
-                    {description ? (
-                      <Dialog.Description asChild>
-                        <motion.p
-                          className={styles.description}
-                          {...shared('description', 'panel', 'position')}
+                    {media ? (
+                      <motion.div className={styles.media} {...shared('media', 'panel')}>
+                        <motion.div
+                          className={styles.zoom}
+                          initial={{ scale: hovered && !reduced ? ZOOM : 1 }}
+                          animate={{ scale: 1 }}
+                          transition={grow}
                         >
-                          {description}
-                        </motion.p>
-                      </Dialog.Description>
+                          {media}
+                        </motion.div>
+                      </motion.div>
                     ) : null}
-                    {children}
-                    {footer('panel')}
-                    <motion.div
-                      className={styles.details}
-                      initial={reduced ? false : { opacity: 0, y: 6 }}
-                      animate={returning ? { opacity: 0, y: 0 } : { opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, transition: fade }}
-                      transition={returning || reduced ? fade : reveal}
+                    <motion.span
+                      className={styles.closeSlot}
+                      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
+                      animate={returning ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 }}
+                      transition={returning ? fade : reduced ? fade : closeIn}
                     >
-                      {details}
-                    </motion.div>
-                  </div>
+                      <Dialog.Close asChild>
+                        <motion.button
+                          type="button"
+                          className={styles.close}
+                          aria-label={closeLabel}
+                          whileTap={reduced ? undefined : { scale: 0.94 }}
+                          transition={spring.snappy}
+                        >
+                          <X width={16} height={16} strokeWidth={1.75} aria-hidden="true" />
+                        </motion.button>
+                      </Dialog.Close>
+                    </motion.span>
+                    <div className={styles.content}>
+                      <Dialog.Title asChild>
+                        <motion.h2 className={styles.title} {...shared('title', 'panel')}>
+                          {panelTitle ?? title}
+                        </motion.h2>
+                      </Dialog.Title>
+                      {description ? (
+                        <Dialog.Description asChild>
+                          <motion.p
+                            className={styles.description}
+                            {...shared('description', 'panel', 'position')}
+                          >
+                            {description}
+                          </motion.p>
+                        </Dialog.Description>
+                      ) : null}
+                      {children}
+                      {footer('panel')}
+                      <motion.div
+                        className={styles.details}
+                        initial={reduced ? false : { opacity: 0, y: 6 }}
+                        animate={returning ? { opacity: 0, y: 0 } : { opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, transition: fade }}
+                        transition={returning || reduced ? fade : reveal}
+                      >
+                        {details}
+                      </motion.div>
+                    </div>
+                  </ScrollArea>
                 </motion.div>
               </Dialog.Content>
             </Dialog.Portal>

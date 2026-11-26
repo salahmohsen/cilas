@@ -125,15 +125,17 @@
   gap: 10px;
 }
 
+.railFrame {
+  width: 9.25rem;
+  flex: none;
+  border-right: 1px solid var(--border-subtle);
+}
 .rail {
   position: relative;
   display: flex;
-  width: 9.25rem;
-  flex: none;
   flex-direction: column;
   gap: 2px;
   padding-right: 10px;
-  border-right: 1px solid var(--border-subtle);
 }
 .railHighlight {
   position: absolute;
@@ -442,20 +444,15 @@
   flex-direction: column;
   gap: 8px;
 }
-.panel[data-compact] .rail {
+.panel[data-compact] .railFrame {
   width: auto;
-  flex-direction: row;
-  gap: 2px;
   margin: 0 -8px;
-  padding: 0 8px 8px;
-  overflow-x: auto;
   border-right: 0;
   border-bottom: 1px solid var(--border-subtle);
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
 }
-.panel[data-compact] .rail::-webkit-scrollbar {
-  display: none;
+.panel[data-compact] .rail {
+  flex-direction: row;
+  padding: 0 8px 8px;
 }
 .panel[data-compact] .preset {
   padding: 0 11px;

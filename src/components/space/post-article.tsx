@@ -6,6 +6,7 @@ import { RichTextScope } from '@/components/rich-text-scope'
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import type { Space, User } from '@/payload-types'
 import { linkTitles, outsideLinks } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
@@ -208,7 +209,14 @@ export async function PostArticle({
       <div className={styles.dialogPhotos}>
         <PostPhotos photos={photos} />
       </div>
-      {article}
+      <ScrollArea
+        className={styles.dialogPostScroll}
+        fade={0}
+        viewportClassName={styles.dialogPostViewport}
+        viewportTabIndex={-1}
+      >
+        {article}
+      </ScrollArea>
     </div>
   )
 }

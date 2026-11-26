@@ -28,6 +28,7 @@ import {
 import type { Transition, Variants } from 'motion/react'
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import { useToday } from '../lib/use-today'
 import styles from './date-range-picker.module.css'
 
@@ -1081,9 +1082,14 @@ export function DateRangePicker({
                 animate="shown"
                 exit="gone"
               >
-                <div
-                  ref={railRef}
-                  className={styles.rail}
+                <ScrollArea
+                  className={styles.railFrame}
+                  fade={0}
+                  orientation={compact ? 'horizontal' : 'vertical'}
+                  viewportClassName={styles.rail}
+                  viewportRef={railRef}
+                  viewportTabIndex={-1}
+                  wheelToHorizontal={false}
                   role="group"
                   aria-label="Presets"
                   onKeyDown={onRailKey}
@@ -1105,7 +1111,7 @@ export function DateRangePicker({
                       {preset.label}
                     </button>
                   ))}
-                </div>
+                </ScrollArea>
 
                 <div
                   className={styles.calendars}

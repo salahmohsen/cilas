@@ -16,6 +16,7 @@ import {
   type Variants,
 } from 'motion/react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import styles from './filter-toolbar.module.css'
 
 export interface FilterChip {
@@ -382,9 +383,12 @@ function MenuList({
       )
   }
   return (
-    <div
-      ref={list}
-      className={styles.list}
+    <ScrollArea
+      fade={0}
+      maxHeight="min(20rem, 55vh)"
+      viewportRef={list}
+      viewportClassName={styles.list}
+      viewportTabIndex={-1}
       role="menu"
       aria-labelledby={labelledBy}
       data-current={present ? '' : undefined}
@@ -436,7 +440,7 @@ function MenuList({
           {row.meta ? <span className={styles.itemMeta}>{row.meta}</span> : null}
         </button>
       ))}
-    </div>
+    </ScrollArea>
   )
 }
 

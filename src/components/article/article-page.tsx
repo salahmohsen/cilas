@@ -25,6 +25,7 @@ import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only
 import { AIInstructions } from '@/components/ai-instructions'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
+import { ArticleActionRow } from '@/components/article/article-action-row'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleSidebar } from '@/components/article/article-sidebar'
@@ -283,7 +284,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         {!narrow && (
           <>
             <SideCardSection label={tShare('heading')}>
-              <div className="side-card-body side-card-flush side-card-scroll">
+              <ArticleActionRow flush label={tShare('heading')}>
                 <ShareBar
                   email={email}
                   file={printEdition}
@@ -291,13 +292,13 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                   path={articlePath}
                   title={title}
                 />
-              </div>
+              </ArticleActionRow>
             </SideCardSection>
             {showAi && (
               <SideCardSection label={tShare('aiHeading')} labelAction={<AIInstructions />}>
-                <div className="side-card-body side-card-flush">
+                <ArticleActionRow flush label={tShare('aiHeading')}>
                   <StudyWithAI kind="article" path={articlePath} />
-                </div>
+                </ArticleActionRow>
               </SideCardSection>
             )}
           </>
@@ -545,13 +546,15 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-share">
                 {tShare('heading')}
               </h2>
-              <ShareBar
-                email={email}
-                file={printEdition}
-                label={tShare('article')}
-                path={articlePath}
-                title={title}
-              />
+              <ArticleActionRow label={tShare('heading')}>
+                <ShareBar
+                  email={email}
+                  file={printEdition}
+                  label={tShare('article')}
+                  path={articlePath}
+                  title={title}
+                />
+              </ArticleActionRow>
             </section>
 
             {/* Taking it with AI, its own section at the tools' spacing. */}
@@ -567,7 +570,9 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                   {tShare('aiHeading')}
                   <AIInstructions />
                 </h2>
-                <StudyWithAI kind="article" path={articlePath} />
+                <ArticleActionRow label={tShare('aiHeading')}>
+                  <StudyWithAI kind="article" path={articlePath} />
+                </ArticleActionRow>
               </section>
             )}
 

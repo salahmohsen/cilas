@@ -24,6 +24,7 @@ import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
 import { SearchField } from '@/components/arc/search-field/search-field'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import SlotText from '@/components/arc/slot-text/slot-text'
 import TextMorph from '@/components/arc/text-morph/text-morph'
@@ -206,20 +207,22 @@ function FilterSheetBody({
 function FiltersSidebar(props: FilterProps) {
   const t = useTranslations('Search')
   return (
-    <aside className="hidden w-64 shrink-0 flex-col overflow-y-auto overscroll-contain border-e border-border px-6 py-8 md:flex">
-      <h2 className="font-sans text-md font-semibold tracking-tight">{t('filters')}</h2>
-      <div className="mt-5 min-w-0 break-words">
-        <FilterChoices {...props} />
-      </div>
-      {props.hiddenFacets.size > 0 ? (
-        <button
-          type="button"
-          onClick={props.onClearFilters}
-          className="mt-4 self-start text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-        >
-          {t('clearAll')}
-        </button>
-      ) : null}
+    <aside className="hidden w-64 shrink-0 flex-col border-e border-border md:flex">
+      <ScrollArea fade={0} viewportClassName="overscroll-contain px-6 py-8" viewportTabIndex={-1}>
+        <h2 className="font-sans text-md font-semibold tracking-tight">{t('filters')}</h2>
+        <div className="mt-5 min-w-0 break-words">
+          <FilterChoices {...props} />
+        </div>
+        {props.hiddenFacets.size > 0 ? (
+          <button
+            type="button"
+            onClick={props.onClearFilters}
+            className="mt-4 self-start text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+          >
+            {t('clearAll')}
+          </button>
+        ) : null}
+      </ScrollArea>
     </aside>
   )
 }
@@ -882,7 +885,12 @@ export function SearchResults({
             onSortChange={onSortChange}
           />
 
-          <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          <ScrollArea
+            className="flex-1"
+            fade={0}
+            viewportClassName="overscroll-contain"
+            viewportTabIndex={-1}
+          >
             {privateContent ||
               (rows.length === 0 ? (
                 <SearchEmptyState searching={searching} failed={failed} query={query} />
@@ -923,7 +931,7 @@ export function SearchResults({
                   />
                 </>
               ))}
-          </div>
+          </ScrollArea>
         </div>
       </div>
     </div>

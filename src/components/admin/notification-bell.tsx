@@ -3,7 +3,9 @@
 import { toast, useAuth } from '@payloadcms/ui'
 import { Bell } from 'lucide-react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import {
   countUnread,
   isOwnTab,
@@ -133,23 +135,26 @@ export function NotificationBell() {
         ) : null}
       </button>
       {open ? (
-        <div
+        <ScrollArea
           id={panel}
           role="dialog"
           aria-label="Notifications"
-          style={{
-            position: 'absolute',
-            insetInlineEnd: 0,
-            top: 42,
-            zIndex: 100,
-            width: 'min(360px, calc(100vw - 32px))',
-            maxHeight: 440,
-            overflow: 'auto',
-            border: '1px solid var(--theme-elevation-150)',
-            borderRadius: 8,
-            background: 'var(--theme-elevation-0)',
-            boxShadow: '0 12px 32px -8px rgb(0 0 0 / 0.35)',
-          }}
+          fade={0}
+          maxHeight="min(440px, calc(100dvh - 80px))"
+          style={
+            {
+              '--foreground': 'var(--theme-elevation-800)',
+              position: 'absolute',
+              insetInlineEnd: 0,
+              top: 42,
+              zIndex: 100,
+              width: 'min(360px, calc(100vw - 32px))',
+              border: '1px solid var(--theme-elevation-150)',
+              borderRadius: 8,
+              background: 'var(--theme-elevation-0)',
+              boxShadow: '0 12px 32px -8px rgb(0 0 0 / 0.35)',
+            } as CSSProperties
+          }
         >
           <div
             style={{
@@ -242,7 +247,7 @@ export function NotificationBell() {
               Nothing yet.
             </p>
           )}
-        </div>
+        </ScrollArea>
       ) : null}
     </div>
   )

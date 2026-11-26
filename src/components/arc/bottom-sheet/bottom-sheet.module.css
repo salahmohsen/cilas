@@ -164,22 +164,24 @@
 
 /* The content scrolls only at the tallest detent; below it, a drag or scroll opens the sheet first.
    While a toast shows, the end padding grows to the toasts' room, so a sticky footer rests above them and a focused control scrolls clear of them. */
-.body {
+.scrollArea {
   flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
+}
+.body {
   padding: var(--space-1) var(--space-5) var(--space-6);
   padding-block-end: max(var(--space-6), var(--toast-layer-height, 0px));
   scroll-padding-block-end: var(--toast-layer-height, 0px);
   overscroll-behavior: contain;
-  scrollbar-width: thin;
   touch-action: pan-y;
   font-size: var(--text-sm);
   line-height: var(--leading-body);
 }
-.sheet:not([data-expanded]) .body {
+.sheet:not([data-expanded]) .scrollArea > .body {
   overflow: hidden;
   touch-action: none;
+}
+.sheet:not([data-expanded]) .scrollArea > [data-axis] {
+  visibility: hidden;
 }
 
 .srOnly {

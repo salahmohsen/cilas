@@ -302,10 +302,7 @@
 .list {
   position: relative;
   display: grid;
-  max-height: min(20rem, 55vh);
-  overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 .highlight {
   position: absolute;

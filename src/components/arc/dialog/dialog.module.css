@@ -9,6 +9,8 @@
 /* Centered with auto margins (like a native modal dialog) so transform stays free for the entrance spring. */
 .content {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   z-index: 51;
   inset: 0;
   width: min(calc(100vw - var(--space-8)), 440px);
@@ -16,25 +18,22 @@
   max-height: calc(100vh - var(--space-8));
   max-height: calc(100dvh - var(--space-8));
   margin: auto;
-  overflow: auto;
+  overflow: clip;
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface-raised);
   color: var(--foreground);
   box-shadow: var(--shadow-floating);
-  /* Room for the toasts while one shows: a sticky footer rests above them, and a focused control scrolls clear of them. The room counts inside the max height. */
+  /* Reserve toast room outside the viewport so sticky controls and focus stay above it. */
   box-sizing: border-box;
   padding-block-end: var(--toast-layer-height, 0px);
-  scroll-padding-block-end: var(--toast-layer-height, 0px);
 }
-/* The dialog itself scrolls, so an absolute layer would scroll away with the content. A zero-height sticky layer stays on the visible edge instead.
-   Sticky respects the padding, so it rests on top of the reserved room; the shift moves its toasts down into that room. */
-.content > .toastLayer {
-  position: sticky;
-  inset: auto;
-  inset-block-end: 0;
-  block-size: 0;
-  translate: 0 var(--toast-layer-height, 0px);
+.scrollArea {
+  flex: 1 1 auto;
+  border-radius: inherit;
+}
+.viewport {
+  overscroll-behavior: contain;
 }
 /* The child supplies the only visible surface and its own close action. Keep the modal's sizing and scrolling. */
 .content.chromeless {

@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import { ToastLayer, fromToast } from '../toast-stack/toast-stack'
 import styles from './dialog.module.css'
 
@@ -144,7 +145,6 @@ export function DialogContent({
   const inner =
     bare || !chrome ? (
       <>
-        {chrome && close}
         <DialogPrimitive.Title className={styles.hidden}>{title}</DialogPrimitive.Title>
         {description ? (
           <DialogPrimitive.Description className={styles.hidden}>
@@ -171,6 +171,21 @@ export function DialogContent({
         <div className={bodyClasses}>{children}</div>
       </>
     )
+  const surface = (
+    <>
+      {bare && chrome && close}
+      <ScrollArea
+        className={styles.scrollArea}
+        fade={0}
+        orientation="both"
+        viewportClassName={styles.viewport}
+        viewportTabIndex={bare && chrome ? 0 : -1}
+      >
+        {inner}
+      </ScrollArea>
+      <ToastLayer />
+    </>
+  )
   // Under a bare Radix root the open state is unknown here, so CSS keyframes keyed off data-state animate the layers instead.
   if (open === null)
     return (
@@ -182,8 +197,7 @@ export function DialogContent({
           onEscapeKeyDown={escape}
           className={`${classes} ${styles.keyframes}`}
         >
-          {inner}
-          <ToastLayer className={styles.toastLayer} />
+          {surface}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     )
@@ -233,8 +247,7 @@ export function DialogContent({
                     }
               }
             >
-              {inner}
-              <ToastLayer className={styles.toastLayer} />
+              {surface}
             </motion.div>
           </DialogPrimitive.Content>
         </DialogPrimitive.Portal>

@@ -210,14 +210,12 @@
 .body {
   --drawer-body-padding: var(--space-6);
   min-height: 0;
-  overflow: auto;
   padding: var(--drawer-body-padding);
   padding-block-end: max(var(--drawer-body-padding), var(--toast-layer-height, 0px));
   scroll-padding-block-end: var(--toast-layer-height, 0px);
   font-size: var(--text-sm);
   line-height: var(--leading-body);
   overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 
 @media (max-width: 40rem) {

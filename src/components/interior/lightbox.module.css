@@ -97,19 +97,18 @@
   pointer-events: none;
 }
 
-.caption {
-  min-width: 0;
-  max-height: 4.5rem;
-  overflow: auto;
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
+.captionFrame {
   border-radius: var(--radius-control);
   background: var(--surface-raised);
+  pointer-events: auto;
+}
+.caption {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
   color: var(--foreground);
   font-size: var(--text-sm);
   font-weight: 500;
   overflow-wrap: anywhere;
-  pointer-events: auto;
 }
 
 .position {

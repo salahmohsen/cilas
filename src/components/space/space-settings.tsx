@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
@@ -222,7 +223,14 @@ export function SpaceSettings({
                   <X size={16} strokeWidth={1.75} aria-hidden="true" />
                 </DialogClose>
               </div>
-              <div className={styles.settingsBody}>{fields}</div>
+              <ScrollArea
+                className={styles.settingsScroll}
+                fade={0}
+                viewportClassName={styles.settingsBody}
+                viewportTabIndex={-1}
+              >
+                {fields}
+              </ScrollArea>
               {footer}
             </div>
           </DialogContent>

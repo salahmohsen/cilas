@@ -5,6 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { ToastLayer, fromToast } from '@/components/arc/toast-stack/toast-stack'
 import styles from './lightbox.module.css'
 
@@ -599,10 +600,17 @@ function Stage({
             transition={reduced ? { duration: 0 } : VEIL}
             className={styles.toolbar}
           >
-            <DialogPrimitive.Title className={styles.caption} dir="auto">
-              {caption ?? alt}
-              {position && <span className={styles.position}>{position}</span>}
-            </DialogPrimitive.Title>
+            <ScrollArea
+              className={styles.captionFrame}
+              fade={0}
+              maxHeight="4.5rem"
+              viewportTabIndex={-1}
+            >
+              <DialogPrimitive.Title className={styles.caption} dir="auto">
+                {caption ?? alt}
+                {position && <span className={styles.position}>{position}</span>}
+              </DialogPrimitive.Title>
+            </ScrollArea>
             <div className={styles.controls}>
               {onPrevious && onNext && (
                 <>

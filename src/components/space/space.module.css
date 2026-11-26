@@ -635,18 +635,17 @@
 /* The settings dialog: a header and a footer that stay, the fields scrolling between them. */
 .settingsDialog[role='dialog'] {
   width: min(calc(100vw - var(--space-8)), 560px);
-  overflow: visible;
+  box-shadow: var(--shadow-floating);
 }
 
 .settingsPanel {
   display: flex;
   flex-direction: column;
-  max-height: calc(100dvh - var(--space-8));
+  max-height: calc(100dvh - var(--space-8) - var(--toast-layer-height, 0px));
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface-raised);
-  box-shadow: var(--shadow-floating);
 }
 
 .settingsHead {
@@ -682,10 +681,10 @@
   color: var(--foreground);
 }
 
-.settingsBody {
+.settingsScroll {
   flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+}
+.settingsBody {
   overscroll-behavior: contain;
   padding: var(--space-6);
 }
@@ -2345,10 +2344,8 @@
 
 /* Arc's dialog body: the whole dialog under the floating close button. */
 .postDialogWideBody.postDialogWideBody {
-  flex: 1 1 auto;
-  min-height: 0;
+  height: 100%;
   padding: 0;
-  overflow-y: auto;
 }
 
 /* While the post loads or fails: the line sits in the middle of the dialog's body, or of the panel. */
@@ -2378,18 +2375,13 @@
   color-scheme: dark;
 }
 
-.dialogSplit > .dialogPost,
-.dialogSplit > .dialogStatus {
-  align-content: start;
-  min-height: 0;
-  padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
-  overflow-y: auto;
-  overscroll-behavior: contain;
+.dialogPostScroll {
   border-inline-start: 1px solid var(--border);
 }
 
-.dialogSplit > .dialogStatus {
-  align-content: center;
+.dialogPostViewport {
+  padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  overscroll-behavior: contain;
 }
 
 .dialogPost {
@@ -2428,9 +2420,7 @@
       var(--space-3) var(--space-3);
   }
 
-  .dialogSplit > .dialogPost,
-  .dialogSplit > .dialogStatus {
-    overflow-y: visible;
+  .dialogPostScroll {
     border-inline-start: 0;
     border-block-start: 1px solid var(--border);
   }

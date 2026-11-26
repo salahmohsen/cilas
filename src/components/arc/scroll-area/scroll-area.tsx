@@ -52,6 +52,8 @@ export interface ScrollAreaProps extends Omit<HTMLAttributes<HTMLDivElement>, 'o
   /** Turns vertical wheel movement into horizontal scrolling for horizontal areas. Defaults to true. */
   wheelToHorizontal?: boolean
   viewportClassName?: string
+  /** Set to -1 when the surrounding surface already manages its tab order. */
+  viewportTabIndex?: 0 | -1
   viewportStyle?: CSSProperties
   viewportRef?: Ref<HTMLDivElement>
   onScroll?: (event: UIEvent<HTMLDivElement>) => void
@@ -73,6 +75,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
     label,
     wheelToHorizontal = true,
     viewportClassName,
+    viewportTabIndex = 0,
     viewportStyle,
     viewportRef,
     onScroll,
@@ -293,7 +296,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
         className={[styles.viewport, viewportClassName].filter(Boolean).join(' ')}
         data-fade={fade > 0 ? orientation : undefined}
         style={{ maxHeight, scrollSnapType: snap, ...viewportStyle }}
-        tabIndex={0}
+        tabIndex={viewportTabIndex}
         role={label ? 'region' : undefined}
         aria-label={label}
         onScroll={handleScroll}

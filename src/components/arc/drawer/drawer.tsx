@@ -8,6 +8,7 @@ import type { PanInfo, Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import { ToastLayer, fromToast } from '../toast-stack/toast-stack'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import styles from './drawer.module.css'
 
 /**
@@ -210,7 +211,9 @@ export function DrawerContent({
           <X size={16} strokeWidth={1.75} aria-hidden="true" />
         </DialogPrimitive.Close>
       </motion.div>
-      <div className={styles.body}>{children}</div>
+      <ScrollArea fade={0} orientation="both" viewportClassName={styles.body} viewportTabIndex={-1}>
+        {children}
+      </ScrollArea>
     </>
   )
 

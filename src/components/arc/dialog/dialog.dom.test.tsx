@@ -63,7 +63,7 @@ describe('DialogContent chrome opt-in', () => {
     expect(screen.getByRole('heading', { name: 'Edit post' })).toHaveClass(styles.hidden)
     expect(screen.getByText('Change your post')).toHaveClass(styles.hidden)
     expect(screen.queryByRole('button', { name: 'Close dialog' })).not.toBeInTheDocument()
-    expect(screen.getByRole('region', { name: 'Composer' }).parentElement).toBe(dialog)
+    expect(dialog).toContainElement(screen.getByRole('region', { name: 'Composer' }))
     expect(document.querySelector('[data-state="open"].' + styles.overlay)).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Post body' })).toHaveFocus()
     screen.getByRole('button', { name: 'Cancel' }).focus()
