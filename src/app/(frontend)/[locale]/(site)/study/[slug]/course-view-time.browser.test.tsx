@@ -43,7 +43,7 @@ const facts = (c: Course, sessions: Session[], locale: 'en' | 'ar' = 'en') => {
       timeZone="Africa/Cairo"
     >
       <NavigationProvider memory={createMemoryRouter('/en/study/a-course')}>
-        <CourseView course={c} sessions={sessions} />
+        <CourseView course={c} sessions={sessions} showAi />
       </NavigationProvider>
     </NextIntlClientProvider>,
   )

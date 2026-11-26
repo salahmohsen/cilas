@@ -25,6 +25,7 @@ export type SpacesSettings = {
   spaces_trial_courses?: Array<number | { id: number }> | null
   spaces_trial_community?: boolean | null
   spaces_trial_cohorts?: Array<number | { id: number }> | null
+  ai_buttons?: boolean | null
 }
 
 export type SpaceLike = {
@@ -34,6 +35,7 @@ export type SpaceLike = {
   programme?: number | { id: number } | null
   posting?: PostingLevel | null
   reopened?: boolean | null
+  ai_buttons?: boolean | null
   audience?: CommunityAudience | null
   introduction_post?: number | { id: number } | null
 }

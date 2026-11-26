@@ -51,7 +51,7 @@ const course: SessionCourse = {
   ],
 } as SessionCourse
 
-const shown: SessionRead = { state: 'shown', course }
+const shown: SessionRead = { state: 'shown', course, ai: true }
 const links = { spaceHref: '/en/spaces/probe', facts: {}, known: true }
 const schedule = (ids: string[]) =>
   `Changes:\n\n${scheduleToken({ from: '2026-11-17', weeks: 2, ids })}`
@@ -119,7 +119,7 @@ describe('a schedule block in a post', () => {
       ...course,
       sessions: [session(12, 2, [{ date: '2026-11-19', start_time: '17:00' }])],
     }
-    view(schedule(['12']), { state: 'shown', course: moved })
+    view(schedule(['12']), { ...shown, course: moved })
     expect(
       screen.getByRole('button', { name: /^Session 1, Thursday, November 19, 5 PM.*Changed$/ }),
     ).toBeInTheDocument()
@@ -154,7 +154,7 @@ describe('a schedule block in a post', () => {
         session(13, 3, [{ date: '2026-11-24' }]),
       ],
     }
-    view(schedule(['12']), { state: 'shown', course: away })
+    view(schedule(['12']), { ...shown, course: away })
     expect(screen.getByText(messages.SpacePost.scheduleGone)).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
   })

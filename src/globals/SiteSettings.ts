@@ -1,7 +1,6 @@
 import { revalidatePath } from 'next/cache'
 import type { Field, GlobalConfig } from 'payload'
 
-import { routing } from '@/i18n/routing'
 import { HERO_SCENES } from '@/lib/hero-scenes'
 import { PEOPLE_PAGES } from '@/lib/people-pages'
 import { isAdmin } from '@/access'
@@ -12,11 +11,11 @@ export const SiteSettings: GlobalConfig = {
   label: 'Site settings',
   access: { read: isAdmin, update: isAdmin },
   hooks: {
-    // Every page's layout reads these settings (header, footer, people pages).
+    // WARNING: keep the root path. `/en` matches no layout tag, and the sitemap sits outside `/(frontend)/[locale]`.
     afterChange: [
       ({ doc }) => {
         try {
-          for (const locale of routing.locales) revalidatePath(`/${locale}`, 'layout')
+          revalidatePath('/', 'layout')
         } catch {
           // Seed and import scripts have no Next cache, and this call throws there.
         }
@@ -179,6 +178,15 @@ export const SiteSettings: GlobalConfig = {
                     condition: (data) =>
                       (data as { spaces_mode?: unknown }).spaces_mode === 'trial',
                     description: 'In Trial, only these programmes have a cohort space.',
+                  },
+                },
+                {
+                  name: 'ai_buttons',
+                  label: 'Show the Study with AI buttons',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: {
+                    description: 'Off hides them on every page of the site, in spaces too.',
                   },
                 },
               ],
