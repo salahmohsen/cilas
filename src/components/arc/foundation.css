@@ -165,6 +165,11 @@
   --duration-considered: 480ms;
   --duration-spring: 580ms;
 }
+/* Tracking is a Latin refinement. WebKit applies it to Arabic too, where it pulls at the joins. */
+[lang='ar'] {
+  --tracking-display: 0em;
+  --tracking-body: 0em;
+}
 
 :root[data-theme='dark'] {
   color-scheme: dark;
