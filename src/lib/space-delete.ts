@@ -80,8 +80,9 @@ export const spaceContentGroups = (c: SpaceContentCounts): DeleteGroup[] => [
 
 /**
  * The spaces collection's beforeDelete: removes everything that hangs on the
- * space so its row can go. Child rows hold `space_id NOT NULL` with
- * `ON DELETE set null`, so the database refuses a bare delete. Runs inside the
+ * space so its row can go. Previews share the production database and can
+ * serve this code before the visit foreign key cascades. Other child rows
+ * hold `space_id NOT NULL` with `ON DELETE set null`. Runs inside the
  * delete's transaction (`req`); files go one at a time so their storage
  * objects go with them, and the collections' own hooks clear private-search
  * entries. A course or cohort space is refused unless its course or programme
