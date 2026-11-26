@@ -211,7 +211,13 @@ export function DrawerContent({
           <X size={16} strokeWidth={1.75} aria-hidden="true" />
         </DialogPrimitive.Close>
       </motion.div>
-      <ScrollArea fade={0} orientation="both" viewportClassName={styles.body} viewportTabIndex={-1}>
+      <ScrollArea
+        className={styles.scrollArea}
+        fade={0}
+        orientation="both"
+        viewportClassName={styles.body}
+        viewportTabIndex={-1}
+      >
         {children}
       </ScrollArea>
     </>

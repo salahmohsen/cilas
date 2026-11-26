@@ -15,14 +15,24 @@
   block-size: fit-content;
   inline-size: min(28rem, calc(100% - 2rem));
   max-block-size: calc(100% - 2rem);
-  overflow-y: auto;
+  overflow: clip;
   margin: auto;
-  padding: var(--space-6);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface-raised);
   color: var(--foreground);
   font-family: var(--font-body);
+}
+.moveDialog[data-open] {
+  display: flex;
+  flex-direction: column;
+}
+.moveScroll {
+  flex: 1 1 auto;
+  border-radius: inherit;
+}
+.moveViewport {
+  padding: var(--space-6);
   overscroll-behavior: contain;
 }
 .moveDialog::backdrop {

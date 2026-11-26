@@ -2424,6 +2424,10 @@
     border-inline-start: 0;
     border-block-start: 1px solid var(--border);
   }
+
+  .dialogPostViewport {
+    overscroll-behavior-y: auto;
+  }
 }
 
 .nextSession {

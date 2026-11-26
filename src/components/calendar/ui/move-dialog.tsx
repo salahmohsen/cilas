@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogTitle } from '@ui-sdk/react/dialog'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/arc/button/button'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import type { EditBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
@@ -54,72 +55,79 @@ export function MoveDialog({
         initialFocus={() => fields.current?.querySelector('button') ?? null}
         finalFocus={finalFocus}
       >
-        <DialogTitle>{words.title}</DialogTitle>
-        <form
-          ref={fields}
-          className={styles.moveForm}
-          noValidate
-          onSubmit={(event) => {
-            event.preventDefault()
-            event.stopPropagation()
-            setTried(true)
-            if (!day || (!block.allDay && (startError || endError))) {
-              fields.current?.querySelector<HTMLElement>('[data-invalid]')?.focus()
-              return
-            }
-            onApply(day, block.allDay ? 0 : from, block.allDay ? 0 : to)
-          }}
+        <ScrollArea
+          className={styles.moveScroll}
+          fade={0}
+          viewportClassName={styles.moveViewport}
+          viewportTabIndex={-1}
         >
-          <DatePicker
-            label={words.day}
-            placeholder={words.day}
-            value={day ? new Date(year!, month! - 1, date) : undefined}
-            onChange={(value) =>
-              setDay(
-                value
-                  ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
-                  : '',
-              )
-            }
-            locale={locale}
-            weekStartsOn={6}
-            error={tried && !day ? words.dayError : undefined}
-            labels={{
-              today: labels.today,
-              previous: labels.previous('month', 1),
-              next: labels.next('month', 1),
-              clear: words.clear,
-              choose: words.day,
-              selected: words.selected,
+          <DialogTitle>{words.title}</DialogTitle>
+          <form
+            ref={fields}
+            className={styles.moveForm}
+            noValidate
+            onSubmit={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              setTried(true)
+              if (!day || (!block.allDay && (startError || endError))) {
+                fields.current?.querySelector<HTMLElement>('[data-invalid]')?.focus()
+                return
+              }
+              onApply(day, block.allDay ? 0 : from, block.allDay ? 0 : to)
             }}
-          />
-          {!block.allDay && (
-            <>
-              <TimePicker
-                label={words.start}
-                optionsLabel={words.start}
-                value={start}
-                onChange={setStart}
-                formatValue={clock}
-                error={tried ? startError : undefined}
-              />
-              <TimePicker
-                label={words.end}
-                optionsLabel={words.end}
-                value={end}
-                onChange={setEnd}
-                formatValue={clock}
-                error={tried ? endError : undefined}
-              />
-            </>
-          )}
-          <div className={styles.moveActions}>
-            <Button type="button" variant="secondary" onClick={onCancel}>
-              {words.cancel}
-            </Button>
-            <Button type="submit">{words.apply}</Button>
-          </div>
-        </form>
+          >
+            <DatePicker
+              label={words.day}
+              placeholder={words.day}
+              value={day ? new Date(year!, month! - 1, date) : undefined}
+              onChange={(value) =>
+                setDay(
+                  value
+                    ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
+                    : '',
+                )
+              }
+              locale={locale}
+              weekStartsOn={6}
+              error={tried && !day ? words.dayError : undefined}
+              labels={{
+                today: labels.today,
+                previous: labels.previous('month', 1),
+                next: labels.next('month', 1),
+                clear: words.clear,
+                choose: words.day,
+                selected: words.selected,
+              }}
+            />
+            {!block.allDay && (
+              <>
+                <TimePicker
+                  label={words.start}
+                  optionsLabel={words.start}
+                  value={start}
+                  onChange={setStart}
+                  formatValue={clock}
+                  error={tried ? startError : undefined}
+                />
+                <TimePicker
+                  label={words.end}
+                  optionsLabel={words.end}
+                  value={end}
+                  onChange={setEnd}
+                  formatValue={clock}
+                  error={tried ? endError : undefined}
+                />
+              </>
+            )}
+            <div className={styles.moveActions}>
+              <Button type="button" variant="secondary" onClick={onCancel}>
+                {words.cancel}
+              </Button>
+              <Button type="submit">{words.apply}</Button>
+            </div>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

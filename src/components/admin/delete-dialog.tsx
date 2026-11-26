@@ -2,6 +2,7 @@
 
 import { Button, Modal, PopupList, toast, useDocumentInfo, useModal } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { useCallback, useId, useState } from 'react'
 
 import type { DeleteGroup, DeleteSummary } from '@/lib/delete-summary'
@@ -16,21 +17,23 @@ type Loaded = (DeleteSummary & { error?: undefined }) | { error: string }
 
 function Groups({ groups }: { groups: DeleteGroup[] }) {
   return (
-    <ul className="cilas-delete-groups">
-      {groups.map((g) => (
-        <li key={g.label}>
-          <strong>
-            {g.count} {g.label}
-          </strong>
-          {g.items.length ? (
-            <span>
-              : {g.items.join(', ')}
-              {g.count > g.items.length ? `, and ${g.count - g.items.length} more` : ''}
-            </span>
-          ) : null}
-        </li>
-      ))}
-    </ul>
+    <ScrollArea className="cilas-delete-groups-scroll" fade={0} maxHeight="16rem">
+      <ul className="cilas-delete-groups">
+        {groups.map((g) => (
+          <li key={g.label}>
+            <strong>
+              {g.count} {g.label}
+            </strong>
+            {g.items.length ? (
+              <span>
+                : {g.items.join(', ')}
+                {g.count > g.items.length ? `, and ${g.count - g.items.length} more` : ''}
+              </span>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </ScrollArea>
   )
 }
 

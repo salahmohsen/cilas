@@ -206,6 +206,9 @@
     color var(--duration-fast) var(--ease-standard),
     transform var(--duration-instant) var(--ease-standard);
 }
+.scrollArea {
+  flex: 1 1 auto;
+}
 /* While a toast shows, the end padding grows to the toasts' room, so a sticky footer rests above them and a focused control scrolls clear of them. */
 .body {
   --drawer-body-padding: var(--space-6);
