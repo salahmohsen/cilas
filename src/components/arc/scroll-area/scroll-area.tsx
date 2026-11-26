@@ -163,13 +163,20 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(function S
     const observer = new ResizeObserver(() => sync())
     observer.observe(node)
     Array.from(node.children).forEach((child) => observer.observe(child))
-    const mutations = new MutationObserver(() => {
-      observer.disconnect()
-      observer.observe(node)
-      Array.from(node.children).forEach((child) => observer.observe(child))
+    const mutations = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.target !== node) continue
+        for (const child of record.removedNodes) {
+          if (child instanceof Element) observer.unobserve(child)
+        }
+        for (const child of record.addedNodes) {
+          if (child instanceof Element) observer.observe(child)
+        }
+      }
       sync()
     })
-    mutations.observe(node, { childList: true })
+    // A nested popup can add scrollable overflow without resizing its parent.
+    mutations.observe(node, { childList: true, subtree: true })
     return () => {
       observer.disconnect()
       mutations.disconnect()
