@@ -421,6 +421,13 @@ a.hero::after {
   gap: 2px;
 }
 
+/* On a narrow phone the strip takes part of the card's padding. Without it, the longest Arabic day name does not fit inside the pressed day's wider border at 320px. */
+@container (width < 400px) {
+  .weekDays {
+    margin-inline: calc(-1 * var(--space-2));
+  }
+}
+
 .dayName {
   font-size: 0.6875rem;
   line-height: 1.4;
