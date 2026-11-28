@@ -101,6 +101,11 @@
   border-radius: var(--radius-control);
   background: var(--surface-raised);
   pointer-events: auto;
+  /* The frame clips overflow, so the viewport's focus ring is drawn inside it. */
+  --focus-outline-offset: -2px;
+}
+.captionViewport {
+  border-radius: inherit;
 }
 .caption {
   margin: 0;
@@ -154,9 +159,9 @@
   .toolbar {
     flex-wrap: wrap;
   }
-  .caption {
+  .captionFrame {
     flex: 1 1 100%;
-    max-height: 3rem;
+    --caption-max-height: 3rem;
   }
   .controls {
     margin-inline-start: auto;

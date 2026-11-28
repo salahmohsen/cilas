@@ -600,7 +600,12 @@ function Stage({
             transition={reduced ? { duration: 0 } : VEIL}
             className={styles.toolbar}
           >
-            <ScrollArea className={styles.captionFrame} fade={0} maxHeight="4.5rem">
+            <ScrollArea
+              className={styles.captionFrame}
+              fade={0}
+              maxHeight="var(--caption-max-height, 4.5rem)"
+              viewportClassName={styles.captionViewport}
+            >
               <DialogPrimitive.Title className={styles.caption} dir="auto">
                 {caption ?? alt}
                 {position && <span className={styles.position}>{position}</span>}
