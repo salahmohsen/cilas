@@ -2209,8 +2209,7 @@ details:not([open]) > summary.side-card-label {
     padding: 0;
   }
   /* Two classes: the group's own module rule has one, and loads later. */
-  .side-card-body.side-card-flush > *,
-  .side-card-action-row > * {
+  .side-card-body.side-card-flush > * {
     width: 100%;
     justify-content: space-between;
     border: 0;
@@ -2218,15 +2217,19 @@ details:not([open]) > summary.side-card-label {
     background: transparent;
     padding: 0;
   }
-  .side-card-action-row > * {
+  /* A flush cell that scrolls sideways: the group is as wide as its buttons,
+     so every button stays inside it at both ends of the scroll. */
+  .side-card-body.side-card-action-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .side-card-body.side-card-action-row > * {
     width: max-content;
     min-width: 100%;
     max-width: none;
   }
   /* Square buttons as tall as the section's label band: the open one's
      tint fills the cell from rule to rule. */
-  .side-card-body.side-card-flush > * > *,
-  .side-card-action-row > * > * {
+  .side-card-body.side-card-flush > * > * {
     height: 2.75rem;
     border-radius: 0;
   }

@@ -16,7 +16,7 @@ export function ArticleActionRow({
       fade={0}
       label={label}
       orientation="horizontal"
-      viewportClassName={flush ? 'side-card-action-row' : undefined}
+      viewportClassName={flush ? 'side-card-body side-card-flush side-card-action-row' : undefined}
     >
       {children}
     </ScrollArea>
